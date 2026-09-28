@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduQuest · Moodboards Must #3</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;800&family=Nunito:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root { --ink:#1a1033; --muted:#5b4d6e; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: Nunito, system-ui, sans-serif; color:var(--ink);
+      background: linear-gradient(160deg,#fff7ed,#f3e8ff 50%,#ecfeff); min-height:100vh; padding:32px 20px 64px; }
+    h1 { font-family: Outfit, sans-serif; font-size: clamp(1.6rem,3vw,2.2rem); margin:0 0 8px; }
+    p.lead { color:var(--muted); max-width: 52rem; margin:0 0 28px; font-weight:700; }
+    .grid { display:grid; gap:20px; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); max-width:960px; }
+    a.card { text-decoration:none; color:inherit; border-radius:24px; padding:22px; background:#fff;
+      box-shadow:0 18px 40px rgba(91,44,255,.12); border:1px solid rgba(91,44,255,.1);
+      transition: transform .18s ease, box-shadow .18s ease; display:block; }
+    a.card:hover { transform: translateY(-3px); box-shadow:0 22px 48px rgba(91,44,255,.18); }
+    .swatch { height:56px; border-radius:14px; margin:14px 0 12px; }
+    .meta { font-size:.85rem; color:var(--muted); font-weight:700; }
+    .tag { display:inline-block; font-size:.72rem; font-weight:800; padding:.3rem .7rem; border-radius:999px;
+      background:rgba(91,44,255,.08); color:#5b2cff; margin-bottom:10px; }
+  </style>
+</head>
+<body>
+  <h1>EduQuest Must #3 · Moodboards</h1>
+  <p class="lead">Dos direcciones visuales (producto edu-gamificado, mood Duolingo / Kahoot / ClassDojo). Darwin elige una ancla o mezcla. Sin Nice/3D. Cero emojis. Assets propios SVG.</p>
+  <div class="grid">
+    <a class="card" href="A-fuego-cfa.html">
+      <span class="tag">Dirección A</span>
+      <h2 style="font-family:Outfit;margin:0 0 6px">Fuego CFA</h2>
+      <p class="meta">Energía Kahoot: contraste alto, tiles de color, coral/oro/índigo. Ideal partidas y timer.</p>
+      <div class="swatch" style="background:linear-gradient(90deg,#FF4D6D,#FFB020,#5B2CFF,#1368CE)"></div>
+    </a>
+    <a class="card" href="B-ruta-verde.html">
+      <span class="tag">Dirección B</span>
+      <h2 style="font-family:Outfit;margin:0 0 6px">Ruta Verde</h2>
+      <p class="meta">Sendero Duolingo + ClassDojo: verdes suaves, crema, violetas de progreso, cards amables.</p>
+      <div class="swatch" style="background:linear-gradient(90deg,#58CC02,#89E219,#1CB0F6,#CE82FF,#FFF4D9)"></div>
+    </a>
+  </div>
+</body>
+</html>

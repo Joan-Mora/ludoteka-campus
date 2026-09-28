@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Moodboard A · Fuego CFA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #1A0B2E; --bg2: #2D1252; --panel: #FFFFFF; --ink: #1A0B2E;
+      --muted: #6B5B8C; --coral: #FF4D6D; --gold: #FFB020; --indigo: #5B2CFF;
+      --blue: #1368CE; --green: #26890C; --cream: #FFF4E8;
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: Nunito, system-ui, sans-serif; color: #fff;
+      background:
+        radial-gradient(700px 400px at 10% 0%, rgba(255,77,109,.45), transparent 60%),
+        radial-gradient(600px 380px at 90% 10%, rgba(91,44,255,.5), transparent 55%),
+        linear-gradient(165deg, var(--bg), var(--bg2));
+      min-height: 100vh; padding: 28px 18px 64px;
+    }
+    h1,h2,h3 { font-family: Outfit, sans-serif; letter-spacing: -.02em; }
+    a.back { color: #FFD6A5; font-weight: 800; text-decoration: none; }
+    .wrap { max-width: 1100px; margin: 0 auto; }
+    .hero-banner { display:flex; flex-wrap:wrap; gap:20px; align-items:center; margin: 18px 0 28px; }
+    .hero-banner img.mark { width:72px; height:72px; filter: drop-shadow(0 12px 24px rgba(255,77,109,.4)); }
+    .section { margin-top: 28px; }
+    .label { font-size: .75rem; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; opacity: .75; margin-bottom: 10px; }
+    .tokens { display:flex; flex-wrap:wrap; gap:10px; }
+    .tok { width: 92px; border-radius: 16px; overflow: hidden; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); }
+    .tok .chip { height: 48px; }
+    .tok span { display:block; font-size: .65rem; font-weight: 800; padding: 6px 8px; color:#fff; }
+    .screens { display:grid; gap:18px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+    .phone {
+      background: var(--cream); color: var(--ink); border-radius: 28px; padding: 16px;
+      box-shadow: 0 24px 60px rgba(0,0,0,.35); border: 3px solid rgba(255,255,255,.2);
+      min-height: 420px;
+    }
+    .phone header.app {
+      display:flex; align-items:center; gap:10px; padding: 10px 12px; border-radius: 18px;
+      background: linear-gradient(90deg, var(--indigo), var(--coral)); color:#fff; margin-bottom: 12px;
+    }
+    .energy { height: 12px; border-radius: 999px; background: rgba(255,255,255,.25); overflow:hidden; margin-top:8px; }
+    .energy > i { display:block; height:100%; width:68%; border-radius:inherit;
+      background: linear-gradient(90deg, var(--coral), var(--gold), #FFE566);
+      animation: fill 2.8s ease-in-out infinite alternate; }
+    @keyframes fill { from { width: 42%; } to { width: 86%; } }
+    .card { background:#fff; border-radius: var(--radius); padding: 14px; box-shadow: 0 10px 28px rgba(26,11,46,.12); margin-bottom: 10px; }
+    .btn { display:inline-block; border:0; border-radius:999px; padding: 10px 16px; font-weight:900; cursor:default;
+      background: linear-gradient(135deg, var(--coral), var(--gold)); color: var(--ink); }
+    .tiles { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .tile { border-radius:14px; padding:16px 10px; color:#fff; font-weight:900; font-size:.85rem; text-align:center; }
+    .input { width:100%; border:2px solid #E8DFF5; border-radius:14px; padding:10px 12px; font:inherit; font-weight:700; margin:6px 0 10px; }
+    .muted { color: var(--muted); font-size: .82rem; font-weight:700; }
+    .nav { display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; }
+    .nav span { background:#F3E8FF; color:var(--indigo); border-radius:999px; padding:6px 10px; font-size:.72rem; font-weight:900; }
+    .art { width:100%; max-height:160px; object-fit:contain; }
+    .note { margin-top: 24px; padding: 14px 16px; border-radius: 16px; background: rgba(255,255,255,.08); font-size:.9rem; font-weight:700; line-height:1.45; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="index.html">← Moodboards</a>
+    <div class="hero-banner">
+      <img class="mark" src="assets/mark-a.svg" alt="EduQuest mark A" />
+      <div>
+        <h1 style="margin:0">Dirección A · Fuego CFA</h1>
+        <p style="margin:6px 0 0; opacity:.85; font-weight:700; max-width:36rem">
+          Mood Kahoot: alto contraste, tiles de respuesta, coral/oro/índigo. Partidas y kiosco con punch visual. Sexto CFA.
+        </p>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="label">Tokens</div>
+      <div class="tokens">
+        <div class="tok"><div class="chip" style="background:#1A0B2E"></div><span>bg #1A0B2E</span></div>
+        <div class="tok"><div class="chip" style="background:#FF4D6D"></div><span>coral</span></div>
+        <div class="tok"><div class="chip" style="background:#FFB020"></div><span>gold</span></div>
+        <div class="tok"><div class="chip" style="background:#5B2CFF"></div><span>indigo</span></div>
+        <div class="tok"><div class="chip" style="background:#1368CE"></div><span>quiz blue</span></div>
+        <div class="tok"><div class="chip" style="background:#26890C"></div><span>quiz green</span></div>
+        <div class="tok"><div class="chip" style="background:#FFF4E8"></div><span>cream UI</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="label">Hero + tipografía Outfit / Nunito</div>
+      <img class="art" src="assets/hero-a.svg" alt="Hero abstracto tiles" />
+    </div>
+
+    <div class="section">
+      <div class="label">Pantallas · Login + Home (mock)</div>
+      <div class="screens">
+        <div class="phone">
+          <header class="app">
+            <img src="assets/mark-a.svg" width="36" height="36" alt="" />
+            <div style="flex:1">
+              <strong>EduQuest</strong>
+              <div class="energy" aria-hidden><i></i></div>
+            </div>
+          </header>
+          <div class="card">
+            <div class="muted">Misión mates sexto</div>
+            <h3 style="margin:4px 0 8px;color:var(--indigo)">Sube de nivel</h3>
+            <img class="art" src="assets/hero-a.svg" alt="" style="max-height:100px" />
+          </div>
+          <div class="card">
+            <strong>Ingresar</strong>
+            <input class="input" placeholder="correo@" disabled />
+            <input class="input" placeholder="••••••••" disabled />
+            <span class="btn">Empezar aventura</span>
+          </div>
+        </div>
+
+        <div class="phone">
+          <header class="app">
+            <img src="assets/mark-a.svg" width="36" height="36" alt="" />
+            <div style="flex:1">
+              <strong>Tablero</strong>
+              <div class="energy" aria-hidden><i style="animation-delay:.4s"></i></div>
+            </div>
+          </header>
+          <div class="card">
+            <strong>Hola, estudiante</strong>
+            <p class="muted" style="margin:4px 0 0">Colegio Francisco Arango</p>
+            <div class="nav">
+              <span>Inicio</span><span>Certificados</span><span>Facial</span><span>Tutor</span>
+            </div>
+          </div>
+          <div class="card">
+            <strong>Unirme a la partida</strong>
+            <input class="input" style="text-align:center; letter-spacing:.3em; font-weight:900" placeholder="CÓDIGO" disabled />
+            <span class="btn">Entrar</span>
+          </div>
+          <div class="tiles">
+            <div class="tile" style="background:#E21B3C">A</div>
+            <div class="tile" style="background:#1368CE">B</div>
+            <div class="tile" style="background:#D89E00">C</div>
+            <div class="tile" style="background:#26890C">D</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      Barra de energía: transición continua (animada aquí como demo; en app = CSS transition width, sin jump-reset).
+      Cero emojis · SVG mark propio · fondos mesh/radial dinámicos · sin Nice/3D.
+    </div>
+  </div>
+</body>
+</html>

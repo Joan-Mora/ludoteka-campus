@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" fill="none">
+  <defs><linearGradient id="g" x1="8" y1="6" x2="88" y2="90"><stop stop-color="#FF4D6D"/><stop offset=".5" stop-color="#FFB020"/><stop offset="1" stop-color="#5B2CFF"/></linearGradient></defs>
+  <rect width="96" height="96" rx="28" fill="url(#g)"/>
+  <text x="48" y="58" text-anchor="middle" fill="#fff" font-family="Arial Black, sans-serif" font-size="32" font-weight="800">EQ</text>
+  <circle cx="74" cy="20" r="8" fill="#FFE566"/>
+</svg>

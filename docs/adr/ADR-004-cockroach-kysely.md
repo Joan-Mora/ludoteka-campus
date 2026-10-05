@@ -8,7 +8,7 @@ La única base es CockroachDB, por el enunciado del parcial. Render Postgres no 
 
 El esquema vive en `db/migrations/*.sql`, legible para la sustentación. En ejecución, Kysely tipa las consultas sobre el driver `pg` (wire protocol de Postgres). `withTx()` reintenta `40001`.
 
-No hay secuencias. Las PK son UUID aleatorios para no crear hotspots en el clúster.
+Las PK son UUID aleatorios para no crear hotspots en el clúster. La única secuencia es `report_seq` (migración 0016): no es una PK, solo numera los reportes con el consecutivo legible `LK-AAAA-NNNNNN` que pide la rúbrica.
 
 ## Consecuencias
 

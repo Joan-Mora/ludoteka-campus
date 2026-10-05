@@ -1,7 +1,8 @@
 # ADR-002 — Facial de laboratorio, Ley 1581
 
 **Estado:** aceptada · 2026-09-28  
-**Hereda:** DEC-01 del prototipo anterior (el alcance legal no cambia; cambia el producto alrededor).
+**Hereda:** DEC-01 del prototipo anterior (el alcance legal no cambia; cambia el producto alrededor).  
+**Actualizada por:** ADR-007 (2026-10-05). El modelo, el cifrado y el umbral de los puntos 5, 6 y 9 se rigen por ADR-007; el marco legal sigue aquí.
 
 ## Decisión
 

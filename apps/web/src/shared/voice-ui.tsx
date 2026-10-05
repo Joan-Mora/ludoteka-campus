@@ -64,6 +64,7 @@ const destinations: Destination[] = [
   { label: 'Arcade', to: '/app/jugar', phrases: ['arcade', 'juegos', 'minijuegos'], roles: ['student'] },
   { label: 'Sala en vivo', to: '/app/en-vivo', phrases: ['sala en vivo', 'en vivo', 'quiz en vivo'] },
   { label: 'Acceso facial', to: '/app/rostro', phrases: ['acceso facial', 'rostro', 'mi cara'] },
+  { label: 'Calificaciones', to: '/app/calificaciones', phrases: ['calificaciones', 'notas', 'asistencia', 'rubricas', 'alertas'], roles: ['teacher', 'admin', 'directivo'] },
   { label: 'Banco de preguntas', to: '/app/banco', phrases: ['banco', 'preguntas'], roles: ['teacher', 'admin'] },
   { label: 'Observatorio', to: '/app/consultas', phrases: ['observatorio', 'consultas', 'datos'], roles: ['teacher', 'admin', 'directivo'] },
   { label: 'Coordinación', to: '/app/rectoria', phrases: ['coordinacion', 'rectoria', 'panorama', 'indicadores'], roles: ['admin', 'directivo'] },

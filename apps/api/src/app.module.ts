@@ -16,6 +16,7 @@ import { InstitutionModule } from './modules/institution/institution.module';
 import { LearningModule } from './modules/learning/learning.module';
 import { AssessmentModule } from './modules/assessment/assessment.module';
 import { ArenaModule } from './modules/arena/arena.module';
+import { StudyModule } from './modules/study/study.module';
 import { IntegrityModule } from './modules/integrity/integrity.module';
 import { GamificationModule } from './modules/gamification/gamification.module';
 import { LibraryModule } from './modules/library/library.module';
@@ -48,6 +49,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     LearningModule,
     AssessmentModule,
     ArenaModule,
+    StudyModule,
     IntegrityModule,
     GamificationModule,
     LibraryModule,

@@ -9,6 +9,7 @@ import {
   type AttemptGradedEvent,
   type LessonCompletedEvent,
   type RouteSolvedEvent,
+  type StudyProgressEvent,
   type SubmissionGradedEvent,
   type TutorMessageEvent,
 } from '../../core/events/domain-events';
@@ -135,6 +136,13 @@ export class GamificationService {
       await this.award(player.userId, 10 + player.correct * 5 + (podium[player.rank] ?? 0), 'arena_played', 'arena_room', event.roomId);
       await this.touchStreak(player.userId);
     }
+  }
+
+  @OnEvent(DomainEvents.StudyProgress)
+  async onStudy(event: StudyProgressEvent) {
+    const xp = event.kind === 'review' ? 1 : Math.min(20, Math.floor(event.amount / 5) * 2);
+    await this.award(event.userId, xp, event.kind === 'review' ? 'flashcard_review' : 'focus_session', event.kind === 'review' ? 'flashcard' : 'focus_session', event.refId);
+    await this.touchStreak(event.userId);
   }
 
   @OnEvent(DomainEvents.TutorMessage)

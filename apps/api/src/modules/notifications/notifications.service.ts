@@ -8,6 +8,7 @@ import {
   type IntegrityViolationEvent,
   type NewsPublishedEvent,
   type PasswordResetEvent,
+  type RiskAlertRaisedEvent,
 } from '../../core/events/domain-events';
 
 @Injectable()
@@ -56,6 +57,29 @@ export class NotificationsService {
     await this.database.db
       .insertInto('notifications')
       .values({ user_id: event.userId, title: 'Nueva respuesta en el foro', body: `${event.authorName} respondió en «${event.title}».` })
+      .execute();
+  }
+
+  /** Docente y acudientes activos; al estudiante no se le notifica para no exponer la etiqueta de riesgo. */
+  @OnEvent(DomainEvents.RiskAlertRaised)
+  async onRisk(event: RiskAlertRaisedEvent) {
+    const guardians = await this.database.db
+      .selectFrom('guardian_links')
+      .select('guardian_id')
+      .where('student_id', '=', event.studentId)
+      .where('status', '=', 'active')
+      .execute();
+    const level = event.level === 'alta' ? 'alta' : 'media';
+    await this.database.db
+      .insertInto('notifications')
+      .values([
+        { user_id: event.teacherId, title: `Alerta ${level}: ${event.kind}`.slice(0, 200), body: `${event.studentName} · ${event.courseTitle}. ${event.detail}.` },
+        ...guardians.map((g) => ({
+          user_id: g.guardian_id,
+          title: `Seguimiento académico: ${event.courseTitle}`.slice(0, 200),
+          body: `El colegio registró una alerta (${event.kind.toLowerCase()}) para ${event.studentName}: ${event.detail}. Comunícate con el docente si tienes dudas.`,
+        })),
+      ])
       .execute();
   }
 

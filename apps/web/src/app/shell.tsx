@@ -5,6 +5,7 @@ import {
   Bell,
   BookOpen,
   Building2,
+  ClipboardList,
   Compass,
   Database,
   Gamepad2,
@@ -15,6 +16,7 @@ import {
   LogOut,
   Megaphone,
   Moon,
+  NotebookPen,
   Radio,
   ScanFace,
   Search,
@@ -91,13 +93,14 @@ export function Shell() {
         { to: '/app/en-vivo', label: 'Sala en vivo', icon: Radio },
       ];
   const play: NavItem[] = [
-    ...(isStudent ? [{ to: '/app/ruta', label: 'Mi ruta', icon: Compass }] : []),
+    ...(isStudent ? [{ to: '/app/ruta', label: 'Mi ruta', icon: Compass }, { to: '/app/cuaderno', label: 'Cuaderno', icon: NotebookPen }] : []),
     { to: '/app/logros', label: 'Logros', icon: Trophy },
     { to: '/app/jugar', label: 'Arcade', icon: Gamepad2 },
     { to: '/app/tutor', label: 'Tutor IA', icon: Sparkles },
   ];
   const account: NavItem[] = [{ to: '/app/rostro', label: 'Acceso facial', icon: ScanFace }];
   const staff: NavItem[] = [
+    ...(isStaff || isBoard ? [{ to: '/app/calificaciones', label: 'Calificaciones', icon: ClipboardList }] : []),
     ...(isStaff ? [{ to: '/app/banco', label: 'Banco de preguntas', icon: GraduationCap }] : []),
     ...(isStaff || isBoard ? [{ to: '/app/consultas', label: 'Observatorio', icon: Database }] : []),
     ...(isBoard ? [{ to: '/app/rectoria', label: 'Coordinación', icon: Building2 }] : []),

@@ -11,7 +11,29 @@ export const DomainEvents = {
   GuardianFacialRevoked: 'guardian.facial_revoked',
   RouteSolved: 'route.solved',
   ArenaFinished: 'arena.finished',
+  StudyProgress: 'study.progress',
+  RiskAlertRaised: 'risk.alert_raised',
 } as const;
+
+export interface StudyProgressEvent {
+  userId: string;
+  kind: 'review' | 'focus';
+  refId: string;
+  /** Tarjetas repasadas o minutos de enfoque. */
+  amount: number;
+}
+
+export interface RiskAlertRaisedEvent {
+  alertId: string;
+  courseId: string;
+  courseTitle: string;
+  teacherId: string;
+  studentId: string;
+  studentName: string;
+  kind: string;
+  level: string;
+  detail: string;
+}
 
 export interface ArenaFinishedEvent {
   roomId: string;

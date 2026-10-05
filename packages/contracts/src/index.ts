@@ -344,6 +344,74 @@ export const arenaOptionSchema = z.object({
   optionId: z.string().uuid(),
 });
 
+export const notebookPageSchema = z.object({
+  title: z.string().trim().min(1, 'Ponle un título').max(160),
+  body: z.string().max(20000, 'El apunte es muy largo').default(''),
+  courseId: z.string().uuid().nullable().optional(),
+});
+
+export const flashcardSchema = z.object({
+  front: z.string().trim().min(1, 'Escribe la pregunta').max(300),
+  back: z.string().trim().min(1, 'Escribe la respuesta').max(600),
+  pageId: z.string().uuid().optional(),
+});
+
+export const flashcardReviewSchema = z.object({
+  grade: z.number().int().min(0).max(5),
+});
+
+export const GOAL_KINDS = ['flashcards', 'focus_minutes', 'lessons', 'route'] as const;
+export const goalSchema = z.object({
+  kind: z.enum(GOAL_KINDS),
+  period: z.enum(['daily', 'weekly']),
+  target: z.number().int().min(1).max(1000),
+});
+
+export const focusStartSchema = z.object({
+  plannedMin: z.number().int().min(5).max(120),
+  pageId: z.string().uuid().optional(),
+});
+
+export const GRADE_SOURCES = ['exam', 'practice', 'live', 'assignment', 'rubric', 'attendance'] as const;
+export type GradeSource = (typeof GRADE_SOURCES)[number];
+export const gradeCategoriesSchema = z.object({
+  categories: z
+    .array(z.object({
+      name: z.string().trim().min(2).max(60),
+      source: z.enum(GRADE_SOURCES),
+      weight: z.number().positive().max(100),
+    }))
+    .min(1, 'Agrega al menos una categoría')
+    .max(6),
+});
+
+export const ATTENDANCE_STATUSES = ['present', 'late', 'absent', 'excused'] as const;
+export const attendanceSchema = z.object({
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Fecha inválida'),
+  entries: z
+    .array(z.object({ studentId: z.string().uuid(), status: z.enum(ATTENDANCE_STATUSES), note: z.string().max(200).optional() }))
+    .min(1)
+    .max(60),
+});
+
+export const rubricSchema = z.object({
+  title: z.string().trim().min(3, 'Escribe un título').max(120),
+  assignmentId: z.string().uuid().optional(),
+  criteria: z
+    .array(z.object({ name: z.string().trim().min(2).max(80), description: z.string().max(400).optional(), maxPoints: z.number().int().min(1).max(100) }))
+    .min(1, 'Agrega al menos un criterio')
+    .max(8),
+});
+
+export const rubricScoreSchema = z.object({
+  studentId: z.string().uuid(),
+  scores: z.array(z.object({ criterionId: z.string().uuid(), points: z.number().int().min(0), comment: z.string().max(400).optional() })).min(1).max(8),
+});
+
+export const riskAlertUpdateSchema = z.object({
+  status: z.enum(['acknowledged', 'resolved']),
+});
+
 export const ARENA_ACTIONS = ['rebalance', 'start', 'next', 'pause', 'resume', 'extra'] as const;
 export type ArenaAction = (typeof ARENA_ACTIONS)[number];
 

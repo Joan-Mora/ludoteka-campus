@@ -147,7 +147,7 @@ export class AnalyticsService {
         : this.count(sql`SELECT count(*) AS n FROM certificates ${isBoard ? sql`` : sql`WHERE course_id IN (SELECT id FROM courses WHERE teacher_id = ${viewer.id})`}`),
       this.count(sql`SELECT count(*) AS n FROM ai_usage WHERE ${isBoard ? sql`true` : sql`user_id = ${viewer.id}`} AND (created_at AT TIME ZONE 'America/Bogota')::DATE = ${today}`),
       this.count(sql`SELECT count(*) AS n FROM library_items WHERE status = 'published'`),
-      this.count(sql`SELECT count(*) AS n FROM flashcards WHERE user_id = ${viewer.id} AND due_on <= ${today}`),
+      this.count(sql`SELECT count(*) AS n FROM flashcards WHERE user_id = ${viewer.id} AND due_at <= now()`),
       this.count(sql`SELECT count(*) AS n FROM route_items WHERE user_id = ${viewer.id} AND status = 'pending'`),
     ]);
 

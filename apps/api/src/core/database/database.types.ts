@@ -539,6 +539,116 @@ export interface Database {
     duration_ms: NullableInt;
     created_at: Ts;
   };
+  notebook_pages: {
+    id: Generated<string>;
+    user_id: string;
+    course_id: NullableString;
+    title: string;
+    body: Generated<string>;
+    summary: NullableString;
+    key_points: JsonValue;
+    summary_source: NullableString;
+    summarized_at: NullableDate;
+    created_at: Ts;
+    updated_at: Ts;
+  };
+  flashcards: {
+    id: Generated<string>;
+    user_id: string;
+    page_id: NullableString;
+    front: string;
+    back: string;
+    source: Generated<string>;
+    ease: ColumnType<string, string | number | undefined, string | number>;
+    interval_days: Generated<number>;
+    repetitions: Generated<number>;
+    due_at: Ts;
+    last_reviewed_at: NullableDate;
+    created_at: Ts;
+  };
+  flashcard_reviews: {
+    id: Generated<string>;
+    card_id: string;
+    user_id: string;
+    grade: number;
+    interval_days: number;
+    ease: ColumnType<string, string | number, string | number>;
+    reviewed_at: Ts;
+  };
+  goals: {
+    id: Generated<string>;
+    user_id: string;
+    kind: string;
+    period: string;
+    target: number;
+    active: Generated<boolean>;
+    created_at: Ts;
+  };
+  focus_sessions: {
+    id: Generated<string>;
+    user_id: string;
+    page_id: NullableString;
+    planned_min: number;
+    status: Generated<string>;
+    actual_sec: NullableInt;
+    started_at: Ts;
+    ended_at: NullableDate;
+  };
+  grade_categories: {
+    id: Generated<string>;
+    course_id: string;
+    name: string;
+    source: string;
+    weight: ColumnType<string, string | number, string | number>;
+    position: number;
+  };
+  rubrics: {
+    id: Generated<string>;
+    course_id: string;
+    assignment_id: NullableString;
+    title: string;
+    created_by: NullableString;
+    created_at: Ts;
+  };
+  rubric_criteria: {
+    id: Generated<string>;
+    rubric_id: string;
+    name: string;
+    description: Generated<string>;
+    max_points: number;
+    position: number;
+  };
+  rubric_scores: {
+    criterion_id: string;
+    student_id: string;
+    rubric_id: string;
+    points: number;
+    comment: Generated<string>;
+    graded_by: NullableString;
+    graded_at: Ts;
+  };
+  attendance: {
+    id: Generated<string>;
+    course_id: string;
+    student_id: string;
+    session_on: ColumnType<string, string, string>;
+    status: string;
+    note: Generated<string>;
+    recorded_by: NullableString;
+    recorded_at: Ts;
+  };
+  risk_alerts: {
+    id: Generated<string>;
+    student_id: string;
+    course_id: string;
+    kind: string;
+    level: string;
+    detail: string;
+    status: Generated<string>;
+    created_at: Ts;
+    resolved_at: NullableDate;
+    resolved_by: NullableString;
+  };
   arena_rooms: {
     id: Generated<string>;
     code: string;

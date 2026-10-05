@@ -14,6 +14,8 @@ import { LibraryItemPage, LibraryPage } from '@/features/library';
 import { RoutePage } from '@/features/route';
 import { ObservatoryPage } from '@/features/observatory';
 import { ArenaPage, ArenaProjectorPage, ArenaRoomPage } from '@/features/arena';
+import { StudyPage } from '@/features/study';
+import { GradebookPage } from '@/features/gradebook';
 
 function Splash() {
   return (
@@ -70,6 +72,8 @@ export function AppRouter() {
         <Route path="consultas" element={<ObservatoryPage />} />
         <Route path="arena" element={<ArenaPage />} />
         <Route path="arena/:id" element={<ArenaRoomPage />} />
+        <Route path="cuaderno" element={<StudyPage />} />
+        <Route path="calificaciones" element={<GradebookPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

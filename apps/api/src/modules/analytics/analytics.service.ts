@@ -2,15 +2,64 @@ import { Injectable } from '@nestjs/common';
 import { sql } from 'kysely';
 import { DatabaseService } from '../../core/database/database.service';
 import { ApiError } from '../../core/errors/api-error';
-import { paintHeader, pdfDocument, reportId, workbookBuffer } from '../../core/reports/documents';
+import type { AuthUser } from '../../core/auth/auth.decorators';
+import { renderPdf, renderWorkbook } from '../../core/reports/documents';
+import { ReportLog } from '../../core/reports/report-log.service';
+
+const pct = (score: number, max: number) => (max > 0 ? Math.round((score * 100) / max) : 0);
+const day = (value: Date | string | null | undefined) => (value ? new Date(value).toLocaleDateString('es-CO', { timeZone: 'America/Bogota' }) : '—');
+const when = (value: Date | string | null | undefined) => (value ? new Date(value).toLocaleString('es-CO', { timeZone: 'America/Bogota', dateStyle: 'short', timeStyle: 'short' }) : '—');
+
+const violationLabel: Record<string, string> = {
+  fullscreen_exit: 'Salió de pantalla completa',
+  visibility_hidden: 'Cambió de pestaña',
+  blur: 'Perdió el foco',
+  escape: 'Presionó Escape',
+};
 
 @Injectable()
 export class AnalyticsService {
-  constructor(private readonly database: DatabaseService) {}
+  constructor(
+    private readonly database: DatabaseService,
+    private readonly reports: ReportLog,
+  ) {}
 
-  async course(courseId: string) {
-    const course = await this.database.db.selectFrom('courses').selectAll().where('id', '=', courseId).executeTakeFirst();
+  private async courseFor(viewer: AuthUser, courseId: string) {
+    const course = await this.database.db
+      .selectFrom('courses')
+      .innerJoin('groups_class', 'groups_class.id', 'courses.group_id')
+      .innerJoin('users', 'users.id', 'courses.teacher_id')
+      .select(['courses.id', 'courses.title', 'courses.group_id', 'courses.teacher_id', 'groups_class.name as group_name', 'users.full_name as teacher_name'])
+      .where('courses.id', '=', courseId)
+      .executeTakeFirst();
     if (!course) throw new ApiError(404, 'NOT_FOUND', 'El curso no existe');
+    if (viewer.role === 'teacher' && course.teacher_id !== viewer.id) throw new ApiError(403, 'FORBIDDEN', 'Solo el docente del curso ve sus reportes');
+    return course;
+  }
+
+  private async assertStudentAccess(viewer: AuthUser, studentId: string) {
+    if (['admin', 'directivo'].includes(viewer.role) || viewer.id === studentId) return;
+    if (viewer.role === 'teacher') {
+      const teaches = await this.database.db
+        .selectFrom('enrollments')
+        .innerJoin('teaching_assignments', 'teaching_assignments.group_id', 'enrollments.group_id')
+        .select('enrollments.id')
+        .where('enrollments.user_id', '=', studentId)
+        .where('teaching_assignments.teacher_id', '=', viewer.id)
+        .executeTakeFirst();
+      if (teaches) return;
+    }
+    if (viewer.role === 'guardian') {
+      const linked = await sql<{ ok: number }>`SELECT 1 AS ok FROM guardian_links WHERE guardian_id = ${viewer.id} AND student_id = ${studentId} AND status = 'active' LIMIT 1`
+        .execute(this.database.db)
+        .catch(() => ({ rows: [] }));
+      if (linked.rows.length) return;
+    }
+    throw new ApiError(403, 'FORBIDDEN', 'No tienes acceso al boletín de este estudiante');
+  }
+
+  async course(viewer: AuthUser, courseId: string) {
+    const course = await this.courseFor(viewer, courseId);
     const attempts = await this.database.db
       .selectFrom('attempts')
       .innerJoin('assessments', 'assessments.id', 'attempts.assessment_id')
@@ -50,38 +99,214 @@ export class AnalyticsService {
       .groupBy(['grades.level', 'grades.name'])
       .orderBy('grades.level')
       .execute();
-    return { byGrade: byGrade.map((row) => ({ ...row, students: Number(row.students) })) };
+    const usage = await this.database.db
+      .selectFrom('ai_usage')
+      .select(['feature', sql<number>`count(*)`.as('n')])
+      .where('created_at', '>', new Date(Date.now() - 30 * 86400000))
+      .groupBy('feature')
+      .orderBy(sql`count(*)`, 'desc')
+      .execute();
+    return {
+      byGrade: byGrade.map((row) => ({ ...row, students: Number(row.students) })),
+      aiUsage: usage.map((row) => ({ feature: row.feature, uses: Number(row.n) })),
+    };
   }
 
-  async bulletin(userId: string) {
+  async bulletin(viewer: AuthUser, userId: string) {
+    await this.assertStudentAccess(viewer, userId);
     const user = await this.database.db.selectFrom('users').selectAll().where('id', '=', userId).executeTakeFirst();
     if (!user) throw new ApiError(404, 'NOT_FOUND', 'El estudiante no existe');
+    const group = await this.database.db
+      .selectFrom('enrollments')
+      .innerJoin('groups_class', 'groups_class.id', 'enrollments.group_id')
+      .innerJoin('grades', 'grades.id', 'groups_class.grade_id')
+      .select(['groups_class.name as group_name', 'grades.name as grade_name'])
+      .where('enrollments.user_id', '=', userId)
+      .where('enrollments.status', '=', 'active')
+      .executeTakeFirst();
     const attempts = await this.database.db
       .selectFrom('attempts')
       .innerJoin('assessments', 'assessments.id', 'attempts.assessment_id')
       .innerJoin('courses', 'courses.id', 'assessments.course_id')
-      .select(['courses.title as course', 'assessments.title as assessment', 'attempts.score', 'attempts.max_score', 'attempts.status'])
+      .select(['courses.title as course', 'assessments.title as assessment', 'assessments.kind', 'attempts.score', 'attempts.max_score', 'attempts.status', 'attempts.submitted_at'])
       .where('attempts.user_id', '=', userId)
       .orderBy('attempts.started_at', 'desc')
       .execute();
-    const id = reportId('BOL');
-    return pdfDocument((doc) => {
-      paintHeader(doc, 'Boletín de desempeño', id);
-      doc.fontSize(12).text(`Estudiante: ${user.full_name}`);
-      doc.text(`Correo: ${user.email}`);
-      doc.moveDown();
-      if (!attempts.length) doc.text('Todavía no hay evaluaciones registradas en la base de datos.');
-      for (const row of attempts) {
-        doc.fontSize(11).text(`${row.course} — ${row.assessment}: ${row.score}/${row.max_score} (${row.status})`);
-      }
-      doc.moveDown();
-      doc.fontSize(9).fillColor('#5C6570').text('Datos leídos de attempts, assessments y courses en CockroachDB.');
+    const byCourse = new Map<string, { sum: number; n: number }>();
+    for (const row of attempts) {
+      if (row.status !== 'completed') continue;
+      const entry = byCourse.get(row.course) ?? { sum: 0, n: 0 };
+      entry.sum += pct(row.score, row.max_score);
+      entry.n += 1;
+      byCourse.set(row.course, entry);
+    }
+    const lessons = await this.database.db
+      .selectFrom('lesson_progress')
+      .select(sql<number>`count(*)`.as('n'))
+      .where('user_id', '=', userId)
+      .where('status', '=', 'completed')
+      .executeTakeFirstOrThrow();
+    const xp = await this.database.db.selectFrom('xp_ledger').select(sql<number>`coalesce(sum(amount), 0)`.as('xp')).where('user_id', '=', userId).executeTakeFirstOrThrow();
+    const badges = await this.database.db
+      .selectFrom('user_badges')
+      .innerJoin('badges', 'badges.id', 'user_badges.badge_id')
+      .select(['badges.name', 'user_badges.awarded_at'])
+      .where('user_badges.user_id', '=', userId)
+      .execute();
+    const meta = await this.reports.register({
+      kind: 'boletin',
+      format: 'pdf',
+      title: 'Boletín de desempeño',
+      subtitle: user.full_name,
+      userId: viewer.id,
+      params: { studentId: userId },
+      rowCount: attempts.length,
+      source: 'users, enrollments, attempts, assessments, courses, lesson_progress, xp_ledger, user_badges',
+    });
+    return renderPdf(meta, (_doc, h) => {
+      h.section('Estudiante');
+      h.keyValues([
+        ['Nombre', user.full_name],
+        ['Correo', user.email],
+        ['Grupo', group ? `${group.grade_name} · ${group.group_name}` : 'Sin matrícula activa'],
+        ['Lecciones completadas', Number(lessons.n)],
+        ['Experiencia acumulada', `${Number(xp.xp)} XP`],
+        ['Insignias', badges.length ? badges.map((b) => b.name).join(', ') : 'Ninguna todavía'],
+      ]);
+      h.section('Promedio por curso');
+      h.table(
+        [{ label: 'Curso', width: 4 }, { label: 'Evaluaciones', width: 1.4, align: 'right' }, { label: 'Promedio', width: 1.4, align: 'right' }, { label: 'Desempeño', width: 1.8 }],
+        [...byCourse.entries()].map(([course, entry]) => {
+          const avg = Math.round(entry.sum / entry.n);
+          return [course, entry.n, `${avg}%`, avg >= 90 ? 'Superior' : avg >= 75 ? 'Alto' : avg >= 60 ? 'Básico' : 'Bajo'];
+        }),
+      );
+      h.section('Detalle de evaluaciones');
+      h.table(
+        [{ label: 'Curso', width: 2.4 }, { label: 'Evaluación', width: 3 }, { label: 'Tipo', width: 1.2 }, { label: 'Puntaje', width: 1.2, align: 'right' }, { label: 'Fecha', width: 1.4 }],
+        attempts.map((row) => [row.course, row.assessment, row.kind === 'exam' ? 'Examen' : row.kind === 'live' ? 'En vivo' : 'Práctica', row.status === 'completed' ? `${row.score}/${row.max_score}` : 'En curso', day(row.submitted_at)]),
+      );
+      h.paragraph('Escala institucional: Superior 90-100 · Alto 75-89 · Básico 60-74 · Bajo menos de 60.', { muted: true, size: 9 });
     });
   }
 
-  async assessmentExcel(assessmentId: string) {
+  async courseExcel(viewer: AuthUser, courseId: string) {
+    const course = await this.courseFor(viewer, courseId);
+    const students = await this.database.db
+      .selectFrom('enrollments')
+      .innerJoin('users', 'users.id', 'enrollments.user_id')
+      .select(['users.id', 'users.full_name', 'users.email'])
+      .where('enrollments.group_id', '=', course.group_id)
+      .where('enrollments.status', '=', 'active')
+      .orderBy('users.full_name')
+      .execute();
+    const ids = students.map((student) => student.id);
+    const totalLessons = await this.database.db
+      .selectFrom('lessons')
+      .innerJoin('units', 'units.id', 'lessons.unit_id')
+      .select(sql<number>`count(*)`.as('n'))
+      .where('units.course_id', '=', courseId)
+      .executeTakeFirstOrThrow();
+    const progress = ids.length
+      ? await this.database.db
+          .selectFrom('lesson_progress')
+          .innerJoin('lessons', 'lessons.id', 'lesson_progress.lesson_id')
+          .innerJoin('units', 'units.id', 'lessons.unit_id')
+          .select(['lesson_progress.user_id', sql<number>`count(*)`.as('n')])
+          .where('units.course_id', '=', courseId)
+          .where('lesson_progress.status', '=', 'completed')
+          .where('lesson_progress.user_id', 'in', ids)
+          .groupBy('lesson_progress.user_id')
+          .execute()
+      : [];
+    const scores = ids.length
+      ? await this.database.db
+          .selectFrom('attempts')
+          .innerJoin('assessments', 'assessments.id', 'attempts.assessment_id')
+          .select(['attempts.user_id', sql<number>`avg(case when attempts.max_score > 0 then attempts.score * 100.0 / attempts.max_score end)`.as('avg'), sql<number>`count(*)`.as('n')])
+          .where('assessments.course_id', '=', courseId)
+          .where('attempts.status', '=', 'completed')
+          .where('attempts.user_id', 'in', ids)
+          .groupBy('attempts.user_id')
+          .execute()
+      : [];
+    const submissions = ids.length
+      ? await this.database.db
+          .selectFrom('submissions')
+          .innerJoin('assignments', 'assignments.id', 'submissions.assignment_id')
+          .select(['submissions.user_id', sql<number>`count(*)`.as('n')])
+          .where('assignments.course_id', '=', courseId)
+          .where('submissions.user_id', 'in', ids)
+          .groupBy('submissions.user_id')
+          .execute()
+      : [];
+    const xp = ids.length
+      ? await this.database.db.selectFrom('xp_ledger').select(['user_id', sql<number>`sum(amount)`.as('xp')]).where('user_id', 'in', ids).groupBy('user_id').execute()
+      : [];
+    const assessments = await this.database.db
+      .selectFrom('assessments')
+      .leftJoin('attempts', (join) => join.onRef('attempts.assessment_id', '=', 'assessments.id').on('attempts.status', '=', 'completed'))
+      .select([
+        'assessments.title',
+        'assessments.kind',
+        sql<number>`count(attempts.id)`.as('n'),
+        sql<number>`coalesce(avg(case when attempts.max_score > 0 then attempts.score * 100.0 / attempts.max_score end), 0)`.as('avg'),
+      ])
+      .where('assessments.course_id', '=', courseId)
+      .groupBy(['assessments.id', 'assessments.title', 'assessments.kind'])
+      .execute();
+    const find = <T extends { user_id: string }>(rows: T[], id: string) => rows.find((row) => row.user_id === id);
+    const meta = await this.reports.register({
+      kind: 'curso',
+      format: 'xlsx',
+      title: 'Reporte de curso',
+      subtitle: `${course.title} · ${course.group_name}`,
+      userId: viewer.id,
+      params: { courseId },
+      rowCount: students.length,
+      source: 'courses, enrollments, lesson_progress, attempts, submissions, xp_ledger',
+    });
+    return renderWorkbook(meta, (h) => {
+      h.sheet(
+        'Estudiantes',
+        [
+          { header: 'Estudiante', width: 30 },
+          { header: 'Correo', width: 32 },
+          { header: 'Lecciones', width: 12 },
+          { header: '% avance', width: 11, numFmt: '0%' },
+          { header: 'Evaluaciones', width: 13 },
+          { header: 'Promedio %', width: 12 },
+          { header: 'Entregas', width: 10 },
+          { header: 'XP', width: 9 },
+        ],
+        students.map((student) => {
+          const done = Number(find(progress, student.id)?.n ?? 0);
+          const score = find(scores, student.id);
+          return [
+            student.full_name,
+            student.email,
+            `${done}/${Number(totalLessons.n)}`,
+            Number(totalLessons.n) ? done / Number(totalLessons.n) : 0,
+            Number(score?.n ?? 0),
+            score ? Math.round(Number(score.avg)) : null,
+            Number(find(submissions, student.id)?.n ?? 0),
+            Number(find(xp, student.id)?.xp ?? 0),
+          ];
+        }),
+        `${course.title} · Docente ${course.teacher_name}`,
+      );
+      h.sheet(
+        'Evaluaciones',
+        [{ header: 'Evaluación', width: 40 }, { header: 'Tipo', width: 12 }, { header: 'Intentos', width: 10 }, { header: 'Promedio %', width: 12 }],
+        assessments.map((row) => [row.title, row.kind, Number(row.n), Math.round(Number(row.avg))]),
+      );
+    });
+  }
+
+  async assessmentExcel(viewer: AuthUser, assessmentId: string) {
     const assessment = await this.database.db.selectFrom('assessments').selectAll().where('id', '=', assessmentId).executeTakeFirst();
     if (!assessment) throw new ApiError(404, 'NOT_FOUND', 'La evaluación no existe');
+    await this.courseFor(viewer, assessment.course_id);
     const rows = await this.database.db
       .selectFrom('attempts')
       .innerJoin('users', 'users.id', 'attempts.user_id')
@@ -89,81 +314,161 @@ export class AnalyticsService {
       .where('attempts.assessment_id', '=', assessmentId)
       .orderBy('users.full_name')
       .execute();
-    const id = reportId('EVA');
-    return workbookBuffer((book) => {
-      const sheet = book.addWorksheet('Resultados');
-      sheet.addRow(['EduQuest · Colegio Francisco Arango']);
-      sheet.addRow([`Resultados: ${assessment.title}`]);
-      sheet.addRow([`Generado: ${new Date().toISOString()}`, `Identificador: ${id}`]);
-      sheet.addRow([]);
-      sheet.addRow(['Estudiante', 'Correo', 'Puntaje', 'Máximo', 'Estado', 'Entrega']);
-      for (const row of rows) {
-        sheet.addRow([row.full_name, row.email, row.score, row.max_score, row.status, row.submitted_at ? new Date(row.submitted_at).toISOString() : '']);
-      }
+    const meta = await this.reports.register({
+      kind: 'evaluacion', format: 'xlsx', title: 'Resultados de evaluación', subtitle: assessment.title,
+      userId: viewer.id, params: { assessmentId }, rowCount: rows.length, source: 'attempts, users, assessments',
+    });
+    return renderWorkbook(meta, (h) => {
+      h.sheet(
+        'Resultados',
+        [{ header: 'Estudiante', width: 30 }, { header: 'Correo', width: 32 }, { header: 'Puntaje', width: 10 }, { header: 'Máximo', width: 10 }, { header: '%', width: 8 }, { header: 'Estado', width: 12 }, { header: 'Entrega', width: 20 }],
+        rows.map((row) => [row.full_name, row.email, row.score, row.max_score, pct(row.score, row.max_score), row.status, when(row.submitted_at)]),
+      );
     });
   }
 
-  async integrityPdf(courseId: string) {
-    const course = await this.database.db.selectFrom('courses').selectAll().where('id', '=', courseId).executeTakeFirst();
-    if (!course) throw new ApiError(404, 'NOT_FOUND', 'El curso no existe');
-    const events = await this.database.db
+  private integrityEvents(courseId: string) {
+    return this.database.db
       .selectFrom('integrity_events')
       .innerJoin('users', 'users.id', 'integrity_events.user_id')
       .innerJoin('attempts', 'attempts.id', 'integrity_events.attempt_id')
       .innerJoin('assessments', 'assessments.id', 'attempts.assessment_id')
-      .select(['users.full_name', 'integrity_events.type', 'integrity_events.at', 'assessments.title'])
-      .where('assessments.course_id', '=', courseId)
-      .orderBy('integrity_events.at', 'desc')
-      .limit(80)
-      .execute();
-    const id = reportId('INT');
-    return pdfDocument((doc) => {
-      paintHeader(doc, `Integridad · ${course.title}`, id);
-      if (!events.length) doc.text('No hay eventos de integridad para este curso.');
-      for (const event of events) {
-        doc.fontSize(10).text(`${new Date(event.at).toLocaleString('es-CO')} · ${event.full_name} · ${event.title} · ${event.type}`);
-      }
-    });
-  }
-
-  async integrityExcel(courseId: string) {
-    const events = await this.database.db
-      .selectFrom('integrity_events')
-      .innerJoin('users', 'users.id', 'integrity_events.user_id')
-      .innerJoin('attempts', 'attempts.id', 'integrity_events.attempt_id')
-      .innerJoin('assessments', 'assessments.id', 'attempts.assessment_id')
-      .select(['users.full_name', 'users.email', 'integrity_events.type', 'integrity_events.at', 'assessments.title'])
+      .leftJoin('attempt_flags', 'attempt_flags.attempt_id', 'attempts.id')
+      .select(['users.full_name', 'users.email', 'integrity_events.type', 'integrity_events.at', 'assessments.title', 'attempt_flags.suspended'])
       .where('assessments.course_id', '=', courseId)
       .orderBy('integrity_events.at', 'desc')
       .execute();
-    const id = reportId('INT');
-    return workbookBuffer((book) => {
-      const sheet = book.addWorksheet('Integridad');
-      sheet.addRow(['EduQuest · Integridad académica']);
-      sheet.addRow([`Generado: ${new Date().toISOString()}`, `Identificador: ${id}`]);
-      sheet.addRow([]);
-      sheet.addRow(['Estudiante', 'Correo', 'Evaluación', 'Tipo', 'Fecha']);
-      for (const event of events) {
-        sheet.addRow([event.full_name, event.email, event.title, event.type, new Date(event.at).toISOString()]);
-      }
+  }
+
+  async integrityPdf(viewer: AuthUser, courseId: string) {
+    const course = await this.courseFor(viewer, courseId);
+    const events = await this.integrityEvents(courseId);
+    const byStudent = new Map<string, { n: number; suspended: boolean }>();
+    const byType = new Map<string, number>();
+    for (const event of events) {
+      const entry = byStudent.get(event.full_name) ?? { n: 0, suspended: false };
+      entry.n += 1;
+      entry.suspended ||= Boolean(event.suspended);
+      byStudent.set(event.full_name, entry);
+      byType.set(event.type, (byType.get(event.type) ?? 0) + 1);
+    }
+    const meta = await this.reports.register({
+      kind: 'integridad', format: 'pdf', title: 'Integridad académica', subtitle: `${course.title} · ${course.group_name}`,
+      userId: viewer.id, params: { courseId }, rowCount: events.length, source: 'integrity_events, attempts, attempt_flags, assessments, users',
+    });
+    return renderPdf(meta, (_doc, h) => {
+      h.section('Resumen');
+      h.keyValues([
+        ['Curso', course.title],
+        ['Docente', course.teacher_name],
+        ['Eventos registrados', events.length],
+        ['Estudiantes con eventos', byStudent.size],
+        ['Intentos suspendidos', [...byStudent.values()].filter((entry) => entry.suspended).length],
+      ]);
+      h.section('Eventos por tipo');
+      h.table([{ label: 'Tipo de evento', width: 4 }, { label: 'Cantidad', width: 1.2, align: 'right' }], [...byType.entries()].map(([type, n]) => [violationLabel[type] ?? type, n]));
+      h.section('Estudiantes');
+      h.table(
+        [{ label: 'Estudiante', width: 4 }, { label: 'Eventos', width: 1.2, align: 'right' }, { label: 'Estado', width: 2 }],
+        [...byStudent.entries()].sort((a, b) => b[1].n - a[1].n).map(([name, entry]) => [name, entry.n, entry.suspended ? 'Suspendido' : 'En revisión']),
+      );
+      h.section('Bitácora de eventos');
+      h.table(
+        [{ label: 'Fecha', width: 1.8 }, { label: 'Estudiante', width: 2.6 }, { label: 'Evaluación', width: 2.6 }, { label: 'Evento', width: 2.2 }],
+        events.slice(0, 200).map((event) => [when(event.at), event.full_name, event.title, violationLabel[event.type] ?? event.type]),
+        'No hay eventos de integridad para este curso.',
+      );
     });
   }
 
-  async rosterExcel() {
+  async integrityExcel(viewer: AuthUser, courseId: string) {
+    const course = await this.courseFor(viewer, courseId);
+    const events = await this.integrityEvents(courseId);
+    const meta = await this.reports.register({
+      kind: 'integridad', format: 'xlsx', title: 'Integridad académica', subtitle: course.title,
+      userId: viewer.id, params: { courseId }, rowCount: events.length, source: 'integrity_events, attempts, assessments, users',
+    });
+    return renderWorkbook(meta, (h) => {
+      h.sheet(
+        'Integridad',
+        [{ header: 'Fecha', width: 20 }, { header: 'Estudiante', width: 30 }, { header: 'Correo', width: 32 }, { header: 'Evaluación', width: 34 }, { header: 'Evento', width: 26 }, { header: 'Suspendido', width: 12 }],
+        events.map((event) => [when(event.at), event.full_name, event.email, event.title, violationLabel[event.type] ?? event.type, event.suspended ? 'Sí' : 'No']),
+      );
+    });
+  }
+
+  async usageExcel(viewer: AuthUser, days = 30) {
+    const since = new Date(Date.now() - days * 86400000);
+    const byFeature = await this.database.db
+      .selectFrom('ai_usage')
+      .select(['feature', sql<number>`count(*)`.as('n'), sql<number>`count(DISTINCT user_id)`.as('users'), sql<string>`max(created_at)`.as('last')])
+      .where('created_at', '>', since)
+      .groupBy('feature')
+      .orderBy(sql`count(*)`, 'desc')
+      .execute();
+    const byModel = await this.database.db
+      .selectFrom('ai_usage')
+      .select(['model', sql<number>`count(*)`.as('n')])
+      .where('created_at', '>', since)
+      .groupBy('model')
+      .orderBy(sql`count(*)`, 'desc')
+      .execute();
+    const byDay = await this.database.db
+      .selectFrom('ai_usage')
+      .select([sql<string>`(created_at AT TIME ZONE 'America/Bogota')::DATE::STRING`.as('day'), sql<number>`count(*)`.as('n')])
+      .where('created_at', '>', since)
+      .groupBy(sql`1`)
+      .orderBy(sql`1`)
+      .execute();
+    const library = await this.libraryUsage(since);
+    const meta = await this.reports.register({
+      kind: 'uso', format: 'xlsx', title: 'Uso de biblioteca e IA', subtitle: `Últimos ${days} días`,
+      userId: viewer.id, params: { days }, rowCount: byFeature.length + library.items.length,
+      source: 'ai_usage, library_items, library_views, bookmarks',
+    });
+    return renderWorkbook(meta, (h) => {
+      h.sheet('IA por funcionalidad', [{ header: 'Funcionalidad', width: 30 }, { header: 'Usos', width: 10 }, { header: 'Usuarios distintos', width: 18 }, { header: 'Último uso', width: 20 }],
+        byFeature.map((row) => [row.feature, Number(row.n), Number(row.users), when(row.last)]));
+      h.sheet('IA por modelo', [{ header: 'Modelo', width: 30 }, { header: 'Usos', width: 10 }], byModel.map((row) => [row.model, Number(row.n)]));
+      h.sheet('IA por día', [{ header: 'Día', width: 14 }, { header: 'Usos', width: 10 }], byDay.map((row) => [row.day, Number(row.n)]));
+      h.sheet('Biblioteca', [{ header: 'Recurso', width: 40 }, { header: 'Materia', width: 22 }, { header: 'Tipo', width: 10 }, { header: 'Vistas', width: 10 }, { header: 'Marcadores', width: 12 }],
+        library.items.map((row) => [row.title, row.subject, row.kind, row.views, row.bookmarks]));
+    });
+  }
+
+  private async libraryUsage(since: Date) {
+    try {
+      const result = await sql<{ title: string; subject: string; kind: string; views: number; bookmarks: number }>`
+        SELECT li.title, s.name AS subject, li.kind,
+          (SELECT count(*) FROM library_views lv WHERE lv.item_id = li.id AND lv.viewed_at > ${since})::INT AS views,
+          (SELECT count(*) FROM bookmarks b WHERE b.item_id = li.id)::INT AS bookmarks
+        FROM library_items li JOIN subjects s ON s.id = li.subject_id
+        ORDER BY views DESC, li.title
+        LIMIT 200`.execute(this.database.db);
+      return { items: result.rows };
+    } catch {
+      return { items: [] };
+    }
+  }
+
+  async rosterExcel(viewer: AuthUser) {
     const rows = await this.database.db
       .selectFrom('users')
       .innerJoin('user_roles', 'user_roles.user_id', 'users.id')
-      .select(['users.full_name', 'users.email', 'user_roles.role', 'users.created_at'])
+      .leftJoin('enrollments', (join) => join.onRef('enrollments.user_id', '=', 'users.id').on('enrollments.status', '=', 'active'))
+      .leftJoin('groups_class', 'groups_class.id', 'enrollments.group_id')
+      .select(['users.full_name', 'users.email', 'user_roles.role', 'users.is_minor', 'groups_class.name as group_name', 'users.created_at'])
+      .orderBy('user_roles.role')
       .orderBy('users.full_name')
       .execute();
-    const id = reportId('USR');
-    return workbookBuffer((book) => {
-      const sheet = book.addWorksheet('Usuarios');
-      sheet.addRow(['EduQuest · Reporte de usuarios']);
-      sheet.addRow([`Generado: ${new Date().toISOString()}`, `Identificador: ${id}`]);
-      sheet.addRow([]);
-      sheet.addRow(['Nombre', 'Correo', 'Rol', 'Creado']);
-      for (const row of rows) sheet.addRow([row.full_name, row.email, row.role, new Date(row.created_at).toISOString()]);
+    const meta = await this.reports.register({
+      kind: 'usuarios', format: 'xlsx', title: 'Reporte de usuarios', userId: viewer.id, rowCount: rows.length,
+      source: 'users, user_roles, enrollments, groups_class',
+    });
+    const roleLabel: Record<string, string> = { admin: 'Administración', directivo: 'Coordinación', teacher: 'Docente', student: 'Estudiante', guardian: 'Acudiente' };
+    return renderWorkbook(meta, (h) => {
+      h.sheet('Usuarios', [{ header: 'Nombre', width: 30 }, { header: 'Correo', width: 32 }, { header: 'Rol', width: 16 }, { header: 'Menor', width: 8 }, { header: 'Grupo', width: 10 }, { header: 'Creado', width: 14 }],
+        rows.map((row) => [row.full_name, row.email, roleLabel[row.role] ?? row.role, row.is_minor ? 'Sí' : 'No', row.group_name, day(row.created_at)]));
     });
   }
 }

@@ -455,3 +455,50 @@ export function VerifyPage() {
     </main>
   );
 }
+
+export function VerifyReportPage() {
+  const { code = '' } = useParams();
+  const query = useQuery({
+    queryKey: ['report-verify', code],
+    queryFn: () => api<{ code: string; kind: string; format: string; title: string; rows: number; generatedAt: string; generatedBy: string }>(`/api/public/reports/${encodeURIComponent(code)}`),
+    retry: false,
+  });
+  return (
+    <main className="landing" style={{ minHeight: '100vh' }}>
+      <div className="container">
+        <nav className="public-nav"><Brand /></nav>
+        <div style={{ maxWidth: 640, margin: '40px auto' }}>
+          {query.isError && (
+            <div className="card" style={{ textAlign: 'center' }}>
+              <Tile icon={Lock} tone="coral" large />
+              <h2 style={{ marginTop: 14 }}>Reporte no registrado</h2>
+              <p className="muted" style={{ marginTop: 6 }}>El número {code} no corresponde a ningún documento emitido por Ludoteka Campus.</p>
+            </div>
+          )}
+          {query.data && (
+            <motion.article className="card" style={{ padding: 36 }} initial={{ y: 12, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+              <div className="row g-12">
+                <Tile icon={BadgeCheck} tone="mint" large />
+                <div>
+                  <span className="chip mint">Documento auténtico</span>
+                  <h2 style={{ marginTop: 6 }}>{query.data.title}</h2>
+                </div>
+              </div>
+              <table className="table" style={{ marginTop: 20 }}>
+                <tbody>
+                  <tr><th>N.º consecutivo</th><td style={{ fontFamily: 'monospace', fontWeight: 800 }}>{query.data.code}</td></tr>
+                  <tr><th>Tipo</th><td>{query.data.kind}</td></tr>
+                  <tr><th>Formato</th><td>{query.data.format.toUpperCase()}</td></tr>
+                  <tr><th>Registros incluidos</th><td>{query.data.rows}</td></tr>
+                  <tr><th>Fecha de generación</th><td>{new Date(query.data.generatedAt).toLocaleString('es-CO', { dateStyle: 'long', timeStyle: 'short' })}</td></tr>
+                  <tr><th>Generado por</th><td>{query.data.generatedBy}</td></tr>
+                </tbody>
+              </table>
+              <p className="muted" style={{ fontSize: 13, marginTop: 14 }}>La verificación confirma que el documento fue emitido por el sistema; el contenido sensible no se publica.</p>
+            </motion.article>
+          )}
+        </div>
+      </div>
+    </main>
+  );
+}

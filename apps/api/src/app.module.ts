@@ -6,6 +6,7 @@ import { ConfigModule, Env } from './core/config/config.module';
 import { DatabaseModule } from './core/database/database.module';
 import { MailModule } from './core/mail/mail.module';
 import { AiModule } from './core/ai/ai.module';
+import { ReportsModule } from './core/reports/reports.module';
 import { RealtimeModule } from './core/realtime/realtime.module';
 import { HttpExceptionFilter } from './core/errors/http-exception.filter';
 import { JwtAuthGuard, RolesGuard } from './core/auth/guards';
@@ -28,6 +29,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     DatabaseModule,
     MailModule,
     AiModule,
+    ReportsModule,
     EventEmitterModule.forRoot(),
     JwtModule.registerAsync({
       global: true,

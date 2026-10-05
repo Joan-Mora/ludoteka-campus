@@ -284,10 +284,16 @@ export function ReportsPage() {
   const stats = useQuery({ queryKey: ['analytics', id], queryFn: () => api<{ title: string; average: number; lessons: number; flaggedAttempts: number }>(`/api/analytics/courses/${id}`) });
   const isBoard = user?.role === 'admin' || user?.role === 'directivo';
 
+  const client = useQueryClient();
+  const fetchDoc = async (path: string, name: string) => {
+    await download(path, name);
+    void client.invalidateQueries({ queryKey: ['report-log'] });
+  };
   const docs = [
-    { icon: FileText, tone: 'coral' as const, title: 'Integridad PDF', body: 'Alertas del curso con fecha e ID.', action: () => download(`/api/reports/integrity/${id}/pdf`, 'integridad.pdf') },
-    { icon: FileSpreadsheet, tone: 'mint' as const, title: 'Integridad Excel', body: 'Detalle para análisis en hoja de cálculo.', action: () => download(`/api/reports/integrity/${id}/excel`, 'integridad.xlsx') },
-    ...(isBoard ? [{ icon: Users, tone: 'sky' as const, title: 'Usuarios Excel', body: 'Listado institucional de cuentas.', action: () => download('/api/reports/roster/excel', 'usuarios.xlsx') }] : []),
+    { icon: FileSpreadsheet, tone: 'violet' as const, title: 'Curso Excel', body: 'Estudiantes, progreso y evaluaciones del curso.', action: () => fetchDoc(`/api/reports/courses/${id}/excel`, 'curso.xlsx') },
+    { icon: FileText, tone: 'coral' as const, title: 'Integridad PDF', body: 'Resumen, alertas por tipo y por estudiante.', action: () => fetchDoc(`/api/reports/integrity/${id}/pdf`, 'integridad.pdf') },
+    { icon: FileSpreadsheet, tone: 'mint' as const, title: 'Integridad Excel', body: 'Detalle de eventos para análisis.', action: () => fetchDoc(`/api/reports/integrity/${id}/excel`, 'integridad.xlsx') },
+    ...(isBoard ? [{ icon: Users, tone: 'sky' as const, title: 'Usuarios Excel', body: 'Listado institucional de cuentas.', action: () => fetchDoc('/api/reports/roster/excel', 'usuarios.xlsx') }] : []),
   ];
 
   return (
@@ -326,7 +332,7 @@ export function ReportsPage() {
                 <td><div className="row g-12"><Avatar name={student.full_name} /><b>{student.full_name}</b></div></td>
                 <td style={{ textAlign: 'right' }}>
                   <div className="row g-8" style={{ justifyContent: 'flex-end' }}>
-                    <button className="btn sm ghost" onClick={() => download(`/api/reports/bulletin/${student.user_id}/pdf`, 'boletin.pdf')}><FileText size={14} /> Boletín</button>
+                    <button className="btn sm ghost" onClick={() => fetchDoc(`/api/reports/bulletin/${student.user_id}/pdf`, 'boletin.pdf')}><FileText size={14} /> Boletín</button>
                     {issued.includes(student.user_id) ? (
                       <span className="chip mint"><BadgeCheck size={13} /> Emitido</span>
                     ) : (
@@ -340,7 +346,57 @@ export function ReportsPage() {
         </table>
         {!students.data?.length && <Empty icon={Users} title="Sin estudiantes matriculados" />}
       </Panel>
+      <div style={{ marginTop: 18 }}><ReportHistory /></div>
     </div>
+  );
+}
+
+type ReportRow = { id: string; code: string; kind: string; format: string; title: string; row_count: number; created_at: string; full_name: string | null };
+
+function ReportHistory() {
+  const log = useQuery({ queryKey: ['report-log'], queryFn: () => api<ReportRow[]>('/api/reports/log') });
+  return (
+    <Panel icon={ClipboardCheck} tone="gold" title="Historial de reportes" subtitle="Cada documento lleva un consecutivo LK verificable con su código QR.">
+      <table className="table">
+        <thead><tr><th>N.º</th><th>Documento</th><th>Formato</th><th>Filas</th><th>Generado</th><th>Por</th></tr></thead>
+        <tbody>
+          {(log.data ?? []).map((row) => (
+            <tr key={row.id}>
+              <td><Link to={`/verificar-reporte/${row.code}`} style={{ fontFamily: 'var(--font-mono, monospace)', fontWeight: 800, color: 'var(--violet)' }}>{row.code}</Link></td>
+              <td>{row.title}</td>
+              <td><span className={`chip ${row.format === 'pdf' ? 'coral' : 'mint'}`}>{row.format.toUpperCase()}</span></td>
+              <td>{row.row_count}</td>
+              <td className="muted">{new Date(row.created_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}</td>
+              <td>{row.full_name ?? 'Sistema'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {!log.data?.length && <Empty icon={FileText} title="Aún no se han generado reportes" />}
+    </Panel>
+  );
+}
+
+function InstitutionReports() {
+  const client = useQueryClient();
+  const [days, setDays] = useState(30);
+  const fetchDoc = async (path: string, name: string) => {
+    await download(path, name);
+    void client.invalidateQueries({ queryKey: ['report-log'] });
+  };
+  return (
+    <Panel icon={Download} tone="mint" title="Reportes institucionales" subtitle="Excel con encabezado, fecha, consecutivo y datos de CockroachDB.">
+      <div className="stack g-12">
+        <div className="row g-8" style={{ flexWrap: 'wrap' }}>
+          <label className="muted" style={{ fontWeight: 700, fontSize: 13 }}>Periodo</label>
+          {[7, 30, 90].map((d) => (
+            <button key={d} className={`btn sm ${days === d ? '' : 'ghost'}`} onClick={() => setDays(d)}>{d} días</button>
+          ))}
+        </div>
+        <button className="btn" onClick={() => fetchDoc(`/api/reports/usage/excel?days=${days}`, 'uso-biblioteca-ia.xlsx')}><FileSpreadsheet size={16} /> Uso de biblioteca e IA</button>
+        <button className="btn ghost" onClick={() => fetchDoc('/api/reports/roster/excel', 'usuarios.xlsx')}><Users size={16} /> Usuarios de la institución</button>
+      </div>
+    </Panel>
   );
 }
 
@@ -385,8 +441,12 @@ export function RectoriaPage() {
             {!grades.length && <Empty icon={Building2} title="Sin datos de matrícula" />}
           </div>
         </Panel>
-        <CourseLinks />
+        <div className="stack g-20">
+          <InstitutionReports />
+          <CourseLinks />
+        </div>
       </div>
+      <ReportHistory />
     </div>
   );
 }

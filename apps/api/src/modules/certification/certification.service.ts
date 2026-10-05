@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import QRCode from 'qrcode';
 import { DatabaseService } from '../../core/database/database.service';
 import { Env } from '../../core/config/config.module';
 import { ApiError } from '../../core/errors/api-error';
 import { shortCode } from '../../core/common/crypto';
-import { paintHeader, pdfDocument, reportId } from '../../core/reports/documents';
+import { renderPdf } from '../../core/reports/documents';
 import { AssessmentService } from '../assessment/public-api';
 
 @Injectable()
@@ -27,7 +26,7 @@ export class CertificationService {
       .where('course_id', '=', input.courseId)
       .executeTakeFirst();
     if (existing) return existing;
-    const code = `EQ-${shortCode(8)}`;
+    const code = `LKC-${shortCode(8)}`;
     return this.database.db
       .insertInto('certificates')
       .values({
@@ -73,22 +72,25 @@ export class CertificationService {
   async pdf(code: string) {
     const data = await this.publicByCode(code);
     const url = `${this.env.values.APP_PUBLIC_URL.replace(/\/$/, '')}/verificar/${data.code}`;
-    const qr = await QRCode.toBuffer(url, { width: 180, margin: 1 });
-    const id = reportId('CER');
-    return pdfDocument((doc) => {
-      paintHeader(doc, 'Certificado de competencias lógicas', id);
-      doc.fontSize(12).text('El Colegio Francisco Arango reconoce a');
-      doc.moveDown(0.4);
-      doc.fontSize(18).fillColor('#243E73').text(data.student);
-      doc.fillColor('#1C2430').fontSize(12).text(data.title);
-      if (data.course) doc.text(`Curso: ${data.course}`);
-      doc.text(`Emitido: ${new Date(data.issuedAt).toLocaleDateString('es-CO')}`);
-      doc.text(`Código: ${data.code}`);
-      doc.moveDown();
-      doc.image(qr, { width: 120 });
-      doc.moveDown();
-      doc.fontSize(9).fillColor('#5C6570').text(`Verificación pública: ${url}`);
-      doc.text('Aval institucional: firma del rector en calidad de plantilla, pendiente de formalización.');
-    });
+    return renderPdf(
+      { code: data.code, title: 'Certificado de competencias', subtitle: data.title, generatedAt: new Date(data.issuedAt), generatedBy: 'Colegio Francisco Arango', verifyUrl: url, source: 'certificates, users, courses' },
+      (doc, h) => {
+        doc.moveDown(1.5);
+        doc.font('Helvetica').fontSize(13).fillColor('#3d3a5c').text('El Colegio Francisco Arango, a través de Ludoteka Campus, certifica que', { align: 'center' });
+        doc.moveDown(0.8);
+        doc.font('Helvetica-Bold').fontSize(28).fillColor('#5b3df5').text(data.student, { align: 'center' });
+        doc.moveDown(0.6);
+        doc.font('Helvetica').fontSize(13).fillColor('#16132d').text(`completó y aprobó ${data.title}`, { align: 'center' });
+        if (data.course) doc.text(`Curso: ${data.course}`, { align: 'center' });
+        doc.moveDown(2);
+        h.keyValues([
+          ['Código de verificación', data.code],
+          ['Fecha de emisión', new Date(data.issuedAt).toLocaleDateString('es-CO', { timeZone: 'America/Bogota', dateStyle: 'long' })],
+          ['Verificación pública', url],
+        ]);
+        doc.moveDown(2);
+        h.paragraph('Escanea el código QR del encabezado para comprobar la autenticidad en línea.', { muted: true, size: 9 });
+      },
+    );
   }
 }

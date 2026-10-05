@@ -2,7 +2,7 @@ import { type ReactNode } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from '@/shared/auth';
 import { Shell } from './shell';
-import { ForgotPage, Landing, LoginPage, RegisterPage, ResetPage, VerifyPage } from '@/features/public';
+import { ForgotPage, Landing, LoginPage, RegisterPage, ResetPage, VerifyPage, VerifyReportPage } from '@/features/public';
 import { CourseDesk, CoursePage, CoursesPage, HomePage, LessonPage } from '@/features/classroom';
 import { ExamPage, LivePage } from '@/features/exam';
 import { AchievementsPage, GamesPage } from '@/features/play';
@@ -38,6 +38,7 @@ export function AppRouter() {
       <Route path="/recuperar" element={<ForgotPage />} />
       <Route path="/restablecer" element={<ResetPage />} />
       <Route path="/verificar/:code" element={<VerifyPage />} />
+      <Route path="/verificar-reporte/:code" element={<VerifyReportPage />} />
       <Route path="/examen/:id" element={<Gate><ExamPage /></Gate>} />
       <Route path="/app" element={<Gate><Shell /></Gate>}>
         <Route index element={<HomePage />} />

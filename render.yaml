@@ -1,0 +1,56 @@
+services:
+  - type: web
+    name: ludoteka-campus
+    runtime: node
+    plan: free
+    region: virginia
+    buildCommand: npm ci --include=dev && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_VERSION
+        value: "22.14.0"
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: APP_PUBLIC_URL
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: AI_API_KEY
+        sync: false
+      - key: AI_BASE_URL
+        value: https://generativelanguage.googleapis.com/v1beta/openai
+      - key: AI_MODEL
+        value: gemini-3.5-flash-lite
+      - key: AI_MODEL_SMART
+        value: gemini-3.5-flash
+      - key: AI_FALLBACK_MODELS
+        value: gemini-3.1-flash-lite,gemini-2.5-flash-lite
+      - key: AI_EMBED_MODEL
+        value: gemini-embedding-2
+      - key: AI_EMBED_DIM
+        value: "768"
+      - key: CLOUDINARY_URL
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: MAIL_FROM
+        sync: false
+      - key: FACIAL_MAX_DISTANCE
+        value: "0.5"
+      - key: FACIAL_POLICY_VERSION
+        value: "2026-10-05"
+      - key: FACIAL_LOCK_ATTEMPTS
+        value: "5"
+      - key: FACIAL_LOCK_MINUTES
+        value: "15"
+      - key: INTEGRITY_SUSPEND_AFTER
+        value: "3"
+      - key: SEED_PASSWORD
+        sync: false

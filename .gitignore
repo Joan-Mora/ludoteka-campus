@@ -9,5 +9,7 @@ dist-ssr/
 coverage/
 .turbo/
 *.tsbuildinfo
-web/dist/
-api/dist/
+apps/*/dist/
+packages/*/dist/
+apps/web/public/models/
+.eq-*

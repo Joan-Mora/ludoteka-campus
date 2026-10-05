@@ -1,13 +1,10 @@
-# EduQuest — Glosario mínimo
+# Glosario
 
-| Término | Definición |
-|---------|------------|
-| EduQuest | Nombre de producto/carpeta |
-| EQ-P01…P10 | RF Must del parcial (BD / auth / Confluence / facial / IA) |
-| EQ-C01…C06 | RF Must del colegio (PWA / Kahoot / kiosco / certificado) |
-| EQ-P08 | Confluence pregunta→respuesta del enunciado + evidencias |
-| EQ-P09 | Facial on-device + consentimiento + fallback password |
-| EQ-P10 | IA tutor solo en modo práctica |
-| DEC-01 | Política facial Darwin (**cerrada** 2026-09-28) |
-| Kiosco | Evaluación fullscreen + detección pérdida de foco |
-| integrity_events | Eventos de integridad por intento |
+| Término | Significado |
+|---------|-------------|
+| Estación | Unidad del mapa de un curso |
+| Kiosco | Examen a pantalla completa que registra salida, pérdida de foco y Escape |
+| Liga | Ranking de XP del grupo, guardado por semana en `leaderboard_snapshots` |
+| Libro de XP | Tabla `xp_ledger`. El total se suma; no hay un contador editable |
+| Modelo de laboratorio | `eduquest-lab-landmarks-v1`, geometría de MediaPipe, no un comparador forense |
+| `groups_class` | Tabla del grupo. El nombre evita la palabra reservada `GROUP` |

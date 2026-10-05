@@ -1,9 +1,20 @@
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Bot, Lightbulb, Send, Sparkles } from 'lucide-react';
+import { Bot, Hand, Lightbulb, Send, Sparkles, Volume2 } from 'lucide-react';
 import { api, ApiException } from '@/shared/api';
+import { joinDictation, useSpeech, voiceSupport } from '@/shared/voice';
+import { MicButton, SpeakButton } from '@/shared/voice-ui';
 import { PageHeader, Tile } from '@/ui';
+
+function usePref(key: string, initial: boolean) {
+  const [value, setValue] = useState(() => {
+    const saved = localStorage.getItem(key);
+    return saved === null ? initial : saved === '1';
+  });
+  useEffect(() => { localStorage.setItem(key, value ? '1' : '0'); }, [key, value]);
+  return [value, setValue] as const;
+}
 
 interface Bubble { role: 'user' | 'assistant'; content: string }
 
@@ -21,8 +32,16 @@ export function TutorPage() {
   const [thinking, setThinking] = useState(false);
   const [draft, setDraft] = useState('');
   const endRef = useRef<HTMLDivElement>(null);
+  const speech = useSpeech();
+  const [readAloud, setReadAloud] = usePref('eq_tutor_voice', false);
+  const [handsFree, setHandsFree] = usePref('eq_tutor_handsfree', false);
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, thinking]);
+
+  function onDictated(text: string) {
+    if (handsFree) void send(text);
+    else setDraft((current) => joinDictation(current, text));
+  }
 
   async function send(message: string) {
     if (!message.trim()) return;
@@ -41,6 +60,7 @@ export function TutorPage() {
       });
       setConversationId(reply.conversationId);
       setMessages((prev) => [...prev, { role: 'assistant', content: reply.content }]);
+      if (readAloud) speech.speak(reply.content);
       setError('');
     } catch (err) {
       setError(err instanceof ApiException ? err.message : 'El tutor no respondió');
@@ -68,6 +88,16 @@ export function TutorPage() {
               </div>
             </div>
             {params.get('lesson') && <span className="chip violet">Contexto de la lección</span>}
+            {speech.supported && (
+              <button className={`chip ${readAloud ? 'violet' : ''}`} onClick={() => { if (readAloud) speech.stop(); setReadAloud(!readAloud); }} title="Leer las respuestas de Luka en voz alta">
+                <Volume2 size={13} /> Voz {readAloud ? 'activada' : 'apagada'}
+              </button>
+            )}
+            {voiceSupport.dictation && (
+              <button className={`chip ${handsFree ? 'mint' : ''}`} onClick={() => setHandsFree(!handsFree)} title="Lo que dictes se envía solo, sin escribir">
+                <Hand size={13} /> Manos libres
+              </button>
+            )}
           </div>
           <div className="chat" style={{ padding: 20 }}>
             {!messages.length && (
@@ -86,6 +116,7 @@ export function TutorPage() {
               {messages.map((message, index) => (
                 <motion.div key={index} className={`bubble ${message.role === 'user' ? 'me' : 'bot'}`} initial={{ opacity: 0, y: 8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }}>
                   {message.content}
+                  {message.role === 'assistant' && <div className="bubble-tools"><SpeakButton text={message.content} /></div>}
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -101,7 +132,8 @@ export function TutorPage() {
           <div style={{ padding: 16, borderTop: '1px solid var(--line)' }}>
             {error && <p className="err" style={{ marginBottom: 10 }}>{error}</p>}
             <form className="composer" onSubmit={onSubmit}>
-              <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Escribe tu duda…" />
+              <input value={draft} onChange={(e) => setDraft(e.target.value)} placeholder={handsFree ? 'Toca el micrófono y habla: se envía solo' : 'Escribe o dicta tu duda…'} />
+              <MicButton onText={onDictated} />
               <button className="btn" type="submit" disabled={!draft.trim() || thinking}><Send size={16} /> Pedir pista</button>
             </form>
           </div>

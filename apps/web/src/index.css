@@ -317,6 +317,18 @@ p { margin: 0; }
 .empty .tile { margin: 0 auto 12px; }
 
 .next-strip { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+
+/* ---------- Voice ---------- */
+.mic-wrap { position: relative; display: inline-flex; }
+.bubble-tools { margin-top: 6px; display: flex; justify-content: flex-end; }
+.bubble-tools .btn { padding: 4px 8px; }
+.lesson-listen .btn { background: rgba(255, 255, 255, .18); color: #fff; border-color: transparent; }
+.mic-on { background: var(--coral) !important; color: #fff !important; border-color: transparent !important; box-shadow: 0 0 0 0 rgba(255, 93, 115, .6); animation: micPulse 1.4s infinite; }
+.mic-dot { width: 10px; height: 10px; border-radius: 50%; background: #fff; display: inline-block; }
+@keyframes micPulse { 70% { box-shadow: 0 0 0 10px rgba(255, 93, 115, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 93, 115, 0); } }
+.mic-hint { position: absolute; bottom: calc(100% + 8px); right: 0; width: max-content; max-width: 280px; background: var(--night); color: #fff; font-size: 12.5px; font-weight: 600; padding: 7px 10px; border-radius: 10px; box-shadow: var(--shadow); z-index: 30; }
+.mic-hint.err { background: var(--coral); }
+.voice-toast { position: absolute; right: 0; top: 52px; width: 300px; background: var(--night); color: #fff; font-size: 13.5px; font-weight: 600; line-height: 1.45; padding: 12px 14px; border-radius: 14px; box-shadow: var(--shadow-lg); z-index: 25; }
 .hero-campus { position: relative; margin-right: -6vw; }
 .hero-luka { position: absolute; left: -10px; bottom: -10px; display: flex; align-items: flex-end; gap: 8px; max-width: 330px; }
 .hero-float { width: 240px; }

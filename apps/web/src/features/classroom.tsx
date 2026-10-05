@@ -33,6 +33,8 @@ import { api, ApiException, download } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
 import { Avatar, Bar, DateTile, Empty, PageHeader, pickGradient, Reveal, Ring, Stat, Tile } from '@/ui';
 import { CampusHome } from './campus';
+import { MicButton, SpeakButton } from '@/shared/voice-ui';
+import { appendToField } from '@/shared/voice';
 
 interface Progress { completed: number; total: number }
 interface CourseCard { id: string; title: string; description: string; subject: string; group_name: string; grade_level: number; progress: Progress }
@@ -411,6 +413,7 @@ export function LessonPage() {
             <div className="row g-16" style={{ marginTop: 12, fontSize: 14, fontWeight: 600, opacity: 0.9 }}>
               <span className="row g-4"><Clock size={15} /> {minutes} min de lectura</span>
               <span className="row g-4"><Zap size={15} /> +25 XP</span>
+              <span className="lesson-listen"><SpeakButton text={`${lesson.data.title}. ${lesson.data.bodyMd}`} label="Escuchar lección" /></span>
             </div>
           </div>
           <div className="reader" style={{ padding: '32px 36px' }}>
@@ -552,8 +555,11 @@ export function CourseDesk() {
                     )}
                     {isStudent && (
                       <form style={{ marginTop: 14 }} onSubmit={(event: FormEvent<HTMLFormElement>) => { event.preventDefault(); submit(assignment.id, String(new FormData(event.currentTarget).get('body'))); }}>
-                        <label className="field">Tu entrega<textarea name="body" rows={4} placeholder="Escribe tu respuesta y explica tu razonamiento…" required /></label>
-                        <button className="btn" type="submit">{mine ? 'Reenviar' : 'Entregar'}</button>
+                        <label className="field">Tu entrega<textarea id={`entrega-${assignment.id}`} name="body" rows={4} placeholder="Escribe o dicta tu respuesta y explica tu razonamiento…" required /></label>
+                        <div className="row g-8">
+                          <button className="btn" type="submit">{mine ? 'Reenviar' : 'Entregar'}</button>
+                          <MicButton label="Dictar" onText={(text) => appendToField(`entrega-${assignment.id}`, text)} />
+                        </div>
                       </form>
                     )}
                     {!isStudent && (

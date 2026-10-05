@@ -153,6 +153,23 @@ export function useDictation(onFinal: (text: string) => void, options: { continu
   return { supported, listening, interim, error, start, stop, toggle: () => (listening ? stop() : start()) };
 }
 
+/** Joins a dictated phrase onto existing text, capitalizing the start of each sentence. */
+export function joinDictation(current: string, phrase: string) {
+  const clean = phrase.trim();
+  if (!clean) return current;
+  const base = current.trimEnd();
+  const startsSentence = !base || /[.!?¿¡:]$/.test(base);
+  const piece = startsSentence ? clean.charAt(0).toUpperCase() + clean.slice(1) : clean;
+  return base ? `${base} ${piece}` : piece;
+}
+
+export function appendToField(id: string, phrase: string) {
+  const field = document.getElementById(id) as HTMLTextAreaElement | HTMLInputElement | null;
+  if (!field) return;
+  field.value = joinDictation(field.value, phrase);
+  field.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
 export interface VoiceCommand { phrases: string[]; label: string; run: () => void }
 
 function normalize(text: string) {

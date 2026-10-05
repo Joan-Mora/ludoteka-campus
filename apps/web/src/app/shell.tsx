@@ -21,6 +21,7 @@ import {
 import { api } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
 import { Avatar, Bar } from '@/ui';
+import { VoiceNav } from '@/shared/voice-ui';
 
 interface NavItem { to: string; label: string; icon: LucideIcon; end?: boolean }
 
@@ -140,6 +141,7 @@ export function Shell() {
                 {xp} XP
               </div>
             )}
+            <VoiceNav />
             <button className="icon-btn" onClick={toggleTheme} title="Tema"><Moon size={18} /></button>
             <div style={{ position: 'relative' }}>
               <button className="icon-btn" title="Notificaciones" onClick={() => setOpen(!open)}>

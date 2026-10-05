@@ -257,6 +257,72 @@ export const forumPostSchema = z.object({
   body: z.string().trim().min(1).max(6000),
 });
 
+export const LIBRARY_VISIBILITY = ['public', 'institution', 'course'] as const;
+const tagList = z.array(z.string().trim().toLowerCase().min(2).max(40)).max(8).default([]);
+
+export const libraryItemSchema = z
+  .object({
+    title: z.string().trim().min(3).max(200),
+    description: z.string().trim().max(2000).default(''),
+    subjectId: z.string().uuid(),
+    gradeId: z.string().uuid().optional(),
+    visibility: z.enum(LIBRARY_VISIBILITY).default('institution'),
+    courseId: z.string().uuid().optional(),
+    tags: tagList,
+    link: z.string().url().max(600).optional(),
+    upload: z
+      .object({
+        publicId: z.string().min(1).max(300),
+        version: z.union([z.number(), z.string()]),
+        signature: z.string().min(10).max(80),
+        secureUrl: z.string().url(),
+        resourceType: z.enum(['image', 'video', 'raw']),
+        format: z.string().max(20).optional(),
+        bytes: z.number().int().min(0).max(52428800),
+        etag: z.string().max(80).optional(),
+        pages: z.number().int().min(0).optional(),
+      })
+      .optional(),
+  })
+  .refine((v) => Boolean(v.link) !== Boolean(v.upload), { message: 'Sube un archivo o pega un enlace', path: ['upload'] })
+  .refine((v) => v.visibility !== 'course' || Boolean(v.courseId), { message: 'Elige el curso', path: ['courseId'] });
+
+export const libraryUpdateSchema = z.object({
+  title: z.string().trim().min(3).max(200).optional(),
+  description: z.string().trim().max(2000).optional(),
+  visibility: z.enum(LIBRARY_VISIBILITY).optional(),
+  courseId: z.string().uuid().nullable().optional(),
+  tags: z.array(z.string().trim().toLowerCase().min(2).max(40)).max(8).optional(),
+  status: z.enum(['published', 'archived']).optional(),
+});
+
+export const bookmarkSchema = z.object({
+  page: z.number().int().min(1).max(5000).optional(),
+  note: z.string().trim().max(500).default(''),
+});
+
+export const glossarySchema = z.object({
+  subjectId: z.string().uuid(),
+  term: z.string().trim().min(2).max(80),
+  definition: z.string().trim().min(5).max(1200),
+  example: z.string().trim().max(600).default(''),
+});
+
+export const libraryAskSchema = z.object({
+  question: z.string().trim().min(3).max(600),
+  itemId: z.string().uuid().optional(),
+  subjectId: z.string().uuid().optional(),
+});
+
+export interface Citation {
+  n: number;
+  itemId: string;
+  title: string;
+  page: number | null;
+  excerpt: string;
+  url: string;
+}
+
 export const certificateIssueSchema = z.object({
   userId: z.string().uuid(),
   courseId: z.string().uuid(),

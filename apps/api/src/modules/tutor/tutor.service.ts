@@ -9,12 +9,14 @@ import { shortCode } from '../../core/common/crypto';
 import type { AuthUser } from '../../core/auth/auth.decorators';
 import { GuardiansService } from '../identity/public-api';
 import { IntegrityService } from '../integrity/public-api';
+import { LibraryService } from '../library/public-api';
 import { AiService } from '../../core/ai/ai.service';
 
 const SYSTEM = `Eres el tutor de matemáticas de sexto del Colegio Francisco Arango, dentro de Ludoteka Campus. Te llamas Luka.
 Ayudas a practicar. Das pistas, preguntas y un siguiente paso. No entregas la respuesta final ni resuelves el ejercicio completo.
 Si te piden la respuesta directa, devuelve una pista más pequeña.
-No hables de temas ajenos al curso. Responde en español, breve, con calma.`;
+No hables de temas ajenos al curso. Responde en español, breve, con calma.
+No uses LaTeX ni signos $: escribe las operaciones con ×, ÷ y /.`;
 
 @Injectable()
 export class TutorService {
@@ -25,6 +27,7 @@ export class TutorService {
     private readonly events: EventEmitter2,
     private readonly ai: AiService,
     private readonly guardians: GuardiansService,
+    private readonly library: LibraryService,
   ) {}
 
   async chat(user: AuthUser, input: { message: string; courseId?: string; lessonId?: string; conversationId?: string }) {
@@ -58,18 +61,27 @@ export class TutorService {
       .limit(12)
       .execute();
     const context = lesson ? `Lección «${lesson.title}»:\n${lesson.body_md.slice(0, 2500)}` : 'Práctica general de matemáticas de sexto.';
+    const citations = await this.library.search(user, input.message, { limit: 3 }).catch(() => []);
+    const sources = citations.length
+      ? `Fragmentos de la biblioteca del colegio. Si los usas, cítalos con [n]:\n${citations.map((c) => `[${c.n}] «${c.title}»${c.page ? `, pág. ${c.page}` : ''}: ${c.excerpt}`).join('\n')}`
+      : null;
     const llm = await this.ai.chatText(
       [
         { role: 'system', content: SYSTEM },
         { role: 'system', content: context },
+        ...(sources ? [{ role: 'system' as const, content: sources }] : []),
         ...history.map((message) => ({ role: message.role as 'user' | 'assistant', content: message.content })),
       ],
       { feature: 'tutor', userId: user.id },
     );
     const content = llm ?? this.localHint(input.message, lesson?.title, lesson?.body_md);
-    await this.database.db.insertInto('tutor_messages').values({ conversation_id: conversationId, role: 'assistant', content }).execute();
+    const cited = llm ? citations.filter((c) => content.includes(`[${c.n}]`)) : [];
+    await this.database.db
+      .insertInto('tutor_messages')
+      .values({ conversation_id: conversationId, role: 'assistant', content, citations: cited.length ? JSON.stringify(cited) : null })
+      .execute();
     this.events.emit(DomainEvents.TutorMessage, { userId: user.id });
-    return { conversationId, content, source: llm ? 'llm' : 'leccion' };
+    return { conversationId, content, citations: cited, source: llm ? 'llm' : 'leccion' };
   }
 
   private localHint(message: string, title?: string, body?: string) {

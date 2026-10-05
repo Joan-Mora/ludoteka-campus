@@ -24,6 +24,7 @@
     "cookie-parser": "^1.4.7",
     "exceljs": "^4.4.0",
     "kysely": "^0.28.5",
+    "pdf-parse": "^2.4.5",
     "pdfkit": "^0.17.2",
     "pg": "^8.16.3",
     "qrcode": "^1.5.4",

@@ -17,6 +17,7 @@ import { LearningModule } from './modules/learning/learning.module';
 import { AssessmentModule } from './modules/assessment/assessment.module';
 import { IntegrityModule } from './modules/integrity/integrity.module';
 import { GamificationModule } from './modules/gamification/gamification.module';
+import { LibraryModule } from './modules/library/library.module';
 import { TutorModule } from './modules/tutor/tutor.module';
 import { BiometricsModule } from './modules/biometrics/biometrics.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
@@ -47,6 +48,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     AssessmentModule,
     IntegrityModule,
     GamificationModule,
+    LibraryModule,
     TutorModule,
     BiometricsModule,
     AnalyticsModule,

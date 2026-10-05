@@ -347,6 +347,7 @@ export interface Database {
     conversation_id: string;
     role: string;
     content: string;
+    citations: JsonValue;
     created_at: Ts;
   };
   recommendations: {
@@ -426,6 +427,64 @@ export interface Database {
     body: string;
     read_at: NullableDate;
     created_at: Ts;
+  };
+  library_items: {
+    id: Generated<string>;
+    title: string;
+    description: Generated<string>;
+    subject_id: string;
+    grade_id: NullableString;
+    kind: string;
+    url: string;
+    cloudinary_public_id: NullableString;
+    resource_type: NullableString;
+    format: NullableString;
+    bytes: Generated<number>;
+    pages: NullableInt;
+    checksum: NullableString;
+    visibility: Generated<string>;
+    course_id: NullableString;
+    status: Generated<string>;
+    text_chars: Generated<number>;
+    uploaded_by: NullableString;
+    created_at: Ts;
+    updated_at: Ts;
+  };
+  library_tags: {
+    item_id: string;
+    tag: string;
+  };
+  bookmarks: {
+    user_id: string;
+    item_id: string;
+    page: NullableInt;
+    note: Generated<string>;
+    created_at: Ts;
+  };
+  library_views: {
+    id: Generated<string>;
+    item_id: string;
+    user_id: NullableString;
+    viewed_at: Ts;
+  };
+  glossary_terms: {
+    id: Generated<string>;
+    subject_id: string;
+    term: string;
+    definition: string;
+    example: Generated<string>;
+    source_item_id: NullableString;
+    created_by: NullableString;
+    created_at: Ts;
+  };
+  library_chunks: {
+    id: Generated<string>;
+    item_id: string;
+    ordinal: number;
+    page: NullableInt;
+    content: string;
+    tsv: Generated<string>;
+    embedding: NullableString;
   };
   guardian_links: {
     id: Generated<string>;

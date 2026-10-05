@@ -5,6 +5,7 @@ import { Bot, Hand, Lightbulb, Send, Sparkles, Volume2 } from 'lucide-react';
 import { api, ApiException } from '@/shared/api';
 import { joinDictation, useSpeech, voiceSupport } from '@/shared/voice';
 import { MicButton, SpeakButton } from '@/shared/voice-ui';
+import { RichText, Sources, type Citation } from '@/shared/rich-text';
 import { PageHeader, Tile } from '@/ui';
 
 function usePref(key: string, initial: boolean) {
@@ -16,7 +17,7 @@ function usePref(key: string, initial: boolean) {
   return [value, setValue] as const;
 }
 
-interface Bubble { role: 'user' | 'assistant'; content: string }
+interface Bubble { role: 'user' | 'assistant'; content: string; citations?: Citation[] }
 
 const suggestions = [
   '¿Cómo sé si un número es divisible entre 3?',
@@ -49,7 +50,7 @@ export function TutorPage() {
     setMessages((prev) => [...prev, { role: 'user', content: message }]);
     setThinking(true);
     try {
-      const reply = await api<{ conversationId: string; content: string; source: string }>('/api/tutor/chat', {
+      const reply = await api<{ conversationId: string; content: string; source: string; citations?: Citation[] }>('/api/tutor/chat', {
         method: 'POST',
         body: JSON.stringify({
           message,
@@ -59,7 +60,7 @@ export function TutorPage() {
         }),
       });
       setConversationId(reply.conversationId);
-      setMessages((prev) => [...prev, { role: 'assistant', content: reply.content }]);
+      setMessages((prev) => [...prev, { role: 'assistant', content: reply.content, citations: reply.citations }]);
       if (readAloud) speech.speak(reply.content);
       setError('');
     } catch (err) {
@@ -115,7 +116,8 @@ export function TutorPage() {
             <AnimatePresence initial={false}>
               {messages.map((message, index) => (
                 <motion.div key={index} className={`bubble ${message.role === 'user' ? 'me' : 'bot'}`} initial={{ opacity: 0, y: 8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }}>
-                  {message.content}
+                  {message.role === 'assistant' ? <RichText text={message.content} citations={message.citations} /> : message.content}
+                  {message.role === 'assistant' && message.citations?.length ? <Sources citations={message.citations} /> : null}
                   {message.role === 'assistant' && <div className="bubble-tools"><SpeakButton text={message.content} /></div>}
                 </motion.div>
               ))}

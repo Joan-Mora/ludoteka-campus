@@ -9,6 +9,7 @@ import {
   GraduationCap,
   HeartHandshake,
   LayoutDashboard,
+  Library,
   LogOut,
   Megaphone,
   Moon,
@@ -76,10 +77,12 @@ export function Shell() {
         { to: '/app', label: 'Inicio', icon: LayoutDashboard, end: true },
         { to: '/app/acudiente', label: 'Seguimiento', icon: HeartHandshake },
         { to: '/app/novedades', label: 'Cartelera', icon: Megaphone },
+        { to: '/app/biblioteca', label: 'Biblioteca', icon: Library },
       ]
     : [
         { to: '/app', label: 'Inicio', icon: LayoutDashboard, end: true },
         { to: '/app/cursos', label: 'Mis cursos', icon: BookOpen },
+        { to: '/app/biblioteca', label: 'Biblioteca', icon: Library },
         { to: '/app/novedades', label: 'Cartelera', icon: Megaphone },
         { to: '/app/en-vivo', label: 'Sala en vivo', icon: Radio },
       ];

@@ -20,6 +20,11 @@ export class AnalyticsController {
     return this.analytics.course(user, id);
   }
 
+  @Get('campus')
+  campus(@CurrentUser() user: AuthUser) {
+    return this.analytics.campus(user);
+  }
+
   @Roles('admin', 'directivo')
   @Get('analytics/institution')
   institution() {

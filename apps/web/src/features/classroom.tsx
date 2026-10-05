@@ -32,6 +32,7 @@ import {
 import { api, ApiException, download } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
 import { Avatar, Bar, DateTile, Empty, PageHeader, pickGradient, Reveal, Ring, Stat, Tile } from '@/ui';
+import { CampusHome } from './campus';
 
 interface Progress { completed: number; total: number }
 interface CourseCard { id: string; title: string; description: string; subject: string; group_name: string; grade_level: number; progress: Progress }
@@ -105,57 +106,23 @@ export function HomePage() {
 
   return (
     <div className="stack g-24">
-      <Reveal>
-        <section className="hero">
-          <div className="orb" style={{ width: 340, height: 340, right: -80, top: -120, background: 'radial-gradient(circle, rgba(255,93,115,.45), transparent 70%)' }} />
-          <div className="orb" style={{ width: 300, height: 300, right: 260, bottom: -200, background: 'radial-gradient(circle, rgba(124,92,255,.6), transparent 70%)' }} />
-          <div className="row between wrap g-24" style={{ position: 'relative' }}>
-            <div style={{ maxWidth: 560 }}>
-              <span className="chip" style={{ background: 'rgba(255,255,255,.1)', color: '#fff', border: 0 }}>
-                {new Date().toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long' })}
-              </span>
-              <h1 style={{ marginTop: 14 }}>¡Hola, {firstName}! 👋</h1>
-              <p style={{ fontSize: 17, marginTop: 10, lineHeight: 1.55 }}>
-                {isStudent
-                  ? nextLesson
-                    ? <>Tu siguiente estación te espera: <b style={{ color: '#fff' }}>{nextLesson.title}</b>.</>
-                    : 'Completaste todas las estaciones disponibles. ¡Excelente trabajo!'
-                  : 'Este es el pulso de tus cursos hoy. Organiza, evalúa y acompaña.'}
-              </p>
-              <div className="row g-12 wrap" style={{ marginTop: 22 }}>
-                {isStudent && nextLesson && (
-                  <Link to={`/app/lecciones/${nextLesson.id}`} className="btn white lg"><Play size={17} fill="currentColor" /> Continuar</Link>
-                )}
-                {firstCourse && <Link to={`/app/cursos/${firstCourse.id}`} className="btn glass lg">Ver mapa</Link>}
-                {!isStudent && <Link to="/app/banco" className="btn glass lg"><Plus size={17} /> Nueva pregunta</Link>}
-              </div>
+      <CampusHome />
+
+      {isStudent && game.data && (
+        <Reveal className="card next-strip">
+          <Ring value={ratio} size={84} stroke={10} track="var(--bg-2)">
+            <div className="display" style={{ fontSize: 26, lineHeight: 1 }}>{game.data.level.level}</div>
+          </Ring>
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <div className="eyebrow">Nivel {game.data.level.level} · {game.data.level.title}</div>
+            <div style={{ fontWeight: 800, fontSize: 18, marginTop: 4 }}>
+              {nextLesson ? <>Siguiente estación: {nextLesson.title}</> : 'Completaste todas las estaciones disponibles'}
             </div>
-            {isStudent && game.data && (
-              <div className="row g-20">
-                <Ring value={ratio} size={150} stroke={14}>
-                  <div style={{ fontSize: 12, color: '#cfc9ff', fontWeight: 700 }}>NIVEL</div>
-                  <div className="display" style={{ fontSize: 46, lineHeight: 1 }}>{game.data.level.level}</div>
-                  <div style={{ fontSize: 12, color: '#ffd66b', fontWeight: 800 }}>{game.data.level.title}</div>
-                </Ring>
-                <div className="stack g-12">
-                  <div className="glass" style={{ padding: '12px 16px', borderRadius: 16 }}>
-                    <div style={{ fontSize: 12, color: '#cfc9ff', fontWeight: 700 }}>Experiencia</div>
-                    <div className="display" style={{ fontSize: 26 }}>{xp} XP</div>
-                    <div style={{ fontSize: 12, color: '#cfc9ff' }}>{game.data.nextLevel ? `${next - xp} para ${game.data.nextLevel.title}` : 'Nivel máximo'}</div>
-                  </div>
-                  <div className="glass row g-8" style={{ padding: '12px 16px', borderRadius: 16 }}>
-                    <Flame size={22} color="#ff8a3d" fill="#ff8a3d" />
-                    <div>
-                      <div className="display" style={{ fontSize: 22 }}>{game.data.streak.current} {game.data.streak.current === 1 ? 'día' : 'días'}</div>
-                      <div style={{ fontSize: 12, color: '#cfc9ff' }}>Racha · mejor {game.data.streak.best}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
+            <div className="muted" style={{ fontSize: 13.5, marginTop: 2 }}>{game.data.nextLevel ? `${next - xp} XP para ${game.data.nextLevel.title}` : 'Nivel máximo alcanzado'} · racha de {game.data.streak.current} {game.data.streak.current === 1 ? 'día' : 'días'}</div>
           </div>
-        </section>
-      </Reveal>
+          {nextLesson && <Link to={`/app/lecciones/${nextLesson.id}`} className="btn lg"><Play size={17} fill="currentColor" /> Continuar</Link>}
+        </Reveal>
+      )}
 
       <div className="grid cols-4">
         {isStudent && game.data ? (
@@ -272,30 +239,6 @@ export function HomePage() {
                 </div>
               ))}
               {!feed.data?.events.length && <Empty icon={CalendarDays} title="Agenda despejada" />}
-            </div>
-          </Reveal>
-          <Reveal className="card" delay={0.2} >
-            <div className="card-title" style={{ marginBottom: 14 }}>Accesos rápidos</div>
-            <div className="grid cols-2" style={{ gap: 10 }}>
-              {(isStudent
-                ? [
-                    { to: '/app/jugar', icon: Zap, label: 'Arcade', tone: 'gold' as const },
-                    { to: '/app/tutor', icon: Sparkles, label: 'Tutor IA', tone: 'violet' as const },
-                    { to: '/app/en-vivo', icon: Radio, label: 'En vivo', tone: 'sky' as const },
-                    { to: '/app/logros', icon: Trophy, label: 'Logros', tone: 'coral' as const },
-                  ]
-                : [
-                    { to: '/app/banco', icon: ClipboardList, label: 'Banco', tone: 'violet' as const },
-                    { to: '/app/en-vivo', icon: Radio, label: 'En vivo', tone: 'sky' as const },
-                    { to: firstCourse ? `/app/integridad/${firstCourse.id}` : '/app/cursos', icon: ShieldCheck, label: 'Integridad', tone: 'mint' as const },
-                    { to: firstCourse ? `/app/reportes/${firstCourse.id}` : '/app/cursos', icon: BarChart3, label: 'Reportes', tone: 'gold' as const },
-                  ]
-              ).map((item) => (
-                <Link key={item.label} to={item.to} className="card hover" style={{ padding: 14, textAlign: 'center' }}>
-                  <div style={{ display: 'grid', placeItems: 'center' }}><Tile icon={item.icon} tone={item.tone} /></div>
-                  <div style={{ fontWeight: 800, fontSize: 13.5, marginTop: 8 }}>{item.label}</div>
-                </Link>
-              ))}
             </div>
           </Reveal>
         </div>

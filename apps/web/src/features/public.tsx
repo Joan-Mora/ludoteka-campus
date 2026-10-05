@@ -7,22 +7,27 @@ import {
   BadgeCheck,
   BarChart3,
   BookOpen,
+  BrainCircuit,
   Check,
+  Compass,
   Flame,
   Gamepad2,
+  Library,
   Lock,
-  Map,
-  Radio,
+  Megaphone,
+  NotebookPen,
   ScanFace,
+  School,
   ShieldCheck,
   Sparkles,
-  Star,
+  Swords,
   Trophy,
   Zap,
 } from 'lucide-react';
 import { api, ApiException } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
-import { Ring, Tile } from '@/ui';
+import { Tile } from '@/ui';
+import { buildingsFor, IsoCampus, Luka, phaseOf } from './campus';
 
 function Brand({ light = true }: { light?: boolean }) {
   return (
@@ -36,71 +41,27 @@ function Brand({ light = true }: { light?: boolean }) {
   );
 }
 
-function HeroPreview() {
-  const nodes = [
-    { state: 'done', x: 40 },
-    { state: 'done', x: 110 },
-    { state: 'next', x: 70 },
-    { state: 'todo', x: 10 },
-  ];
+function HeroCampus() {
+  const phase = phaseOf(Number(new Intl.DateTimeFormat('en-US', { hour: 'numeric', hour12: false, timeZone: 'America/Bogota' }).format(new Date())) % 24);
+  const buildings = buildingsFor('student');
   return (
-    <div style={{ position: 'relative', height: 520 }}>
-      <motion.div
-        className="glass"
-        style={{ position: 'absolute', inset: '30px 20px 20px 60px', padding: 26 }}
-        initial={{ opacity: 0, y: 30, rotate: -2 }}
-        animate={{ opacity: 1, y: 0, rotate: 0 }}
-        transition={{ duration: 0.8, ease: [0.2, 0.8, 0.2, 1] }}
-      >
-        <div className="row between">
-          <div>
-            <div style={{ fontSize: 12, color: '#a79fe0', fontWeight: 700 }}>MATEMÁTICAS 6°</div>
-            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 22 }}>Aventura lógica</div>
-          </div>
-          <span className="chip" style={{ background: 'rgba(255,200,61,.18)', color: '#ffd66b', border: 0 }}><Flame size={14} /> 5 días</span>
-        </div>
-        <div style={{ position: 'relative', height: 300, marginTop: 20 }}>
-          {nodes.map((node, i) => (
-            <motion.div
-              key={i}
-              className={`node ${node.state}`}
-              style={{ position: 'absolute', left: 60 + node.x, top: i * 72, width: 60, height: 56 }}
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.4 + i * 0.12, type: 'spring', stiffness: 260, damping: 16 }}
-            >
-              {node.state === 'done' ? <Check size={26} strokeWidth={3.2} /> : node.state === 'next' ? <Star size={24} fill="#fff" /> : <Lock size={20} />}
-            </motion.div>
-          ))}
+    <div className="hero-campus">
+      <motion.div initial={{ opacity: 0, y: 40, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1] }}>
+        <IsoCampus buildings={buildings} phase={phase === 'day' || phase === 'dawn' ? 'dusk' : phase} interactive={false} />
+      </motion.div>
+      <motion.div className="hero-luka" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }}>
+        <Luka mood="talking" size={92} />
+        <div className="luka-bubble" style={{ marginBottom: 34 }}>
+          <div className="luka-name"><Sparkles size={13} /> Luka</div>
+          <p>¡Hola! Soy tu compañero IA. Te acompaño por el campus, te explico paso a paso y te escucho por voz.</p>
         </div>
       </motion.div>
-
-      <motion.div className="float-card" style={{ right: -10, top: 10, width: 230 }} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.6 }}>
+      <motion.div className="float-card hero-float" style={{ right: 0, top: 10 }} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1 }}>
         <div className="row g-12">
-          <Ring value={72} size={62} stroke={8} track="#eee9ff"><b style={{ fontSize: 15 }}>N3</b></Ring>
+          <Tile icon={ScanFace} tone="mint" />
           <div>
-            <div style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 700 }}>Nivel Estratega</div>
-            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 22 }}>1.240 XP</div>
-          </div>
-        </div>
-      </motion.div>
-
-      <motion.div className="float-card" style={{ left: -10, bottom: 70, width: 250 }} initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.8 }}>
-        <div className="row g-12">
-          <Tile icon={Trophy} tone="gold" />
-          <div>
-            <div style={{ fontWeight: 800 }}>¡Insignia desbloqueada!</div>
-            <div style={{ fontSize: 13, color: 'var(--muted)' }}>Examen perfecto · +50 XP</div>
-          </div>
-        </div>
-      </motion.div>
-
-      <motion.div className="float-card" style={{ right: 10, bottom: 0, width: 260 }} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1 }}>
-        <div className="row g-12">
-          <Tile icon={ShieldCheck} tone="mint" />
-          <div>
-            <div style={{ fontWeight: 800 }}>Examen en kiosco</div>
-            <div style={{ fontSize: 13, color: 'var(--muted)' }}>Integridad en tiempo real</div>
+            <div style={{ fontWeight: 800 }}>Ingreso con tu rostro</div>
+            <div style={{ fontSize: 13, color: 'var(--muted)' }}>Con prueba de vida y cifrado</div>
           </div>
         </div>
       </motion.div>
@@ -109,12 +70,14 @@ function HeroPreview() {
 }
 
 const features = [
-  { icon: Map, tone: 'violet' as const, title: 'Mapa de aventura', body: 'Unidades y lecciones como estaciones de un recorrido. Cada avance queda en tu camino.' },
-  { icon: Trophy, tone: 'gold' as const, title: 'XP, niveles y ligas', body: 'Experiencia, rachas, insignias y misiones semanales que premian la constancia.' },
-  { icon: Sparkles, tone: 'coral' as const, title: 'Tutor con IA', body: 'Pistas socráticas durante la práctica. Se apaga solo cuando hay un examen activo.' },
-  { icon: Radio, tone: 'sky' as const, title: 'Clases en vivo', body: 'Preguntas en tiempo real para todo el grupo con marcador instantáneo.' },
-  { icon: ShieldCheck, tone: 'mint' as const, title: 'Examen en kiosco', body: 'Pantalla completa, alertas al docente y suspensión automática por reincidencia.' },
-  { icon: BadgeCheck, tone: 'violet' as const, title: 'Certificados verificables', body: 'Constancias PDF con código único que cualquiera puede validar en línea.' },
+  { icon: School, color: '#ff8a5c', title: 'Aula', body: 'Cursos, lecciones, tareas y evaluaciones con integridad en tiempo real.' },
+  { icon: Library, color: '#4f86f7', title: 'Biblioteca', body: 'Guías y lecturas en la nube con etiquetas, marcadores y glosario. Luka responde citando el documento.' },
+  { icon: BrainCircuit, color: '#8b6cff', title: 'Laboratorio IA', body: 'Tutor socrático que da pistas, no respuestas, y se apaga solo durante los exámenes.' },
+  { icon: Swords, color: '#ff5d73', title: 'Arena', body: 'Competencias por equipos con código QR, capitán rotativo y podio en el proyector.' },
+  { icon: NotebookPen, color: '#19c39c', title: 'Cuaderno', body: 'Apuntes con resumen automático y tarjetas de repaso espaciado para no olvidar.' },
+  { icon: Compass, color: '#3ab8ff', title: 'Mi ruta', body: 'Retos que se ajustan a tu dominio de cada tema, verificados por el servidor.' },
+  { icon: Megaphone, color: '#ff5d73', title: 'Cartelera', body: 'Novedades por audiencia, foros del curso y confirmación de lectura para acudientes.' },
+  { icon: Trophy, color: '#ffc83d', title: 'Sala de trofeos', body: 'XP, rachas, insignias y certificados con código QR verificable.' },
 ];
 
 export function Landing() {
@@ -147,40 +110,42 @@ export function Landing() {
               </div>
               <div className="row g-24 wrap" style={{ marginTop: 44 }}>
                 {[
-                  ['12', 'lecciones de Mate 6°'],
-                  ['5', 'niveles por desbloquear'],
-                  ['4+', 'reportes PDF y Excel'],
+                  ['8', 'edificios para aprender'],
+                  ['5', 'perfiles: estudiante, docente, coordinación, rectoría y acudiente'],
+                  ['QR', 'en cada reporte y certificado'],
                 ].map(([value, label]) => (
-                  <div key={label}>
+                  <div key={label} style={{ maxWidth: 170 }}>
                     <div className="display" style={{ fontSize: 36 }}>{value}</div>
                     <div style={{ color: '#a79fe0', fontSize: 14, fontWeight: 600 }}>{label}</div>
                   </div>
                 ))}
               </div>
             </motion.div>
-            <HeroPreview />
+            <HeroCampus />
           </div>
         </div>
       </section>
 
       <section className="section">
         <div className="container">
-          <div style={{ textAlign: 'center', maxWidth: 680, margin: '0 auto 52px' }}>
-            <div className="eyebrow">Todo lo que tu clase necesita</div>
-            <h2 className="display" style={{ fontSize: 'clamp(34px, 4vw, 52px)', marginTop: 12 }}>Un aula completa, no un quiz suelto.</h2>
+          <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 52px' }}>
+            <div className="eyebrow">Un edificio para cada forma de aprender</div>
+            <h2 className="display" style={{ fontSize: 'clamp(34px, 4vw, 52px)', marginTop: 12 }}>Recorre el campus, no un menú.</h2>
+            <p className="muted" style={{ marginTop: 12, fontSize: 17, lineHeight: 1.6 }}>Cada edificio muestra en vivo lo que te espera: lecciones pendientes, salas abiertas, avisos sin leer y tarjetas para repasar.</p>
           </div>
-          <div className="grid cols-3">
+          <div className="grid cols-4">
             {features.map((feature, i) => (
               <motion.article
                 key={feature.title}
-                className="card hover feature"
+                className="card hover feature building-card"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 + i * 0.06 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
               >
-                <Tile icon={feature.icon} tone={feature.tone} large />
-                <h3 style={{ fontSize: 21, margin: '18px 0 8px' }}>{feature.title}</h3>
-                <p className="muted" style={{ lineHeight: 1.6 }}>{feature.body}</p>
+                <span className="building-ico" style={{ background: feature.color }}><feature.icon size={24} strokeWidth={2.4} /></span>
+                <h3 style={{ fontSize: 20, margin: '16px 0 8px' }}>{feature.title}</h3>
+                <p className="muted" style={{ lineHeight: 1.6, fontSize: 14.5 }}>{feature.body}</p>
               </motion.article>
             ))}
           </div>
@@ -194,14 +159,14 @@ export function Landing() {
               <div>
                 <div className="eyebrow" style={{ color: '#ffd66b' }}>Cómo funciona</div>
                 <h2 className="display" style={{ fontSize: 'clamp(30px, 3.6vw, 46px)', marginTop: 12 }}>Del primer clic al certificado.</h2>
-                <p style={{ marginTop: 14, fontSize: 17, lineHeight: 1.6 }}>Cada rol tiene su espacio: estudiantes que avanzan, docentes que orquestan y rectoría que decide con datos.</p>
+                <p style={{ marginTop: 14, fontSize: 17, lineHeight: 1.6 }}>Cada rol tiene su espacio: estudiantes que avanzan, docentes que orquestan, acudientes que acompañan y rectoría que decide con datos.</p>
               </div>
               <div className="stack g-12">
                 {[
-                  { icon: BookOpen, title: 'Aprende', body: 'Lecciones cortas y tareas con retroalimentación.' },
-                  { icon: Gamepad2, title: 'Practica', body: 'Minijuegos, tutor IA y quices en vivo.' },
+                  { icon: BookOpen, title: 'Aprende', body: 'Lecciones, biblioteca y tutor IA que responde por voz.' },
+                  { icon: Gamepad2, title: 'Practica', body: 'Mi ruta adaptativa, tarjetas de repaso y Arena por equipos.' },
                   { icon: ShieldCheck, title: 'Demuestra', body: 'Examen en kiosco con integridad en tiempo real.' },
-                  { icon: BarChart3, title: 'Decide', body: 'Paneles y reportes para docentes y rectoría.' },
+                  { icon: BarChart3, title: 'Decide', body: 'Reportes PDF y Excel numerados y consultas en lenguaje natural.' },
                 ].map((step, i) => (
                   <div key={step.title} className="glass row g-16" style={{ padding: 16 }}>
                     <div className="display" style={{ fontSize: 28, width: 40, color: '#ffd66b' }}>0{i + 1}</div>
@@ -221,7 +186,7 @@ export function Landing() {
       <section className="section" style={{ paddingTop: 0 }}>
         <div className="container grid cols-3">
           {[
-            { icon: ScanFace, title: 'Privacidad por diseño', body: 'Acceso facial opcional, en el dispositivo y con consentimiento según Ley 1581.' },
+            { icon: ScanFace, title: 'Privacidad por diseño', body: 'Acceso facial opcional con consentimiento (Ley 1581): la foto nunca sale del dispositivo y la plantilla se guarda cifrada.' },
             { icon: Lock, title: 'Seguridad real', body: 'Sesiones cortas, contraseñas con argon2id y roles estrictos por perfil.' },
             { icon: BarChart3, title: 'Datos para decidir', body: 'Boletines, resultados e integridad exportables en PDF y Excel.' },
           ].map((item) => (

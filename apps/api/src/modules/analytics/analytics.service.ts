@@ -112,6 +112,51 @@ export class AnalyticsService {
     };
   }
 
+  private async count(query: ReturnType<typeof sql<{ n: string | number }>>) {
+    const result = await query.execute(this.database.db).catch(() => ({ rows: [] as { n: string | number }[] }));
+    return Number(result.rows[0]?.n ?? 0);
+  }
+
+  /** Live counters for each campus building, scoped to what the viewer can see. */
+  async campus(viewer: AuthUser) {
+    const today = sql`(now() AT TIME ZONE 'America/Bogota')::DATE`;
+    const studentCourses = sql`SELECT c.id FROM courses c JOIN enrollments e ON e.group_id = c.group_id WHERE e.user_id = ${viewer.id} AND e.status = 'active'`;
+    const isStudent = viewer.role === 'student';
+    const isTeacher = viewer.role === 'teacher';
+    const isBoard = viewer.role === 'admin' || viewer.role === 'directivo';
+
+    const [aula, cartelera, arena, trofeos, lab, biblioteca, cuaderno, ruta] = await Promise.all([
+      isStudent
+        ? this.count(sql`SELECT count(*) AS n FROM lessons l JOIN units u ON u.id = l.unit_id WHERE l.published AND u.course_id IN (${studentCourses})
+            AND NOT EXISTS (SELECT 1 FROM lesson_progress p WHERE p.lesson_id = l.id AND p.user_id = ${viewer.id} AND p.status = 'completed')`)
+        : isTeacher
+          ? this.count(sql`SELECT count(*) AS n FROM submissions s JOIN assignments a ON a.id = s.assignment_id JOIN courses c ON c.id = a.course_id WHERE c.teacher_id = ${viewer.id} AND s.status = 'submitted'`)
+          : this.count(sql`SELECT count(*) AS n FROM courses`),
+      this.count(sql`SELECT count(*) AS n FROM notifications WHERE user_id = ${viewer.id} AND read_at IS NULL`),
+      isStudent
+        ? this.count(sql`SELECT count(*) AS n FROM live_sessions ls JOIN assessments a ON a.id = ls.assessment_id WHERE ls.status <> 'ended' AND a.course_id IN (${studentCourses})`)
+        : this.count(sql`SELECT count(*) AS n FROM live_sessions WHERE status <> 'ended' ${isBoard ? sql`` : sql`AND host_id = ${viewer.id}`}`),
+      isStudent
+        ? this.count(sql`SELECT count(*) AS n FROM user_badges WHERE user_id = ${viewer.id}`)
+        : this.count(sql`SELECT count(*) AS n FROM certificates ${isBoard ? sql`` : sql`WHERE course_id IN (SELECT id FROM courses WHERE teacher_id = ${viewer.id})`}`),
+      this.count(sql`SELECT count(*) AS n FROM ai_usage WHERE ${isBoard ? sql`true` : sql`user_id = ${viewer.id}`} AND (created_at AT TIME ZONE 'America/Bogota')::DATE = ${today}`),
+      this.count(sql`SELECT count(*) AS n FROM library_items WHERE status = 'published'`),
+      this.count(sql`SELECT count(*) AS n FROM flashcards WHERE user_id = ${viewer.id} AND due_on <= ${today}`),
+      this.count(sql`SELECT count(*) AS n FROM route_items WHERE user_id = ${viewer.id} AND status = 'pending'`),
+    ]);
+
+    const [lessonsToday, attemptsToday, online] = await Promise.all([
+      this.count(sql`SELECT count(*) AS n FROM lesson_progress WHERE status = 'completed' AND (completed_at AT TIME ZONE 'America/Bogota')::DATE = ${today}`),
+      this.count(sql`SELECT count(*) AS n FROM attempts WHERE (started_at AT TIME ZONE 'America/Bogota')::DATE = ${today}`),
+      this.count(sql`SELECT count(DISTINCT user_id) AS n FROM refresh_tokens WHERE revoked_at IS NULL AND created_at > now() - INTERVAL '30 minutes'`),
+    ]);
+
+    return {
+      buildings: { aula, cartelera, arena, trofeos, lab, biblioteca, cuaderno, ruta },
+      pulse: { lessonsToday, attemptsToday, online },
+    };
+  }
+
   async bulletin(viewer: AuthUser, userId: string) {
     await this.assertStudentAccess(viewer, userId);
     const user = await this.database.db.selectFrom('users').selectAll().where('id', '=', userId).executeTakeFirst();

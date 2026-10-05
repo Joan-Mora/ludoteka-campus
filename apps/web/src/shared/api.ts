@@ -1,5 +1,5 @@
 export class ApiException extends Error {
-  constructor(public code: string, message: string) {
+  constructor(public code: string, message: string, public details?: Record<string, unknown>) {
     super(message);
   }
 }
@@ -46,7 +46,7 @@ export async function api<T>(path: string, init: RequestInit = {}, retry = true)
   const text = await res.text();
   const data = text ? JSON.parse(text) : null;
   if (!res.ok) {
-    throw new ApiException(data?.error?.code ?? 'HTTP', data?.error?.message ?? 'No se pudo completar la acción');
+    throw new ApiException(data?.error?.code ?? 'HTTP', data?.error?.message ?? 'No se pudo completar la acción', data?.error?.details);
   }
   return data as T;
 }

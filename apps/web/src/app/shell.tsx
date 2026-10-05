@@ -5,6 +5,8 @@ import {
   Bell,
   BookOpen,
   Building2,
+  Compass,
+  Database,
   Gamepad2,
   GraduationCap,
   HeartHandshake,
@@ -87,6 +89,7 @@ export function Shell() {
         { to: '/app/en-vivo', label: 'Sala en vivo', icon: Radio },
       ];
   const play: NavItem[] = [
+    ...(isStudent ? [{ to: '/app/ruta', label: 'Mi ruta', icon: Compass }] : []),
     { to: '/app/logros', label: 'Logros', icon: Trophy },
     { to: '/app/jugar', label: 'Arcade', icon: Gamepad2 },
     { to: '/app/tutor', label: 'Tutor IA', icon: Sparkles },
@@ -94,6 +97,7 @@ export function Shell() {
   const account: NavItem[] = [{ to: '/app/rostro', label: 'Acceso facial', icon: ScanFace }];
   const staff: NavItem[] = [
     ...(isStaff ? [{ to: '/app/banco', label: 'Banco de preguntas', icon: GraduationCap }] : []),
+    ...(isStaff || isBoard ? [{ to: '/app/consultas', label: 'Observatorio', icon: Database }] : []),
     ...(isBoard ? [{ to: '/app/rectoria', label: 'Coordinación', icon: Building2 }] : []),
     ...(user?.role === 'admin' ? [{ to: '/app/admin', label: 'Institución', icon: Building2 }] : []),
   ];

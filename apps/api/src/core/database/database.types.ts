@@ -486,6 +486,59 @@ export interface Database {
     tsv: Generated<string>;
     embedding: NullableString;
   };
+  topics: {
+    id: Generated<string>;
+    subject_id: string;
+    grade_id: NullableString;
+    code: string;
+    name: string;
+    generator: string;
+    position: number;
+  };
+  question_topics: {
+    question_id: string;
+    topic_id: string;
+  };
+  topic_mastery: {
+    user_id: string;
+    topic_id: string;
+    level: Generated<number>;
+    streak: Generated<number>;
+    correct_count: Generated<number>;
+    attempt_count: Generated<number>;
+    updated_at: Ts;
+  };
+  route_items: {
+    id: Generated<string>;
+    user_id: string;
+    topic_id: string;
+    level: number;
+    generator: string;
+    params: JsonValue;
+    prompt: string;
+    hint: Generated<string>;
+    answer: string;
+    answer_kind: string;
+    explanation: Generated<string>;
+    source: string;
+    ai_answer: NullableString;
+    verification: string;
+    status: Generated<string>;
+    given: NullableString;
+    created_at: Ts;
+    answered_at: NullableDate;
+  };
+  nl_queries: {
+    id: Generated<string>;
+    user_id: string;
+    question: string;
+    sql_text: NullableString;
+    status: string;
+    reason: NullableString;
+    row_count: Generated<number>;
+    duration_ms: NullableInt;
+    created_at: Ts;
+  };
   guardian_links: {
     id: Generated<string>;
     guardian_id: string;

@@ -9,7 +9,15 @@ export const DomainEvents = {
   NewsPublished: 'news.published',
   ForumReply: 'forum.reply',
   GuardianFacialRevoked: 'guardian.facial_revoked',
+  RouteSolved: 'route.solved',
 } as const;
+
+export interface RouteSolvedEvent {
+  userId: string;
+  itemId: string;
+  level: number;
+  levelUp: boolean;
+}
 
 export interface NewsPublishedEvent {
   newsId: string;

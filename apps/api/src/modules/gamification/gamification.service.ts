@@ -7,6 +7,7 @@ import {
   DomainEvents,
   type AttemptGradedEvent,
   type LessonCompletedEvent,
+  type RouteSolvedEvent,
   type SubmissionGradedEvent,
   type TutorMessageEvent,
 } from '../../core/events/domain-events';
@@ -118,6 +119,12 @@ export class GamificationService {
     await this.award(event.userId, Math.round(20 + ratio * 80), 'attempt_graded', 'attempt', event.attemptId);
     await this.touchStreak(event.userId);
     if (event.maxScore > 0 && event.score === event.maxScore) await this.giveBadge(event.userId, 'examen-perfecto');
+  }
+
+  @OnEvent(DomainEvents.RouteSolved)
+  async onRoute(event: RouteSolvedEvent) {
+    await this.award(event.userId, 4 + event.level + (event.levelUp ? 10 : 0), event.levelUp ? 'route_level_up' : 'route_solved', 'route_item', event.itemId);
+    await this.touchStreak(event.userId);
   }
 
   @OnEvent(DomainEvents.TutorMessage)

@@ -314,6 +314,19 @@ export const libraryAskSchema = z.object({
   subjectId: z.string().uuid().optional(),
 });
 
+export const routeGenerateSchema = z.object({
+  topicId: z.string().uuid().optional(),
+  count: z.number().int().min(1).max(5).optional(),
+});
+
+export const routeAnswerSchema = z.object({
+  answer: z.string().trim().min(1, 'Escribe tu respuesta').max(60),
+});
+
+export const nlQuerySchema = z.object({
+  question: z.string().trim().min(5, 'Escribe una pregunta más completa').max(400),
+});
+
 export interface Citation {
   n: number;
   itemId: string;

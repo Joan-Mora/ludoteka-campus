@@ -11,6 +11,8 @@ import { FacialLoginPage, FacialPage } from '@/features/facial';
 import { AdminPage, BankPage, IntegrityPage, RectoriaPage, ReportsPage } from '@/features/staff';
 import { GuardianPage, NewsPage } from '@/features/community';
 import { LibraryItemPage, LibraryPage } from '@/features/library';
+import { RoutePage } from '@/features/route';
+import { ObservatoryPage } from '@/features/observatory';
 
 function Splash() {
   return (
@@ -62,6 +64,8 @@ export function AppRouter() {
         <Route path="acudiente" element={<GuardianPage />} />
         <Route path="biblioteca" element={<LibraryPage />} />
         <Route path="biblioteca/:id" element={<LibraryItemPage />} />
+        <Route path="ruta" element={<RoutePage />} />
+        <Route path="consultas" element={<ObservatoryPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

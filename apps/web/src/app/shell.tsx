@@ -19,6 +19,7 @@ import {
   ScanFace,
   Search,
   Sparkles,
+  Swords,
   Trophy,
   Zap,
   type LucideIcon,
@@ -86,6 +87,7 @@ export function Shell() {
         { to: '/app/cursos', label: 'Mis cursos', icon: BookOpen },
         { to: '/app/biblioteca', label: 'Biblioteca', icon: Library },
         { to: '/app/novedades', label: 'Cartelera', icon: Megaphone },
+        { to: '/app/arena', label: 'Arena', icon: Swords },
         { to: '/app/en-vivo', label: 'Sala en vivo', icon: Radio },
       ];
   const play: NavItem[] = [

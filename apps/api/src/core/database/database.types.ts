@@ -539,6 +539,59 @@ export interface Database {
     duration_ms: NullableInt;
     created_at: Ts;
   };
+  arena_rooms: {
+    id: Generated<string>;
+    code: string;
+    host_id: string;
+    course_id: string;
+    title: string;
+    question_ids: string[];
+    team_size: Generated<number>;
+    question_sec: Generated<number>;
+    status: Generated<string>;
+    current_index: Generated<number>;
+    snapshot: JsonValue;
+    snapshot_at: NullableDate;
+    created_at: Ts;
+    started_at: NullableDate;
+    ended_at: NullableDate;
+  };
+  arena_teams: {
+    id: Generated<string>;
+    room_id: string;
+    name: string;
+    color: string;
+    position: number;
+    score: Generated<number>;
+  };
+  arena_members: {
+    room_id: string;
+    user_id: string;
+    team_id: string;
+    joined_at: Ts;
+  };
+  arena_answers: {
+    id: Generated<string>;
+    room_id: string;
+    team_id: string;
+    question_index: number;
+    question_id: string;
+    option_id: NullableString;
+    locked_by: NullableString;
+    votes: JsonValue;
+    elapsed_ms: number;
+    correct: Generated<boolean>;
+    points: Generated<number>;
+    reveal_order: number;
+    locked_at: Ts;
+  };
+  arena_results: {
+    room_id: string;
+    team_id: string;
+    rank: number;
+    score: number;
+    correct_count: number;
+  };
   guardian_links: {
     id: Generated<string>;
     guardian_id: string;

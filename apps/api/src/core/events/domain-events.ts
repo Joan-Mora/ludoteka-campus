@@ -10,7 +10,13 @@ export const DomainEvents = {
   ForumReply: 'forum.reply',
   GuardianFacialRevoked: 'guardian.facial_revoked',
   RouteSolved: 'route.solved',
+  ArenaFinished: 'arena.finished',
 } as const;
+
+export interface ArenaFinishedEvent {
+  roomId: string;
+  players: { userId: string; rank: number; correct: number }[];
+}
 
 export interface RouteSolvedEvent {
   userId: string;

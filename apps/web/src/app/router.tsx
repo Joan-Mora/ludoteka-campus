@@ -13,6 +13,7 @@ import { GuardianPage, NewsPage } from '@/features/community';
 import { LibraryItemPage, LibraryPage } from '@/features/library';
 import { RoutePage } from '@/features/route';
 import { ObservatoryPage } from '@/features/observatory';
+import { ArenaPage, ArenaProjectorPage, ArenaRoomPage } from '@/features/arena';
 
 function Splash() {
   return (
@@ -44,6 +45,7 @@ export function AppRouter() {
       <Route path="/verificar/:code" element={<VerifyPage />} />
       <Route path="/verificar-reporte/:code" element={<VerifyReportPage />} />
       <Route path="/examen/:id" element={<Gate><ExamPage /></Gate>} />
+      <Route path="/arena/:id/proyector" element={<Gate><ArenaProjectorPage /></Gate>} />
       <Route path="/app" element={<Gate><Shell /></Gate>}>
         <Route index element={<HomePage />} />
         <Route path="cursos" element={<CoursesPage />} />
@@ -66,6 +68,8 @@ export function AppRouter() {
         <Route path="biblioteca/:id" element={<LibraryItemPage />} />
         <Route path="ruta" element={<RoutePage />} />
         <Route path="consultas" element={<ObservatoryPage />} />
+        <Route path="arena" element={<ArenaPage />} />
+        <Route path="arena/:id" element={<ArenaRoomPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

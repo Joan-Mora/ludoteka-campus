@@ -327,6 +327,30 @@ export const nlQuerySchema = z.object({
   question: z.string().trim().min(5, 'Escribe una pregunta más completa').max(400),
 });
 
+export const arenaCreateSchema = z.object({
+  courseId: z.string().uuid(),
+  title: z.string().trim().min(3, 'Escribe un título').max(120).optional(),
+  assessmentId: z.string().uuid().optional(),
+  count: z.number().int().min(3).max(20).optional(),
+  teamSize: z.number().int().min(2).max(5).optional(),
+  questionSec: z.number().int().min(15).max(180).optional(),
+});
+
+export const arenaJoinSchema = z.object({
+  code: z.string().trim().toUpperCase().regex(/^[A-Z2-9]{6}$/, 'El código tiene 6 caracteres'),
+});
+
+export const arenaOptionSchema = z.object({
+  optionId: z.string().uuid(),
+});
+
+export const ARENA_ACTIONS = ['rebalance', 'start', 'next', 'pause', 'resume', 'extra'] as const;
+export type ArenaAction = (typeof ARENA_ACTIONS)[number];
+
+export const arenaControlSchema = z.object({
+  action: z.enum(ARENA_ACTIONS),
+});
+
 export interface Citation {
   n: number;
   itemId: string;

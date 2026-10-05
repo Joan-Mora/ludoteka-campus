@@ -507,6 +507,80 @@ button.chip:hover { border-color: var(--violet); }
 .campus-list-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .campus-list-text small { font-size: 12.5px; font-weight: 600; opacity: .7; }
 
+/* ---------- Arena ---------- */
+.arena-code-input { flex: 1; min-width: 0; font-size: 24px; font-weight: 800; letter-spacing: .2em; text-align: center; padding: 14px; border-radius: 16px; border: 2px solid rgba(255,255,255,.2); background: rgba(255,255,255,.08); color: #fff; }
+.arena-code-input::placeholder { color: rgba(255,255,255,.45); }
+.qr { background: #fff; border-radius: 16px; padding: 8px; margin: 0 auto; box-shadow: 0 18px 40px -18px rgba(0,0,0,.6); }
+.qr svg { width: 100%; height: 100%; display: block; }
+.stage { background: var(--grad-night); color: #fff; border-radius: 26px; padding: 24px; min-height: 320px; box-shadow: var(--shadow); }
+.stage .chip.violet { background: rgba(255,255,255,.14); color: #fff; }
+.stage.big { border-radius: 0; background: none; box-shadow: none; padding: 0; font-size: 20px; }
+.stage-prompt { font-size: clamp(20px, 2.4vw, 30px); line-height: 1.3; margin: 0; }
+.stage.big .stage-prompt { font-size: clamp(30px, 3.6vw, 52px); }
+.stage.big .kahoot button { font-size: 26px; padding: 30px 24px; }
+.stage-explain { background: rgba(255,255,255,.08); border-radius: 16px; padding: 14px 16px; margin: 0; line-height: 1.55; }
+.stage-lobby { display: grid; grid-template-columns: minmax(200px, 320px) 1fr; gap: 28px; align-items: start; }
+.muted-light { color: #cfc9ff; font-size: 14px; }
+.arena-code { font-family: var(--font-display, inherit); font-size: 54px; font-weight: 800; letter-spacing: .16em; margin: 6px 0 14px; }
+.stage.big .arena-code { font-size: 96px; }
+.arena-teams { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; }
+.team-card { background: rgba(255,255,255,.08); border-top: 5px solid; border-radius: 16px; padding: 12px 14px; }
+.team-members { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.team-members span { background: rgba(255,255,255,.14); border-radius: 999px; padding: 4px 10px; font-size: 13px; font-weight: 700; }
+.team-members .empty-slot { background: none; color: #cfc9ff; font-weight: 600; }
+.team-side { border-left: 5px solid; padding: 12px 14px; }
+.team-dot { width: 18px; height: 18px; border-radius: 6px; display: inline-block; }
+.arena-options button { position: relative; }
+.arena-options button:disabled { cursor: default; }
+.arena-options button.voted { outline: 4px solid var(--ink); outline-offset: 2px; }
+.stage .arena-options button.voted { outline-color: #fff; }
+.arena-options button.correct { outline: 4px solid #fff; box-shadow: 0 0 0 8px rgba(25,195,156,.55), inset 0 -6px 0 rgba(0,0,0,.18); }
+.arena-options button.dim { opacity: .35; }
+.opt-label { font-weight: 900; opacity: .8; margin-right: 4px; }
+.voters { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.voters span { background: rgba(255,255,255,.28); border-radius: 999px; padding: 2px 8px; font-size: 12px; font-weight: 700; }
+.lock-strip { display: flex; flex-wrap: wrap; gap: 8px; }
+.lock-pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 999px; border: 2px solid; font-weight: 700; font-size: 13px; background: var(--surface); color: var(--ink-2); opacity: .7; }
+.lock-pill.on { opacity: 1; }
+.stage .lock-pill { background: rgba(255,255,255,.08); color: #fff; }
+.paused-banner { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border-radius: 14px; background: rgba(255,200,61,.2); color: #9a6300; font-weight: 800; }
+.stage .paused-banner { color: #ffd66b; }
+.reveal-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; border-left: 6px solid; background: var(--surface-2); color: var(--ink); }
+.stage .reveal-row { background: rgba(255,255,255,.08); color: #fff; }
+.reveal-row.mine { box-shadow: 0 0 0 2px var(--violet); }
+.reveal-row.ok { background: rgba(25,195,156,.16); }
+.reveal-row.bad { background: rgba(255,93,115,.12); }
+.leader-row { display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 14px; background: var(--surface-2); color: var(--ink); }
+.stage .leader-row { background: rgba(255,255,255,.08); color: #fff; }
+.leader-row.mine { box-shadow: 0 0 0 2px var(--violet); }
+.leader-pos { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; font-weight: 800; background: rgba(124,92,255,.18); }
+.leader-bar { flex: 1; height: 14px; border-radius: 999px; background: rgba(124,92,255,.14); overflow: hidden; }
+.leader-bar span { display: block; height: 100%; border-radius: 999px; }
+.podium { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; align-items: end; max-width: 720px; margin: 0 auto; }
+.podium-step { display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center; }
+.podium-team { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.podium-team small { opacity: .75; font-weight: 700; }
+.podium-members { font-size: 12px; opacity: .7; }
+.podium-block { width: 100%; border-radius: 16px 16px 6px 6px; display: grid; place-items: center; color: #fff; font-size: 40px; font-weight: 900; box-shadow: inset 0 -8px 0 rgba(0,0,0,.18); }
+.podium-step.p1 .podium-block { height: 170px; }
+.podium-step.p2 .podium-block { height: 120px; }
+.podium-step.p3 .podium-block { height: 86px; }
+.podium-step.mine .podium-team b { color: var(--violet-2); }
+.stage.big .podium { max-width: 1000px; }
+.stage.big .podium-step.p1 .podium-block { height: 280px; }
+.stage.big .podium-step.p2 .podium-block { height: 200px; }
+.stage.big .podium-step.p3 .podium-block { height: 140px; }
+.captain-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.captain-bar.locked { background: rgba(25,195,156,.12); }
+.verdict { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; }
+.verdict.ok { background: rgba(25,195,156,.16); color: #0c8f71; }
+.verdict.bad { background: rgba(255,93,115,.12); color: #d6304a; }
+.projector-body { max-width: 1400px; margin: 0 auto; padding: 32px 40px 64px; }
+.projector .chip.violet { background: rgba(255,255,255,.14); color: #fff; }
+.stage.big h2 { font-size: clamp(30px, 3vw, 48px); }
+.stage.big .muted { color: #cfc9ff; font-size: 20px; }
+.stage.big .podium-team b { font-size: 26px; }
+
 @media (max-width: 760px) {
   .campus { min-height: 0; padding: 20px 16px 0; border-radius: 24px; }
   .campus-map { display: none; }
@@ -536,4 +610,6 @@ button.chip:hover { border-color: var(--violet); }
   .auth-art { display: none; }
   .search { display: none; }
   .kahoot { grid-template-columns: 1fr; }
+  .stage-lobby { grid-template-columns: 1fr; }
+  .arena-code { font-size: 40px; }
 }

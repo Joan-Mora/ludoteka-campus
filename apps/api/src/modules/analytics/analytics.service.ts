@@ -138,8 +138,10 @@ export class AnalyticsService {
         this.count(unreadNewsCount(viewer)),
       ]).then(([notes, news]) => notes + news),
       isStudent
-        ? this.count(sql`SELECT count(*) AS n FROM live_sessions ls JOIN assessments a ON a.id = ls.assessment_id WHERE ls.status <> 'ended' AND a.course_id IN (${studentCourses})`)
-        : this.count(sql`SELECT count(*) AS n FROM live_sessions WHERE status <> 'ended' ${isBoard ? sql`` : sql`AND host_id = ${viewer.id}`}`),
+        ? this.count(sql`SELECT (SELECT count(*) FROM live_sessions ls JOIN assessments a ON a.id = ls.assessment_id WHERE ls.status <> 'ended' AND a.course_id IN (${studentCourses}))
+            + (SELECT count(*) FROM arena_rooms WHERE status <> 'ended' AND course_id IN (${studentCourses})) AS n`)
+        : this.count(sql`SELECT (SELECT count(*) FROM live_sessions WHERE status <> 'ended' ${isBoard ? sql`` : sql`AND host_id = ${viewer.id}`})
+            + (SELECT count(*) FROM arena_rooms WHERE status <> 'ended' ${isBoard ? sql`` : sql`AND host_id = ${viewer.id}`}) AS n`),
       isStudent
         ? this.count(sql`SELECT count(*) AS n FROM user_badges WHERE user_id = ${viewer.id}`)
         : this.count(sql`SELECT count(*) AS n FROM certificates ${isBoard ? sql`` : sql`WHERE course_id IN (SELECT id FROM courses WHERE teacher_id = ${viewer.id})`}`),

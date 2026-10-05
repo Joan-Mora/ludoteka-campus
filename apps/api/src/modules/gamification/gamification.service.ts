@@ -5,6 +5,7 @@ import { DatabaseService } from '../../core/database/database.service';
 import { ApiError } from '../../core/errors/api-error';
 import {
   DomainEvents,
+  type ArenaFinishedEvent,
   type AttemptGradedEvent,
   type LessonCompletedEvent,
   type RouteSolvedEvent,
@@ -125,6 +126,15 @@ export class GamificationService {
   async onRoute(event: RouteSolvedEvent) {
     await this.award(event.userId, 4 + event.level + (event.levelUp ? 10 : 0), event.levelUp ? 'route_level_up' : 'route_solved', 'route_item', event.itemId);
     await this.touchStreak(event.userId);
+  }
+
+  @OnEvent(DomainEvents.ArenaFinished)
+  async onArena(event: ArenaFinishedEvent) {
+    const podium = [0, 30, 20, 10];
+    for (const player of event.players) {
+      await this.award(player.userId, 10 + player.correct * 5 + (podium[player.rank] ?? 0), 'arena_played', 'arena_room', event.roomId);
+      await this.touchStreak(player.userId);
+    }
   }
 
   @OnEvent(DomainEvents.TutorMessage)

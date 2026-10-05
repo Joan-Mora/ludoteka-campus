@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
 import { randomUUID } from 'crypto';
 import { sql } from 'kysely';
 import { FACE_MODEL_ID, LIVENESS_ACTIONS, type LivenessAction } from '@eduquest/contracts';
@@ -7,6 +8,7 @@ import { Env } from '../../core/config/config.module';
 import { ApiError } from '../../core/errors/api-error';
 import { decryptVector, deriveKey, encryptVector, sha256 } from '../../core/common/crypto';
 import type { AuthUser } from '../../core/auth/auth.decorators';
+import { DomainEvents, type GuardianFacialRevokedEvent } from '../../core/events/domain-events';
 import { IdentityService } from '../identity/public-api';
 
 type Reason =
@@ -215,6 +217,15 @@ export class BiometricsService {
       .values({ actor_id: userId, action: 'facial.delete', entity: 'face_templates', entity_id: userId, meta: null })
       .execute();
     return { ok: true };
+  }
+
+  @OnEvent(DomainEvents.GuardianFacialRevoked)
+  async onGuardianRevoked(event: GuardianFacialRevokedEvent) {
+    await this.database.db.deleteFrom('face_templates').where('user_id', '=', event.studentId).execute();
+    await this.database.db
+      .insertInto('audit_log')
+      .values({ actor_id: event.guardianId, action: 'facial.delete', entity: 'face_templates', entity_id: event.studentId, meta: JSON.stringify({ reason: 'guardian_revoked' }) })
+      .execute();
   }
 
   async attempts(userId: string) {

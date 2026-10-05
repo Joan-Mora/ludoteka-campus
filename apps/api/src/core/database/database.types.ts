@@ -427,6 +427,68 @@ export interface Database {
     read_at: NullableDate;
     created_at: Ts;
   };
+  guardian_links: {
+    id: Generated<string>;
+    guardian_id: string;
+    student_id: string;
+    relationship: string;
+    status: Generated<string>;
+    created_by: NullableString;
+    created_at: Ts;
+  };
+  guardian_authorizations: {
+    id: Generated<string>;
+    link_id: string;
+    scope: string;
+    policy_version: string;
+    granted: boolean;
+    ip: NullableString;
+    created_at: Ts;
+  };
+  news: {
+    id: Generated<string>;
+    author_id: string;
+    title: string;
+    body: string;
+    category: Generated<string>;
+    pinned: Generated<boolean>;
+    requires_ack: Generated<boolean>;
+    publish_at: Ts;
+    expires_at: NullableDate;
+    created_at: Ts;
+    updated_at: Ts;
+  };
+  news_audience: {
+    news_id: string;
+    kind: string;
+    value: Generated<string>;
+  };
+  news_reads: {
+    news_id: string;
+    user_id: string;
+    read_at: Ts;
+    acknowledged_at: NullableDate;
+  };
+  forum_threads: {
+    id: Generated<string>;
+    course_id: string;
+    author_id: string;
+    title: string;
+    body: string;
+    pinned: Generated<boolean>;
+    locked: Generated<boolean>;
+    posts_count: Generated<number>;
+    last_post_at: Ts;
+    created_at: Ts;
+  };
+  forum_posts: {
+    id: Generated<string>;
+    thread_id: string;
+    author_id: string;
+    body: string;
+    is_answer: Generated<boolean>;
+    created_at: Ts;
+  };
   email_outbox: {
     id: Generated<string>;
     to_email: string;

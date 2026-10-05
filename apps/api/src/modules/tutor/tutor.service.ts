@@ -7,6 +7,7 @@ import { ApiError } from '../../core/errors/api-error';
 import { DomainEvents } from '../../core/events/domain-events';
 import { shortCode } from '../../core/common/crypto';
 import type { AuthUser } from '../../core/auth/auth.decorators';
+import { GuardiansService } from '../identity/public-api';
 import { IntegrityService } from '../integrity/public-api';
 import { AiService } from '../../core/ai/ai.service';
 
@@ -23,11 +24,15 @@ export class TutorService {
     private readonly integrity: IntegrityService,
     private readonly events: EventEmitter2,
     private readonly ai: AiService,
+    private readonly guardians: GuardiansService,
   ) {}
 
   async chat(user: AuthUser, input: { message: string; courseId?: string; lessonId?: string; conversationId?: string }) {
     if (await this.integrity.hasBlockingAttempt(user.id)) {
       throw new ApiError(403, 'KIOSK_ACTIVE', 'El tutor se apaga durante un examen. Termina la evaluación y vuelve a practicar.');
+    }
+    if (user.role === 'student' && !(await this.guardians.isAuthorized(user.id, 'ai_tutor'))) {
+      throw new ApiError(403, 'GUARDIAN_REQUIRED', 'Tu acudiente debe autorizar el tutor con IA desde su panel antes de que puedas usarlo.');
     }
     let conversationId = input.conversationId;
     if (!conversationId) {

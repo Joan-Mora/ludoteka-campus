@@ -5,6 +5,7 @@ import { ApiError } from '../../core/errors/api-error';
 import type { AuthUser } from '../../core/auth/auth.decorators';
 import { renderPdf, renderWorkbook } from '../../core/reports/documents';
 import { ReportLog } from '../../core/reports/report-log.service';
+import { unreadNewsCount } from '../learning/public-api';
 
 const pct = (score: number, max: number) => (max > 0 ? Math.round((score * 100) / max) : 0);
 const day = (value: Date | string | null | undefined) => (value ? new Date(value).toLocaleDateString('es-CO', { timeZone: 'America/Bogota' }) : '—');
@@ -132,7 +133,10 @@ export class AnalyticsService {
         : isTeacher
           ? this.count(sql`SELECT count(*) AS n FROM submissions s JOIN assignments a ON a.id = s.assignment_id JOIN courses c ON c.id = a.course_id WHERE c.teacher_id = ${viewer.id} AND s.status = 'submitted'`)
           : this.count(sql`SELECT count(*) AS n FROM courses`),
-      this.count(sql`SELECT count(*) AS n FROM notifications WHERE user_id = ${viewer.id} AND read_at IS NULL`),
+      Promise.all([
+        this.count(sql`SELECT count(*) AS n FROM notifications WHERE user_id = ${viewer.id} AND read_at IS NULL`),
+        this.count(unreadNewsCount(viewer)),
+      ]).then(([notes, news]) => notes + news),
       isStudent
         ? this.count(sql`SELECT count(*) AS n FROM live_sessions ls JOIN assessments a ON a.id = ls.assessment_id WHERE ls.status <> 'ended' AND a.course_id IN (${studentCourses})`)
         : this.count(sql`SELECT count(*) AS n FROM live_sessions WHERE status <> 'ended' ${isBoard ? sql`` : sql`AND host_id = ${viewer.id}`}`),
@@ -154,6 +158,46 @@ export class AnalyticsService {
     return {
       buildings: { aula, cartelera, arena, trofeos, lab, biblioteca, cuaderno, ruta },
       pulse: { lessonsToday, attemptsToday, online },
+    };
+  }
+
+  /** Compact progress card for a student, shown to the student's guardians and teachers. */
+  async studentOverview(viewer: AuthUser, studentId: string) {
+    await this.assertStudentAccess(viewer, studentId);
+    const courses = sql`SELECT c.id FROM courses c JOIN enrollments e ON e.group_id = c.group_id WHERE e.user_id = ${studentId} AND e.status = 'active' AND c.published`;
+    const [lessonsDone, lessonsTotal, xp, badges, flagged, pending] = await Promise.all([
+      this.count(sql`SELECT count(*) AS n FROM lesson_progress WHERE user_id = ${studentId} AND status = 'completed'`),
+      this.count(sql`SELECT count(*) AS n FROM lessons l JOIN units u ON u.id = l.unit_id WHERE l.published AND u.course_id IN (${courses})`),
+      this.count(sql`SELECT coalesce(sum(amount), 0) AS n FROM xp_ledger WHERE user_id = ${studentId}`),
+      this.count(sql`SELECT count(*) AS n FROM user_badges WHERE user_id = ${studentId}`),
+      this.count(sql`SELECT count(*) AS n FROM attempt_flags f JOIN attempts a ON a.id = f.attempt_id WHERE a.user_id = ${studentId} AND f.flagged`),
+      this.count(sql`SELECT count(*) AS n FROM assignments a WHERE a.course_id IN (${courses})
+        AND NOT EXISTS (SELECT 1 FROM submissions s WHERE s.assignment_id = a.id AND s.user_id = ${studentId})`),
+    ]);
+    const recent = await this.database.db
+      .selectFrom('attempts')
+      .innerJoin('assessments', 'assessments.id', 'attempts.assessment_id')
+      .innerJoin('courses', 'courses.id', 'assessments.course_id')
+      .select(['attempts.id', 'assessments.title', 'assessments.kind', 'courses.title as course', 'attempts.score', 'attempts.max_score', 'attempts.submitted_at'])
+      .where('attempts.user_id', '=', studentId)
+      .where('attempts.status', '=', 'completed')
+      .orderBy('attempts.submitted_at', 'desc')
+      .limit(6)
+      .execute();
+    const last = await sql<{ at: Date | null }>`SELECT greatest(
+        (SELECT max(completed_at) FROM lesson_progress WHERE user_id = ${studentId}),
+        (SELECT max(started_at) FROM attempts WHERE user_id = ${studentId})
+      ) AS at`.execute(this.database.db);
+    const average = recent.length ? Math.round(recent.reduce((sum, r) => sum + pct(r.score, r.max_score), 0) / recent.length) : null;
+    return {
+      lessons: { completed: lessonsDone, total: lessonsTotal },
+      xp,
+      badges,
+      flaggedAttempts: flagged,
+      pendingAssignments: pending,
+      average,
+      lastActivity: last.rows[0]?.at ?? null,
+      recent: recent.map((r) => ({ id: r.id, title: r.title, kind: r.kind, course: r.course, percent: pct(r.score, r.max_score), at: r.submitted_at })),
     };
   }
 

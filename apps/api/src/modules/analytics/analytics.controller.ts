@@ -32,6 +32,12 @@ export class AnalyticsController {
   }
 
   @Roles('teacher', 'admin', 'directivo', 'student', 'guardian')
+  @Get('analytics/students/:id/overview')
+  studentOverview(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+    return this.analytics.studentOverview(user, id);
+  }
+
+  @Roles('teacher', 'admin', 'directivo', 'student', 'guardian')
   @Get('reports/bulletin/:userId/pdf')
   async bulletin(@CurrentUser() user: AuthUser, @Param('userId') userId: string, @Res() res: Response) {
     send(res, await this.analytics.bulletin(user, userId), 'pdf', 'boletin');

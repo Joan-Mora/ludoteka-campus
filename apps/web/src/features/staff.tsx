@@ -14,6 +14,7 @@ import {
   FileSpreadsheet,
   FileText,
   GraduationCap,
+  HeartHandshake,
   Layers,
   Library,
   Plus,
@@ -411,7 +412,7 @@ export function RectoriaPage() {
         <section className="hero">
           <div className="orb" style={{ width: 380, height: 380, right: -120, top: -160, background: 'radial-gradient(circle, rgba(58,184,255,.45), transparent 70%)' }} />
           <div style={{ position: 'relative' }}>
-            <div className="eyebrow" style={{ color: '#ffd66b' }}>Rectoría</div>
+            <div className="eyebrow" style={{ color: '#ffd66b' }}>Coordinación</div>
             <h1 style={{ marginTop: 8 }}>Panorama institucional</h1>
             <p style={{ marginTop: 8, fontSize: 16, maxWidth: 560 }}>Indicadores del Colegio Francisco Arango en tiempo real para decidir con datos.</p>
           </div>
@@ -467,7 +468,7 @@ function CourseLinks() {
   );
 }
 
-const roleName: Record<string, string> = { student: 'Estudiante', teacher: 'Docente', directivo: 'Directivo', admin: 'Admin', guardian: 'Acudiente' };
+const roleName: Record<string, string> = { student: 'Estudiante', teacher: 'Docente', directivo: 'Coordinación', admin: 'Admin', guardian: 'Acudiente' };
 const roleTone: Record<string, string> = { student: 'violet', teacher: 'sky', directivo: 'gold', admin: 'coral', guardian: 'mint' };
 
 export function AdminPage() {
@@ -477,7 +478,7 @@ export function AdminPage() {
   const groups = useQuery({ queryKey: ['groups'], queryFn: () => api<{ id: string; name: string; grade_name: string }[]>('/api/institution/groups') });
   const subjects = useQuery({ queryKey: ['subjects'], queryFn: () => api<{ id: string; name: string; code: string }[]>('/api/institution/subjects') });
   const users = useQuery({ queryKey: ['users'], queryFn: () => api<{ id: string; fullName: string; email: string; role: string }[]>('/api/admin/users') });
-  const [tab, setTab] = useState<'people' | 'structure' | 'courses'>('people');
+  const [tab, setTab] = useState<'people' | 'guardians' | 'structure' | 'courses'>('people');
 
   async function send(path: string, body: unknown, form?: HTMLFormElement) {
     await api(path, { method: 'POST', body: JSON.stringify(body) });
@@ -501,6 +502,7 @@ export function AdminPage() {
       <div className="row g-8" style={{ marginBottom: 18, padding: 6, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, width: 'fit-content' }}>
         {([
           ['people', 'Personas', Users],
+          ['guardians', 'Acudientes', HeartHandshake],
           ['structure', 'Estructura', Building2],
           ['courses', 'Cursos', BookOpen],
         ] as const).map(([key, label, Icon]) => (
@@ -583,7 +585,80 @@ export function AdminPage() {
         </div>
       )}
 
+      {tab === 'guardians' && <GuardianLinks users={users.data ?? []} />}
+
       {tab === 'courses' && <TeacherBuilder />}
+    </div>
+  );
+}
+
+interface GuardianLinkRow {
+  id: string;
+  relationship: string;
+  status: string;
+  guardian_name: string;
+  guardian_email: string;
+  student_name: string;
+  student_email: string;
+  is_minor: boolean;
+}
+
+function GuardianLinks({ users }: { users: { id: string; fullName: string; email: string; role: string }[] }) {
+  const client = useQueryClient();
+  const links = useQuery({ queryKey: ['guardian-links'], queryFn: () => api<GuardianLinkRow[]>('/api/admin/guardian-links') });
+  const [error, setError] = useState('');
+
+  async function create(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const d = new FormData(form);
+    setError('');
+    try {
+      await api('/api/admin/guardian-links', { method: 'POST', body: JSON.stringify({ guardianEmail: d.get('guardian'), studentEmail: d.get('student'), relationship: d.get('relationship') }) });
+      form.reset();
+      client.invalidateQueries({ queryKey: ['guardian-links'] });
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  }
+
+  async function revoke(id: string) {
+    await api(`/api/admin/guardian-links/${id}`, { method: 'DELETE' });
+    client.invalidateQueries({ queryKey: ['guardian-links'] });
+  }
+
+  return (
+    <div className="grid cols-3" style={{ alignItems: 'start' }}>
+      <Panel icon={HeartHandshake} tone="mint" title="Vínculos acudiente-estudiante" subtitle="El acudiente autoriza el acceso facial y el tutor IA de los menores (Ley 1581)" className="span-2">
+        <table className="table">
+          <thead><tr><th>Acudiente</th><th>Estudiante</th><th>Parentesco</th><th>Estado</th><th /></tr></thead>
+          <tbody>
+            {(links.data ?? []).map((link) => (
+              <tr key={link.id}>
+                <td><b>{link.guardian_name}</b><div className="muted" style={{ fontSize: 12 }}>{link.guardian_email}</div></td>
+                <td><b>{link.student_name}</b> {link.is_minor && <span className="chip gold" style={{ marginLeft: 6 }}>Menor</span>}<div className="muted" style={{ fontSize: 12 }}>{link.student_email}</div></td>
+                <td style={{ textTransform: 'capitalize' }}>{link.relationship}</td>
+                <td><span className={`chip ${link.status === 'active' ? 'mint' : 'soft'}`}>{link.status === 'active' ? 'Activo' : link.status === 'revoked' ? 'Revocado' : 'Pendiente'}</span></td>
+                <td>{link.status === 'active' && <button className="btn sm ghost" onClick={() => revoke(link.id)}>Revocar</button>}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        {!links.data?.length && <Empty icon={HeartHandshake} title="Sin vínculos" body="Vincula a cada acudiente con su estudiante." />}
+      </Panel>
+      <Panel icon={UserPlus} tone="violet" title="Nuevo vínculo">
+        <form onSubmit={create}>
+          <label className="field">Acudiente<select name="guardian" required>{users.filter((u) => u.role === 'guardian').map((u) => <option key={u.id} value={u.email}>{u.fullName}</option>)}</select></label>
+          <label className="field">Estudiante<select name="student" required>{users.filter((u) => u.role === 'student').map((u) => <option key={u.id} value={u.email}>{u.fullName}</option>)}</select></label>
+          <label className="field">Parentesco
+            <select name="relationship">
+              {['madre', 'padre', 'tutor', 'abuelo', 'otro'].map((r) => <option key={r} value={r}>{r[0]!.toUpperCase() + r.slice(1)}</option>)}
+            </select>
+          </label>
+          {error && <p className="form-error">{error}</p>}
+          <button className="btn" type="submit" style={{ width: '100%' }}>Vincular</button>
+        </form>
+      </Panel>
     </div>
   );
 }

@@ -6,7 +6,30 @@ export const DomainEvents = {
   IntegritySuspend: 'integrity.suspend',
   PasswordReset: 'password.reset',
   TutorMessage: 'tutor.message',
+  NewsPublished: 'news.published',
+  ForumReply: 'forum.reply',
+  GuardianFacialRevoked: 'guardian.facial_revoked',
 } as const;
+
+export interface NewsPublishedEvent {
+  newsId: string;
+  title: string;
+  category: string;
+  requiresAck: boolean;
+  recipientIds: string[];
+}
+
+export interface ForumReplyEvent {
+  userId: string;
+  threadId: string;
+  title: string;
+  authorName: string;
+}
+
+export interface GuardianFacialRevokedEvent {
+  studentId: string;
+  guardianId: string;
+}
 
 export interface LessonCompletedEvent {
   userId: string;

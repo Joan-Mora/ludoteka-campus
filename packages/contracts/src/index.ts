@@ -206,6 +206,57 @@ export const guardianConsentSchema = z.object({
   userId: z.string().uuid(),
 });
 
+export const GUARDIAN_RELATIONSHIPS = ['madre', 'padre', 'tutor', 'abuelo', 'otro'] as const;
+export const GUARDIAN_SCOPES = ['facial', 'ai_tutor', 'data_processing'] as const;
+export type GuardianScope = (typeof GUARDIAN_SCOPES)[number];
+
+export const guardianLinkSchema = z.object({
+  guardianEmail: z.string().email(),
+  studentEmail: z.string().email(),
+  relationship: z.enum(GUARDIAN_RELATIONSHIPS),
+});
+
+export const guardianAuthorizationSchema = z.object({
+  studentId: z.string().uuid(),
+  scope: z.enum(GUARDIAN_SCOPES),
+  granted: z.boolean(),
+});
+
+export const NEWS_CATEGORIES = ['general', 'academico', 'evento', 'convivencia', 'urgente'] as const;
+
+export const newsAudienceSchema = z.discriminatedUnion('kind', [
+  z.object({ kind: z.literal('all') }),
+  z.object({ kind: z.literal('role'), value: z.enum(ROLES) }),
+  z.object({ kind: z.literal('group'), value: z.string().uuid() }),
+  z.object({ kind: z.literal('course'), value: z.string().uuid() }),
+]);
+export type NewsAudience = z.infer<typeof newsAudienceSchema>;
+
+export const newsSchema = z
+  .object({
+    title: z.string().trim().min(3).max(160),
+    body: z.string().trim().min(1).max(8000),
+    category: z.enum(NEWS_CATEGORIES).default('general'),
+    pinned: z.boolean().default(false),
+    requiresAck: z.boolean().default(false),
+    publishAt: z.string().datetime({ offset: true }).optional(),
+    expiresAt: z.string().datetime({ offset: true }).optional(),
+    audience: z.array(newsAudienceSchema).min(1).max(20),
+  })
+  .refine((v) => !v.expiresAt || new Date(v.expiresAt) > new Date(v.publishAt ?? Date.now()), {
+    message: 'La fecha de vencimiento debe ser posterior a la publicación',
+    path: ['expiresAt'],
+  });
+
+export const forumThreadSchema = z.object({
+  title: z.string().trim().min(3).max(160),
+  body: z.string().trim().min(1).max(6000),
+});
+
+export const forumPostSchema = z.object({
+  body: z.string().trim().min(1).max(6000),
+});
+
 export const certificateIssueSchema = z.object({
   userId: z.string().uuid(),
   courseId: z.string().uuid(),

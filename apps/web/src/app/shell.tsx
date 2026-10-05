@@ -7,8 +7,10 @@ import {
   Building2,
   Gamepad2,
   GraduationCap,
+  HeartHandshake,
   LayoutDashboard,
   LogOut,
+  Megaphone,
   Moon,
   Radio,
   ScanFace,
@@ -29,7 +31,7 @@ const roleLabel: Record<string, string> = {
   student: 'Estudiante',
   teacher: 'Docente',
   admin: 'Administración',
-  directivo: 'Rectoría',
+  directivo: 'Coordinación',
   guardian: 'Acudiente',
 };
 
@@ -68,11 +70,19 @@ export function Shell() {
   const isStaff = user && ['teacher', 'admin'].includes(user.role);
   const isBoard = user && ['admin', 'directivo'].includes(user.role);
 
-  const learn: NavItem[] = [
-    { to: '/app', label: 'Inicio', icon: LayoutDashboard, end: true },
-    { to: '/app/cursos', label: 'Mis cursos', icon: BookOpen },
-    { to: '/app/en-vivo', label: 'Sala en vivo', icon: Radio },
-  ];
+  const isGuardian = user?.role === 'guardian';
+  const learn: NavItem[] = isGuardian
+    ? [
+        { to: '/app', label: 'Inicio', icon: LayoutDashboard, end: true },
+        { to: '/app/acudiente', label: 'Seguimiento', icon: HeartHandshake },
+        { to: '/app/novedades', label: 'Cartelera', icon: Megaphone },
+      ]
+    : [
+        { to: '/app', label: 'Inicio', icon: LayoutDashboard, end: true },
+        { to: '/app/cursos', label: 'Mis cursos', icon: BookOpen },
+        { to: '/app/novedades', label: 'Cartelera', icon: Megaphone },
+        { to: '/app/en-vivo', label: 'Sala en vivo', icon: Radio },
+      ];
   const play: NavItem[] = [
     { to: '/app/logros', label: 'Logros', icon: Trophy },
     { to: '/app/jugar', label: 'Arcade', icon: Gamepad2 },
@@ -81,7 +91,7 @@ export function Shell() {
   const account: NavItem[] = [{ to: '/app/rostro', label: 'Acceso facial', icon: ScanFace }];
   const staff: NavItem[] = [
     ...(isStaff ? [{ to: '/app/banco', label: 'Banco de preguntas', icon: GraduationCap }] : []),
-    ...(isBoard ? [{ to: '/app/rectoria', label: 'Rectoría', icon: Building2 }] : []),
+    ...(isBoard ? [{ to: '/app/rectoria', label: 'Coordinación', icon: Building2 }] : []),
     ...(user?.role === 'admin' ? [{ to: '/app/admin', label: 'Institución', icon: Building2 }] : []),
   ];
 

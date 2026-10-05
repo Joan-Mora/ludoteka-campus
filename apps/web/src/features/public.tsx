@@ -249,7 +249,8 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
 const labAccounts = [
   ['Estudiante', 'estudiante@eduquest.local'],
   ['Docente', 'docente@eduquest.local'],
-  ['Rectoría', 'rectoria@eduquest.local'],
+  ['Coordinación', 'coordinacion@eduquest.local'],
+  ['Acudiente', 'acudiente@eduquest.local'],
   ['Admin', 'admin@eduquest.local'],
 ];
 

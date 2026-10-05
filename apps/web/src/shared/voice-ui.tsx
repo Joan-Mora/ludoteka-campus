@@ -66,7 +66,7 @@ const destinations: Destination[] = [
   { label: 'Acceso facial', to: '/app/rostro', phrases: ['acceso facial', 'rostro', 'mi cara'] },
   { label: 'Banco de preguntas', to: '/app/banco', phrases: ['banco', 'preguntas'], roles: ['teacher', 'admin'] },
   { label: 'Observatorio', to: '/app/consultas', phrases: ['observatorio', 'consultas', 'datos'], roles: ['teacher', 'admin', 'directivo'] },
-  { label: 'Rectoría', to: '/app/rectoria', phrases: ['rectoria', 'panorama', 'indicadores'], roles: ['admin', 'directivo'] },
+  { label: 'Coordinación', to: '/app/rectoria', phrases: ['coordinacion', 'rectoria', 'panorama', 'indicadores'], roles: ['admin', 'directivo'] },
   { label: 'Seguimiento', to: '/app/acudiente', phrases: ['seguimiento', 'mis hijos', 'acudidos'], roles: ['guardian'] },
 ];
 

@@ -9,6 +9,7 @@ import { AchievementsPage, GamesPage } from '@/features/play';
 import { TutorPage } from '@/features/tutor';
 import { FacialLoginPage, FacialPage } from '@/features/facial';
 import { AdminPage, BankPage, IntegrityPage, RectoriaPage, ReportsPage } from '@/features/staff';
+import { GuardianPage, NewsPage } from '@/features/community';
 
 function Splash() {
   return (
@@ -56,6 +57,8 @@ export function AppRouter() {
         <Route path="reportes/:id" element={<ReportsPage />} />
         <Route path="rectoria" element={<RectoriaPage />} />
         <Route path="admin" element={<AdminPage />} />
+        <Route path="novedades" element={<NewsPage />} />
+        <Route path="acudiente" element={<GuardianPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

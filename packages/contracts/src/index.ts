@@ -3,11 +3,12 @@ import { z } from 'zod';
 export const ROLES = ['admin', 'directivo', 'teacher', 'student', 'guardian'] as const;
 export type Role = (typeof ROLES)[number];
 
-export const registerSchema = z.object({
-  email: z.string().email('Correo inválido'),
-  password: z.string().min(8, 'Mínimo 8 caracteres'),
-  fullName: z.string().min(2, 'Escribe tu nombre').max(120),
-});
+const strongPassword = z
+  .string()
+  .min(8, 'Mínimo 8 caracteres')
+  .max(128)
+  .regex(/[A-Za-z]/, 'Incluye al menos una letra')
+  .regex(/\d/, 'Incluye al menos un número');
 
 export const loginSchema = z.object({
   email: z.string().email('Correo inválido'),
@@ -20,15 +21,85 @@ export const forgotSchema = z.object({
 
 export const resetSchema = z.object({
   token: z.string().min(10),
-  password: z.string().min(8, 'Mínimo 8 caracteres'),
+  password: strongPassword,
+});
+
+export const otpVerifySchema = z.object({
+  challengeId: z.string().uuid(),
+  code: z.string().regex(/^\d{6}$/, 'El código tiene 6 dígitos'),
+  trustDevice: z.boolean().optional(),
+});
+
+export const otpResendSchema = z.object({
+  challengeId: z.string().uuid(),
+});
+
+export const changePasswordSchema = z.object({
+  currentPassword: z.string().min(1, 'Escribe tu contraseña actual'),
+  newPassword: strongPassword,
+});
+
+/** The admin never types a password: the API generates a temporary one and emails it. */
+export const passkeyVerifySchema = z.object({
+  challengeId: z.string().uuid(),
+  response: z
+    .object({
+      id: z.string().min(1).max(1024),
+      rawId: z.string().min(1).max(1024),
+      type: z.literal('public-key'),
+      response: z.record(z.string(), z.unknown()),
+    })
+    .passthrough(),
+});
+
+export const passkeyRenameSchema = z.object({ label: z.string().min(1).max(60) });
+
+export const legalAcceptSchema = z.object({
+  wards: z.array(z.string().uuid()).max(20).optional(),
+  guardianPresent: z.boolean().optional(),
+});
+
+export const dataRequestSchema = z.object({
+  kind: z.literal('delete'),
+  reason: z.string().max(500).optional(),
+});
+
+export const resolveDataRequestSchema = z.object({ status: z.enum(['done', 'rejected']) });
+
+export const preferencesSchema = z.object({
+  companion: z.enum(['luka', 'luna']).optional(),
+  theme: z.enum(['light', 'dark', 'system']).optional(),
 });
 
 export const createUserSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
-  fullName: z.string().min(2).max(120),
+  email: z.string().email('Correo inválido'),
+  fullName: z.string().min(2, 'Escribe el nombre').max(120),
   role: z.enum(ROLES),
   isMinor: z.boolean().optional(),
+  groupId: z.string().uuid().optional(),
+  guardianOf: z.array(z.string().email()).max(10).optional(),
+});
+
+export const updateUserSchema = z.object({
+  fullName: z.string().min(2).max(120).optional(),
+  role: z.enum(ROLES).optional(),
+  isMinor: z.boolean().optional(),
+  status: z.enum(['active', 'disabled']).optional(),
+});
+
+export const importRowSchema = z.object({
+  fullName: z.string().min(2).max(120),
+  email: z.string().email(),
+  role: z.enum(ROLES),
+  group: z.string().max(20).optional(),
+  isMinor: z.boolean().optional(),
+  guardianOf: z.array(z.string().email()).optional(),
+});
+
+export const importCommitSchema = z.object({
+  fileName: z.string().min(1).max(200),
+  rows: z.array(importRowSchema).min(1).max(2000),
+  sendEmails: z.boolean().optional(),
 });
 
 export const yearSchema = z.object({
@@ -433,5 +504,4 @@ export const certificateIssueSchema = z.object({
   courseId: z.string().uuid(),
 });
 
-export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;

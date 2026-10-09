@@ -1,6 +1,68 @@
-import type { ReactNode } from 'react';
-import { motion } from 'framer-motion';
-import type { LucideIcon } from 'lucide-react';
+import { useEffect, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
+import { AnimatePresence, motion, useDragControls } from 'framer-motion';
+import { Moon, Sun, X, type LucideIcon } from 'lucide-react';
+import { useTheme } from '@/shared/theme';
+
+export function ThemeButton({ className = 'icon-btn', label }: { className?: string; label?: boolean }) {
+  const { dark, toggleTheme } = useTheme();
+  const text = dark ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro';
+  return (
+    <button type="button" className={className} onClick={toggleTheme} title={text} aria-label={text}>
+      {dark ? <Sun size={18} /> : <Moon size={18} />}
+      {label && <span>{dark ? 'Tema claro' : 'Tema oscuro'}</span>}
+    </button>
+  );
+}
+
+/** Bottom sheet for phones: slides up, closes on backdrop tap, Escape or the close button. */
+export function Sheet({ open, onClose, title, children, full }: { open: boolean; onClose: () => void; title: string; children: ReactNode; full?: boolean }) {
+  const drag = useDragControls();
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') onClose(); };
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = previous;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [open, onClose]);
+  return createPortal(
+    <AnimatePresence>
+      {open && (
+        <div className="sheet-layer">
+          <motion.div className="sheet-backdrop" onClick={onClose} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
+          <motion.section
+            className={`sheet${full ? ' full' : ''}`}
+            role="dialog"
+            aria-modal="true"
+            aria-label={title}
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
+            transition={{ type: 'spring', damping: 32, stiffness: 340 }}
+            drag="y"
+            dragListener={false}
+            dragControls={drag}
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={{ top: 0, bottom: 0.6 }}
+            onDragEnd={(_, info) => { if (info.offset.y > 120 || info.velocity.y > 600) onClose(); }}
+          >
+            <div className="sheet-grip" aria-hidden onPointerDown={(event) => drag.start(event)} />
+            <header className="sheet-head" onPointerDown={(event) => drag.start(event)}>
+              <b>{title}</b>
+              <button className="icon-btn" onClick={onClose} aria-label="Cerrar"><X size={18} /></button>
+            </header>
+            <div className="sheet-body">{children}</div>
+          </motion.section>
+        </div>
+      )}
+    </AnimatePresence>,
+    document.body,
+  );
+}
 
 export type Tone = 'violet' | 'gold' | 'mint' | 'sky' | 'coral' | 'soft';
 

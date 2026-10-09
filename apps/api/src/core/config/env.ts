@@ -50,6 +50,8 @@ const schema = z.object({
   CLOUDINARY_URL: z.string().optional().default(''),
   RESEND_API_KEY: z.string().optional().default(''),
   MAIL_FROM: z.string().default('Ludoteka Campus <onboarding@resend.dev>'),
+  /** Mailbox that receives the login codes of the lab accounts (*@eduquest.local), which have no real inbox. */
+  LAB_OTP_INBOX: z.string().optional().default(''),
   FACIAL_MAX_DISTANCE: z.coerce.number().default(0.5),
   FACIAL_POLICY_VERSION: z.string().default('2026-10-05'),
   FACIAL_EMBEDDING_DIM: z.coerce.number().default(128),

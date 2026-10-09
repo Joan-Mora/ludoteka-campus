@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { BookOpenCheck, Brain, Check, Flag, Layers, Loader2, NotebookPen, Plus, RotateCcw, Save, Sparkles, Target, Timer, Trash2, X } from 'lucide-react';
 import { api, ApiException } from '@/shared/api';
 import { MicButton, SpeakButton } from '@/shared/voice-ui';
+import { useCompanion } from '@/shared/companion';
 import { Bar, Empty, PageHeader, Reveal, Ring, Stat } from '@/ui';
 
 interface PageRow { id: string; title: string; course_id: string | null; course_title: string | null; updated_at: string; summarized: boolean; snippet: string; cards: number }
@@ -27,12 +28,13 @@ const GRADES = [
 const errorText = (e: unknown, fallback: string) => (e instanceof ApiException ? e.message : fallback);
 
 export function StudyPage() {
+  const companion = useCompanion();
   const overview = useQuery({ queryKey: ['study'], queryFn: () => api<Overview>('/api/study') });
   const [tab, setTab] = useState<'notes' | 'review'>('notes');
   const data = overview.data;
   return (
     <div>
-      <PageHeader eyebrow="Cuaderno" title="Tu cuaderno de estudio" subtitle="Escribe o dicta tus apuntes, pídele a Luka un resumen y repasa con tarjetas que vuelven justo cuando las vas a olvidar." />
+      <PageHeader eyebrow="Cuaderno" title="Tu cuaderno de estudio" subtitle={`Escribe o dicta tus apuntes, pídele a ${companion.name} un resumen y repasa con tarjetas que vuelven justo cuando las vas a olvidar.`} />
       <div className="grid cols-3" style={{ marginBottom: 18 }}>
         <Stat icon={Layers} tone="violet" value={data?.cards.due ?? '—'} label="Tarjetas para hoy" />
         <Stat icon={BookOpenCheck} tone="mint" value={data?.cards.reviewedToday ?? '—'} label="Repasadas hoy" />
@@ -80,6 +82,7 @@ function Notes({ pages }: { pages: PageRow[] }) {
 }
 
 function Editor({ pageId, onSaved }: { pageId: string | null; onSaved: (id: string | null) => void }) {
+  const companion = useCompanion();
   const client = useQueryClient();
   const page = useQuery({ queryKey: ['study-page', pageId], queryFn: () => api<PageDetail>(`/api/study/pages/${pageId}`), enabled: Boolean(pageId) });
   const courses = useQuery({ queryKey: ['courses'], queryFn: () => api<{ id: string; title: string }[]>('/api/courses') });
@@ -138,7 +141,7 @@ function Editor({ pageId, onSaved }: { pageId: string | null; onSaved: (id: stri
     setError(null);
     try {
       const result = await api<{ source: string }>(`/api/study/pages/${id}/summary`, { method: 'POST' });
-      setNotice(result.source === 'ia' ? 'Luka resumió tu apunte.' : 'La IA no respondió; hice un resumen automático con tus propias frases.');
+      setNotice(result.source === 'ia' ? `${companion.name} resumió tu apunte.` : 'La IA no respondió; hice un resumen automático con tus propias frases.');
       await client.invalidateQueries({ queryKey: ['study-page', id] });
       await client.invalidateQueries({ queryKey: ['study'] });
       if (id !== pageId) onSaved(id);
@@ -192,7 +195,7 @@ function Editor({ pageId, onSaved }: { pageId: string | null; onSaved: (id: stri
         <div className="row g-8 wrap" style={{ marginTop: 10 }}>
           <button className="btn" onClick={saveAndSelect} disabled={busy !== null || !dirty}>{busy === 'save' ? <Loader2 size={16} className="spin" /> : <Save size={16} />} {dirty ? 'Guardar' : 'Guardado'}</button>
           <button className="btn ghost" onClick={summarize} disabled={busy !== null || body.trim().length < 60} title={body.trim().length < 60 ? 'Escribe al menos 60 caracteres' : undefined}>
-            {busy === 'summary' ? <Loader2 size={16} className="spin" /> : <Sparkles size={16} />} Resumir con Luka
+            {busy === 'summary' ? <Loader2 size={16} className="spin" /> : <Sparkles size={16} />} Resumir con {companion.name}
           </button>
           <span className="muted" style={{ fontSize: 12, marginLeft: 'auto' }}>{body.length.toLocaleString('es-CO')} / 20.000</span>
           {pageId && <button className="btn sm ghost" onClick={remove} title="Eliminar"><Trash2 size={15} /></button>}
@@ -233,6 +236,7 @@ function Editor({ pageId, onSaved }: { pageId: string | null; onSaved: (id: stri
 }
 
 function CardList({ pageId, cards }: { pageId: string; cards: Card[] }) {
+  const companion = useCompanion();
   const client = useQueryClient();
   const [front, setFront] = useState('');
   const [back, setBack] = useState('');
@@ -267,7 +271,7 @@ function CardList({ pageId, cards }: { pageId: string; cards: Card[] }) {
         <button className="btn sm" disabled={!front.trim() || !back.trim()}><Plus size={14} /> Agregar</button>
       </form>
       {error && <p className="form-error">{error}</p>}
-      {cards.length === 0 && <p className="muted" style={{ fontSize: 14, margin: 0 }}>Aún no hay tarjetas. Crea una o pídele a Luka un resumen.</p>}
+      {cards.length === 0 && <p className="muted" style={{ fontSize: 14, margin: 0 }}>Aún no hay tarjetas. Crea una o pídele a {companion.name} un resumen.</p>}
       <div className="stack" style={{ gap: 6 }}>
         {cards.map((card) => (
           <div key={card.id} className="row g-12" style={{ padding: '8px 0', borderBottom: '1px solid var(--line)' }}>

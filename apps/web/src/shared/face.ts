@@ -12,7 +12,13 @@ export function loadFaceApi(): Promise<FaceApi> {
       const tf = faceapi.tf as unknown as { setBackend(name: string): Promise<boolean>; ready(): Promise<void> };
       const webgl = await tf.setBackend('webgl').catch(() => false);
       if (!webgl) await tf.setBackend('cpu');
-      await tf.ready();
+      try {
+        await tf.ready();
+      } catch {
+        // Safari con WebGL limitado: TensorFlow corre en CPU, más lento pero funciona.
+        await tf.setBackend('cpu');
+        await tf.ready();
+      }
       await Promise.all([
         faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
         faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
@@ -27,14 +33,36 @@ export function loadFaceApi(): Promise<FaceApi> {
   return loading;
 }
 
+const cameraErrors: Record<string, string> = {
+  NotAllowedError: 'Permite la cámara. En iPhone: Ajustes > Safari > Cámara > Permitir, y recarga la página.',
+  NotFoundError: 'No encontramos una cámara en este equipo.',
+  NotReadableError: 'Otra aplicación está usando la cámara. Ciérrala y vuelve a intentarlo.',
+  OverconstrainedError: 'La cámara no admite la resolución pedida.',
+  SecurityError: 'La cámara solo funciona en una conexión segura (https).',
+};
+
 export async function openCamera(video: HTMLVideoElement) {
-  if (!navigator.mediaDevices?.getUserMedia) throw new Error('Este navegador no permite usar la cámara.');
-  const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }, audio: false });
-  video.srcObject = stream;
+  if (!navigator.mediaDevices?.getUserMedia) throw new Error('Este navegador no permite usar la cámara. En iPhone usa Safari actualizado.');
+  // iOS exige estos atributos antes de asignar el stream o abre el video a pantalla completa y no reproduce.
+  video.setAttribute('playsinline', '');
+  video.setAttribute('webkit-playsinline', '');
+  video.setAttribute('autoplay', '');
   video.muted = true;
   video.playsInline = true;
-  await video.play();
-  await new Promise((resolve) => setTimeout(resolve, 300));
+  let stream: MediaStream;
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } }, audio: false });
+  } catch (error) {
+    const name = (error as { name?: string })?.name ?? '';
+    throw new Error(cameraErrors[name] ?? 'No se pudo abrir la cámara.');
+  }
+  video.srcObject = stream;
+  await video.play().catch(() => undefined);
+  await new Promise<void>((resolve) => {
+    if (video.readyState >= 2 && video.videoWidth) return resolve();
+    video.addEventListener('loadeddata', () => resolve(), { once: true });
+    setTimeout(resolve, 1500);
+  });
   return () => stream.getTracks().forEach((track) => track.stop());
 }
 

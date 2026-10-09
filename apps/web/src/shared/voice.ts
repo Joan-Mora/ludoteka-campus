@@ -18,8 +18,13 @@ type RecognitionCtor = new () => Recognition;
 
 const LANG = 'es-CO';
 
+const isApple = typeof navigator !== 'undefined' && (/iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1));
+const isStandalone = typeof window !== 'undefined' && ((navigator as unknown as { standalone?: boolean }).standalone === true || window.matchMedia?.('(display-mode: standalone)').matches);
+
 function recognitionCtor(): RecognitionCtor | null {
   if (typeof window === 'undefined') return null;
+  // La app instalada en la pantalla de inicio de iPhone no expone el dictado de Safari.
+  if (isApple && isStandalone) return null;
   const w = window as unknown as { SpeechRecognition?: RecognitionCtor; webkitSpeechRecognition?: RecognitionCtor };
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 }
@@ -28,6 +33,63 @@ export const voiceSupport = {
   get dictation() { return recognitionCtor() !== null; },
   get speech() { return typeof window !== 'undefined' && 'speechSynthesis' in window; },
 };
+
+/** Why dictation is off on this device, phrased for the user. */
+export function dictationUnavailable() {
+  if (isApple && isStandalone) return 'En la app instalada de iPhone o iPad no hay dictado. Ábrela en Safari para hablarle a tu compañero.';
+  if (isApple) return 'Actualiza iOS o activa Siri y Dictado en Ajustes para usar la voz.';
+  return 'Tu navegador no permite dictado por voz. Usa Chrome, Edge o Safari.';
+}
+
+/* ---------- Voices ---------- */
+
+let voiceCache: SpeechSynthesisVoice[] = [];
+const voiceListeners = new Set<() => void>();
+
+function refreshVoices() {
+  if (!voiceSupport.speech) return;
+  voiceCache = window.speechSynthesis.getVoices();
+  voiceListeners.forEach((fn) => fn());
+}
+
+if (voiceSupport.speech) {
+  refreshVoices();
+  window.speechSynthesis.addEventListener?.('voiceschanged', refreshVoices);
+  // Algunos Safari no disparan voiceschanged: reintentamos un par de veces.
+  [250, 1000, 2500].forEach((ms) => window.setTimeout(() => { if (!voiceCache.length) refreshVoices(); }, ms));
+}
+
+export function getVoices() {
+  return voiceCache;
+}
+
+export function useVoices() {
+  const [voices, setVoices] = useState(voiceCache);
+  useEffect(() => {
+    const update = () => setVoices([...voiceCache]);
+    voiceListeners.add(update);
+    update();
+    return () => { voiceListeners.delete(update); };
+  }, []);
+  return voices;
+}
+
+/** iOS only lets speechSynthesis talk after a user gesture; a silent utterance on the first tap unlocks it. */
+export function unlockSpeechOnFirstTap() {
+  if (!voiceSupport.speech) return;
+  const unlock = () => {
+    try {
+      const silent = new SpeechSynthesisUtterance(' ');
+      silent.volume = 0;
+      window.speechSynthesis.speak(silent);
+    } catch { /* sin voz */ }
+    refreshVoices();
+    window.removeEventListener('pointerdown', unlock, true);
+    window.removeEventListener('keydown', unlock, true);
+  };
+  window.addEventListener('pointerdown', unlock, true);
+  window.addEventListener('keydown', unlock, true);
+}
 
 const errorCopy: Record<string, string> = {
   'not-allowed': 'Permite el micrófono en el navegador para dictar.',
@@ -41,14 +103,77 @@ export function voiceErrorMessage(code: string) {
   return errorCopy[code] ?? 'No se pudo usar el micrófono.';
 }
 
+/* ---------- Voz del compañero (Luka o Luna) ---------- */
+
+export type VoiceGender = 'male' | 'female';
+
+// Los navegadores no dicen el género de cada voz; se deduce por los nombres conocidos de Microsoft, Apple y Google.
+const MALE_NAMES = /\b(jorge|ra[uú]l|pablo|juan|diego|carlos|enrique|[aá]lvaro|gonzalo|andr[eé]s|miguel|antonio|daniel|santiago|emilio|alonso|gerardo|lorenzo|federico|jos[eé]|tom[aá]s|reed|eddy|rocko|grandpa|male|hombre)\b/i;
+const FEMALE_NAMES = /\b(helena|laura|m[oó]nica|paulina|sabina|dalia|elvira|elena|luc[ií]a|marisol|paloma|camila|salom[eé]|ximena|isabela|valentina|catalina|beatriz|carmen|gloria|in[eé]s|marta|sara|sandy|shelley|flo|grandma|female|mujer)\b/i;
+const VOICE_KEY = 'lk_voice';
+
+export function voiceGender(voice: SpeechSynthesisVoice): VoiceGender | null {
+  const name = voice.name;
+  if (FEMALE_NAMES.test(name)) return 'female';
+  if (MALE_NAMES.test(name)) return 'male';
+  // Las voces "Google español" son femeninas.
+  if (/^google /i.test(name)) return 'female';
+  return null;
+}
+
+export function spanishVoices(voices = voiceCache) {
+  const rank = (v: SpeechSynthesisVoice) => (v.lang === LANG ? 0 : /^es-(MX|US|419)/i.test(v.lang) ? 1 : /^es-(AR|CL|PE|VE|EC|BO|UY|PY|CR|PA|DO|GT|HN|NI|SV|PR|CU)/i.test(v.lang) ? 2 : 3);
+  return voices.filter((v) => v.lang.toLowerCase().startsWith('es')).sort((a, b) => rank(a) - rank(b) || Number(b.localService) - Number(a.localService));
+}
+
+let companionGender: VoiceGender = 'male';
+
+/** The companion's gender decides which voice speaks; set from the user's choice in Ajustes. */
+export function configureSpeech(gender: VoiceGender) {
+  companionGender = gender;
+}
+
+export function savedVoiceURI() {
+  try {
+    return localStorage.getItem(VOICE_KEY);
+  } catch {
+    return null;
+  }
+}
+
+/** The chosen voice lives on this device only: the voice list differs between an iPhone and a Windows laptop. */
+export function saveVoiceURI(uri: string | null) {
+  try {
+    if (uri) localStorage.setItem(VOICE_KEY, uri);
+    else localStorage.removeItem(VOICE_KEY);
+  } catch { /* almacenamiento bloqueado */ }
+}
+
+/** Voice and pitch for a gender: the saved voice, else the best Spanish voice of that gender, else any Spanish voice with a shifted pitch. */
+export function voiceFor(gender: VoiceGender, voices = voiceCache.length ? voiceCache : window.speechSynthesis.getVoices()) {
+  const spanish = spanishVoices(voices);
+  const saved = savedVoiceURI();
+  const chosen = saved ? spanish.find((v) => v.voiceURI === saved) : undefined;
+  const voice = chosen ?? spanish.find((v) => voiceGender(v) === gender) ?? spanish[0] ?? null;
+  const actual = voice ? voiceGender(voice) : null;
+  const pitch = chosen || actual === gender ? 1.05 : gender === 'female' ? 1.3 : 0.8;
+  return { voice, pitch, matches: actual === gender };
+}
+
 function pickVoice() {
-  const voices = window.speechSynthesis.getVoices();
-  return (
-    voices.find((v) => v.lang === LANG) ??
-    voices.find((v) => v.lang.startsWith('es-') && /latin|colomb|mex|us/i.test(`${v.name} ${v.lang}`)) ??
-    voices.find((v) => v.lang.startsWith('es')) ??
-    null
-  );
+  return voiceFor(companionGender);
+}
+
+/** Plays a sample with a specific voice, for the "Probar" buttons in Ajustes. */
+export function sayWith(voice: SpeechSynthesisVoice | null, pitch: number, text: string) {
+  if (!voiceSupport.speech) return;
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = voice?.lang ?? LANG;
+  utterance.pitch = pitch;
+  if (voice) utterance.voice = voice;
+  if (isApple) window.setTimeout(() => window.speechSynthesis.speak(utterance), 50);
+  else window.speechSynthesis.speak(utterance);
 }
 
 /** Strips markdown and emoji so speech sounds natural. */
@@ -78,13 +203,16 @@ export function useSpeech() {
     const utterance = new SpeechSynthesisUtterance(speakable(text));
     utterance.lang = LANG;
     utterance.rate = rate;
-    utterance.pitch = 1.05;
-    const voice = pickVoice();
+    const { voice, pitch } = pickVoice();
+    utterance.pitch = pitch;
     if (voice) utterance.voice = voice;
     utterance.onstart = () => setSpeaking(true);
     utterance.onend = () => setSpeaking(false);
     utterance.onerror = () => setSpeaking(false);
-    window.speechSynthesis.speak(utterance);
+    // Safari descarta un speak() pegado a cancel(); un respiro corto lo evita.
+    if (isApple) window.setTimeout(() => window.speechSynthesis.speak(utterance), 50);
+    else window.speechSynthesis.speak(utterance);
+    if (window.speechSynthesis.paused) window.speechSynthesis.resume();
     return true;
   }, [supported]);
 
@@ -117,7 +245,7 @@ export function useDictation(onFinal: (text: string) => void, options: { continu
   const start = useCallback(() => {
     const Ctor = recognitionCtor();
     if (!Ctor) {
-      setError('Tu navegador no permite dictado por voz. Usa Chrome o Edge.');
+      setError(dictationUnavailable());
       return;
     }
     recognition.current?.abort();
@@ -145,7 +273,12 @@ export function useDictation(onFinal: (text: string) => void, options: { continu
     recognition.current = rec;
     setError(null);
     setListening(true);
-    rec.start();
+    try {
+      rec.start();
+    } catch {
+      setListening(false);
+      setError(dictationUnavailable());
+    }
   }, [options.continuous]);
 
   useEffect(() => () => recognition.current?.abort(), []);
@@ -222,7 +355,7 @@ function normalize(text: string) {
 
 /** Matches a spoken phrase against command phrases, ignoring accents and filler words. */
 export function matchCommand(spoken: string, commands: VoiceCommand[]) {
-  const said = normalize(spoken).replace(/^(luka|oye luka|hola luka)\s*/, '');
+  const said = normalize(spoken).replace(/^((oye|hola)\s+)?(luka|luna)\s*/, '');
   let best: { command: VoiceCommand; score: number } | null = null;
   for (const command of commands) {
     for (const phrase of command.phrases) {

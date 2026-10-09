@@ -277,7 +277,7 @@ export class BiometricsService {
         : `No reconocimos el rostro. Te quedan ${after.remaining} intentos antes del bloqueo.`);
     }
     await this.log({ userId: user.id, email, ip, mode: 'verify', success: true, reason: 'ok', distance });
-    return { ...(await this.identity.issueSession(user.id)), distance };
+    return { ...(await this.identity.issueSession(user.id, 'facial', { ip })), distance };
   }
 
   private async identify(descriptor: number[], challengeId: string, ip?: string) {
@@ -319,7 +319,7 @@ export class BiometricsService {
       throw new ApiError(401, 'AMBIGUOUS', 'El rostro se parece a más de una cuenta. Escribe tu correo para confirmar.');
     }
     await this.log({ userId: best.userId, ip, mode: 'identify', success: true, reason: 'ok', distance: best.distance });
-    return { ...(await this.identity.issueSession(best.userId)), distance: best.distance };
+    return { ...(await this.identity.issueSession(best.userId, 'facial', { ip })), distance: best.distance };
   }
 
   async purgeExpired() {

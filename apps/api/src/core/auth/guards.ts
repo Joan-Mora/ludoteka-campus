@@ -3,7 +3,7 @@ import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import type { Role } from '@eduquest/contracts';
 import { ApiError } from '../errors/api-error';
-import { AuthUser, IS_PUBLIC, ROLES_KEY } from './auth.decorators';
+import { ALLOW_PENDING, AuthUser, IS_PUBLIC, ROLES_KEY, type AuthMethod } from './auth.decorators';
 
 interface JwtPayload {
   sub: string;
@@ -11,6 +11,8 @@ interface JwtPayload {
   role: Role;
   fullName: string;
   isMinor: boolean;
+  amr?: AuthMethod;
+  mcp?: boolean;
 }
 
 @Injectable()
@@ -32,21 +34,28 @@ export class JwtAuthGuard implements CanActivate {
       if (isPublic) return true;
       throw new ApiError(401, 'UNAUTHENTICATED', 'Inicia sesión');
     }
+    let payload: JwtPayload;
     try {
-      const payload = this.jwt.verify<JwtPayload>(token);
-      const user: AuthUser = {
-        id: payload.sub,
-        email: payload.email,
-        role: payload.role,
-        fullName: payload.fullName,
-        isMinor: Boolean(payload.isMinor),
-      };
-      req.user = user;
-      return true;
+      payload = this.jwt.verify<JwtPayload>(token);
     } catch {
       if (isPublic) return true;
       throw new ApiError(401, 'UNAUTHENTICATED', 'Sesión vencida');
     }
+    const user: AuthUser = {
+      id: payload.sub,
+      email: payload.email,
+      role: payload.role,
+      fullName: payload.fullName,
+      isMinor: Boolean(payload.isMinor),
+      amr: payload.amr ?? 'password',
+      mustChangePassword: Boolean(payload.mcp),
+    };
+    req.user = user;
+    const allowPending = this.reflector.getAllAndOverride<boolean>(ALLOW_PENDING, [ctx.getHandler(), ctx.getClass()]);
+    if (user.mustChangePassword && !allowPending && !isPublic) {
+      throw new ApiError(403, 'PASSWORD_CHANGE_REQUIRED', 'Primero cambia tu contraseña temporal');
+    }
+    return true;
   }
 }
 

@@ -12,4 +12,8 @@ coverage/
 apps/*/dist/
 packages/*/dist/
 apps/web/public/models/
-.eq-*
+.local/
+apps/web/e2e/.auth/
+apps/web/e2e/.results/
+apps/web/e2e/.report/
+apps/web/e2e/shots/

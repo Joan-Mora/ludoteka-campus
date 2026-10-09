@@ -6,6 +6,7 @@ import { api, ApiException } from '@/shared/api';
 import { joinDictation, useSpeech, voiceSupport } from '@/shared/voice';
 import { MicButton, SpeakButton } from '@/shared/voice-ui';
 import { RichText, Sources, type Citation } from '@/shared/rich-text';
+import { useCompanion } from '@/shared/companion';
 import { PageHeader, Tile } from '@/ui';
 
 function usePref(key: string, initial: boolean) {
@@ -27,6 +28,7 @@ const suggestions = [
 
 export function TutorPage() {
   const [params] = useSearchParams();
+  const companion = useCompanion();
   const [messages, setMessages] = useState<Bubble[]>([]);
   const [conversationId, setConversationId] = useState<string>();
   const [error, setError] = useState('');
@@ -77,20 +79,20 @@ export function TutorPage() {
 
   return (
     <div>
-      <PageHeader eyebrow="Tutor IA" title="Tu tutor de práctica" subtitle="Pistas paso a paso, nunca la respuesta final. Se apaga solo si tienes un examen activo." />
+      <PageHeader eyebrow="Tutor IA" title={companion.female ? 'Tu tutora de práctica' : 'Tu tutor de práctica'} subtitle="Pistas paso a paso, nunca la respuesta final. Se apaga solo si tienes un examen activo." />
       <div className="grid cols-3" style={{ alignItems: 'start' }}>
         <div className="card span-2" style={{ padding: 0, overflow: 'hidden' }}>
           <div className="row g-12" style={{ padding: '16px 20px', borderBottom: '1px solid var(--line)' }}>
             <Tile icon={Bot} tone="violet" />
             <div style={{ flex: 1 }}>
-              <b>Luka · tutor IA</b>
+              <b>{companion.name} · {companion.female ? 'tutora' : 'tutor'} IA</b>
               <div className="row g-4" style={{ fontSize: 12.5, color: 'var(--mint)', fontWeight: 700 }}>
                 <span style={{ width: 8, height: 8, borderRadius: 99, background: 'var(--mint)' }} /> En línea
               </div>
             </div>
             {params.get('lesson') && <span className="chip violet">Contexto de la lección</span>}
             {speech.supported && (
-              <button className={`chip ${readAloud ? 'violet' : ''}`} onClick={() => { if (readAloud) speech.stop(); setReadAloud(!readAloud); }} title="Leer las respuestas de Luka en voz alta">
+              <button className={`chip ${readAloud ? 'violet' : ''}`} onClick={() => { if (readAloud) speech.stop(); setReadAloud(!readAloud); }} title={`Leer las respuestas de ${companion.name} en voz alta`}>
                 <Volume2 size={13} /> Voz {readAloud ? 'activada' : 'apagada'}
               </button>
             )}

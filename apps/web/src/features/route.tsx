@@ -5,6 +5,7 @@ import { CheckCircle2, Compass, Lightbulb, Loader2, ShieldCheck, SkipForward, Sp
 import { api, ApiException } from '@/shared/api';
 import { MicButton, SpeakButton } from '@/shared/voice-ui';
 import { spokenAnswer } from '@/shared/voice';
+import { useCompanion } from '@/shared/companion';
 import { Empty, PageHeader, Reveal, Ring } from '@/ui';
 
 interface Topic { id: string; code: string; name: string; level: number; streak: number; correct_count: number; attempt_count: number; pending: number }
@@ -29,6 +30,7 @@ function LevelBar({ level }: { level: number }) {
 
 export function RoutePage() {
   const client = useQueryClient();
+  const companion = useCompanion();
   const overview = useQuery({ queryKey: ['route'], queryFn: () => api<Overview>('/api/route') });
   const [busy, setBusy] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +51,7 @@ export function RoutePage() {
   const data = overview.data;
   return (
     <div>
-      <PageHeader eyebrow="Mi ruta" title="Tu ruta de retos" subtitle="Luka arma retos según tu nivel en cada tema. La IA los redacta y el servidor verifica cada respuesta antes de guardarla." />
+      <PageHeader eyebrow="Mi ruta" title="Tu ruta de retos" subtitle={`${companion.name} arma retos según tu nivel en cada tema. La IA los redacta y el servidor verifica cada respuesta antes de guardarla.`} />
       <div className="grid cols-3" style={{ alignItems: 'start' }}>
         <div className="span-2 stack" style={{ gap: 16 }}>
           {data?.suggestion && (
@@ -59,7 +61,7 @@ export function RoutePage() {
                   <div style={{ textAlign: 'center', color: '#fff' }}><b style={{ fontSize: 22 }}>{data.average}</b><div style={{ fontSize: 11, opacity: 0.85 }}>de 10</div></div>
                 </Ring>
                 <div style={{ flex: 1, minWidth: 200 }}>
-                  <div className="eyebrow" style={{ color: 'rgba(255,255,255,.8)' }}>Luka sugiere</div>
+                  <div className="eyebrow" style={{ color: 'rgba(255,255,255,.8)' }}>{companion.name} sugiere</div>
                   <h3 style={{ margin: '4px 0 6px', fontSize: 22 }}>{data.suggestion.name}</h3>
                   <p style={{ margin: 0, opacity: 0.9 }}>Es tu tema con menos nivel (nivel {data.suggestion.level}). Dos aciertos seguidos te suben de nivel.</p>
                 </div>
@@ -74,7 +76,7 @@ export function RoutePage() {
             {data?.pending.map((item) => <Challenge key={item.id} item={item} onDone={() => client.invalidateQueries({ queryKey: ['route'] })} />)}
           </AnimatePresence>
           {data && !data.pending.length && (
-            <Empty icon={Compass} title="Sin retos pendientes" body="Pide retos de un tema o deja que Luka elija el que más necesitas." />
+            <Empty icon={Compass} title="Sin retos pendientes" body={`Pide retos de un tema o deja que ${companion.name} elija el que más necesitas.`} />
           )}
           {!!data?.recent.length && (
             <div className="card">

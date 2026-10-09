@@ -14,6 +14,11 @@ export interface Database {
     full_name: string;
     is_minor: Generated<boolean>;
     guardian_consent_at: NullableDate;
+    status: Generated<string>;
+    must_change_password: Generated<boolean>;
+    last_login_at: NullableDate;
+    failed_logins: Generated<number>;
+    locked_until: NullableDate;
     created_at: Ts;
     updated_at: Ts;
   };
@@ -28,6 +33,11 @@ export interface Database {
     token_hash: string;
     expires_at: Date;
     revoked_at: NullableDate;
+    family_id: NullableString;
+    auth_method: NullableString;
+    user_agent: NullableString;
+    ip: NullableString;
+    replaced_at: NullableDate;
     created_at: Ts;
   };
   password_reset_tokens: {
@@ -772,5 +782,90 @@ export interface Database {
     status: Generated<string>;
     created_at: Ts;
     sent_at: NullableDate;
+  };
+  login_challenges: {
+    id: Generated<string>;
+    user_id: string;
+    code_hash: string;
+    attempts: Generated<number>;
+    max_attempts: Generated<number>;
+    expires_at: Date;
+    used_at: NullableDate;
+    ip: NullableString;
+    created_at: Ts;
+  };
+  trusted_devices: {
+    id: Generated<string>;
+    user_id: string;
+    token_hash: string;
+    label: string;
+    expires_at: Date;
+    revoked_at: NullableDate;
+    last_used_at: NullableDate;
+    created_at: Ts;
+  };
+  webauthn_credentials: {
+    id: Generated<string>;
+    user_id: string;
+    credential_id: string;
+    public_key: Buffer;
+    counter: ColumnType<string | number, number | undefined, number>;
+    transports: NullableString;
+    device_type: NullableString;
+    backed_up: Generated<boolean>;
+    label: string;
+    last_used_at: NullableDate;
+    created_at: Ts;
+  };
+  webauthn_challenges: {
+    id: Generated<string>;
+    user_id: NullableString;
+    challenge: string;
+    kind: string;
+    expires_at: Date;
+    used_at: NullableDate;
+    created_at: Ts;
+  };
+  account_imports: {
+    id: Generated<string>;
+    actor_id: NullableString;
+    kind: string;
+    file_name: string;
+    total_rows: Generated<number>;
+    created_count: Generated<number>;
+    skipped_count: Generated<number>;
+    errors: JsonValue;
+    created_at: Ts;
+  };
+  user_preferences: {
+    user_id: string;
+    companion: Generated<string>;
+    theme: Generated<string>;
+    updated_at: Ts;
+  };
+  legal_documents: {
+    id: Generated<string>;
+    kind: string;
+    version: string;
+    title: string;
+    published_at: Ts;
+  };
+  legal_acceptances: {
+    id: Generated<string>;
+    user_id: string;
+    document_id: string;
+    accepted_by: string;
+    ip: NullableString;
+    accepted_at: Ts;
+  };
+  data_requests: {
+    id: Generated<string>;
+    user_id: string;
+    kind: string;
+    status: Generated<string>;
+    reason: NullableString;
+    resolved_by: NullableString;
+    resolved_at: NullableDate;
+    created_at: Ts;
   };
 }

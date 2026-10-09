@@ -3,6 +3,7 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { sql } from 'kysely';
 import type { AuthUser } from '../../core/auth/auth.decorators';
 import { AiService } from '../../core/ai/ai.service';
+import { personaLine, personaOf } from '../../core/common/companion';
 import { DatabaseService } from '../../core/database/database.service';
 import { ApiError } from '../../core/errors/api-error';
 import { DomainEvents, type StudyProgressEvent } from '../../core/events/domain-events';
@@ -10,7 +11,7 @@ import { bogotaToday, shiftDate } from '../../core/time';
 import { LearningService } from '../learning/public-api';
 import { cleanSummary, localSummary, redact, sm2, type StudySummary } from './study.logic';
 
-const SUMMARY_PROMPT = `Eres Luka, asistente de estudio de un colegio en Colombia (grados 6° a 11°).
+const SUMMARY_PROMPT = `Eres el asistente de estudio de un colegio en Colombia (grados 6° a 11°).
 Recibes los apuntes de un estudiante. Responde SOLO con JSON:
 {"resumen": "3 a 5 oraciones claras", "ideas": ["3 a 6 ideas clave"], "tarjetas": [{"frente": "pregunta corta", "reverso": "respuesta breve"}]}
 Reglas: usa solo lo que está en los apuntes, no inventes datos; de 3 a 6 tarjetas; español de Colombia; nada de nombres propios de personas.`;
@@ -117,9 +118,10 @@ export class StudyService {
     if (page.body.trim().length < 60) throw new ApiError(400, 'TOO_SHORT', 'Escribe un poco más para poder resumir (mínimo 60 caracteres)');
     let result: StudySummary | null = null;
     let source: 'ia' | 'local' = 'ia';
+    const persona = await personaOf(this.database, user.id);
     const reply = await this.ai.chatJson<{ resumen?: unknown; ideas?: unknown; tarjetas?: unknown }>(
       [
-        { role: 'system', content: SUMMARY_PROMPT },
+        { role: 'system', content: `${SUMMARY_PROMPT}\n${personaLine(persona)}` },
         { role: 'user', content: `Título: ${redact(page.title)}\n\nApuntes:\n${redact(page.body).slice(0, 8000)}` },
       ],
       { feature: 'cuaderno.resumen', userId: user.id, temperature: 0.3 },

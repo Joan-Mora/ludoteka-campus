@@ -1,7 +1,27 @@
-import { createCipheriv, createDecipheriv, createHash, randomBytes } from 'crypto';
+import { createCipheriv, createDecipheriv, createHash, createHmac, randomBytes, randomInt, timingSafeEqual } from 'crypto';
 
 export function sha256(value: string): string {
   return createHash('sha256').update(value).digest('hex');
+}
+
+export function hmac(secret: string, value: string): string {
+  return createHmac('sha256', secret).update(value).digest('hex');
+}
+
+export function safeEqual(a: string, b: string): boolean {
+  const left = Buffer.from(a);
+  const right = Buffer.from(b);
+  return left.length === right.length && timingSafeEqual(left, right);
+}
+
+/** Six decimal digits, uniformly distributed. */
+export function otpCode(): string {
+  return randomInt(0, 1_000_000).toString().padStart(6, '0');
+}
+
+/** Readable temporary password: no ambiguous characters, always has letters and digits. */
+export function temporaryPassword(): string {
+  return `${shortCode(4)}-${shortCode(4)}-${randomInt(10, 100)}`;
 }
 
 export function randomToken(bytes = 32): string {

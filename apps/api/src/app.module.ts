@@ -25,6 +25,8 @@ import { BiometricsModule } from './modules/biometrics/biometrics.module';
 import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { CertificationModule } from './modules/certification/certification.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { LegalModule } from './modules/legal/legal.module';
+import { throttlerModule } from './core/security/throttle';
 
 @Module({
   imports: [
@@ -34,6 +36,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     AiModule,
     ReportsModule,
     EventEmitterModule.forRoot(),
+    throttlerModule,
     JwtModule.registerAsync({
       global: true,
       inject: [Env],
@@ -58,6 +61,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     AnalyticsModule,
     CertificationModule,
     NotificationsModule,
+    LegalModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: HttpExceptionFilter },

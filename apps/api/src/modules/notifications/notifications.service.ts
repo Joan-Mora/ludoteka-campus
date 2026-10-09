@@ -24,6 +24,7 @@ export class NotificationsService {
       event.email,
       'Recupera tu contraseña de Ludoteka Campus',
       `Hola ${event.fullName}.\n\nEste enlace vale una hora:\n${event.link}\n\nSi no fuiste tú, ignora este mensaje.`,
+      { sensitive: true },
     );
   }
 

@@ -549,7 +549,7 @@ interface Overview {
 
 const scopeHelp: Record<string, { icon: LucideIcon; text: string }> = {
   data_processing: { icon: ShieldCheck, text: 'Registrar notas, progreso y asistencia para el seguimiento académico.' },
-  ai_tutor: { icon: Sparkles, text: 'Conversar con Luka, el tutor IA. Los mensajes se envían sin nombre ni datos personales.' },
+  ai_tutor: { icon: Sparkles, text: 'Conversar con el compañero de IA (Luka o Luna). Los mensajes se envían sin nombre ni datos personales.' },
   facial: { icon: ScanFace, text: 'Iniciar sesión con el rostro. Se guarda un vector cifrado, nunca la foto. Revocar borra la plantilla.' },
 };
 

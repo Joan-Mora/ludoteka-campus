@@ -1,15 +1,21 @@
 # Ludoteka Campus — Modelo entidad-relación
 
-Evidencia de la base de datos del parcial. El SQL ejecutable está en `db/migrations/` (0000 a 0017) y se aplica con `npm run migrate`. La tabla `schema_migrations` registra qué archivo corrió y cuándo.
+> Última revisión: 2026-10-09 · Responsable: Cronista
+> **Nombre:** Ludoteka Campus (nombre pendiente de confirmar por Darwin; antes EduQuest).
+> **Cobertura:** migraciones 0000 a 0019. Las tablas de 0018 y 0019 se transcribieron del SQL del repo (2Klair, sin commit al 2026-10-09). El resto sale del catálogo de producción.
+
+Evidencia de la base de datos del parcial. El SQL ejecutable está en `db/migrations/` (0000 a 0019) y se aplica con `npm run migrate`. La tabla `schema_migrations` registra qué archivo corrió y cuándo.
 
 Motor: **CockroachDB Cloud** (wire de PostgreSQL, SSL). No hay otra base: Render solo ejecuta la aplicación.
 
 | Indicador | Valor |
 |---|---|
-| Tablas | 89 (88 de negocio + `schema_migrations`) |
-| Llaves foráneas | 148 |
-| Restricciones `CHECK` | 131 |
-| Restricciones `UNIQUE` | 48 (4 parciales y 1 por expresión) |
+| Tablas | 98 (97 de negocio + `schema_migrations`) |
+| Llaves foráneas | 159 |
+| Restricciones `CHECK` | 147 |
+| Restricciones `UNIQUE` | 52 (4 parciales y 1 por expresión) |
+
+Los indicadores suman los conteos del catálogo de producción (0000 a 0017: 89 tablas, 148 FK, 131 CHECK y 48 UNIQUE) y lo que agregan 0018 y 0019 según su SQL: 9 tablas, 11 FK, 16 CHECK y 4 UNIQUE. Se confirman contra el catálogo cuando 0018 y 0019 corran en producción (evidencia E9).
 | Vistas de lectura | 12 (`v_*`, para el Observatorio) |
 | Rol de base de datos | `ludoteka_reader` (solo `SELECT` sobre `v_*`) |
 | Secuencia | `report_seq` (consecutivo LK de los reportes) |
@@ -20,6 +26,14 @@ Convenciones:
 - Toda FK declara su regla: `CASCADE` cuando el hijo no tiene sentido sin el padre, `SET NULL` cuando el registro es histórico (autor, quien calificó, quien subió el archivo).
 - Estados, roles y rangos se validan con `CHECK` en la base, no solo en la API.
 - La tabla física del grupo se llama `groups_class` porque `GROUP` es palabra reservada.
+
+## Índice
+
+1. Diagrama general
+2. Entidades por módulo: identidad y acceso · **cuentas y acceso reforzado (0018)** · **preferencias y datos personales (0019)** · biometría · institución · aula · cartelera y foros · evaluación · libro de calificaciones · integridad · gamificación · Arena · biblioteca · Cuaderno · tutor y Mi ruta · certificados, reportes y notificaciones
+3. Vistas y rol de lectura
+4. Reglas de integridad que se demuestran en la sustentación
+5. Consultas de evidencia
 
 ## Diagrama general
 
@@ -75,6 +89,13 @@ erDiagram
   users ||--o{ nl_queries : pregunta
   users ||--o{ report_log : genera
   users ||--o{ certificates : recibe
+  users ||--o{ login_challenges : "código de ingreso"
+  users ||--o{ trusted_devices : "confía en"
+  users ||--o{ webauthn_credentials : "passkeys"
+  users ||--o| user_preferences : prefiere
+  legal_documents ||--o{ legal_acceptances : "aceptado en"
+  users ||--o{ legal_acceptances : acepta
+  users ||--o{ data_requests : "pide habeas data"
 ```
 
 ## Entidades por módulo
@@ -85,13 +106,36 @@ Generado desde el catálogo de la base en producción (`information_schema.colum
 
 | Entidad | Atributos | PK / FK | Relaciones |
 |---|---|---|---|
-| `users` | **id** UUID<br>email STRING<br>password_hash STRING<br>full_name STRING<br>is_minor BOOL<br>guardian_consent_at TIMESTAMPTZ NULL<br>created_at TIMESTAMPTZ<br>updated_at TIMESTAMPTZ | PK (id)<br>UNIQUE (email) | 1:1 face_templates<br>1:1 streaks<br>1:1 user_roles<br>1:N con 51 tablas: ai_usage, announcements, arena_answers, arena_members, arena_rooms, assessments, attempts, attendance, audit_log, bookmarks, certificates, courses, enrollments, face_attempts, facial_consents, flashcard_reviews, flashcards, focus_sessions, forum_posts, forum_threads, glossary_terms, goals, guardian_links, integrity_events, lesson_progress, library_items, library_views, live_participants, live_sessions, minigame_runs, mission_progress, news, news_reads, nl_queries, notebook_pages, notifications, password_reset_tokens, questions, recommendations, refresh_tokens, report_log, risk_alerts, route_items, rubric_scores, rubrics, submissions, teaching_assignments, topic_mastery, tutor_conversations, user_badges, xp_ledger |
+| `users` | **id** UUID<br>email STRING<br>password_hash STRING<br>full_name STRING<br>is_minor BOOL<br>guardian_consent_at TIMESTAMPTZ NULL<br>status STRING (0018)<br>must_change_password BOOL (0018)<br>last_login_at TIMESTAMPTZ NULL (0018)<br>failed_logins INT (0018)<br>locked_until TIMESTAMPTZ NULL (0018)<br>created_at TIMESTAMPTZ<br>updated_at TIMESTAMPTZ | PK (id)<br>UNIQUE (email)<br>CHECK status IN ('active','disabled') (0018)<br>CHECK failed_logins >= 0 (0018) | 1:1 face_templates<br>1:1 streaks<br>1:1 user_roles<br>1:N con 51 tablas: ai_usage, announcements, arena_answers, arena_members, arena_rooms, assessments, attempts, attendance, audit_log, bookmarks, certificates, courses, enrollments, face_attempts, facial_consents, flashcard_reviews, flashcards, focus_sessions, forum_posts, forum_threads, glossary_terms, goals, guardian_links, integrity_events, lesson_progress, library_items, library_views, live_participants, live_sessions, minigame_runs, mission_progress, news, news_reads, nl_queries, notebook_pages, notifications, password_reset_tokens, questions, recommendations, refresh_tokens, report_log, risk_alerts, route_items, rubric_scores, rubrics, submissions, teaching_assignments, topic_mastery, tutor_conversations, user_badges, xp_ledger<br>1:1 user_preferences (0019)<br>1:N (0018/0019): login_challenges, trusted_devices, webauthn_credentials, webauthn_challenges, account_imports, legal_acceptances (como user_id y como accepted_by), data_requests (como user_id y como resolved_by) |
 | `user_roles` | **user_id** (FK) UUID<br>role STRING<br>created_at TIMESTAMPTZ | PK (user_id)<br>FK user_id → users(id) CASCADE<br>1 CHECK | 1:1 users |
-| `refresh_tokens` | **id** UUID<br>user_id (FK) UUID<br>token_hash STRING<br>expires_at TIMESTAMPTZ<br>revoked_at TIMESTAMPTZ NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK user_id → users(id) CASCADE<br>UNIQUE (token_hash) | N:1 users |
+| `refresh_tokens` | **id** UUID<br>user_id (FK) UUID<br>token_hash STRING<br>expires_at TIMESTAMPTZ<br>revoked_at TIMESTAMPTZ NULL<br>family_id UUID NULL (0018)<br>auth_method STRING NULL (0018)<br>user_agent STRING NULL (0018)<br>ip STRING NULL (0018)<br>replaced_at TIMESTAMPTZ NULL (0018)<br>created_at TIMESTAMPTZ | PK (id)<br>FK user_id → users(id) CASCADE<br>UNIQUE (token_hash)<br>CHECK auth_method IS NULL OR IN ('password','otp','trusted_device','passkey','facial') (0018)<br>INDEX idx_refresh_family (family_id) | N:1 users. Las filas con el mismo `family_id` forman una familia de sesión; reusar un token rotado revoca la familia |
 | `password_reset_tokens` | **id** UUID<br>user_id (FK) UUID<br>token_hash STRING<br>expires_at TIMESTAMPTZ<br>used_at TIMESTAMPTZ NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK user_id → users(id) CASCADE<br>UNIQUE (token_hash) | N:1 users |
 | `audit_log` | **id** UUID<br>actor_id (FK) UUID NULL<br>action STRING<br>entity STRING<br>entity_id STRING NULL<br>meta JSONB NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK actor_id → users(id) SET NULL | N:1 users |
 | `guardian_links` | **id** UUID<br>guardian_id (FK) UUID<br>student_id (FK) UUID<br>relationship STRING<br>status STRING<br>created_by (FK) UUID NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK guardian_id → users(id) CASCADE<br>FK student_id → users(id) CASCADE<br>FK created_by → users(id) SET NULL<br>UNIQUE (guardian_id, student_id)<br>3 CHECK | N:1 users<br>1:N guardian_authorizations |
 | `guardian_authorizations` | **id** UUID<br>link_id (FK) UUID<br>scope STRING<br>policy_version STRING<br>granted BOOL<br>ip STRING NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK link_id → guardian_links(id) CASCADE<br>1 CHECK | N:1 guardian_links |
+
+### Cuentas y acceso reforzado (identity, migración 0018)
+
+El administrador crea las cuentas (individual o por Excel). El ingreso pide la contraseña y un código de 6 dígitos por correo, o un dispositivo de confianza o una passkey. Hay bloqueo progresivo. Las columnas que 0018 agrega a `users` y `refresh_tokens` están en la tabla anterior.
+
+| Entidad | Atributos | PK / FK | Relaciones |
+|---|---|---|---|
+| `login_challenges` | **id** UUID<br>user_id (FK) UUID<br>code_hash STRING<br>attempts INT (def. 0)<br>max_attempts INT (def. 5)<br>expires_at TIMESTAMPTZ<br>used_at TIMESTAMPTZ NULL<br>ip STRING NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK user_id → users(id) CASCADE<br>CHECK attempts >= 0<br>CHECK max_attempts > 0<br>INDEX (user_id, created_at DESC) | N:1 users. Solo se guarda el hash del código; vence a los 10 min y sirve una vez |
+| `trusted_devices` | **id** UUID<br>user_id (FK) UUID<br>token_hash STRING<br>label STRING<br>expires_at TIMESTAMPTZ<br>revoked_at TIMESTAMPTZ NULL<br>last_used_at TIMESTAMPTZ NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK user_id → users(id) CASCADE<br>UNIQUE (token_hash)<br>INDEX (user_id) | N:1 users. Cookie `HttpOnly` de 30 días; en la base solo va el hash |
+| `webauthn_credentials` | **id** UUID<br>user_id (FK) UUID<br>credential_id STRING<br>public_key BYTES<br>counter INT8 (def. 0)<br>transports STRING NULL<br>device_type STRING NULL<br>backed_up BOOL (def. false)<br>label STRING<br>last_used_at TIMESTAMPTZ NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK user_id → users(id) CASCADE<br>UNIQUE (credential_id)<br>CHECK counter >= 0<br>INDEX (user_id) | N:1 users. Passkeys: solo la llave pública; la biometría no sale del dispositivo |
+| `webauthn_challenges` | **id** UUID<br>user_id (FK) UUID NULL<br>challenge STRING<br>kind STRING<br>expires_at TIMESTAMPTZ<br>used_at TIMESTAMPTZ NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK user_id → users(id) CASCADE<br>CHECK kind IN ('register','login') | N:0..1 users (`NULL` en el login sin usuario identificado) |
+| `account_imports` | **id** UUID<br>actor_id (FK) UUID NULL<br>kind STRING<br>file_name STRING<br>total_rows INT (def. 0)<br>created_count INT (def. 0)<br>skipped_count INT (def. 0)<br>errors JSONB NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK actor_id → users(id) SET NULL<br>CHECK kind IN ('users','structure')<br>CHECK total_rows >= 0, created_count >= 0, skipped_count >= 0<br>INDEX (created_at DESC) | N:1 users (el admin que importó). Auditoría de cargas masivas |
+
+### Preferencias y datos personales (identity y legal, migración 0019)
+
+Documentos legales versionados (Ley 1581 de 2012 y Decreto 1377 de 2013) y solicitudes de habeas data.
+
+| Entidad | Atributos | PK / FK | Relaciones |
+|---|---|---|---|
+| `user_preferences` | **user_id** (FK) UUID<br>companion STRING (def. 'luka')<br>theme STRING (def. 'system')<br>updated_at TIMESTAMPTZ | PK (user_id)<br>FK user_id → users(id) CASCADE<br>CHECK companion IN ('luka','luna')<br>CHECK theme IN ('light','dark','system') | 1:1 users |
+| `legal_documents` | **id** UUID<br>kind STRING<br>version STRING<br>title STRING<br>published_at TIMESTAMPTZ | PK (id)<br>UNIQUE (kind, version)<br>CHECK kind IN ('terminos','privacidad','cookies') | 1:N legal_acceptances. La migración siembra la versión 2026-10-09 de los tres documentos |
+| `legal_acceptances` | **id** UUID<br>user_id (FK) UUID<br>document_id (FK) UUID<br>accepted_by (FK) UUID<br>ip STRING NULL<br>accepted_at TIMESTAMPTZ | PK (id)<br>FK user_id → users(id) CASCADE<br>FK document_id → legal_documents(id) CASCADE<br>FK accepted_by → users(id) CASCADE<br>UNIQUE (user_id, document_id) | N:1 users (titular)<br>N:1 users (quien acepta: el acudiente si es menor)<br>N:1 legal_documents |
+| `data_requests` | **id** UUID<br>user_id (FK) UUID<br>kind STRING<br>status STRING (def. 'pending')<br>reason STRING NULL<br>resolved_by (FK) UUID NULL<br>resolved_at TIMESTAMPTZ NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK user_id → users(id) CASCADE<br>FK resolved_by → users(id) SET NULL<br>CHECK kind IN ('export','delete')<br>CHECK status IN ('pending','done','rejected')<br>INDEX (status, created_at DESC) | N:1 users (solicitante)<br>N:1 users (admin que resuelve) |
 
 ### Biometría (biometrics)
 

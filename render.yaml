@@ -42,6 +42,8 @@ services:
         sync: false
       - key: MAIL_FROM
         sync: false
+      - key: LAB_OTP_INBOX
+        sync: false
       - key: FACIAL_MAX_DISTANCE
         value: "0.5"
       - key: FACIAL_POLICY_VERSION

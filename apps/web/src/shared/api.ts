@@ -17,18 +17,26 @@ export function getToken() {
   return accessToken;
 }
 
+async function requestRefresh(attempt = 0): Promise<string | null> {
+  const res = await fetch('/api/auth/refresh', { method: 'POST', credentials: 'include' });
+  if (res.ok) {
+    const data = await res.json();
+    setToken(data.accessToken);
+    return data.accessToken as string;
+  }
+  const body = await res.json().catch(() => null);
+  if (body?.error?.code === 'SESSION_RACE' && attempt < 2) {
+    await new Promise((resolve) => setTimeout(resolve, 400 + attempt * 400));
+    return requestRefresh(attempt + 1);
+  }
+  return null;
+}
+
 async function refresh(): Promise<string | null> {
   if (!refreshing) {
-    refreshing = fetch('/api/auth/refresh', { method: 'POST', credentials: 'include' })
-      .then(async (res) => {
-        if (!res.ok) return null;
-        const data = await res.json();
-        setToken(data.accessToken);
-        return data.accessToken as string;
-      })
-      .finally(() => {
-        refreshing = null;
-      });
+    refreshing = requestRefresh().finally(() => {
+      refreshing = null;
+    });
   }
   return refreshing;
 }
@@ -38,7 +46,7 @@ export async function api<T>(path: string, init: RequestInit = {}, retry = true)
   if (init.body && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
   if (accessToken) headers.set('Authorization', `Bearer ${accessToken}`);
   const res = await fetch(path, { ...init, headers, credentials: 'include' });
-  if (res.status === 401 && retry && !path.startsWith('/api/auth/login') && !path.startsWith('/api/auth/refresh')) {
+  if (res.status === 401 && retry && !/^\/api\/auth\/(login|refresh|otp|passkey\/login)/.test(path)) {
     const token = await refresh();
     if (token) return api<T>(path, init, false);
   }

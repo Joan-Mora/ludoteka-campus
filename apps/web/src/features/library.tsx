@@ -28,6 +28,7 @@ import {
 } from 'lucide-react';
 import { api } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
+import { useCompanion } from '@/shared/companion';
 import { MicButton, SpeakButton } from '@/shared/voice-ui';
 import { joinDictation } from '@/shared/voice';
 import { RichText, Sources, type Citation } from '@/shared/rich-text';
@@ -81,10 +82,11 @@ export function LibraryPage() {
   const { user } = useAuth();
   const staff = user && ['teacher', 'admin', 'directivo'].includes(user.role);
   const [tab, setTab] = useState<'items' | 'ask' | 'glossary'>('items');
+  const companion = useCompanion();
   return (
     <div>
-      <PageHeader eyebrow="Biblioteca" title="Biblioteca del campus" subtitle="Guías, lecturas y videos del colegio. Pregúntale a Luka y te responde citando la página." />
-      <div className="row g-8" style={{ marginBottom: 18, padding: 6, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, width: 'fit-content' }}>
+      <PageHeader eyebrow="Biblioteca" title="Biblioteca del campus" subtitle={`Guías, lecturas y videos del colegio. Pregúntale a ${companion.name} y te responde citando la página.`} />
+      <div className="row g-8 seg" style={{ marginBottom: 18 }}>
         {([
           ['items', 'Recursos', Library],
           ['ask', 'Pregúntale a la biblioteca', MessageSquareQuote],
@@ -259,7 +261,7 @@ function Uploader({ catalog, onBusy }: { catalog?: Catalog; onBusy: (busy: boole
       }
       form.reset();
       setFile(null);
-      setDone(mode === 'file' && file?.type === 'application/pdf' ? 'Publicado. Luka está leyendo el PDF para poder citarlo.' : 'Publicado.');
+      setDone(mode === 'file' && file?.type === 'application/pdf' ? 'Publicado. La IA está leyendo el PDF para poder citarlo.' : 'Publicado.');
       client.invalidateQueries({ queryKey: ['library'] });
       client.invalidateQueries({ queryKey: ['library-catalog'] });
       client.invalidateQueries({ queryKey: ['campus'] });
@@ -325,6 +327,7 @@ function Uploader({ catalog, onBusy }: { catalog?: Catalog; onBusy: (busy: boole
 }
 
 function AskPanel({ itemId, compact }: { itemId?: string; compact?: boolean }) {
+  const companion = useCompanion();
   const [question, setQuestion] = useState('');
   const [busy, setBusy] = useState(false);
   const [answer, setAnswer] = useState<{ answer: string; citations: Citation[]; source: string } | null>(null);
@@ -345,7 +348,7 @@ function AskPanel({ itemId, compact }: { itemId?: string; compact?: boolean }) {
           <Tile icon={Sparkles} tone="violet" />
           <div>
             <div className="card-title">Pregúntale a la biblioteca</div>
-            <div className="muted" style={{ fontSize: 13 }}>Luka responde solo con lo que dicen los documentos y cita la página.</div>
+            <div className="muted" style={{ fontSize: 13 }}>{companion.name} responde solo con lo que dicen los documentos y cita la página.</div>
           </div>
         </div>
       )}
@@ -420,7 +423,7 @@ function Glossary({ staff }: { staff: boolean }) {
             </div>
           ))}
         </div>
-        {!terms.isLoading && !terms.data?.length && <Empty icon={BookOpen} title="Sin términos" body="Al subir un PDF, Luka propone los conceptos clave del documento." />}
+        {!terms.isLoading && !terms.data?.length && <Empty icon={BookOpen} title="Sin términos" body="Al subir un PDF, la IA propone los conceptos clave del documento." />}
       </div>
       {staff && (
         <Reveal className="card">

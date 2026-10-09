@@ -1,6 +1,7 @@
 import { Injectable, Logger, type OnApplicationBootstrap } from '@nestjs/common';
 import { sql } from 'kysely';
 import type { Citation } from '@eduquest/contracts';
+import { personaLine, personaOf } from '../../core/common/companion';
 import { DatabaseService } from '../../core/database/database.service';
 import { ApiError } from '../../core/errors/api-error';
 import type { AuthUser } from '../../core/auth/auth.decorators';
@@ -496,13 +497,14 @@ export class LibraryService implements OnApplicationBootstrap {
 
   async ask(viewer: Viewer, input: { question: string; itemId?: string; subjectId?: string }) {
     const citations = await this.search(viewer, input.question, { itemId: input.itemId, subjectId: input.subjectId, limit: 5 });
+    const persona = await personaOf(this.database, viewer.id);
     if (!citations.length) {
-      return { answer: 'No encontré ese tema en los documentos de la biblioteca. Prueba con otras palabras o pregúntale a Luka en el tutor.', citations, source: 'none' };
+      return { answer: `No encontré ese tema en los documentos de la biblioteca. Prueba con otras palabras o pregúntale a ${persona.name} en el tutor.`, citations, source: 'none' };
     }
     const sources = citations.map((c) => `[${c.n}] «${c.title}»${c.page ? `, pág. ${c.page}` : ''}:\n${c.excerpt}`).join('\n\n');
     const answer = await this.ai.chatText(
       [
-        { role: 'system', content: 'Eres Luka, bibliotecario de Ludoteka Campus. Responde en español, claro y breve, usando SOLO las fuentes dadas. Cita cada afirmación con [n]. Si las fuentes no alcanzan, dilo. No uses LaTeX ni signos $: escribe las operaciones con ×, ÷ y /.' },
+        { role: 'system', content: `Eres ${persona.name}, ${persona.female ? 'bibliotecaria' : 'bibliotecario'} de Ludoteka Campus. ${personaLine(persona)} Responde en español, claro y breve, usando SOLO las fuentes dadas. Cita cada afirmación con [n]. Si las fuentes no alcanzan, dilo. No uses LaTeX ni signos $: escribe las operaciones con ×, ÷ y /.` },
         { role: 'system', content: `Fuentes:\n${sources}` },
         { role: 'user', content: input.question },
       ],

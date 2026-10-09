@@ -32,7 +32,8 @@ import {
 import { api, ApiException, download } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
 import { Avatar, Bar, DateTile, Empty, PageHeader, pickGradient, Reveal, Ring, Stat, Tile } from '@/ui';
-import { CampusHome } from './campus';
+import { CampusHome, MobileHub } from './campus';
+import { useLayout } from '@/app/layout';
 import { MicButton, SpeakButton } from '@/shared/voice-ui';
 import { appendToField } from '@/shared/voice';
 
@@ -105,10 +106,11 @@ export function HomePage() {
   const firstName = user?.fullName.split(' ')[0];
   const totalDone = (courses.data ?? []).reduce((sum, c) => sum + c.progress.completed, 0);
   const totalLessons = (courses.data ?? []).reduce((sum, c) => sum + c.progress.total, 0);
+  const layout = useLayout();
 
   return (
     <div className="stack g-24">
-      <CampusHome />
+      {layout === 'mobile' ? <MobileHub /> : <CampusHome />}
 
       {isStudent && game.data && (
         <Reveal className="card next-strip">

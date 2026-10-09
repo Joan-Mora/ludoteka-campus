@@ -3,14 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { useAuth } from './auth';
-import { matchCommand, useDictation, useSpeech, voiceSupport, type VoiceCommand } from './voice';
+import { setTheme } from './theme';
+import { dictationUnavailable, matchCommand, useDictation, useSpeech, voiceSupport, type VoiceCommand } from './voice';
 
 /** Appends dictated phrases through `onText`. Hidden-but-explained when the browser lacks speech recognition. */
 export function MicButton({ onText, size = 'sm', label, continuous = false }: { onText: (text: string) => void; size?: 'sm' | 'md'; label?: string; continuous?: boolean }) {
   const mic = useDictation(onText, { continuous });
   if (!mic.supported) {
     return (
-      <button type="button" className={`btn ${size === 'sm' ? 'sm' : ''} ghost`} disabled title="Tu navegador no permite dictado por voz. Usa Chrome o Edge.">
+      <button type="button" className={`btn ${size === 'sm' ? 'sm' : ''} ghost`} disabled title={dictationUnavailable()}>
         <MicOff size={15} />
       </button>
     );
@@ -55,7 +56,7 @@ const destinations: Destination[] = [
   { label: 'Inicio', to: '/app', phrases: ['inicio', 'campus', 'casa', 'mapa'] },
   { label: 'Mis cursos', to: '/app/cursos', phrases: ['cursos', 'mis cursos', 'aula', 'clases'] },
   { label: 'Biblioteca', to: '/app/biblioteca', phrases: ['biblioteca', 'libros', 'recursos'] },
-  { label: 'Tutor IA', to: '/app/tutor', phrases: ['tutor', 'laboratorio', 'luka', 'inteligencia artificial'] },
+  { label: 'Tutor IA', to: '/app/tutor', phrases: ['tutor', 'laboratorio', 'luka', 'luna', 'inteligencia artificial'] },
   { label: 'Arena', to: '/app/arena', phrases: ['arena', 'competencia', 'equipos'] },
   { label: 'Cartelera', to: '/app/novedades', phrases: ['cartelera', 'novedades', 'noticias', 'avisos', 'foros'] },
   { label: 'Cuaderno', to: '/app/cuaderno', phrases: ['cuaderno', 'apuntes', 'flashcards', 'tarjetas'], roles: ['student'] },
@@ -82,8 +83,8 @@ export function VoiceNav() {
     ...destinations
       .filter((d) => !d.roles || (user && d.roles.includes(user.role)))
       .map((d) => ({ label: d.label, say: `Abriendo ${d.label}`, phrases: d.phrases, run: () => navigate(d.to) })),
-    { label: 'Modo oscuro', say: 'Modo oscuro activado', phrases: ['modo oscuro', 'tema oscuro', 'apaga la luz'], run: () => { document.documentElement.dataset.theme = 'dark'; } },
-    { label: 'Modo claro', say: 'Modo claro activado', phrases: ['modo claro', 'tema claro', 'prende la luz'], run: () => { document.documentElement.dataset.theme = ''; } },
+    { label: 'Modo oscuro', say: 'Modo oscuro activado', phrases: ['modo oscuro', 'tema oscuro', 'apaga la luz'], run: () => setTheme('dark') },
+    { label: 'Modo claro', say: 'Modo claro activado', phrases: ['modo claro', 'tema claro', 'prende la luz'], run: () => setTheme('light') },
     { label: 'Volver', phrases: ['volver', 'atras', 'regresar'], run: () => navigate(-1) },
     { label: 'Leer página', phrases: ['lee la pagina', 'leer pagina', 'lee esto', 'leer en voz alta'], run: () => speech.speak(document.querySelector('.content')?.textContent?.slice(0, 1200) ?? '') },
     { label: 'Silencio', phrases: ['silencio', 'callate', 'para de leer', 'detente'], run: () => speech.stop() },
@@ -114,7 +115,7 @@ export function VoiceNav() {
     <div style={{ position: 'relative' }}>
       <button
         className={`icon-btn${mic.listening ? ' mic-on' : ''}`}
-        title={voiceSupport.dictation ? 'Comandos de voz: di «abre la biblioteca»' : 'Tu navegador no permite comandos de voz. Usa Chrome o Edge.'}
+        title={voiceSupport.dictation ? 'Comandos de voz: di «abre la biblioteca»' : dictationUnavailable()}
         disabled={!voiceSupport.dictation}
         onClick={mic.toggle}
         aria-pressed={mic.listening}

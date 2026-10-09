@@ -1,6 +1,7 @@
 import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import { sql } from 'kysely';
+import { personaLine, personaOf } from '../../core/common/companion';
 import { DatabaseService } from '../../core/database/database.service';
 import { ApiError } from '../../core/errors/api-error';
 import { DomainEvents, type AttemptGradedEvent, type RouteSolvedEvent } from '../../core/events/domain-events';
@@ -233,9 +234,13 @@ export class RouteService implements OnApplicationBootstrap {
    */
   private async build(generator: GeneratorKey, topicName: string, level: number, count: number, userId: string): Promise<NewItem[]> {
     const out: NewItem[] = [];
+    const persona = await personaOf(this.database, userId);
     const proposal = await this.ai.chatJson<{ ejercicios?: AiExercise[] }>(
       [
-        { role: 'system', content: 'Generas ejercicios de matemáticas de grado sexto para un colegio de Colombia. Respondes solo JSON válido. No uses LaTeX ni nombres de personas reales.' },
+        {
+          role: 'system',
+          content: `Generas ejercicios de matemáticas de grado sexto para un colegio de Colombia. Respondes solo JSON válido. No uses LaTeX ni nombres de personas reales. ${personaLine(persona)} Las pistas van en segunda persona y con tono amable.`,
+        },
         {
           role: 'user',
           content: [

@@ -426,9 +426,9 @@ export function RectoriaPage() {
       </div>
       <div className="grid cols-3" style={{ alignItems: 'start' }}>
         <Panel icon={Building2} tone="violet" title="Matrícula por grado" className="span-2">
-          <div className="row g-16" style={{ alignItems: 'flex-end', height: 240, padding: '10px 4px 0' }}>
+          <div className="row bar-chart" style={{ alignItems: 'flex-end', height: 240, padding: '10px 4px 0' }}>
             {grades.map((grade, i) => (
-              <div key={grade.level} className="stack g-8" style={{ flex: 1, alignItems: 'center', height: '100%', justifyContent: 'flex-end' }}>
+              <div key={grade.level} className="stack g-8" style={{ flex: 1, minWidth: 0, alignItems: 'center', height: '100%', justifyContent: 'flex-end' }}>
                 <b style={{ fontSize: 14 }}>{grade.students}</b>
                 <motion.div
                   initial={{ height: 0 }}
@@ -436,7 +436,7 @@ export function RectoriaPage() {
                   transition={{ delay: 0.2 + i * 0.07, duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
                   style={{ width: '100%', maxWidth: 64, borderRadius: '12px 12px 6px 6px', background: 'var(--grad-brand)', boxShadow: '0 10px 20px -10px rgba(124,92,255,.8)' }}
                 />
-                <span className="muted" style={{ fontSize: 12.5, fontWeight: 700 }}>{grade.name}</span>
+                <span className="muted ellipsis" style={{ fontSize: 12.5, fontWeight: 700, maxWidth: '100%' }}>{grade.name}</span>
               </div>
             ))}
             {!grades.length && <Empty icon={Building2} title="Sin datos de matrícula" />}
@@ -468,9 +468,6 @@ function CourseLinks() {
   );
 }
 
-const roleName: Record<string, string> = { student: 'Estudiante', teacher: 'Docente', directivo: 'Coordinación', admin: 'Admin', guardian: 'Acudiente' };
-const roleTone: Record<string, string> = { student: 'violet', teacher: 'sky', directivo: 'gold', admin: 'coral', guardian: 'mint' };
-
 export function AdminPage() {
   const client = useQueryClient();
   const years = useQuery({ queryKey: ['years'], queryFn: () => api<{ id: string; name: string }[]>('/api/institution/years') });
@@ -478,7 +475,7 @@ export function AdminPage() {
   const groups = useQuery({ queryKey: ['groups'], queryFn: () => api<{ id: string; name: string; grade_name: string }[]>('/api/institution/groups') });
   const subjects = useQuery({ queryKey: ['subjects'], queryFn: () => api<{ id: string; name: string; code: string }[]>('/api/institution/subjects') });
   const users = useQuery({ queryKey: ['users'], queryFn: () => api<{ id: string; fullName: string; email: string; role: string }[]>('/api/admin/users') });
-  const [tab, setTab] = useState<'people' | 'guardians' | 'structure' | 'courses'>('people');
+  const [tab, setTab] = useState<'guardians' | 'structure' | 'courses'>('structure');
 
   async function send(path: string, body: unknown, form?: HTMLFormElement) {
     await api(path, { method: 'POST', body: JSON.stringify(body) });
@@ -491,7 +488,12 @@ export function AdminPage() {
 
   return (
     <div>
-      <PageHeader eyebrow="Administración" title="Institución" subtitle="Cuentas, estructura académica y cursos del colegio." />
+      <PageHeader
+        eyebrow="Administración"
+        title="Institución"
+        subtitle="Estructura académica, acudientes y cursos del colegio."
+        actions={<Link className="btn ghost" to="/app/admin/usuarios"><Users size={16} /> Gestionar usuarios</Link>}
+      />
       <div className="grid cols-4" style={{ marginBottom: 18 }}>
         <Stat icon={Users} tone="violet" value={users.data?.length ?? 0} label="Cuentas" />
         <Stat icon={Layers} tone="sky" value={groups.data?.length ?? 0} label="Grupos" />
@@ -499,56 +501,17 @@ export function AdminPage() {
         <Stat icon={GraduationCap} tone="mint" value={grades.data?.length ?? 0} label="Grados" />
       </div>
 
-      <div className="row g-8" style={{ marginBottom: 18, padding: 6, background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: 16, width: 'fit-content' }}>
+      <div className="row g-8 seg" style={{ marginBottom: 18 }}>
         {([
-          ['people', 'Personas', Users],
-          ['guardians', 'Acudientes', HeartHandshake],
           ['structure', 'Estructura', Building2],
+          ['guardians', 'Acudientes', HeartHandshake],
           ['courses', 'Cursos', BookOpen],
         ] as const).map(([key, label, Icon]) => (
           <button key={key} className={`btn sm ${tab === key ? '' : 'ghost'}`} style={tab === key ? undefined : { border: 0 }} onClick={() => setTab(key)}><Icon size={15} /> {label}</button>
         ))}
       </div>
 
-      {tab === 'people' && (
-        <div className="grid cols-3" style={{ alignItems: 'start' }}>
-          <Panel icon={Users} tone="violet" title="Cuentas" subtitle={`${users.data?.length ?? 0} usuarios`} className="span-2">
-            <table className="table">
-              <thead><tr><th>Nombre</th><th>Correo</th><th>Rol</th></tr></thead>
-              <tbody>
-                {(users.data ?? []).map((u) => (
-                  <tr key={u.id}>
-                    <td><div className="row g-12"><Avatar name={u.fullName} /><b>{u.fullName}</b></div></td>
-                    <td className="muted">{u.email}</td>
-                    <td><span className={`chip ${roleTone[u.role] ?? ''}`}>{roleName[u.role] ?? u.role}</span></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </Panel>
-          <div className="stack" style={{ gap: 18 }}>
-            <Panel icon={UserPlus} tone="mint" title="Nueva cuenta">
-              <form onSubmit={(e) => { e.preventDefault(); const f = e.currentTarget; const d = new FormData(f); send('/api/admin/users', { fullName: d.get('fullName'), email: d.get('email'), password: d.get('password'), role: d.get('role'), isMinor: d.get('isMinor') === 'on' }, f); }}>
-                <label className="field">Nombre<input name="fullName" required /></label>
-                <label className="field">Correo<input name="email" type="email" required /></label>
-                <label className="field">Clave<input name="password" required /></label>
-                <label className="field">Rol<select name="role">{Object.entries(roleName).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select></label>
-                <label className="check"><input name="isMinor" type="checkbox" /> Es menor de edad</label>
-                <button className="btn" type="submit" style={{ width: '100%' }}>Crear cuenta</button>
-              </form>
-            </Panel>
-            <Panel icon={GraduationCap} tone="sky" title="Matrícula">
-              <form onSubmit={(e) => { e.preventDefault(); const f = e.currentTarget; const d = new FormData(f); send('/api/institution/enrollments', { userId: d.get('userId'), groupId: d.get('groupId'), academicYearId: d.get('yearId') }, f); }}>
-                <label className="field">Estudiante<select name="userId">{(users.data ?? []).filter((u) => u.role === 'student').map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}</select></label>
-                {groupSelect}
-                {yearSelect}
-                <button className="btn" type="submit" style={{ width: '100%' }}>Matricular</button>
-              </form>
-            </Panel>
-          </div>
-        </div>
-      )}
-
+      {tab === 'structure' && <StructureImport onDone={() => client.invalidateQueries()} />}
       {tab === 'structure' && (
         <div className="grid cols-3" style={{ alignItems: 'start' }}>
           <Panel icon={Layers} tone="sky" title="Grupos">
@@ -582,6 +545,14 @@ export function AdminPage() {
               <button className="btn" type="submit" style={{ width: '100%' }}>Asignar</button>
             </form>
           </Panel>
+          <Panel icon={GraduationCap} tone="mint" title="Matrícula" subtitle="Las cuentas nuevas se matriculan desde Usuarios">
+            <form onSubmit={(e) => { e.preventDefault(); const f = e.currentTarget; const d = new FormData(f); send('/api/institution/enrollments', { userId: d.get('userId'), groupId: d.get('groupId'), academicYearId: d.get('yearId') }, f); }}>
+              <label className="field">Estudiante<select name="userId">{(users.data ?? []).filter((u) => u.role === 'student').map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}</select></label>
+              {groupSelect}
+              {yearSelect}
+              <button className="btn" type="submit" style={{ width: '100%' }}>Matricular</button>
+            </form>
+          </Panel>
         </div>
       )}
 
@@ -589,6 +560,63 @@ export function AdminPage() {
 
       {tab === 'courses' && <TeacherBuilder />}
     </div>
+  );
+}
+
+interface StructurePlan { year: string; grades: string[]; groups: string[]; subjects: string[]; applied: boolean }
+
+function StructureImport({ onDone }: { onDone: () => void }) {
+  const [file, setFile] = useState<File | null>(null);
+  const [plan, setPlan] = useState<StructurePlan | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  async function run(dryRun: boolean, picked = file) {
+    setBusy(true);
+    setError('');
+    try {
+      const query = `?dryRun=${dryRun ? 1 : 0}${picked ? `&name=${encodeURIComponent(picked.name)}` : ''}`;
+      const result = await api<StructurePlan>(`/api/admin/structure/import${query}`, {
+        method: 'POST',
+        ...(picked ? { body: picked, headers: { 'Content-Type': 'application/octet-stream' } } : {}),
+      });
+      setPlan(result);
+      if (!dryRun) onDone();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudo leer la estructura');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const nothing = plan && !plan.grades.length && !plan.groups.length && !plan.subjects.length;
+  return (
+    <Panel icon={FileSpreadsheet} tone="violet" title="Plantilla de estructura" subtitle="Grados 6.° a 11.°, grupos A y B y materias del plan de estudios" className="structure-import">
+      <div className="row g-8 wrap" style={{ marginBottom: 12 }}>
+        <button className="btn ghost sm" onClick={() => download('/api/admin/structure/template.xlsx', 'plantilla-estructura-ludoteka.xlsx')}><Download size={15} /> Descargar plantilla</button>
+        <label className="btn ghost sm" style={{ cursor: 'pointer' }}>
+          <FileSpreadsheet size={15} /> {file ? file.name : 'Subir plantilla llena'}
+          <input type="file" accept=".xlsx,.csv" hidden onChange={(e) => { const f = e.target.files?.[0] ?? null; setFile(f); setPlan(null); if (f) run(true, f); }} />
+        </label>
+        {!file && <button className="btn ghost sm" disabled={busy} onClick={() => run(true, null)}><Wand2 size={15} /> Usar estructura base</button>}
+      </div>
+      {plan && (
+        <div className="stack" style={{ gap: 8, fontSize: 14 }}>
+          {nothing ? (
+            <p className="ok-text" style={{ margin: 0 }}>{plan.applied ? 'Estructura creada.' : `Todo ya existe en ${plan.year}.`}</p>
+          ) : (
+            <>
+              <p style={{ margin: 0 }}>{plan.applied ? 'Se creó' : 'Se creará'} en <b>{plan.year}</b>:</p>
+              {!!plan.grades.length && <p className="muted" style={{ margin: 0 }}>Grados: {plan.grades.join(', ')}</p>}
+              {!!plan.groups.length && <p className="muted" style={{ margin: 0 }}>Grupos: {plan.groups.join(', ')}</p>}
+              {!!plan.subjects.length && <p className="muted" style={{ margin: 0 }}>Materias: {plan.subjects.join(', ')}</p>}
+              {!plan.applied && <button className="btn sm" disabled={busy} onClick={() => run(false)} style={{ width: 'fit-content' }}>Crear lo que falta</button>}
+            </>
+          )}
+        </div>
+      )}
+      {error && <p className="form-error">{error}</p>}
+    </Panel>
   );
 }
 

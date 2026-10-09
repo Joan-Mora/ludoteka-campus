@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -29,6 +29,7 @@ import {
 import { api } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
 import { matchCommand, useDictation, useSpeech, type VoiceCommand } from '@/shared/voice';
+import { useCompanion, type Companion, type CompanionId } from '@/shared/companion';
 
 /* ---------- Isometric geometry ---------- */
 
@@ -69,6 +70,8 @@ const phaseMeta: Record<Phase, { label: string; icon: LucideIcon; sky: string; g
   dusk: { label: 'Atardecer', icon: Sunset, sky: 'linear-gradient(180deg,#4b33b8 0%,#c4569a 45%,#ffb27a 100%)', greet: '¡Buenas tardes' },
   night: { label: 'Noche', icon: Moon, sky: 'linear-gradient(180deg,#070620 0%,#151146 50%,#2a2166 100%)', greet: '¡Buenas noches' },
 };
+
+const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
 
 function useClock() {
   const [now, setNow] = useState(() => new Date());
@@ -122,14 +125,14 @@ const layout: Record<BuildingKey, Pick<Building, 'x' | 'y' | 'w' | 'd' | 'h' | '
   arena: { x: 9.9, y: 9.9, w: 3, d: 3, h: 0.7, shape: 'stadium', color: '#ff5d73' },
 };
 
-export function buildingsFor(role: string | undefined): Building[] {
+export function buildingsFor(role: string | undefined, companionName = 'Luka'): Building[] {
   const student = role === 'student';
   const guardian = role === 'guardian';
   const board = role === 'admin' || role === 'directivo';
   const list: Omit<Building, keyof (typeof layout)[BuildingKey]>[] = [
     { key: 'aula', name: guardian ? 'Seguimiento' : 'Aula', caption: student ? 'lecciones pendientes' : role === 'teacher' ? 'entregas por calificar' : guardian ? 'acudidos' : 'cursos activos', to: guardian ? '/app/acudiente' : '/app/cursos', icon: School, voice: ['aula', 'cursos', 'mis cursos', 'clases', 'seguimiento'] },
     { key: 'biblioteca', name: 'Biblioteca', caption: 'recursos publicados', to: '/app/biblioteca', icon: Library, voice: ['biblioteca', 'libros', 'recursos', 'documentos'] },
-    { key: 'lab', name: 'Laboratorio IA', caption: 'consultas a Luka hoy', to: '/app/tutor', icon: BrainCircuit, voice: ['laboratorio', 'tutor', 'inteligencia artificial', 'luka', 'preguntar'] },
+    { key: 'lab', name: 'Laboratorio IA', caption: `consultas a ${companionName} hoy`, to: '/app/tutor', icon: BrainCircuit, voice: ['laboratorio', 'tutor', 'inteligencia artificial', 'luka', 'luna', 'preguntar'] },
     { key: 'arena', name: 'Arena', caption: 'salas en vivo', to: '/app/arena', icon: Swords, voice: ['arena', 'competencia', 'equipos', 'en vivo', 'jugar en equipo'] },
     {
       key: 'trofeos',
@@ -444,6 +447,8 @@ const lamps: [number, number][] = [[4.1, 6.1], [9.7, 6.1], [4.1, 8.1], [9.7, 8.1
 
 /* ---------- Isometric campus ---------- */
 
+const VIEW = { x: -430, y: -110, w: 860, h: 640 };
+
 export function IsoCampus({ buildings, counts, phase, interactive = true, onPick }: {
   buildings: Building[];
   counts?: Partial<Record<BuildingKey, number>>;
@@ -452,6 +457,18 @@ export function IsoCampus({ buildings, counts, phase, interactive = true, onPick
   onPick?: (b: Building) => void;
 }) {
   const [hover, setHover] = useState<BuildingKey | null>(null);
+  const wrap = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  useEffect(() => {
+    const el = wrap.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(([entry]) => {
+      const width = entry?.contentRect.width ?? VIEW.w;
+      setScale(Math.max(0.55, Math.min(1.15, width / VIEW.w)));
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
   const paint: Paint = useMemo(() => ({ tone: toner(phase), night: phase === 'night' }), [phase]);
   const night = phase === 'night';
 
@@ -496,99 +513,117 @@ export function IsoCampus({ buildings, counts, phase, interactive = true, onPick
   const walkers = ['#ff5d73', '#7c5cff', '#ffc83d', '#19c39c', '#3ab8ff'];
 
   return (
-    <svg className="iso-svg" viewBox="-430 -110 860 640" role="img" aria-label="Mapa del campus Ludoteka">
-      <defs>
-        <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
-          <feGaussianBlur stdDeviation="2.4" result="b" />
-          <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-        </filter>
-        <radialGradient id="lampPool"><stop offset="0%" stopColor="#ffd66b" stopOpacity=".55" /><stop offset="100%" stopColor="#ffd66b" stopOpacity="0" /></radialGradient>
-        <linearGradient id="water" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor={paint.tone('#7fd6ff')} /><stop offset="100%" stopColor={paint.tone('#3a9bff')} /></linearGradient>
-      </defs>
+    <div className="iso-wrap" ref={wrap} style={{ '--iso-scale': scale } as CSSProperties}>
+      <svg className="iso-svg" viewBox={`${VIEW.x} ${VIEW.y} ${VIEW.w} ${VIEW.h}`} role="img" aria-label="Mapa del campus Ludoteka">
+        <defs>
+          <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="2.4" result="b" />
+            <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+          <radialGradient id="lampPool"><stop offset="0%" stopColor="#ffd66b" stopOpacity=".55" /><stop offset="100%" stopColor="#ffd66b" stopOpacity="0" /></radialGradient>
+          <linearGradient id="water" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor={paint.tone('#7fd6ff')} /><stop offset="100%" stopColor={paint.tone('#3a9bff')} /></linearGradient>
+        </defs>
 
-      <polygon points={pts([P(0, G), P(G, G), iso(G, G, -0.7), iso(0, G, -0.7)])} fill={sideA} />
-      <polygon points={pts([P(G, 0), P(G, G), iso(G, G, -0.7), iso(G, 0, -0.7)])} fill={sideB} />
-      <polygon points={pts([iso(0, G, -0.7), iso(G, G, -0.7), iso(G, G, -0.9), iso(0, G, -0.9)])} fill={paint.tone('#7a5232')} />
-      <polygon points={pts([iso(G, 0, -0.7), iso(G, G, -0.7), iso(G, G, -0.9), iso(G, 0, -0.9)])} fill={paint.tone('#5e3e25')} />
-      <polygon points={pts([P(0, 0), P(G, 0), P(G, G), P(0, G)])} fill={grass} />
-      <polygon points={pts([P(0, 0), P(G, 0), P(G, 0.12), P(0.12, 0.12), P(0.12, G), P(0, G)])} fill={paint.tone('#a6eaa9')} />
+        <polygon points={pts([P(0, G), P(G, G), iso(G, G, -0.7), iso(0, G, -0.7)])} fill={sideA} />
+        <polygon points={pts([P(G, 0), P(G, G), iso(G, G, -0.7), iso(G, 0, -0.7)])} fill={sideB} />
+        <polygon points={pts([iso(0, G, -0.7), iso(G, G, -0.7), iso(G, G, -0.9), iso(0, G, -0.9)])} fill={paint.tone('#7a5232')} />
+        <polygon points={pts([iso(G, 0, -0.7), iso(G, G, -0.7), iso(G, G, -0.9), iso(G, 0, -0.9)])} fill={paint.tone('#5e3e25')} />
+        <polygon points={pts([P(0, 0), P(G, 0), P(G, G), P(0, G)])} fill={grass} />
+        <polygon points={pts([P(0, 0), P(G, 0), P(G, 0.12), P(0.12, 0.12), P(0.12, G), P(0, G)])} fill={paint.tone('#a6eaa9')} />
 
-      <polygon points={pts([P(0, 6.5), P(G, 6.5), P(G, 7.3), P(0, 7.3)])} fill={plaza} />
-      <polygon points={pts([P(6.5, 0), P(7.3, 0), P(7.3, G), P(6.5, G)])} fill={plaza} />
-      <path d={loopD} fill="none" stroke={plaza} strokeWidth={13} strokeLinejoin="round" />
-      <path d={loopD} fill="none" stroke={paint.tone('#d9ccb0')} strokeWidth={1} strokeDasharray="3 7" />
+        <polygon points={pts([P(0, 6.5), P(G, 6.5), P(G, 7.3), P(0, 7.3)])} fill={plaza} />
+        <polygon points={pts([P(6.5, 0), P(7.3, 0), P(7.3, G), P(6.5, G)])} fill={plaza} />
+        <path d={loopD} fill="none" stroke={plaza} strokeWidth={13} strokeLinejoin="round" />
+        <path d={loopD} fill="none" stroke={paint.tone('#d9ccb0')} strokeWidth={1} strokeDasharray="3 7" />
 
-      {(() => {
-        const [px, py] = iso(4.9, 2, 0);
-        return (
-          <g>
-            <ellipse cx={px} cy={py} rx={34} ry={17} fill={paint.tone('#5a8f5e')} />
-            <ellipse cx={px} cy={py - 1} rx={30} ry={14.5} fill="url(#water)" />
-            <ellipse className="iso-ripple" cx={px - 6} cy={py - 3} rx={8} ry={3} fill="none" stroke="#fff" strokeOpacity={0.6} />
+        {(() => {
+          const [px, py] = iso(4.9, 2, 0);
+          return (
+            <g>
+              <ellipse cx={px} cy={py} rx={34} ry={17} fill={paint.tone('#5a8f5e')} />
+              <ellipse cx={px} cy={py - 1} rx={30} ry={14.5} fill="url(#water)" />
+              <ellipse className="iso-ripple" cx={px - 6} cy={py - 3} rx={8} ry={3} fill="none" stroke="#fff" strokeOpacity={0.6} />
+            </g>
+          );
+        })()}
+
+        {walkers.map((c, i) => (
+          <g key={c}>
+            <circle r={3.2} cy={-9} fill={paint.tone('#ffd9b8')} />
+            <rect x={-3.5} y={-6.5} width={7} height={8} rx={3} fill={paint.tone(c)} />
+            <animateMotion dur={`${26 + i * 5}s`} repeatCount="indefinite" path={loopD} begin={`-${i * 6}s`} keyPoints={i % 2 ? '1;0' : '0;1'} keyTimes="0;1" calcMode="linear" />
           </g>
-        );
-      })()}
+        ))}
 
-      {walkers.map((c, i) => (
-        <g key={c}>
-          <circle r={3.2} cy={-9} fill={paint.tone('#ffd9b8')} />
-          <rect x={-3.5} y={-6.5} width={7} height={8} rx={3} fill={paint.tone(c)} />
-          <animateMotion dur={`${26 + i * 5}s`} repeatCount="indefinite" path={loopD} begin={`-${i * 6}s`} keyPoints={i % 2 ? '1;0' : '0;1'} keyTimes="0;1" calcMode="linear" />
-        </g>
-      ))}
-
-      {scenery}
-
-      {buildings.map((b) => {
-        const top = b.shape === 'stadium' ? iso(b.x + b.w / 2, b.y + b.d / 2, b.h + 1.6) : iso(b.x + b.w / 2, b.y + b.d / 2, b.h + (b.shape === 'board' ? 1.6 : b.shape === 'school' ? 1.85 : b.shape === 'tower' ? 1.9 : 1.4));
-        const n = counts?.[b.key] ?? 0;
-        const active = hover === b.key;
-        return (
-          <foreignObject key={`lbl-${b.key}`} x={top[0] - 90} y={top[1] - 46} width={180} height={52} className="iso-label-wrap" style={{ pointerEvents: 'none' }}>
-            <div className={`iso-label${active ? ' on' : ''}${night ? ' night' : ''}`}>
-              <span className="iso-label-ico" style={{ background: b.color }}><b.icon size={13} strokeWidth={2.6} /></span>
-              <span className="iso-label-name">{b.name}</span>
-              {counts && n > 0 && <span className="iso-count">{n > 99 ? '99+' : n}</span>}
+        {scenery}
+      </svg>
+      <div className="iso-labels" aria-hidden>
+        {buildings.map((b) => {
+          const top = b.shape === 'stadium' ? iso(b.x + b.w / 2, b.y + b.d / 2, b.h + 1.6) : iso(b.x + b.w / 2, b.y + b.d / 2, b.h + (b.shape === 'board' ? 1.6 : b.shape === 'school' ? 1.85 : b.shape === 'tower' ? 1.9 : 1.4));
+          const n = counts?.[b.key] ?? 0;
+          const active = hover === b.key;
+          return (
+            <div key={`lbl-${b.key}`} className="iso-tag" style={{ left: `${((top[0] - VIEW.x) / VIEW.w) * 100}%`, top: `${((top[1] - VIEW.y) / VIEW.h) * 100}%` }}>
+              <div className={`iso-label${active ? ' on' : ''}${night ? ' night' : ''}`}>
+                <span className="iso-label-ico" style={{ background: b.color }}><b.icon size={13} strokeWidth={2.6} /></span>
+                <span className="iso-label-name">{b.name}</span>
+                {counts && n > 0 && <span className="iso-count">{n > 99 ? '99+' : n}</span>}
+              </div>
             </div>
-          </foreignObject>
-        );
-      })}
-    </svg>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
 /* ---------- Luka, the AI companion ---------- */
 
-export function Luka({ mood = 'idle', size = 112 }: { mood?: 'idle' | 'talking' | 'listening'; size?: number }) {
+const lookOf: Record<CompanionId, { stops: [string, string, string]; limb: string; eye: string; mark: string }> = {
+  luka: { stops: ['#9b7bff', '#6a45f0', '#d5459a'], limb: '#6a45f0', eye: '#3fe0b4', mark: '#ffc83d' },
+  luna: { stops: ['#ff9ad5', '#b45cff', '#5b8cff'], limb: '#9a4ff0', eye: '#7fd6ff', mark: '#fff1a8' },
+};
+
+export function Luka({ mood = 'idle', size = 112, variant = 'luka' }: { mood?: 'idle' | 'talking' | 'listening'; size?: number; variant?: CompanionId }) {
+  const look = lookOf[variant];
+  const body = `cBody-${variant}`;
+  const eye = `cEye-${variant}`;
   return (
     <svg className={`luka luka-${mood}`} width={size} height={size * 1.15} viewBox="0 0 120 138" aria-hidden>
       <defs>
-        <linearGradient id="lukaBody" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#9b7bff" />
-          <stop offset="60%" stopColor="#6a45f0" />
-          <stop offset="100%" stopColor="#d5459a" />
+        <linearGradient id={body} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor={look.stops[0]} />
+          <stop offset="60%" stopColor={look.stops[1]} />
+          <stop offset="100%" stopColor={look.stops[2]} />
         </linearGradient>
-        <radialGradient id="lukaEye"><stop offset="0%" stopColor="#d9fff5" /><stop offset="100%" stopColor="#3fe0b4" /></radialGradient>
+        <radialGradient id={eye}><stop offset="0%" stopColor="#e9fbff" /><stop offset="100%" stopColor={look.eye} /></radialGradient>
       </defs>
       <ellipse className="luka-shadow" cx="60" cy="132" rx="26" ry="5" fill="rgba(0,0,0,.22)" />
       <g className="luka-float">
-        <line x1="60" y1="24" x2="60" y2="10" stroke="#6a45f0" strokeWidth="3" strokeLinecap="round" />
-        <circle className="luka-antenna" cx="60" cy="8" r="5.5" fill="#ffc83d" />
-        <rect className="luka-arm l" x="10" y="88" width="16" height="26" rx="8" fill="#6a45f0" />
-        <rect className="luka-arm r" x="94" y="88" width="16" height="26" rx="8" fill="#6a45f0" />
-        <rect x="30" y="82" width="60" height="40" rx="20" fill="url(#lukaBody)" />
+        <line x1="60" y1="24" x2="60" y2="10" stroke={look.limb} strokeWidth="3" strokeLinecap="round" />
+        {variant === 'luna'
+          ? <path className="luka-antenna" d="M63 1.5a7 7 0 1 0 0 13 5.6 5.6 0 1 1 0-13z" fill={look.mark} />
+          : <circle className="luka-antenna" cx="60" cy="8" r="5.5" fill={look.mark} />}
+        <rect className="luka-arm l" x="10" y="88" width="16" height="26" rx="8" fill={look.limb} />
+        <rect className="luka-arm r" x="94" y="88" width="16" height="26" rx="8" fill={look.limb} />
+        <rect x="30" y="82" width="60" height="40" rx="20" fill={`url(#${body})`} />
         <circle cx="60" cy="101" r="9" fill="#140f2e" />
-        <text x="60" y="105.5" textAnchor="middle" fontSize="12" fontWeight="800" fill="#ffc83d" fontFamily="var(--font-display)">L</text>
-        <rect x="16" y="22" width="88" height="66" rx="32" fill="url(#lukaBody)" />
+        <text x="60" y="105.5" textAnchor="middle" fontSize="12" fontWeight="800" fill={look.mark} fontFamily="var(--font-display)">L</text>
+        <rect x="16" y="22" width="88" height="66" rx="32" fill={`url(#${body})`} />
         <rect x="16" y="22" width="88" height="66" rx="32" fill="none" stroke="#fff" strokeOpacity=".25" strokeWidth="2" />
         <rect x="27" y="36" width="66" height="38" rx="19" fill="#140f2e" />
         <g className="luka-eyes">
-          <ellipse cx="47" cy="53" rx="6.5" ry="8" fill="url(#lukaEye)" />
-          <ellipse cx="73" cy="53" rx="6.5" ry="8" fill="url(#lukaEye)" />
+          <ellipse cx="47" cy="53" rx="6.5" ry="8" fill={`url(#${eye})`} />
+          <ellipse cx="73" cy="53" rx="6.5" ry="8" fill={`url(#${eye})`} />
           <circle cx="49" cy="50" r="2" fill="#fff" />
           <circle cx="75" cy="50" r="2" fill="#fff" />
+          {variant === 'luna' && (
+            <g stroke={look.eye} strokeWidth="1.8" strokeLinecap="round">
+              <path d="M40 46l-3-3M43 44.5l-1.5-3.5M80 46l3-3M77 44.5l1.5-3.5" />
+            </g>
+          )}
         </g>
-        <path className="luka-mouth" d="M51 64 Q60 70 69 64" stroke="#3fe0b4" strokeWidth="3" fill="none" strokeLinecap="round" />
+        <path className="luka-mouth" d="M51 64 Q60 70 69 64" stroke={look.eye} strokeWidth="3" fill="none" strokeLinecap="round" />
         <circle cx="34" cy="66" r="5" fill="#ff5d73" opacity=".45" />
         <circle cx="86" cy="66" r="5" fill="#ff5d73" opacity=".45" />
       </g>
@@ -596,7 +631,7 @@ export function Luka({ mood = 'idle', size = 112 }: { mood?: 'idle' | 'talking' 
   );
 }
 
-function tipsFor(role: string | undefined, counts: Partial<Record<BuildingKey, number>>, buildings: Building[], name: string, phase: Phase) {
+function tipsFor(role: string | undefined, counts: Partial<Record<BuildingKey, number>>, buildings: Building[], name: string, phase: Phase, companion: Companion) {
   const tips: { text: string; to?: string }[] = [];
   const by = (k: BuildingKey) => buildings.find((b) => b.key === k);
   const n = (k: BuildingKey) => counts[k] ?? 0;
@@ -624,7 +659,7 @@ function tipsFor(role: string | undefined, counts: Partial<Record<BuildingKey, n
     tips.push({ text: `${greet} El campus registra hoy actividad en tiempo real; revisa los indicadores en Certificados y reportes.`, to: by('trofeos')?.to });
     tips.push({ text: 'Pregúntale al Observatorio cosas como «promedio por grado este periodo» y te respondo con una consulta segura de solo lectura.', to: by('ruta')?.to });
   }
-  tips.push({ text: 'Tócame el micrófono y di, por ejemplo, «abre la biblioteca» o «ir a la arena». Te llevo de una.' });
+  tips.push({ text: `Soy ${companion.name}, tu ${companion.noun} IA. Tócame el micrófono y di, por ejemplo, «abre la biblioteca» o «ir a la arena». Te llevo de una.` });
   return tips;
 }
 
@@ -638,19 +673,101 @@ export function useCampusData() {
   });
 }
 
+/** Phone home: the same buildings, counts and companion as the campus map, laid out as a vertical hub. */
+export function MobileHub() {
+  const { user } = useAuth();
+  const companion = useCompanion();
+  const navigate = useNavigate();
+  const now = useClock();
+  const phase = phaseOf(bogotaHour(now));
+  const meta = phaseMeta[phase];
+  const buildings = useMemo(() => buildingsFor(user?.role, companion.name), [user?.role, companion.name]);
+  const data = useCampusData();
+  const counts = data.data?.buildings ?? {};
+  const firstName = user?.fullName.split(' ')[0] ?? '';
+  const tips = useMemo(() => tipsFor(user?.role, counts, buildings, firstName, phase, companion), [user?.role, counts, buildings, firstName, phase, companion]);
+  const [tip, setTip] = useState(0);
+  const current = tips[tip % tips.length]!;
+  const speech = useSpeech();
+  const pending = buildings.filter((b) => (counts[b.key] ?? 0) > 0);
+  const PhaseIcon = meta.icon;
+
+  return (
+    <div className="hub">
+      <section className={`hub-hero phase-${phase}`} style={{ background: meta.sky }}>
+        <span className="campus-chip"><PhaseIcon size={14} /> {capitalize(now.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Bogota' }))}</span>
+        <h1>{meta.greet}, {firstName}!</h1>
+        <div className="hub-pulse">
+          <span className="campus-chip live"><i /> {data.data?.pulse.online ?? 0} en línea</span>
+          <span className="campus-chip">{data.data?.pulse.lessonsToday ?? 0} lecciones hoy</span>
+        </div>
+      </section>
+
+      <section className="hub-companion">
+        <button className="luka-btn" onClick={() => navigate('/app/tutor')} aria-label={`Hablar con ${companion.name}`}>
+          <Luka mood={speech.speaking ? 'talking' : 'idle'} size={64} variant={companion.id} />
+        </button>
+        <div style={{ minWidth: 0, flex: 1 }}>
+          <div className="luka-name"><Sparkles size={13} /> {companion.name}</div>
+          <p>{current.text}</p>
+          <div className="luka-actions">
+            {current.to && <button className="btn sm" onClick={() => navigate(current.to!)}>Ir ahora</button>}
+            {speech.supported && (
+              <button className="btn sm ghost" onClick={() => (speech.speaking ? speech.stop() : speech.speak(current.text))} aria-label="Leer en voz alta">
+                {speech.speaking ? <VolumeX size={14} /> : <Volume2 size={14} />}
+              </button>
+            )}
+            <button className="btn sm ghost" onClick={() => setTip((t) => t + 1)} aria-label="Otro consejo"><BookMarked size={14} /></button>
+          </div>
+        </div>
+      </section>
+
+      {pending.length > 0 && (
+        <section>
+          <h2 className="hub-title">Para hoy</h2>
+          <div className="stack g-8">
+            {pending.map((b) => (
+              <button key={b.key} className="hub-row" onClick={() => navigate(b.to)}>
+                <span className="campus-list-ico" style={{ background: b.color }}><b.icon size={20} strokeWidth={2.4} /></span>
+                <span className="campus-list-text"><b>{b.name}</b><small>{counts[b.key]} {b.caption}</small></span>
+                <span className="iso-count">{counts[b.key]}</span>
+                <ChevronRight size={18} />
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section>
+        <h2 className="hub-title">Edificios del campus</h2>
+        <div className="hub-grid">
+          {buildings.map((b) => (
+            <button key={b.key} className="hub-tile" onClick={() => navigate(b.to)}>
+              <span className="hub-tile-ico" style={{ background: b.color }}><b.icon size={22} strokeWidth={2.4} /></span>
+              <b>{b.name}</b>
+              <small>{counts[b.key] ?? 0} {b.caption}</small>
+            </button>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 export function CampusHome() {
   const { user } = useAuth();
+  const companion = useCompanion();
   const navigate = useNavigate();
   const now = useClock();
   const [override, setOverride] = useState<Phase | null>(null);
   const autoPhase = phaseOf(bogotaHour(now));
   const phase = override ?? autoPhase;
   const meta = phaseMeta[phase];
-  const buildings = useMemo(() => buildingsFor(user?.role), [user?.role]);
+  const buildings = useMemo(() => buildingsFor(user?.role, companion.name), [user?.role, companion.name]);
   const data = useCampusData();
   const counts = data.data?.buildings ?? {};
   const firstName = user?.fullName.split(' ')[0] ?? '';
-  const tips = useMemo(() => tipsFor(user?.role, counts, buildings, firstName, phase), [user?.role, counts, buildings, firstName, phase]);
+  const tips = useMemo(() => tipsFor(user?.role, counts, buildings, firstName, phase, companion), [user?.role, counts, buildings, firstName, phase, companion]);
   const [tip, setTip] = useState(0);
   const current = tips[tip % tips.length]!;
   const speech = useSpeech();
@@ -658,7 +775,7 @@ export function CampusHome() {
 
   const commands: (VoiceCommand & { say?: string })[] = useMemo(() => [
     ...buildings.map((b) => ({ label: b.name, say: `Vamos a ${b.name}`, phrases: b.voice, run: () => navigate(b.to) })),
-    { label: 'Acceso facial', say: 'Vamos a tu acceso facial', phrases: ['acceso facial', 'rostro', 'mi cara'], run: () => navigate('/app/rostro') },
+    { label: 'Ajustes', say: 'Vamos a tus ajustes', phrases: ['ajustes', 'configuracion', 'acceso facial', 'rostro', 'mi cuenta'], run: () => navigate('/app/ajustes') },
     { label: 'Siguiente consejo', phrases: ['siguiente', 'otro consejo', 'que mas'], run: () => { setHeard(null); setTip((t) => t + 1); } },
     { label: 'Leer consejo', phrases: ['lee', 'leer', 'repite', 'que dijiste'], run: () => { setHeard(null); speech.speak(current.text); } },
   ], [buildings, navigate, speech, current.text]);
@@ -699,7 +816,7 @@ export function CampusHome() {
 
       <header className="campus-head">
         <div>
-          <span className="campus-chip">{now.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Bogota' })}</span>
+          <span className="campus-chip">{capitalize(now.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Bogota' }))}</span>
           <h1>{meta.greet}, {firstName}!</h1>
           <p>Bienvenido al campus del Colegio Francisco Arango. Toca un edificio para entrar.</p>
         </div>
@@ -734,10 +851,10 @@ export function CampusHome() {
       </ul>
 
       <div className="campus-luka">
-        <button className="luka-btn" onClick={() => navigate('/app/tutor')} title="Hablar con Luka en el Laboratorio IA"><Luka mood={mood} /></button>
+        <button className="luka-btn" onClick={() => navigate('/app/tutor')} title={`Hablar con ${companion.name} en el Laboratorio IA`}><Luka mood={mood} variant={companion.id} /></button>
         <AnimatePresence mode="wait">
           <motion.div key={tip + (heard ?? '')} className="luka-bubble" initial={{ opacity: 0, y: 8, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6 }}>
-            <div className="luka-name"><Sparkles size={13} /> Luka · tu compañero IA</div>
+            <div className="luka-name"><Sparkles size={13} /> {companion.name} · tu {companion.noun} IA</div>
             <p>{mic.listening ? (mic.interim || 'Te escucho…') : heard ?? current.text}</p>
             {mic.error && <p className="err" style={{ fontSize: 12.5 }}>{mic.error}</p>}
             <div className="luka-actions">

@@ -1,29 +1,105 @@
 # Glosario
 
+> Última revisión: 2026-10-09 · Responsable: Cronista
+> **Nombre:** Ludoteka Campus (nombre pendiente de confirmar por Darwin; antes EduQuest).
+
+## Producto y proceso
+
 | Término | Significado |
 |---------|-------------|
-| Acudiente | Rol `guardian`. Sigue a sus hijos (`guardian_links`), recibe alertas de riesgo y autoriza el registro facial de un menor |
-| Alerta de riesgo | Fila de `risk_alerts`: nota baja, inasistencias, integridad o inactividad, con nivel `media` o `alta` |
+| CFA | Colegio Francisco Arango, el cliente institucional |
+| Dual-track | Una sola app sirve a dos pistas: **A** (colegio y rectoría) y **B** (parcial de Gestión y Operación de BD) |
+| Must / Nice | Must es lo que exige la rúbrica del parcial o el MVP de sexto. Nice va después del 15-oct |
+| EQ-P / EQ-C / EQ-A | IDs de requisitos: P = parcial, C = colegio, A = aula. Ver `RF-RNF.md` |
+| RNF-F | Requisitos no funcionales del facial (Ley 1581) |
+| Freeze | Hasta el 15-oct solo entra lo que bloquee evidencia del Must |
+| Fuego CFA | Iteración visual del 28-sep (coral, oro e índigo, tono Kahoot), **pausada**. La estética oficial es el campus isométrico (decisión del 9-oct) |
+| Campus isométrico | Estética oficial de la app: campus en vista isométrica, un edificio por módulo, Luka o Luna como guía, temas claro y oscuro |
+| Modo revisión | Desde el 28-sep Darwin construye y los bots solo revisan y documentan |
+| Gate | Punto que se libera con una acción de Darwin (secreto, aprobación o evidencia) |
+| R1 / R2 / R3 | Riesgos declarados: clave demo por defecto, límites de intentos (R2, cerrado el 9-oct con ADR-009) y dependencia del correo para el login (ver `threat-model-eq-p09-facial.md`) |
+| QA Lab | Equipo de pruebas (Speck ejecuta, Sentinel coordina) que corre las evidencias de verificación |
+| Outbox | Patrón para garantizar efectos tras un commit (propuesto para la revocación facial, ADR-011 futura) |
+
+## Plataforma y despliegue
+
+| Término | Significado |
+|---------|-------------|
+| Cockroach Cloud | CockroachDB gestionado, la única base permitida. Se conecta por el protocolo de Postgres con SSL (`DATABASE_URL`) |
+| Render | PaaS donde corre el Web Service `ludoteka-campus` (`render.yaml`). Plan gratuito: se duerme tras 15 min sin uso |
+| Resend | Proveedor de correo: recuperación de contraseña y código de ingreso. Sin clave, el correo queda en `email_outbox` |
+| `LAB_OTP_INBOX` | Buzón que recibe los códigos de **todas** las cuentas `@eduquest.local`, admin incluido. En Render debe quedar vacía o apuntar a un buzón que solo controle Darwin (R3) |
+| Cloudinary | Almacén de archivos de la biblioteca (ADR-005) |
+| `schema_migrations` | Tabla que registra qué migraciones SQL se aplicaron |
+| `/api/health` | Healthcheck público. Hace ping a la base |
+| `SEED_PASSWORD` | Variable con la clave de las cuentas demo. En Render debe ser fuerte; nunca se escribe su valor en docs |
+
+## Identidad y seguridad
+
+| Término | Significado |
+|---------|-------------|
+| argon2id | Algoritmo de hash de contraseñas |
+| OTP / código de ingreso | Código de 6 dígitos por correo tras la contraseña. Vence en 10 min, admite 5 intentos (`login_challenges`) |
+| Dispositivo de confianza | Cookie `HttpOnly` de 30 días que salta el código (`trusted_devices`) |
+| Passkey | Credencial WebAuthn (Touch ID, Windows Hello…) en `webauthn_credentials` |
+| Refresh rotativo | Token opaco en cookie que se renueva en cada uso. Si se reutiliza uno viejo, se cierra toda la familia de sesiones |
+| `ACCOUNT_LOCKED` | Bloqueo progresivo por cuenta tras 5 contraseñas fallidas |
+| Throttler | Límite de peticiones por ventana (`@nestjs/throttler`) en las rutas de autenticación: 300 por IP cada 15 min y 10 por IP más cuenta cada 5 min. Responde `429 TOO_MANY_REQUESTS` (ADR-009) |
+| CSP | *Content Security Policy*: encabezado que le dice al navegador de dónde puede cargar scripts, estilos, imágenes y conexiones. La de Ludoteka solo permite scripts propios (ADR-009) |
+| `audit_log` | Registro de acciones sensibles (`facial.delete`, `password.reset`, `login`…) |
+| Habeas data | Derecho a conocer, exportar o borrar los datos. Se pide en `data_requests` |
+| `legal_documents` | Términos, privacidad y cookies versionados. Una versión nueva exige aceptarla otra vez |
+
+## Facial
+
+| Término | Significado |
+|---------|-------------|
+| Embedding / descriptor facial | Vector de 128 números que calcula face-api en el navegador. Se guarda cifrado (AES-256-GCM) en `face_templates` |
+| `modelId` | Identificador del modelo que generó el descriptor. Si cambia, la plantilla vieja no sirve y el usuario se registra de nuevo |
+| `policyVersion` | Versión vigente de la política biométrica (`FACIAL_POLICY_VERSION`) |
+| `needsReconsent` | Bandera que indica que el usuario aceptó una versión vieja de la política y debe aceptar la nueva |
+| Prueba de vida | Gesto aleatorio (parpadear o girar) exigido antes de tomar las muestras |
+| `face_attempts` | Auditoría de intentos faciales: modo, éxito, motivo, distancia, IP y hash del correo. Nunca el vector |
+| `IMAGE_NOT_ALLOWED` | Error 400 si llega una foto a la API |
+| `FACE_LOCKED` | Error 423 tras 5 fallos faciales (15 min) |
+| `AMBIGUOUS` | El rostro se parece a dos cuentas. Se pide el correo |
+| `guardian.facial_revoked` | Evento: el acudiente revoca la autorización y se borra la plantilla del menor |
+
+## Aula, evaluación y juego
+
+| Término | Significado |
+|---------|-------------|
+| Acudiente | Rol `guardian`. Sigue a sus hijos (`guardian_links`), recibe alertas y autoriza el facial de un menor |
+| Alerta de riesgo | Fila de `risk_alerts`: nota baja, inasistencia, integridad o inactividad, con nivel `media` o `alta` |
 | Arena | Juego en vivo por equipos con capitán rotativo, votos, candado de respuesta y podio |
 | Campus | Pantalla de inicio isométrica: cada edificio abre un módulo |
-| Capitán | Miembro del equipo que bloquea la respuesta en la Arena; rota en cada pregunta |
-| Cartelera | Novedades del colegio con audiencia, fijado, programación y confirmación de lectura |
+| Capitán | Miembro del equipo que bloquea la respuesta en la Arena. Rota en cada pregunta |
+| Cartelera | Novedades con audiencia, fijado, programación y confirmación de lectura |
 | Código LK | Consecutivo `LK-AAAA-NNNNNN` de cada reporte, guardado en `report_log` y verificable en `/verificar-reporte/<código>` |
-| Coordinación | Rol `directivo`. Ve indicadores del colegio, el Observatorio y los reportes |
-| Cuaderno | Apuntes del estudiante con resumen IA, tarjetas de repaso, metas y sesiones de enfoque |
-| Descriptor facial | Vector de 128 números que calcula face-api; se guarda cifrado en `face_templates` |
+| Coordinación | Rol `directivo`. Ve indicadores, el Observatorio y los reportes |
+| Cuaderno | Apuntes con resumen IA, tarjetas de repaso, metas y sesiones de enfoque |
 | Estación | Unidad del mapa de un curso |
-| Kiosco | Examen a pantalla completa que registra salida, pérdida de foco y Escape |
-| Liga | Ranking de XP del grupo, guardado por semana en `leaderboard_snapshots` |
-| Libro de calificaciones | Notas ponderadas por categoría en escala 1.0 a 5.0, con asistencia y rúbricas |
-| Libro de XP | Tabla `xp_ledger`. El total se suma; no hay un contador editable |
-| Luka | Compañero del campus que sugiere la siguiente actividad |
+| Kiosco | Examen en pantalla completa que registra salida, pérdida de foco, pestaña oculta y Esc |
+| `KIOSK_ACTIVE` | Error 403 del tutor cuando el estudiante tiene un examen o sala en vivo activos |
+| `integrity_events` | Una fila por evento de kiosco (`fullscreen_exit`, `visibility_hidden`, `blur`, `escape`) |
+| `attempt_flags` | Contador de violaciones por intento. Al llegar a `INTEGRITY_SUSPEND_AFTER` el intento se suspende |
+| Liga | Ranking semanal de XP del grupo (`leaderboard_snapshots`) |
+| Libro de calificaciones | Notas ponderadas 1.0 a 5.0, asistencia y rúbricas |
+| Libro de XP | Tabla `xp_ledger`. El total se suma; no hay contador editable |
+| Luka / Luna | Compañero del campus (a elección del usuario) que sugiere la siguiente actividad |
 | Maestría | Nivel de 1 a 10 por estudiante y tema (`topic_mastery`) |
-| Mi ruta | Retos adaptativos por tema; el servidor verifica la respuesta que propone la IA |
-| Observatorio | Preguntas en español convertidas a SQL de solo lectura sobre las vistas `v_*` |
-| Prueba de vida | Gesto aleatorio (parpadear o girar) que se exige antes de tomar las muestras faciales |
-| RAG | Recuperación de fragmentos de la biblioteca (`library_chunks`) para que el tutor responda con citas |
-| SM-2 | Algoritmo de repaso espaciado: cada tarjeta vuelve según qué tan fácil fue recordarla |
-| Snapshot | Estado efímero de una sala de Arena guardado en `arena_rooms.snapshot` para sobrevivir a un reinicio |
-| `groups_class` | Tabla del grupo. El nombre evita la palabra reservada `GROUP` |
-| `ludoteka_reader` | Rol de base de datos con `SELECT` solo sobre las vistas `v_*` |
+| Mi ruta | Retos adaptativos. El servidor verifica la respuesta que propone la IA |
+| Snapshot | Estado efímero de una sala de Arena en `arena_rooms.snapshot` para sobrevivir a un reinicio |
+| `groups_class` | Tabla del grupo (evita la palabra reservada `GROUP`) |
+
+## IA y datos
+
+| Término | Significado |
+|---------|-------------|
+| Observatorio | Preguntas en español convertidas a SQL de solo lectura sobre las vistas `v_*` (ADR-006) |
+| `ludoteka_reader` | Rol de base de datos con `SELECT` solo sobre `v_*` |
+| RAG | Recuperación de fragmentos (`library_chunks`) para que el tutor responda con citas |
+| `ai_usage` | Registro de cada llamada a IA (funcionalidad y modelo, sin contenido) |
+| SM-2 | Algoritmo de repaso espaciado de las tarjetas |
+| VECTOR INDEX | Índice vectorial de CockroachDB. Spike Nice después del 15-oct |
+| Captura de voz | Dictado (Web Speech API), comandos de navegación y lectura en voz alta (EQ-P11) |

@@ -19,7 +19,11 @@ export class RealtimeGateway implements OnGatewayInit {
       const token = String(socket.handshake.auth?.token ?? '');
       if (!token) return;
       try {
-        const payload = this.jwt.verify<{ sub: string }>(token);
+        const payload = this.jwt.verify<{ sub: string; mcp?: boolean }>(token);
+        if (payload.mcp) {
+          socket.disconnect();
+          return;
+        }
         socket.join(`user:${payload.sub}`);
       } catch {
         socket.disconnect();

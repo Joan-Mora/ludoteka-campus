@@ -1,53 +1,67 @@
-import { useState } from 'react';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { Suspense, useEffect, useMemo, useRef, useState, type RefObject } from 'react';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import {
-  Bell,
-  BookOpen,
-  Building2,
-  ClipboardList,
-  Compass,
-  Database,
-  Gamepad2,
-  GraduationCap,
-  HeartHandshake,
-  LayoutDashboard,
-  Library,
-  LogOut,
-  Megaphone,
-  Moon,
-  NotebookPen,
-  Radio,
-  ScanFace,
-  Search,
-  Sparkles,
-  Swords,
-  Trophy,
-  Zap,
-  type LucideIcon,
-} from 'lucide-react';
+import { ArrowLeft, Bell, LogOut, Menu, Search, Zap } from 'lucide-react';
 import { api } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
-import { Avatar, Bar } from '@/ui';
+import { useCompanion } from '@/shared/companion';
+import { Avatar, Bar, Sheet, ThemeButton } from '@/ui';
 import { VoiceNav } from '@/shared/voice-ui';
+import { configureSpeech } from '@/shared/voice';
+import { hasDeviceTheme, setTheme, type ThemeChoice } from '@/shared/theme';
+import { useLayout } from './layout';
+import { mobileTabs, navSections, roleLabel, type NavItem, type NavSection } from './nav';
 
-interface NavItem { to: string; label: string; icon: LucideIcon; end?: boolean }
+function PageLoading() {
+  return <div className="page-loading" role="status" aria-label="Cargando"><span /><span /><span /></div>;
+}
 
-const roleLabel: Record<string, string> = {
-  student: 'Estudiante',
-  teacher: 'Docente',
-  admin: 'Administración',
-  directivo: 'Coordinación',
-  guardian: 'Acudiente',
-};
+interface Note { id: string; title: string; body: string; read_at: string | null }
+interface GameMe { xp: number; level: { level: number; title: string; min_xp: number }; nextLevel: { min_xp: number } | null }
 
-function Section({ label, items }: { label: string; items: NavItem[] }) {
-  if (!items.length) return null;
+function useShellData() {
+  const { user } = useAuth();
+  const notes = useQuery({ queryKey: ['notes'], queryFn: () => api<Note[]>('/api/notifications') });
+  const game = useQuery({ queryKey: ['me-game'], queryFn: () => api<GameMe>('/api/gamification/me'), enabled: user?.role === 'student' });
+  const xp = game.data?.xp ?? 0;
+  const floor = game.data?.level.min_xp ?? 0;
+  const next = game.data?.nextLevel?.min_xp ?? xp + 1;
+  return {
+    notes,
+    game,
+    xp,
+    pct: Math.round(((xp - floor) / Math.max(1, next - floor)) * 100),
+    unread: notes.data?.filter((n) => !n.read_at).length ?? 0,
+  };
+}
+
+function NotificationList({ notes, onRead }: { notes: Note[] | undefined; onRead: () => void }) {
+  return (
+    <div className="note-list">
+      {(notes ?? []).map((note) => (
+        <button
+          key={note.id}
+          onClick={async () => { await api(`/api/notifications/${note.id}/read`, { method: 'POST' }); onRead(); }}
+          className={`note-item${note.read_at ? '' : ' unread'}`}
+        >
+          <span className="note-dot" />
+          <span>
+            <b>{note.title}</b>
+            <span className="muted">{note.body}</span>
+          </span>
+        </button>
+      ))}
+      {!notes?.length && <p className="muted" style={{ padding: 20, textAlign: 'center', fontSize: 14 }}>Todo al día.</p>}
+    </div>
+  );
+}
+
+function Section({ section }: { section: NavSection }) {
   return (
     <div>
-      <div className="nav-label">{label}</div>
+      <div className="nav-label">{section.label}</div>
       <nav className="nav">
-        {items.map((item) => (
+        {section.items.map((item) => (
           <NavLink key={item.to} to={item.to} end={item.end} className={({ isActive }) => (isActive ? 'active' : '')}>
             <span className="nav-ico"><item.icon size={16} strokeWidth={2.4} /></span>
             {item.label}
@@ -58,64 +72,12 @@ function Section({ label, items }: { label: string; items: NavItem[] }) {
   );
 }
 
-export function Shell() {
+function DesktopShell({ sections }: { sections: NavSection[] }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const notes = useQuery({
-    queryKey: ['notes'],
-    queryFn: () => api<{ id: string; title: string; body: string; read_at: string | null }[]>('/api/notifications'),
-  });
+  const { notes, game, xp, pct, unread } = useShellData();
   const [open, setOpen] = useState(false);
-  const game = useQuery({
-    queryKey: ['me-game'],
-    queryFn: () => api<{ xp: number; level: { level: number; title: string; min_xp: number }; nextLevel: { min_xp: number } | null }>('/api/gamification/me'),
-    enabled: user?.role === 'student',
-  });
-  const unread = notes.data?.filter((n) => !n.read_at).length ?? 0;
   const isStudent = user?.role === 'student';
-  const isStaff = user && ['teacher', 'admin'].includes(user.role);
-  const isBoard = user && ['admin', 'directivo'].includes(user.role);
-
-  const isGuardian = user?.role === 'guardian';
-  const learn: NavItem[] = isGuardian
-    ? [
-        { to: '/app', label: 'Inicio', icon: LayoutDashboard, end: true },
-        { to: '/app/acudiente', label: 'Seguimiento', icon: HeartHandshake },
-        { to: '/app/novedades', label: 'Cartelera', icon: Megaphone },
-        { to: '/app/biblioteca', label: 'Biblioteca', icon: Library },
-      ]
-    : [
-        { to: '/app', label: 'Inicio', icon: LayoutDashboard, end: true },
-        { to: '/app/cursos', label: 'Mis cursos', icon: BookOpen },
-        { to: '/app/biblioteca', label: 'Biblioteca', icon: Library },
-        { to: '/app/novedades', label: 'Cartelera', icon: Megaphone },
-        { to: '/app/arena', label: 'Arena', icon: Swords },
-        { to: '/app/en-vivo', label: 'Sala en vivo', icon: Radio },
-      ];
-  const play: NavItem[] = [
-    ...(isStudent ? [{ to: '/app/ruta', label: 'Mi ruta', icon: Compass }, { to: '/app/cuaderno', label: 'Cuaderno', icon: NotebookPen }] : []),
-    { to: '/app/logros', label: 'Logros', icon: Trophy },
-    { to: '/app/jugar', label: 'Arcade', icon: Gamepad2 },
-    { to: '/app/tutor', label: 'Tutor IA', icon: Sparkles },
-  ];
-  const account: NavItem[] = [{ to: '/app/rostro', label: 'Acceso facial', icon: ScanFace }];
-  const staff: NavItem[] = [
-    ...(isStaff || isBoard ? [{ to: '/app/calificaciones', label: 'Calificaciones', icon: ClipboardList }] : []),
-    ...(isStaff ? [{ to: '/app/banco', label: 'Banco de preguntas', icon: GraduationCap }] : []),
-    ...(isStaff || isBoard ? [{ to: '/app/consultas', label: 'Observatorio', icon: Database }] : []),
-    ...(isBoard ? [{ to: '/app/rectoria', label: 'Coordinación', icon: Building2 }] : []),
-    ...(user?.role === 'admin' ? [{ to: '/app/admin', label: 'Institución', icon: Building2 }] : []),
-  ];
-
-  const xp = game.data?.xp ?? 0;
-  const floor = game.data?.level.min_xp ?? 0;
-  const next = game.data?.nextLevel?.min_xp ?? xp + 1;
-  const pct = Math.round(((xp - floor) / Math.max(1, next - floor)) * 100);
-
-  function toggleTheme() {
-    const root = document.documentElement;
-    root.dataset.theme = root.dataset.theme === 'dark' ? '' : 'dark';
-  }
 
   return (
     <div className="shell">
@@ -127,16 +89,13 @@ export function Shell() {
             <div className="brand-sub">Colegio Francisco Arango</div>
           </div>
         </div>
-        <Section label="Aprender" items={learn} />
-        {isStudent && <Section label="Jugar" items={play} />}
-        <Section label="Gestión" items={staff} />
-        <Section label="Cuenta" items={account} />
+        {sections.map((section) => <Section key={section.label} section={section} />)}
         <div className="side-card">
           <div className="row g-12">
             <Avatar name={user?.fullName} />
             <div style={{ minWidth: 0, flex: 1 }}>
               <div style={{ fontWeight: 800, color: '#fff', fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.fullName}</div>
-              <div style={{ fontSize: 12, color: '#a79fe0', fontWeight: 600 }}>{roleLabel[user?.role ?? 'student']}</div>
+              <div style={{ fontSize: 12, color: '#a79fe0', fontWeight: 600 }}>{user ? roleLabel[user.role] : ''}</div>
             </div>
             <button className="icon-btn" style={{ background: 'rgba(255,255,255,.08)', borderColor: 'transparent', color: '#fff' }} onClick={async () => { await logout(); navigate('/'); }} title="Salir">
               <LogOut size={17} />
@@ -164,7 +123,7 @@ export function Shell() {
               </div>
             )}
             <VoiceNav />
-            <button className="icon-btn" onClick={toggleTheme} title="Tema"><Moon size={18} /></button>
+            <ThemeButton />
             <div style={{ position: 'relative' }}>
               <button className="icon-btn" title="Notificaciones" onClick={() => setOpen(!open)}>
                 <Bell size={18} />
@@ -177,21 +136,7 @@ export function Shell() {
                     <span className="chip violet">{unread} nuevas</span>
                   </div>
                   <div style={{ maxHeight: 360, overflowY: 'auto' }}>
-                    {(notes.data ?? []).map((note) => (
-                      <button
-                        key={note.id}
-                        onClick={async () => { await api(`/api/notifications/${note.id}/read`, { method: 'POST' }); notes.refetch(); }}
-                        className="row g-12"
-                        style={{ width: '100%', textAlign: 'left', padding: '12px 16px', border: 0, borderBottom: '1px solid var(--line)', background: note.read_at ? 'transparent' : 'rgba(124,92,255,.06)', alignItems: 'flex-start' }}
-                      >
-                        <span style={{ width: 8, height: 8, borderRadius: 99, marginTop: 7, flex: 'none', background: note.read_at ? 'var(--line)' : 'var(--coral)' }} />
-                        <span>
-                          <b style={{ fontSize: 14 }}>{note.title}</b>
-                          <span className="muted" style={{ display: 'block', fontSize: 13, marginTop: 2 }}>{note.body}</span>
-                        </span>
-                      </button>
-                    ))}
-                    {!notes.data?.length && <p className="muted" style={{ padding: 20, textAlign: 'center', fontSize: 14 }}>Todo al día.</p>}
+                    <NotificationList notes={notes.data} onRead={() => notes.refetch()} />
                   </div>
                 </div>
               )}
@@ -199,9 +144,163 @@ export function Shell() {
           </div>
         </header>
         <div className="content">
-          <Outlet />
+          <Suspense fallback={<PageLoading />}><Outlet /></Suspense>
         </div>
       </section>
     </div>
   );
+}
+
+/** Labels each table cell with its column header so tables can stack as cards on phones. */
+function useTableCards(root: RefObject<HTMLElement | null>) {
+  useEffect(() => {
+    const el = root.current;
+    if (!el) return;
+    const label = () => {
+      el.querySelectorAll<HTMLTableElement>('table.table:not(.keep-table)').forEach((table) => {
+        const heads = Array.from(table.querySelectorAll('thead th')).map((th) => {
+          const parts = Array.from(th.childNodes).map((node) => node.textContent?.trim() ?? '').filter(Boolean);
+          return parts.join(' · ');
+        });
+        if (!heads.length) return;
+        table.classList.add('as-cards');
+        table.querySelectorAll('tbody tr').forEach((tr) => {
+          Array.from(tr.children).forEach((cell, i) => {
+            const text = heads[i] ?? '';
+            if (cell.getAttribute('data-label') !== text) cell.setAttribute('data-label', text);
+          });
+        });
+      });
+    };
+    label();
+    const observer = new MutationObserver(label);
+    observer.observe(el, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, [root]);
+}
+
+const FULLSCREEN = [/^\/app\/arena\/[^/]+$/];
+
+function MobileShell({ sections }: { sections: NavSection[] }) {
+  const { user, logout } = useAuth();
+  const companion = useCompanion();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { notes, game, xp, pct, unread } = useShellData();
+  const [more, setMore] = useState(false);
+  const [bell, setBell] = useState(false);
+  const content = useRef<HTMLElement>(null);
+  useTableCards(content);
+
+  const tabs = useMemo(() => (user ? mobileTabs(user.role, companion.name) : []), [user, companion.name]);
+  const all = useMemo(() => sections.flatMap((s) => s.items), [sections]);
+  const current = useMemo(() => {
+    const path = location.pathname;
+    return [...all].sort((a, b) => b.to.length - a.to.length).find((item) => (item.end ? path === item.to : path === item.to || path.startsWith(`${item.to}/`)));
+  }, [all, location.pathname]);
+  const fullscreen = FULLSCREEN.some((re) => re.test(location.pathname));
+  const onTab = tabs.some((tab) => (tab.end ? location.pathname === tab.to : location.pathname.startsWith(tab.to)));
+  const isStudent = user?.role === 'student';
+
+  useEffect(() => {
+    setMore(false);
+    setBell(false);
+    content.current?.scrollTo?.({ top: 0 });
+  }, [location.pathname]);
+
+  const tabLink = (item: NavItem) => (
+    <NavLink key={item.to} to={item.to} end={item.end ?? item.to === '/app'} className={({ isActive }) => `m-tab${isActive ? ' active' : ''}`}>
+      <item.icon size={22} strokeWidth={2.2} />
+      <span>{item.label}</span>
+    </NavLink>
+  );
+
+  return (
+    <div className={`m-shell${fullscreen ? ' fullscreen' : ''}`}>
+      <header className="m-top">
+        {fullscreen || (!onTab && location.pathname !== '/app') ? (
+          <button className="m-icon" onClick={() => navigate(-1)} aria-label="Volver"><ArrowLeft size={22} /></button>
+        ) : (
+          <img className="m-brand" src="/favicon.svg" alt="" />
+        )}
+        <div className="m-title">{current?.label ?? 'Ludoteka'}</div>
+        {isStudent && <span className="m-xp"><Zap size={14} strokeWidth={2.6} /> {xp}</span>}
+        <button className="m-icon" onClick={() => setBell(true)} aria-label={`Notificaciones${unread ? `: ${unread} nuevas` : ''}`}>
+          <Bell size={21} />
+          {unread > 0 && <span className="dot">{unread}</span>}
+        </button>
+        <button className="m-avatar" onClick={() => setMore(true)} aria-label="Menú de la cuenta">
+          <Avatar name={user?.fullName} />
+        </button>
+      </header>
+
+      <main className="m-content" ref={content}>
+        <Suspense fallback={<PageLoading />}><Outlet /></Suspense>
+      </main>
+
+      {!fullscreen && (
+        <nav className="m-tabs" aria-label="Navegación principal">
+          {tabs.map(tabLink)}
+          <button className={`m-tab${more ? ' active' : ''}`} onClick={() => setMore(true)}>
+            <Menu size={22} strokeWidth={2.2} />
+            <span>Más</span>
+          </button>
+        </nav>
+      )}
+
+      <Sheet open={more} onClose={() => setMore(false)} title="Todo Ludoteka">
+        <div className="m-profile">
+          <Avatar name={user?.fullName} large />
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <b className="ellipsis">{user?.fullName}</b>
+            <div className="muted" style={{ fontSize: 13 }}>{user ? roleLabel[user.role] : ''} · {user?.email}</div>
+            {isStudent && game.data && (
+              <div style={{ marginTop: 8 }}>
+                <div className="row between muted" style={{ fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
+                  <span>Nivel {game.data.level.level} · {game.data.level.title}</span><span>{pct}%</span>
+                </div>
+                <Bar value={pct} tone="gold" thin />
+              </div>
+            )}
+          </div>
+        </div>
+        {sections.map((section) => (
+          <div key={section.label} className="m-section">
+            <div className="eyebrow">{section.label}</div>
+            <div className="m-grid">
+              {section.items.map((item) => (
+                <NavLink key={item.to} to={item.to} end={item.end} className={({ isActive }) => `m-tile${isActive ? ' active' : ''}`}>
+                  <span className="m-tile-ico"><item.icon size={20} strokeWidth={2.3} /></span>
+                  <span>{item.label}</span>
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        ))}
+        <div className="m-actions">
+          <ThemeButton className="btn ghost" label />
+          <VoiceNav />
+          <button className="btn ghost" onClick={async () => { await logout(); navigate('/'); }}><LogOut size={17} /> Salir</button>
+        </div>
+      </Sheet>
+
+      <Sheet open={bell} onClose={() => setBell(false)} title={`Notificaciones${unread ? ` · ${unread} nuevas` : ''}`}>
+        <NotificationList notes={notes.data} onRead={() => notes.refetch()} />
+      </Sheet>
+    </div>
+  );
+}
+
+export function Shell() {
+  const { user } = useAuth();
+  const companion = useCompanion();
+  const layout = useLayout();
+  const sections = useMemo(() => (user ? navSections(user.role, companion.name) : []), [user, companion.name]);
+  useEffect(() => configureSpeech(companion.female ? 'female' : 'male'), [companion.female]);
+  const preferences = useQuery({ queryKey: ['preferences'], queryFn: () => api<{ theme: ThemeChoice }>('/api/me/preferences'), staleTime: Infinity, enabled: Boolean(user) });
+  useEffect(() => {
+    const theme = preferences.data?.theme;
+    if (theme && theme !== 'system' && !hasDeviceTheme()) setTheme(theme);
+  }, [preferences.data?.theme]);
+  return layout === 'mobile' ? <MobileShell sections={sections} /> : <DesktopShell sections={sections} />;
 }

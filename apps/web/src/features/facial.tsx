@@ -76,7 +76,7 @@ function FaceScanner({ mode, disabled, label, onResult }: {
           <circle cx="128" cy="128" r="124" fill="none" stroke={ring} strokeWidth="5" strokeLinecap="round" strokeDasharray={2 * Math.PI * 124} strokeDashoffset={2 * Math.PI * 124 * (1 - progress)} style={{ transition: 'stroke-dashoffset .25s' }} />
         </svg>
         <div style={{ position: 'absolute', inset: 0, borderRadius: '50%', overflow: 'hidden', background: 'var(--grad-night)', display: 'grid', placeItems: 'center' }}>
-          <video ref={video} style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scaleX(-1)', display: live || phase === 'sending' ? 'block' : 'none' }} />
+          <video ref={video} playsInline muted autoPlay style={{ width: '100%', height: '100%', objectFit: 'cover', transform: 'scaleX(-1)', display: live || phase === 'sending' ? 'block' : 'none' }} />
           <canvas ref={canvas} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', transform: 'scaleX(-1)', display: live ? 'block' : 'none' }} />
           {!live && phase !== 'sending' && (
             <div style={{ color: '#fff' }}>

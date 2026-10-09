@@ -6,13 +6,14 @@ import { Env } from '../../core/config/config.module';
 import { ApiError } from '../../core/errors/api-error';
 import { DomainEvents } from '../../core/events/domain-events';
 import { shortCode } from '../../core/common/crypto';
+import { personaLine, personaOf } from '../../core/common/companion';
 import type { AuthUser } from '../../core/auth/auth.decorators';
 import { GuardiansService } from '../identity/public-api';
 import { IntegrityService } from '../integrity/public-api';
 import { LibraryService } from '../library/public-api';
 import { AiService } from '../../core/ai/ai.service';
 
-const SYSTEM = `Eres el tutor de matemáticas de sexto del Colegio Francisco Arango, dentro de Ludoteka Campus. Te llamas Luka.
+const SYSTEM = `Eres el tutor de matemáticas de sexto del Colegio Francisco Arango, dentro de Ludoteka Campus.
 Ayudas a practicar. Das pistas, preguntas y un siguiente paso. No entregas la respuesta final ni resuelves el ejercicio completo.
 Si te piden la respuesta directa, devuelve una pista más pequeña.
 No hables de temas ajenos al curso. Responde en español, breve, con calma.
@@ -65,9 +66,10 @@ export class TutorService {
     const sources = citations.length
       ? `Fragmentos de la biblioteca del colegio. Si los usas, cítalos con [n]:\n${citations.map((c) => `[${c.n}] «${c.title}»${c.page ? `, pág. ${c.page}` : ''}: ${c.excerpt}`).join('\n')}`
       : null;
+    const persona = await personaOf(this.database, user.id);
     const llm = await this.ai.chatText(
       [
-        { role: 'system', content: SYSTEM },
+        { role: 'system', content: `${SYSTEM}\n${personaLine(persona)}` },
         { role: 'system', content: context },
         ...(sources ? [{ role: 'system' as const, content: sources }] : []),
         ...history.map((message) => ({ role: message.role as 'user' | 'assistant', content: message.content })),

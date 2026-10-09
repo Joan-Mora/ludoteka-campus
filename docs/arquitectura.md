@@ -124,7 +124,7 @@ face-api calcula en el navegador un descriptor de 128 dimensiones tras una prueb
 
 Un Web Service de Render definido en `render.yaml`. Healthcheck: `GET /api/health` (incluye ping a la base). El servidor escucha en `0.0.0.0:$PORT`. El sistema de archivos de Render es efímero: los PDF y Excel se generan en la respuesta y los archivos de la biblioteca van a Cloudinary (ADR-005). Cada push a `main` en GitHub dispara un deploy.
 
-## Cambios del 2026-10-09 (sin commit en el repo)
+## Cambios del 2026-10-09 (commit `340b047`)
 
 - **identity:** cuentas creadas solo por el administrador (`accounts.*`, importación Excel), login con contraseña + código por correo (`login_challenges`), dispositivos de confianza, passkeys WebAuthn, bloqueo progresivo por cuenta y familias de refresh (migración 0018).
 - **legal (nuevo módulo):** términos, privacidad y cookies versionados, aceptación (por el acudiente si es menor) y solicitudes de habeas data (migración 0019).

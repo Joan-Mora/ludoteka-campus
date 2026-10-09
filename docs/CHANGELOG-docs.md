@@ -16,7 +16,8 @@
 | `threat-model-eq-p09-facial.md` | R2 cerrado. La llave facial propia y el outbox pasan a ADR-011 (futura) |
 | `glosario.md` | Throttler y CSP. R2 cerrado |
 | `arquitectura.md` | `core/security`, flujo de ingreso, seguridad web y compatibilidad |
-| `bitacora.md` | Cuatro filas: R2 cerrado y renumeración de ADR, ADR-010, módulo legal y Playwright en verde |
+| `bitacora.md` | Cinco filas: R2 cerrado y renumeración de ADR, ADR-010, módulo legal, Playwright en verde y deploy con E0 |
+| `confluence-eq-p08.md`, `RF-RNF.md`, `threat-model-eq-p09-facial.md` | Después del deploy del commit `340b047`: R6 cerrado, E0 y E7 con evidencia (faltan las capturas), RNF-11 hecho para el código de ingreso, RNF-09 con la corrida contra prod y sin menciones a "sin commit" |
 
 ## 2026-10-09 (cuarta ronda)
 

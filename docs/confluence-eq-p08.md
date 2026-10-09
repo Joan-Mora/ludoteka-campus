@@ -23,10 +23,10 @@ Estados: **Con contenido** (el texto está listo; se indica el doc fuente), **Pa
 | 6 | IA (tutor y demás) | Con contenido | ADR-006, `docs/arquitectura.md` §IA |
 | 7 | Reconocimiento facial | Con contenido | ADR-002, ADR-007 |
 | 8 | Captura de voz (EQ-P11) | Con contenido | `apps/web/src/shared/voice.ts` |
-| 9 | Seguridad | Parcial | Riesgos conocidos R1 a R6. **Darwin, en este orden:** (1) `JWT_SECRET` fuerte, `SEED_PASSWORD` y `LAB_OTP_INBOX` en Render; (2) deploy; (3) registrar los rostros de la demo (ver §9 y el Anexo B) |
+| 9 | Seguridad | Parcial | Riesgos conocidos R1, R3, R4, R5 y R7 (R2 y R6 cerrados el 9-oct). `LAB_OTP_INBOX` y el deploy ya están hechos. **Darwin:** (1) confirmar que `JWT_SECRET` y `SEED_PASSWORD` de Render son fuertes; (2) registrar los rostros de la demo (ver §9 y el Anexo B) |
 | 10 | Integridad en exámenes: kiosco (EQ-C05) | Con contenido | `exam.tsx`, `integrity.service.ts` |
 | 11 | Demo (guion de sustentación) | Con contenido | §11 |
-| 12 | Deploy | Parcial | El servicio está en línea con la base arriba. **Darwin:** confirmar que producción corre el último código (los cambios del 9-oct no tienen commit) y captura del dashboard de Render en verde |
+| 12 | Deploy | Parcial | El servicio está en línea con la base arriba y corre el commit `340b047` del 9-oct. **Darwin:** captura del dashboard de Render en verde |
 | 13 | Evidencias (capturas y videos) | Depende de Darwin | 0/16 obligatorias, con E14 confirmada como obligatoria y en ejecución, y 0/2 complementarias. **E0 (correo en producción) es un gate.** Dueños en §13 |
 | 14 | Entregables (repo, scripts SQL, URL, Confluence) | Parcial | Repo, scripts y URL listos. **Darwin:** crear el espacio de Confluence y confirmar el acceso del docente al repo |
 | A | Anexo: revocación facial (E14) | Parcial | QA Lab: ejecuta Speck, coordina Sentinel, comprometida para el lun 12-oct; caso escrito por Forge. En ejecución |
@@ -161,7 +161,7 @@ Cada llamada queda en `ai_usage` (funcionalidad y modelo, sin contenido). No sal
 | R3 | El login con contraseña pide un código por correo: **sin envío real no hay login ni demo**. Además, `LAB_OTP_INBOX` manda los códigos de todas las cuentas `@eduquest.local` (admin incluido) a un mismo buzón. Plan B: un dispositivo de confianza o una passkey ya registrados entran sin código (implementados y probados el 9-oct) | Resend operativo en Render (escalado a Darwin; ya no sale con la salida por defecto del lunes). Con el remitente por defecto `onboarding@resend.dev`, `LAB_OTP_INBOX` **debe ser la dirección dueña de la cuenta de Resend**; si no, hay que verificar un dominio propio en `MAIL_FROM`. `LAB_OTP_INBOX` vacía o con un buzón que solo controle Darwin. `SEED_PASSWORD` fuerte | Darwin |
 | R4 | `JWT_SECRET` débil: el código solo exige 8 caracteres | Usar un valor aleatorio de 32 bytes o más (por ejemplo, generado con `openssl rand -base64 48`), sin reutilizarlo en otros servicios. **No se rota antes del 15-oct.** La llave facial propia (`FACIAL_ENC_KEY` y ADR-011, futura) va después del freeze. Advertencia: cambiar `JWT_SECRET` es una rotación: deja ilegibles las plantillas faciales existentes (la llave facial se deriva de él mientras no exista `FACIAL_ENC_KEY` propia) e invalida todas las sesiones. **No rotar entre el registro de rostros y la demo del lunes 12-oct.** | Darwin |
 | R5 | El listener de `guardian.facial_revoked` no se reintenta: si falla, la plantilla queda guardada (el login facial del menor se rechaza igual) | Riesgo conocido. Para la demo basta con que E14 muestre `facial.delete` en `audit_log`. El outbox va al backlog de Atlas (después del 15-oct) | Atlas |
-| R6 | Producción puede no correr el código del 9-oct (sin commit): bloqueo, OTP y módulo legal | Confirmar con el último deploy de Render | Darwin |
+| R6 | ~~Producción puede no correr el código del 9-oct~~ **Cerrado:** el commit `340b047` está `live` en Render desde el 9-oct a las 14:22 (hora Colombia), con bloqueo, OTP, passkeys, módulo legal y encabezados de seguridad | — | Darwin |
 
 ## 10. Integridad en exámenes: kiosco (EQ-C05) — *Con contenido*
 
@@ -196,7 +196,7 @@ Cada llamada queda en `ai_usage` (funcionalidad y modelo, sin contenido). No sal
 |---|---|
 | Aplicación funcionando | El servicio responde 200 en `/`. Falta la captura (Darwin) |
 | Base de datos funcionando | `/api/health` → `db:"up"`. Falta la captura de la consola (Darwin) |
-| Autenticación funcionando | Por demostrar. El login pide un código por correo: `RESEND_API_KEY`, `MAIL_FROM` y `LAB_OTP_INBOX` tienen que estar en Render (Darwin) |
+| Autenticación funcionando | Verificado el 9-oct (14:42). Contraseña de `docente@` en prod → código enviado a `jo••••@hotmail.com` (remitente del dominio verificado `abacore.co`) → código recibido → verificación 200 con dispositivo de confianza. Playwright contra prod: 59 pasadas y 0 fallidas en WebKit y Chromium. Falta la captura (Darwin) |
 | Recuperación funcionando | Por demostrar (Darwin) |
 | Reconocimiento facial funcionando | Por demostrar. HTTPS y cámara; `FACIAL_ENC_KEY` estable (Darwin) |
 | IA funcionando | Por demostrar. `AI_API_KEY` en Render (Darwin) |
@@ -216,7 +216,7 @@ Se pega una captura o un clip por fila. La evidencia final debe ser de **producc
 
 | # | Evidencia | Cómo obtenerla | Dueño | Estado |
 |---|-----------|----------------|-------|--------|
-| **E0** | **Gate: correo recibido en producción** (ligado a R3) | (1) Render › Environment: existen `RESEND_API_KEY`, `MAIL_FROM` y `LAB_OTP_INBOX` (solo nombres). (2) En prod, `/ingresar` con `docente@` → "código enviado a <correo enmascarado>". (3) El correo llega a `LAB_OTP_INBOX` en ≤ 60 s (código tapado). (4) `SELECT to_email, subject, status, sent_at FROM email_outbox ORDER BY created_at DESC LIMIT 1;` → `status = 'sent'`. **FAIL** si queda `logged` o no llega. Nota: con el remitente por defecto de Resend (`onboarding@resend.dev`) normalmente solo se entrega a la dirección dueña de la cuenta de Resend, así que `LAB_OTP_INBOX` debe ser esa dirección, o hay que verificar un dominio en `MAIL_FROM` | Darwin (Render, buzón) · QA Lab (Speck el flujo, Probe la BD) | Pendiente: sin verificar por QA |
+| **E0** | **Gate: correo recibido en producción** (ligado a R3) | (1) Render › Environment: existen `RESEND_API_KEY`, `MAIL_FROM` y `LAB_OTP_INBOX` (solo nombres). (2) En prod, `/ingresar` con `docente@` → "código enviado a <correo enmascarado>". (3) El correo llega a `LAB_OTP_INBOX` en ≤ 60 s (código tapado). (4) `SELECT to_email, subject, status, sent_at FROM email_outbox ORDER BY created_at DESC LIMIT 1;` → `status = 'sent'`. **FAIL** si queda `logged` o no llega. Nota: con el remitente por defecto de Resend (`onboarding@resend.dev`) normalmente solo se entrega a la dirección dueña de la cuenta de Resend, así que `LAB_OTP_INBOX` debe ser esa dirección, o hay que verificar un dominio en `MAIL_FROM` | Darwin (Render, buzón) · QA Lab (Speck el flujo, Probe la BD) | **Pasó el 9-oct (14:42):** el código para `docente@` llegó al buzón de laboratorio desde `abacore.co` y se verificó en prod. Faltan las capturas y la consulta a `email_outbox` |
 | E1 | Login con contraseña (P05) | `/ingresar` con `docente@`, código por correo y entrada. Logout, y volver atrás no entra. Un endpoint protegido sin token responde 401 | Darwin | Pendiente (depende de E0) |
 | E1b | Registro de usuarios (P05) | Como `admin@`, crear una cuenta en `/app/admin/usuarios` y luego `SELECT email, left(password_hash, 30) FROM users WHERE email = '<nuevo>';` → `$argon2id$…` (truncado). Dos cuentas con la misma clave tienen hashes distintos (sal) | Darwin | Pendiente |
 | E2 | Login facial (P09) | `/app/rostro` (registro con consentimiento) y `/ingresar/rostro` (entrada), un error (prueba de vida o `NO_MATCH`) con la opción "usar contraseña", y el bloqueo `423 FACE_LOCKED`. **El código bloquea tras 5 fallos** (`FACIAL_LOCK_ATTEMPTS = 5`, 15 min, distancia 0,5). **Los umbrales de Prisma están pendientes de Darwin**: si difieren de los del código, implican cambiar el código y `render.yaml` | Darwin | Pendiente |
@@ -224,7 +224,7 @@ Se pega una captura o un clip por fila. La evidencia final debe ser de **producc
 | E4 | IA (P10) | Tutor con cita, Mi ruta, resumen del Cuaderno, Observatorio con el SQL generado y el tutor respondiendo `403 KIOSK_ACTIVE` durante un examen | Darwin | Pendiente |
 | E5 | CRUD (P04) | `/app/admin`: crear, editar y borrar un grupo o materia; subir y borrar un recurso de la biblioteca | Darwin | Pendiente |
 | E6 | PDF y Excel (EQ-A09) | Boletín PDF, calificaciones Excel o PDF e integridad PDF, cada uno con su código LK | Darwin | Pendiente |
-| E7 | Aplicación desplegada (P01) | URL pública abierta, `/api/health` → `db:"up"` y dashboard de Render con el último deploy en verde, **con el commit desplegado identificado** (hash y mensaje en Events/Deploys) junto a la captura. Hoy HEAD = `5c6f4ac` y el código del 9-oct no tiene commit | Darwin | Pendiente: health OK (lectura pública del 9-oct); commit no identificado |
+| E7 | Aplicación desplegada (P01) | URL pública abierta, `/api/health` → `db:"up"` y dashboard de Render con el último deploy en verde, **con el commit desplegado identificado** (hash y mensaje en Events/Deploys) junto a la captura. Commit desplegado: `340b047` ("Cuentas institucionales, passkeys, Ajustes, legal, seguridad web y compatibilidad Apple"), `live` el 9-oct a las 14:22 | Darwin | Pendiente: health OK y commit identificado; falta la captura del dashboard |
 | E8 | Verificación del reporte (C06) | `/verificar-reporte/LK-2026-…` y certificado con QR en `/verificar/…` | Darwin | Pendiente |
 | E9 | Base de datos real (P02) | Consola de Cockroach Cloud: clúster y región (sin credenciales), `SELECT version();` (→ `CockroachDB CCL v…`), `SHOW TABLES`, `SHOW CREATE TABLE risk_alerts`, `SHOW CONSTRAINTS FROM users` y `schema_migrations` (0000 a 0019) | Darwin | Pendiente |
 | E10 | Integridad referencial (P04) | FK y CHECK rechazados más una consulta con JOIN y COUNT (`er.md`) | Darwin | Pendiente |
@@ -242,7 +242,7 @@ Se pega una captura o un clip por fila. La evidencia final debe ser de **producc
 | Entregable | Estado | Valor o qué falta |
 |---|---|---|
 | 1. Aplicación desplegada | Con contenido | https://ludoteka-campus.onrender.com |
-| 2. Repositorio Git | Parcial | https://github.com/Joan-Mora/ludoteka-campus. Darwin hace commit de los cambios del 9-oct y confirma el acceso del docente |
+| 2. Repositorio Git | Parcial | https://github.com/Joan-Mora/ludoteka-campus. Los cambios del 9-oct están en el commit `340b047`. Darwin confirma el acceso del docente |
 | 3. Scripts SQL (crear y poblar) | Con contenido | `db/migrations/0000…0019`, `db/seeds/001_contenido.sql`, `npm run migrate`, `npm run seed` |
 | 4. URL | Con contenido | La de arriba |
 | 5. Confluence | Depende de Darwin | Crear el espacio y pegar esta página |

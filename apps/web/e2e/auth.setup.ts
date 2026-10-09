@@ -32,8 +32,13 @@ async function acceptLegal(context: APIRequestContext, role: E2ERole, token: str
 setup('sesiones de laboratorio', async ({ baseURL }) => {
   mkdirSync(authDir, { recursive: true });
   const password = labPassword();
+  const local = (process.env.E2E_TARGET ?? 'local') === 'local';
   for (const role of LEGAL_ORDER) {
     const file = storageFor(role);
+    if (!local && !existsSync(file)) {
+      console.warn(`[setup] ${role}: sin dispositivo de confianza guardado; no se pide un código que nadie va a leer.`);
+      continue;
+    }
     const context = await request.newContext({ baseURL, storageState: existsSync(file) ? file : undefined });
     const login = await context.post('/api/auth/login', { data: { email: accounts[role], password } });
     if (!login.ok()) {

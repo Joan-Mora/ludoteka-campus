@@ -2,7 +2,7 @@
 
 > Última revisión: 2026-10-09 · Responsable: Cronista
 > **Nombre:** Ludoteka Campus (nombre pendiente de confirmar por Darwin; antes EduQuest). La carpeta sigue siendo `Proyectos\EduQuest`.
-> **Fuente del estado:** repo `ludoteka-campus` en 2Klair (último commit `5c6f4ac` del 2026-10-05 más los cambios sin commit del 2026-10-09) y `GET https://ludoteka-campus.onrender.com/api/health` respondiendo `{"ok":true,"db":"up"}` el 2026-10-09 a las 12:58 (hora Colombia).
+> **Fuente del estado:** repo `ludoteka-campus` en 2Klair (commit `340b047` del 2026-10-09, desplegado en Render a las 14:22) y `GET https://ludoteka-campus.onrender.com/api/health` respondiendo `{"ok":true,"db":"up"}` el 2026-10-09 después del deploy (hora Colombia).
 > **Modo de trabajo:** Darwin construye; el Equipo Dev solo revisa. Freeze hasta el 15-oct: solo entra lo que bloquee evidencia del Must.
 
 ## Convenciones
@@ -67,13 +67,13 @@
 | RNF-03 | Los secretos solo viven en el entorno. `.env` y `.env.*` están ignorados y solo se versiona `.env.example`. Ningún secreto ni clave por defecto aparece en docs, README o Confluence | Inspección | Parcial: el código trae un valor por defecto para `SEED_PASSWORD` y el README lo publica. Ver Seguridad en `confluence-eq-p08.md` |
 | RNF-04 | `GET /api/health` hace ping a la BD y responde en menos de 2 s con el servicio despierto | Prueba | Hecho (200, `db:"up"`, 0,3 s el 2026-10-09) |
 | RNF-05 | Marca coherente en UI, reportes y docs | Inspección | Parcial: la app y los reportes dicen Ludoteka Campus; las cuentas y el paquete npm siguen como `eduquest`. Falta que Darwin confirme el nombre |
-| RNF-06 | El esquema vive en migraciones SQL versionadas y aplicadas al arrancar | Inspección | Hecho (0000 a 0019; 0018 y 0019 sin commit) |
+| RNF-06 | El esquema vive en migraciones SQL versionadas y aplicadas al arrancar | Inspección | Hecho (0000 a 0019, con 0018 y 0019 en el commit `340b047`) |
 | RNF-07 | Las fronteras entre módulos se verifican con dependency-cruiser | Prueba | Hecho |
 | RNF-08 | Límite de intentos de autenticación | Prueba | Hecho (R2 cerrado el 9-oct, ADR-009). Mecanismos activos:<br>• bloqueo progresivo de la cuenta tras 5 fallos (`ACCOUNT_LOCKED`);<br>• 5 intentos por código OTP;<br>• bloqueo del facial;<br>• `@nestjs/throttler` en login, OTP, recuperación (`forgot` y `reset`), cambio de clave, facial y passkeys: 300 peticiones por IP cada 15 min y 10 por IP más cuenta o reto cada 5 min. El intento 11 contra una cuenta responde `429 TOO_MANY_REQUESTS` |
 | RNF-12 | Encabezados de seguridad: CSP estricta (`script-src 'self'`, sin `eval`), HSTS en producción, `frame-ancestors 'none'`, `Referrer-Policy`, `Permissions-Policy` (cámara y micrófono solo para el propio origen) y sin `X-Powered-By` | Prueba (Playwright falla si hay violaciones de CSP) + Inspección (`curl -I`) | Hecho (`core/security/headers.ts`, ADR-009) |
 | RNF-13 | El navegador no recibe mapas de código y el código propio va con ofuscación ligera (las librerías no). La seguridad real sigue en la API | Inspección (`dist/` sin `.map`) | Hecho (`vite.config.ts`, ADR-009) |
-| RNF-11 | El correo transaccional (Resend) entrega el código de ingreso y la recuperación en producción. `LAB_OTP_INBOX` queda vacía o apunta a un buzón que solo controla Darwin | Demo | Pendiente (R3; escalado a Darwin) |
-| RNF-09 | Smoke E2E (Playwright) en verde antes de la demo | Prueba | Hecho en local: la corrida del 9-oct (14:15) dio 181 pasadas, 16 omitidas y 0 fallidas en iPhone, iPad, Safari Mac (WebKit) y Android (Chromium), incluida la passkey con un autenticador virtual. Las omitidas son rutas de otro dispositivo o pruebas solo locales. La corrida contra producción es `npm run e2e:prod -w @eduquest/web` |
+| RNF-11 | El correo transaccional (Resend) entrega el código de ingreso y la recuperación en producción. `LAB_OTP_INBOX` queda vacía o apunta a un buzón que solo controla Darwin | Demo | Hecho para el código de ingreso: el 9-oct (14:42) llegó desde `abacore.co` y se verificó en prod. `LAB_OTP_INBOX` apunta al buzón de laboratorio de Darwin. La recuperación ya llegaba con estado `sent` desde las 11:29. R3 sigue como dependencia declarada |
+| RNF-09 | Smoke E2E (Playwright) en verde antes de la demo | Prueba | Hecho en local: la corrida del 9-oct (14:15) dio 181 pasadas, 16 omitidas y 0 fallidas en iPhone, iPad, Safari Mac (WebKit) y Android (Chromium), incluida la passkey con un autenticador virtual. Las omitidas son rutas de otro dispositivo o pruebas solo locales. Contra producción (`npm run e2e:prod -w @eduquest/web`, 9-oct 14:50): 59 pasadas y 0 fallidas en WebKit y Chromium. Cubre las rutas públicas y las del docente, que tiene dispositivo de confianza; los demás roles necesitan su código del correo una vez |
 | RNF-10 | Arranque en frío de Render cubierto en la demo | Análisis | Hecho (procedimiento: abrir la URL 2 min antes) |
 
 ### RNF-F (facial, Ley 1581; heredan ADR-002 y ADR-007)

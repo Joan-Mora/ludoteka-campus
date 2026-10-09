@@ -32,15 +32,16 @@ import { api, ApiException } from '@/shared/api';
 import { useAuth, type OtpChallenge, type SessionUser } from '@/shared/auth';
 import { Sheet, ThemeButton, Tile } from '@/ui';
 import { PasskeyLogin } from '@/shared/passkey';
+import { useTheme } from '@/shared/theme';
 import { buildingsFor, IsoCampus, Luka, phaseOf } from './campus';
 
 function Brand({ light = true }: { light?: boolean }) {
   return (
-    <Link to="/" className="row g-12">
+    <Link to="/" className={`row g-12 brand-link${light ? '' : ' on-page'}`}>
       <img src="/favicon.svg" alt="" style={{ width: 40, height: 40, borderRadius: 12 }} />
       <div>
-        <div className="brand-name" style={{ color: light ? '#fff' : 'var(--ink)' }}>Ludoteka Campus</div>
-        <div className="brand-sub" style={{ color: light ? '#a79fe0' : 'var(--muted)' }}>Colegio Francisco Arango</div>
+        <div className="brand-name">Ludoteka Campus</div>
+        <div className="brand-sub">Colegio Francisco Arango</div>
       </div>
     </Link>
   );
@@ -49,10 +50,12 @@ function Brand({ light = true }: { light?: boolean }) {
 function HeroCampus() {
   const phase = phaseOf(Number(new Intl.DateTimeFormat('en-US', { hour: 'numeric', hour12: false, timeZone: 'America/Bogota' }).format(new Date())) % 24);
   const buildings = buildingsFor('student');
+  const { dark } = useTheme();
+  const shown = !dark ? 'day' : phase === 'day' || phase === 'dawn' ? 'dusk' : phase;
   return (
     <div className="hero-campus">
       <motion.div initial={{ opacity: 0, y: 40, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1] }}>
-        <IsoCampus buildings={buildings} phase={phase === 'day' || phase === 'dawn' ? 'dusk' : phase} interactive={false} />
+        <IsoCampus buildings={buildings} phase={shown} interactive={false} />
       </motion.div>
       <motion.div className="hero-luka" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }}>
         <Luka mood="talking" size={92} />
@@ -126,13 +129,13 @@ export function Landing() {
           <PublicNav />
           <div className="grid cols-2" style={{ alignItems: 'center', gap: 40, padding: '56px 0 96px' }}>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <span className="chip" style={{ background: 'rgba(255,255,255,.08)', color: '#e9e6ff', border: '1px solid rgba(255,255,255,.15)' }}>
-                <Zap size={14} color="#ffd66b" /> Aula virtual gamificada · 2026
+              <span className="chip landing-chip">
+                <Zap size={14} /> Aula virtual gamificada · 2026
               </span>
               <h1 className="display" style={{ fontSize: 'clamp(46px, 6.2vw, 84px)', margin: '22px 0 20px' }}>
                 Aprender se siente como <span className="text-grad">una aventura.</span>
               </h1>
-              <p style={{ fontSize: 19, lineHeight: 1.6, color: '#cfc9ff', maxWidth: 540 }}>
+              <p className="landing-lead" style={{ fontSize: 19, lineHeight: 1.6, maxWidth: 540 }}>
                 Ludoteka Campus es el campus virtual del Colegio Francisco Arango: un mundo explorable donde cada edificio
                 es una forma de aprender, con biblioteca, arena por equipos, tutor IA y acceso facial.
               </p>
@@ -148,7 +151,7 @@ export function Landing() {
                 ].map(([value, label]) => (
                   <div key={label} style={{ maxWidth: value === '5' ? 240 : 170 }}>
                     <div className="display" style={{ fontSize: 36 }}>{value}</div>
-                    <div style={{ color: '#a79fe0', fontSize: 14, fontWeight: 600 }}>{label}</div>
+                    <div className="landing-stat">{label}</div>
                   </div>
                 ))}
               </div>

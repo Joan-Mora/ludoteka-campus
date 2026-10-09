@@ -8,6 +8,7 @@ import { Env } from '../../core/config/config.module';
 import { ApiError } from '../../core/errors/api-error';
 import { temporaryPassword } from '../../core/common/crypto';
 import { Mailer } from '../../core/mail/mailer';
+import { welcomeEmail } from '../../core/mail/templates';
 import type { AuthUser } from '../../core/auth/auth.decorators';
 import { IdentityService } from './identity.service';
 import {
@@ -178,30 +179,10 @@ export class AccountsService {
 
   /* ---------- Alta ---------- */
 
-  private welcomeBody(fullName: string, email: string, password: string, forLab: boolean) {
-    const url = this.env.values.APP_PUBLIC_URL.replace(/\/$/, '');
-    return [
-      `Hola ${fullName}.`,
-      '',
-      'El Colegio Francisco Arango creó tu cuenta en Ludoteka Campus.',
-      '',
-      `Entra en: ${url}/ingresar`,
-      `Correo: ${email}`,
-      `Clave temporal: ${password}`,
-      '',
-      'Al entrar te enviaremos un código de 6 dígitos a este correo y después elegirás tu propia contraseña.',
-      'La clave temporal deja de servir en cuanto la cambies.',
-      forLab ? `Cuenta de laboratorio: ${email}.` : '',
-      '',
-      'Si no esperabas este correo, avisa a la secretaría del colegio.',
-    ].join('\n');
-  }
-
   private async sendWelcome(item: Welcome) {
     await this.mailer.send(
       item.to,
-      item.to === item.email ? 'Tu cuenta de Ludoteka Campus' : `Cuenta de Ludoteka Campus para ${item.email}`,
-      this.welcomeBody(item.fullName, item.email, item.password, item.to !== item.email),
+      welcomeEmail({ baseUrl: this.env.values.APP_PUBLIC_URL, fullName: item.fullName, account: item.email, password: item.password, forLab: item.to !== item.email }),
       { sensitive: true },
     );
   }

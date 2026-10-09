@@ -11,6 +11,7 @@ import { hmac, otpCode, passwordIsStrong, randomToken, safeEqual, sha256 } from 
 import { deviceLabel, maskEmail } from '../../core/common/device';
 import { DomainEvents } from '../../core/events/domain-events';
 import { Mailer } from '../../core/mail/mailer';
+import { loginCodeEmail } from '../../core/mail/templates';
 import type { AuthMethod, AuthUser } from '../../core/auth/auth.decorators';
 import { legalPending } from '../legal/public-api';
 
@@ -195,16 +196,7 @@ export class IdentityService {
     const forLab = to !== user.email;
     await this.mailer.send(
       to,
-      forLab ? `Código ${code} para ${user.email} · Ludoteka Campus` : `Tu código de ingreso: ${code}`,
-      [
-        `Hola ${user.full_name}.`,
-        '',
-        `Tu código para entrar a Ludoteka Campus es: ${code}`,
-        '',
-        `Vence en ${OTP_MINUTES} minutos y sirve una sola vez.`,
-        forLab ? `Cuenta de laboratorio: ${user.email}.` : '',
-        'Si no fuiste tú, cambia tu contraseña y avisa al colegio.',
-      ].filter((line, i, all) => line || all[i - 1]).join('\n'),
+      loginCodeEmail({ baseUrl: this.env.values.APP_PUBLIC_URL, fullName: user.full_name, account: user.email, code, minutes: OTP_MINUTES, forLab }),
       { sensitive: true },
     );
     return {

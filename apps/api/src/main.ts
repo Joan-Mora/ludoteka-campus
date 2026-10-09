@@ -29,6 +29,10 @@ async function bootstrap() {
   });
   const webDist = path.join(repoRoot(), 'apps', 'web', 'dist');
   if (existsSync(webDist)) {
+    http.use('/email', (_req, res, next) => {
+      res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+      next();
+    });
     http.use(express.static(webDist, { index: false }));
     http.use((req, res, next) => {
       if (req.method !== 'GET' && req.method !== 'HEAD') return next();

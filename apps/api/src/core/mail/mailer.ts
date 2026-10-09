@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Env } from '../config/config.module';
 import { DatabaseService } from '../database/database.service';
+import type { RenderedEmail } from './templates';
 
 const REDACTED = '[Contenido con código, enlace o clave de acceso: no se guarda en la base de datos]';
 
@@ -12,7 +13,8 @@ export class Mailer {
   ) {}
 
   /** `sensitive` mails (codes, reset links, temporary passwords) are delivered but stored redacted in the outbox. */
-  async send(to: string, subject: string, body: string, options: { sensitive?: boolean } = {}) {
+  async send(to: string, email: RenderedEmail, options: { sensitive?: boolean } = {}) {
+    const { subject, text: body, html } = email;
     const key = this.env.values.RESEND_API_KEY;
     let status: 'sent' | 'logged' = 'logged';
     if (key) {
@@ -27,6 +29,7 @@ export class Mailer {
           to: [to],
           subject,
           text: body,
+          html,
         }),
       }).catch(() => null);
       status = response?.ok ? 'sent' : 'logged';

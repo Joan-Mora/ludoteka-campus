@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { DatabaseService } from '../../core/database/database.service';
 import { Mailer } from '../../core/mail/mailer';
+import { passwordResetEmail } from '../../core/mail/templates';
 import {
   DomainEvents,
   type ForumReplyEvent,
@@ -22,8 +23,7 @@ export class NotificationsService {
   async onReset(event: PasswordResetEvent) {
     await this.mailer.send(
       event.email,
-      'Recupera tu contraseña de Ludoteka Campus',
-      `Hola ${event.fullName}.\n\nEste enlace vale una hora:\n${event.link}\n\nSi no fuiste tú, ignora este mensaje.`,
+      passwordResetEmail({ baseUrl: new URL(event.link).origin, fullName: event.fullName, link: event.link }),
       { sensitive: true },
     );
   }

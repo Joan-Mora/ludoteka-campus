@@ -25,6 +25,12 @@ export interface ChatResult {
 
 const RETRYABLE = new Set([404, 408, 429, 500, 502, 503, 504]);
 
+/** Gemini 3.5+ ignores sampling parameters and future generations reject them with a 400. */
+function acceptsSampling(model: string) {
+  const version = /^gemini-(\d+(?:\.\d+)?)/.exec(model)?.[1];
+  return version === undefined || Number(version) < 3.5;
+}
+
 @Injectable()
 export class AiService {
   private readonly logger = new Logger('AI');
@@ -58,7 +64,7 @@ export class AiService {
           headers: { Authorization: `Bearer ${this.env.values.AI_API_KEY}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({
             model,
-            temperature: options.temperature ?? 0.4,
+            ...(acceptsSampling(model) ? { temperature: options.temperature ?? 0.4 } : {}),
             ...(options.maxTokens ? { max_tokens: options.maxTokens } : {}),
             ...(options.json ? { response_format: { type: 'json_object' } } : {}),
             messages,

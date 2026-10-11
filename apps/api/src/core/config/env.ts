@@ -43,7 +43,7 @@ const schema = z.object({
   AI_API_KEY: z.string().optional().default(''),
   AI_BASE_URL: z.string().default('https://generativelanguage.googleapis.com/v1beta/openai'),
   AI_MODEL: z.string().default('gemini-3.5-flash-lite'),
-  AI_MODEL_SMART: z.string().default('gemini-3.5-flash'),
+  AI_MODEL_SMART: z.string().default('gemini-3.6-flash'),
   AI_FALLBACK_MODELS: z.string().default('gemini-3.1-flash-lite,gemini-2.5-flash-lite'),
   AI_EMBED_MODEL: z.string().default('gemini-embedding-2'),
   AI_EMBED_DIM: z.coerce.number().default(768),

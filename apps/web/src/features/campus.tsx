@@ -449,6 +449,27 @@ const lamps: [number, number][] = [[4.1, 6.1], [9.7, 6.1], [4.1, 8.1], [9.7, 8.1
 
 const VIEW = { x: -430, y: -110, w: 860, h: 640 };
 
+/** Fixed silhouette covering the building at rest and lifted, so hovering never moves the target out from under the cursor. */
+function hitArea(b: Building): [number, number][] {
+  const top = b.h + (b.shape === 'board' || b.shape === 'stadium' ? 1.6 : 1.9);
+  const corners: [number, number][] = [];
+  for (const [x, y] of [[b.x - 0.2, b.y - 0.2], [b.x + b.w + 0.2, b.y - 0.2], [b.x + b.w + 0.2, b.y + b.d + 0.2], [b.x - 0.2, b.y + b.d + 0.2]] as const) {
+    corners.push(iso(x, y, 0), iso(x, y, top));
+  }
+  const sorted = [...corners].sort((a, c) => a[0] - c[0] || a[1] - c[1]);
+  const cross = (o: [number, number], a: [number, number], c: [number, number]) => (a[0] - o[0]) * (c[1] - o[1]) - (a[1] - o[1]) * (c[0] - o[0]);
+  const half = (points: [number, number][]) => {
+    const hull: [number, number][] = [];
+    for (const p of points) {
+      while (hull.length >= 2 && cross(hull[hull.length - 2]!, hull[hull.length - 1]!, p) <= 0) hull.pop();
+      hull.push(p);
+    }
+    hull.pop();
+    return hull;
+  };
+  return [...half(sorted), ...half([...sorted].reverse())];
+}
+
 export function IsoCampus({ buildings, counts, phase, interactive = true, onPick }: {
   buildings: Building[];
   counts?: Partial<Record<BuildingKey, number>>;
@@ -498,6 +519,7 @@ export function IsoCampus({ buildings, counts, phase, interactive = true, onPick
         <g className="iso-lift">
           <BuildingShape b={b} paint={paint} seed={index + 3} />
         </g>
+        {interactive && <polygon className="iso-hit" points={pts(hitArea(b))} />}
       </g>
     );
   };

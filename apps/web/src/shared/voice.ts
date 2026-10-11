@@ -107,23 +107,63 @@ export function voiceErrorMessage(code: string) {
 
 export type VoiceGender = 'male' | 'female';
 
-// Los navegadores no dicen el género de cada voz; se deduce por los nombres conocidos de Microsoft, Apple y Google.
-const MALE_NAMES = /\b(jorge|ra[uú]l|pablo|juan|diego|carlos|enrique|[aá]lvaro|gonzalo|andr[eé]s|miguel|antonio|daniel|santiago|emilio|alonso|gerardo|lorenzo|federico|jos[eé]|tom[aá]s|reed|eddy|rocko|grandpa|male|hombre)\b/i;
-const FEMALE_NAMES = /\b(helena|laura|m[oó]nica|paulina|sabina|dalia|elvira|elena|luc[ií]a|marisol|paloma|camila|salom[eé]|ximena|isabela|valentina|catalina|beatriz|carmen|gloria|in[eé]s|marta|sara|sandy|shelley|flo|grandma|female|mujer)\b/i;
+// Los navegadores no dicen el género de cada voz. Solo ofrecemos voces cuyo nombre está en esta tabla
+// (Microsoft, Apple y Google); las demás quedan fuera para que Luka nunca hable con voz de mujer ni Luna con voz de hombre.
+const VOICE_TABLE: Record<string, VoiceGender> = {
+  gonzalo: 'male', jorge: 'male', raul: 'male', pablo: 'male', juan: 'male', diego: 'male', carlos: 'male', alvaro: 'male',
+  tomas: 'male', lorenzo: 'male', emilio: 'male', gerardo: 'male', federico: 'male', alonso: 'male', andres: 'male',
+  enrique: 'male', antonio: 'male', miguel: 'male', daniel: 'male', santiago: 'male', mateo: 'male', luciano: 'male',
+  salome: 'female', dalia: 'female', sabina: 'female', helena: 'female', laura: 'female', elvira: 'female', elena: 'female',
+  monica: 'female', paulina: 'female', marisol: 'female', angelica: 'female', isabela: 'female', catalina: 'female',
+  ximena: 'female', paloma: 'female', camila: 'female', valentina: 'female', lucia: 'female', beatriz: 'female',
+  irene: 'female', abril: 'female', soledad: 'female', marta: 'female', carmen: 'female',
+};
 const VOICE_KEY = 'lk_voice';
+const SHOWN_PER_GENDER = 5;
+
+const plain = (text: string) => text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
 export function voiceGender(voice: SpeechSynthesisVoice): VoiceGender | null {
-  const name = voice.name;
-  if (FEMALE_NAMES.test(name)) return 'female';
-  if (MALE_NAMES.test(name)) return 'male';
-  // Las voces "Google español" son femeninas.
-  if (/^google /i.test(name)) return 'female';
+  const name = plain(voice.name);
+  // "Google español" y "Google español de Estados Unidos" son voces femeninas.
+  if (/^google espanol/.test(name)) return 'female';
+  for (const word of name.split(/[^a-z]+/)) {
+    const gender = VOICE_TABLE[word];
+    if (gender) return gender;
+  }
   return null;
 }
 
+function voiceScore(v: SpeechSynthesisVoice) {
+  const name = plain(v.name);
+  let score = 0;
+  if (/natural|online|neural/.test(name)) score += 40;
+  if (/premium|enhanced|mejorada/.test(name)) score += 30;
+  if (/^google/.test(name)) score += 20;
+  if (v.lang === LANG) score += 15;
+  else if (/^es-(MX|US|419)/i.test(v.lang)) score += 10;
+  else if (!/^es-ES/i.test(v.lang)) score += 5;
+  if (v.localService) score += 2;
+  return score;
+}
+
 export function spanishVoices(voices = voiceCache) {
-  const rank = (v: SpeechSynthesisVoice) => (v.lang === LANG ? 0 : /^es-(MX|US|419)/i.test(v.lang) ? 1 : /^es-(AR|CL|PE|VE|EC|BO|UY|PY|CR|PA|DO|GT|HN|NI|SV|PR|CU)/i.test(v.lang) ? 2 : 3);
-  return voices.filter((v) => v.lang.toLowerCase().startsWith('es')).sort((a, b) => rank(a) - rank(b) || Number(b.localService) - Number(a.localService));
+  return voices.filter((v) => v.lang.toLowerCase().startsWith('es')).sort((a, b) => voiceScore(b) - voiceScore(a));
+}
+
+/** The best Spanish voices of one gender, one per name (Apple lists the same voice in several qualities). */
+export function curatedVoices(gender: VoiceGender, voices = voiceCache) {
+  const seen = new Set<string>();
+  const list: SpeechSynthesisVoice[] = [];
+  for (const v of spanishVoices(voices)) {
+    if (voiceGender(v) !== gender) continue;
+    const key = plain(v.name).replace(/\(.*\)|online|natural|premium|enhanced|mejorada|microsoft|google|-.*$/g, '').trim();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    list.push(v);
+    if (list.length === SHOWN_PER_GENDER) break;
+  }
+  return list;
 }
 
 let companionGender: VoiceGender = 'male';
@@ -149,12 +189,12 @@ export function saveVoiceURI(uri: string | null) {
   } catch { /* almacenamiento bloqueado */ }
 }
 
-/** Voice and pitch for a gender: the saved voice, else the best Spanish voice of that gender, else any Spanish voice with a shifted pitch. */
+/** Voice and pitch for a gender: the saved voice if it fits the gender, else the best curated voice, else any Spanish voice with a shifted pitch. */
 export function voiceFor(gender: VoiceGender, voices = voiceCache.length ? voiceCache : window.speechSynthesis.getVoices()) {
-  const spanish = spanishVoices(voices);
+  const curated = curatedVoices(gender, voices);
   const saved = savedVoiceURI();
-  const chosen = saved ? spanish.find((v) => v.voiceURI === saved) : undefined;
-  const voice = chosen ?? spanish.find((v) => voiceGender(v) === gender) ?? spanish[0] ?? null;
+  const chosen = saved ? curated.find((v) => v.voiceURI === saved) : undefined;
+  const voice = chosen ?? curated[0] ?? spanishVoices(voices)[0] ?? null;
   const actual = voice ? voiceGender(voice) : null;
   const pitch = chosen || actual === gender ? 1.05 : gender === 'female' ? 1.3 : 0.8;
   return { voice, pitch, matches: actual === gender };

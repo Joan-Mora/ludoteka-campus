@@ -217,7 +217,7 @@ export function FacialPage() {
           <div className="card-title">Historial de accesos faciales</div>
           {data?.lockedUntil ? <span className="chip coral">Bloqueado hasta {new Date(data.lockedUntil).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}</span> : <span className="chip">{data?.remainingAttempts ?? 5} intentos disponibles</span>}
         </div>
-        <table className="table">
+        <div className="table-scroll"><table className="table">
           <thead><tr><th>Fecha</th><th>Tipo</th><th>Resultado</th><th>Distancia</th></tr></thead>
           <tbody>
             {(attempts.data ?? []).map((row) => (
@@ -229,7 +229,7 @@ export function FacialPage() {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
         {!attempts.data?.length && <p className="muted" style={{ padding: 16, textAlign: 'center' }}>Todavía no hay intentos.</p>}
       </article>
     </div>

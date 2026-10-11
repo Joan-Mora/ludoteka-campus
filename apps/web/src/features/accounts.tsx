@@ -219,7 +219,7 @@ export function UsuariosPage() {
       {!!imports.data?.length && (
         <div className="card" style={{ marginTop: 18 }}>
           <div className="card-title" style={{ marginBottom: 12 }}>Importaciones recientes</div>
-          <table className="table">
+          <div className="table-scroll"><table className="table">
             <thead><tr><th>Archivo</th><th>Tipo</th><th>Creadas</th><th>Omitidas</th><th>Fecha</th><th>Por</th></tr></thead>
             <tbody>
               {imports.data.map((log) => (
@@ -233,7 +233,7 @@ export function UsuariosPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         </div>
       )}
 

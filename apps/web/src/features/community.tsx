@@ -235,7 +235,7 @@ function Receipts({ id, requiresAck }: { id: string; requiresAck: boolean }) {
         <span>{pct}%</span>
       </div>
       <Bar value={pct} tone="mint" thin />
-      <div style={{ maxHeight: 260, overflowY: 'auto', marginTop: 10 }}>
+      <div className="table-scroll" style={{ maxHeight: 260, overflowY: 'auto', marginTop: 10 }}>
         <table className="table">
           <thead><tr><th>Persona</th><th>Leída</th>{requiresAck && <th>Confirmada</th>}</tr></thead>
           <tbody>
@@ -621,7 +621,7 @@ function StudentCard({ student, policyVersion }: { student: GuardianStudent; pol
         <div>
           <div className="card-title" style={{ fontSize: 16, marginBottom: 10 }}>Evaluaciones recientes</div>
           {o?.recent.length ? (
-            <table className="table">
+            <div className="table-scroll"><table className="table">
               <thead><tr><th>Evaluación</th><th>Curso</th><th style={{ textAlign: 'right' }}>Resultado</th></tr></thead>
               <tbody>
                 {o.recent.map((r) => (
@@ -632,7 +632,7 @@ function StudentCard({ student, policyVersion }: { student: GuardianStudent; pol
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           ) : (
             <p className="muted">Todavía no presenta evaluaciones.</p>
           )}

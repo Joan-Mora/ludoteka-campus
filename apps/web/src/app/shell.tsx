@@ -72,12 +72,29 @@ function Section({ section }: { section: NavSection }) {
   );
 }
 
+/** Touchpad pinch arrives as ctrl+wheel (Chromium, Firefox) or gesture events (Safari); keyboard zoom stays available. */
+function useNoPinchZoom() {
+  useEffect(() => {
+    const wheel = (event: WheelEvent) => { if (event.ctrlKey) event.preventDefault(); };
+    const gesture = (event: Event) => event.preventDefault();
+    window.addEventListener('wheel', wheel, { passive: false });
+    document.addEventListener('gesturestart', gesture);
+    document.addEventListener('gesturechange', gesture);
+    return () => {
+      window.removeEventListener('wheel', wheel);
+      document.removeEventListener('gesturestart', gesture);
+      document.removeEventListener('gesturechange', gesture);
+    };
+  }, []);
+}
+
 function DesktopShell({ sections }: { sections: NavSection[] }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const { notes, game, xp, pct, unread } = useShellData();
   const [open, setOpen] = useState(false);
   const isStudent = user?.role === 'student';
+  useNoPinchZoom();
 
   return (
     <div className="shell">
@@ -94,16 +111,16 @@ function DesktopShell({ sections }: { sections: NavSection[] }) {
           <div className="row g-12">
             <Avatar name={user?.fullName} />
             <div style={{ minWidth: 0, flex: 1 }}>
-              <div style={{ fontWeight: 800, color: '#fff', fontSize: 14, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user?.fullName}</div>
-              <div style={{ fontSize: 12, color: '#a79fe0', fontWeight: 600 }}>{user ? roleLabel[user.role] : ''}</div>
+              <div className="side-name">{user?.fullName}</div>
+              <div className="side-role">{user ? roleLabel[user.role] : ''}</div>
             </div>
-            <button className="icon-btn" style={{ background: 'rgba(255,255,255,.08)', borderColor: 'transparent', color: '#fff' }} onClick={async () => { await logout(); navigate('/'); }} title="Salir">
+            <button className="icon-btn" onClick={async () => { await logout(); navigate('/'); }} title="Salir">
               <LogOut size={17} />
             </button>
           </div>
           {isStudent && game.data && (
             <div style={{ marginTop: 14 }}>
-              <div className="row between" style={{ fontSize: 12, fontWeight: 700, color: '#c9c3f3', marginBottom: 6 }}>
+              <div className="row between side-level">
                 <span>Nivel {game.data.level.level} · {game.data.level.title}</span>
                 <span>{pct}%</span>
               </div>

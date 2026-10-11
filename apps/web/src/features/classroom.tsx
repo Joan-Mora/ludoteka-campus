@@ -109,7 +109,8 @@ export function HomePage() {
   const layout = useLayout();
 
   return (
-    <div className="stack g-24">
+    <div className="home-grid">
+      <div className="home-main">
       {layout === 'mobile' ? <MobileHub /> : <CampusHome />}
 
       {isStudent && game.data && (
@@ -146,15 +147,14 @@ export function HomePage() {
         )}
       </div>
 
-      <div className="grid cols-3" style={{ alignItems: 'start' }}>
-        <div className="span-2 stack g-18" style={{ gap: 18 }}>
+        <div className="stack" style={{ gap: 18 }}>
           <div className="row between">
             <h2 style={{ fontSize: 22 }}>{isStudent ? 'Mis cursos' : 'Cursos a cargo'}</h2>
             <Link to="/app/cursos" className="row g-4" style={{ color: 'var(--violet-2)', fontWeight: 800, fontSize: 14 }}>Ver todos <ArrowRight size={15} /></Link>
           </div>
-          <div className="grid cols-2">
+          <div className="auto-grid">
             {(courses.data ?? []).map((course, i) => <CourseTile key={course.id} course={course} index={i} />)}
-            {!courses.isLoading && !courses.data?.length && <div className="card span-2"><Empty icon={BookOpen} title="Aún no tienes cursos" body="Cuando te asignen a un grupo aparecerán aquí." /></div>}
+            {!courses.isLoading && !courses.data?.length && <div className="card full-row"><Empty icon={BookOpen} title="Aún no tienes cursos" body="Cuando te asignen a un grupo aparecerán aquí." /></div>}
           </div>
 
           {!isStudent && firstCourse && (
@@ -182,7 +182,10 @@ export function HomePage() {
               </div>
             </Reveal>
           )}
+        </div>
+      </div>
 
+      <aside className="home-rail">
           {isStudent && game.data && (
             <Reveal className="card">
               <div className="card-head">
@@ -212,9 +215,6 @@ export function HomePage() {
               </div>
             </Reveal>
           )}
-        </div>
-
-        <div className="stack" style={{ gap: 18 }}>
           <Reveal className="card" delay={0.1}>
             <div className="card-head"><div className="row g-12"><Tile icon={Megaphone} tone="coral" /><div className="card-title">Tablón</div></div></div>
             <div className="list">
@@ -245,8 +245,7 @@ export function HomePage() {
               {!feed.data?.events.length && <Empty icon={CalendarDays} title="Agenda despejada" />}
             </div>
           </Reveal>
-        </div>
-      </div>
+      </aside>
     </div>
   );
 }

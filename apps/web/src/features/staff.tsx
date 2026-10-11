@@ -325,7 +325,7 @@ export function ReportsPage() {
       </div>
 
       <Panel icon={GraduationCap} tone="violet" title="Estudiantes" subtitle="Boletín individual y certificado del curso.">
-        <table className="table">
+        <div className="table-scroll"><table className="table">
           <thead><tr><th>Estudiante</th><th style={{ textAlign: 'right' }}>Acciones</th></tr></thead>
           <tbody>
             {(students.data ?? []).map((student) => (
@@ -344,7 +344,7 @@ export function ReportsPage() {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
         {!students.data?.length && <Empty icon={Users} title="Sin estudiantes matriculados" />}
       </Panel>
       <div style={{ marginTop: 18 }}><ReportHistory /></div>
@@ -358,7 +358,7 @@ function ReportHistory() {
   const log = useQuery({ queryKey: ['report-log'], queryFn: () => api<ReportRow[]>('/api/reports/log') });
   return (
     <Panel icon={ClipboardCheck} tone="gold" title="Historial de reportes" subtitle="Cada documento lleva un consecutivo LK verificable con su código QR.">
-      <table className="table">
+      <div className="table-scroll"><table className="table">
         <thead><tr><th>N.º</th><th>Documento</th><th>Formato</th><th>Filas</th><th>Generado</th><th>Por</th></tr></thead>
         <tbody>
           {(log.data ?? []).map((row) => (
@@ -372,7 +372,7 @@ function ReportHistory() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table></div>
       {!log.data?.length && <Empty icon={FileText} title="Aún no se han generado reportes" />}
     </Panel>
   );
@@ -658,7 +658,7 @@ function GuardianLinks({ users }: { users: { id: string; fullName: string; email
   return (
     <div className="grid cols-3" style={{ alignItems: 'start' }}>
       <Panel icon={HeartHandshake} tone="mint" title="Vínculos acudiente-estudiante" subtitle="El acudiente autoriza el acceso facial y el tutor IA de los menores (Ley 1581)" className="span-2">
-        <table className="table">
+        <div className="table-scroll"><table className="table">
           <thead><tr><th>Acudiente</th><th>Estudiante</th><th>Parentesco</th><th>Estado</th><th /></tr></thead>
           <tbody>
             {(links.data ?? []).map((link) => (
@@ -671,7 +671,7 @@ function GuardianLinks({ users }: { users: { id: string; fullName: string; email
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
         {!links.data?.length && <Empty icon={HeartHandshake} title="Sin vínculos" body="Vincula a cada acudiente con su estudiante." />}
       </Panel>
       <Panel icon={UserPlus} tone="violet" title="Nuevo vínculo">

@@ -628,7 +628,7 @@ export function VerifyReportPage() {
                   <h2 style={{ marginTop: 6 }}>{query.data.title}</h2>
                 </div>
               </div>
-              <table className="table" style={{ marginTop: 20 }}>
+              <div className="table-scroll" style={{ marginTop: 20 }}><table className="table">
                 <tbody>
                   <tr><th>N.º consecutivo</th><td style={{ fontFamily: 'monospace', fontWeight: 800 }}>{query.data.code}</td></tr>
                   <tr><th>Tipo</th><td>{query.data.kind}</td></tr>
@@ -637,7 +637,7 @@ export function VerifyReportPage() {
                   <tr><th>Fecha de generación</th><td>{new Date(query.data.generatedAt).toLocaleString('es-CO', { dateStyle: 'long', timeStyle: 'short' })}</td></tr>
                   <tr><th>Generado por</th><td>{query.data.generatedBy}</td></tr>
                 </tbody>
-              </table>
+              </table></div>
               <p className="muted" style={{ fontSize: 13, marginTop: 14 }}>La verificación confirma que el documento fue emitido por el sistema; el contenido sensible no se publica.</p>
             </motion.article>
           )}

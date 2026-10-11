@@ -26,7 +26,7 @@ import { useAuth } from '@/shared/auth';
 import { COMPANIONS, useCompanion, type CompanionId } from '@/shared/companion';
 import { PasskeyManager } from '@/shared/passkey';
 import { useTheme, type ThemeChoice } from '@/shared/theme';
-import { saveVoiceURI, savedVoiceURI, sayWith, spanishVoices, useVoices, voiceFor, voiceGender, voiceSupport, type VoiceGender } from '@/shared/voice';
+import { curatedVoices, saveVoiceURI, savedVoiceURI, sayWith, spanishVoices, useVoices, voiceFor, voiceSupport, type VoiceGender } from '@/shared/voice';
 import { Avatar, PageHeader } from '@/ui';
 import { roleLabel } from '@/app/nav';
 import { Luka } from './campus';
@@ -256,12 +256,8 @@ function CompanionSection() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const gender: VoiceGender = companion.female ? 'female' : 'male';
-  const spanish = useMemo(() => spanishVoices(voices), [voices]);
-  const groups = useMemo(() => ({
-    male: spanish.filter((v) => voiceGender(v) === 'male'),
-    female: spanish.filter((v) => voiceGender(v) === 'female'),
-    other: spanish.filter((v) => voiceGender(v) === null),
-  }), [spanish]);
+  const curated = useMemo(() => curatedVoices(gender, voices), [gender, voices]);
+  const anySpanish = useMemo(() => spanishVoices(voices).length > 0, [voices]);
   const auto = voiceFor(gender, voices);
 
   async function choose(id: CompanionId) {
@@ -290,12 +286,12 @@ function CompanionSection() {
       <div>
         <div className="eyebrow" style={{ margin: '10px 0 6px' }}>{label}</div>
         <div className="stack" style={{ gap: 6 }}>
-          {list.map((v) => (
+          {list.map((v, i) => (
             <label key={v.voiceURI} className={`setting-row voice-row ${voiceURI === v.voiceURI ? 'on' : ''}`}>
               <input type="radio" name="voice" checked={voiceURI === v.voiceURI} onChange={() => pickVoice(v.voiceURI)} />
               <div style={{ flex: 1, minWidth: 0 }}>
                 <b className="ellipsis">{v.name.replace(/^(Microsoft|Google)\s+/, '').replace(/\s*\(.*\)$/, '')}</b>
-                <span className="muted" style={{ fontSize: 12.5 }}>{v.lang}{v.localService ? ' · en el equipo' : ' · en línea'}</span>
+                <span className="muted" style={{ fontSize: 12.5 }}>{i === 0 ? 'La mejor de este equipo · ' : ''}{v.lang}{v.localService ? ' · en el equipo' : ' · en línea'}</span>
               </div>
               <button type="button" className="btn sm ghost" onClick={(e) => { e.preventDefault(); sayWith(v, 1.05, SAMPLE[companion.id]); }}><Play size={14} /> Probar</button>
             </label>
@@ -342,10 +338,8 @@ function CompanionSection() {
               </div>
               <button type="button" className="btn sm ghost" onClick={(e) => { e.preventDefault(); sayWith(auto.voice, auto.pitch, SAMPLE[companion.id]); }}><Play size={14} /> Probar</button>
             </label>
-            {voiceList(companion.female ? groups.female : groups.male, companion.female ? 'Voces femeninas' : 'Voces masculinas')}
-            {voiceList(companion.female ? groups.male : groups.female, companion.female ? 'Voces masculinas' : 'Voces femeninas')}
-            {voiceList(groups.other, 'Otras voces en español')}
-            {!spanish.length && <p className="muted">No encontramos voces en español en este dispositivo.</p>}
+            {voiceList(curated, `Voces ${companion.female ? 'femeninas' : 'masculinas'} en español para ${companion.name}`)}
+            {!anySpanish && <p className="muted">No encontramos voces en español en este dispositivo.</p>}
           </>
         )}
       </Block>

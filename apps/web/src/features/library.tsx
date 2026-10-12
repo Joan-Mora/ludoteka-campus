@@ -1,5 +1,5 @@
-import { FormEvent, useRef, useState, type DragEvent } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { FormEvent, useEffect, useRef, useState, type DragEvent } from 'react';
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import {
@@ -104,7 +104,9 @@ export function LibraryPage() {
 
 function Catalogue({ staff }: { staff: boolean }) {
   const catalog = useQuery({ queryKey: ['library-catalog'], queryFn: () => api<Catalog>('/api/library/catalog') });
-  const [q, setQ] = useState('');
+  const [search] = useSearchParams();
+  const [q, setQ] = useState(() => search.get('q') ?? '');
+  useEffect(() => { const spoken = search.get('q'); if (spoken) setQ(spoken); }, [search]);
   const [subjectId, setSubjectId] = useState('');
   const [kind, setKind] = useState('');
   const [tag, setTag] = useState('');

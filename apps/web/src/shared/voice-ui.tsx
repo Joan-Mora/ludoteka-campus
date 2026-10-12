@@ -1,10 +1,14 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { HelpCircle, Mic, MicOff, Volume2, VolumeX, X } from 'lucide-react';
+import { api } from './api';
 import { useAuth } from './auth';
+import { useCompanion } from './companion';
 import { setTheme } from './theme';
-import { dictationUnavailable, matchCommand, useDictation, useSpeech, voiceSupport, type VoiceCommand } from './voice';
+import { dictationUnavailable, matchCommand, matchSlot, useDictation, useSpeech, voiceSupport, type SlotCommand, type VoiceCommand } from './voice';
 
 /** Appends dictated phrases through `onText`. Hidden-but-explained when the browser lacks speech recognition. */
 export function MicButton({ onText, size = 'sm', label, continuous = false }: { onText: (text: string) => void; size?: 'sm' | 'md'; label?: string; continuous?: boolean }) {
@@ -75,38 +79,159 @@ const destinations: Destination[] = [
   { label: 'Familia', to: '/app/acudiente', phrases: ['familia', 'seguimiento', 'mis hijos', 'acudidos'], roles: ['guardian'] },
 ];
 
-/** Global spoken navigation, e.g. «abre la biblioteca», «ir a mis cursos», «modo oscuro». */
-export function VoiceNav() {
+type CampusSnapshot = { buildings: Record<string, number>; pending: Record<string, { title: string; meta: string; link: string }[]> };
+
+const PLACES: Record<string, string> = {
+  aula: 'el Aula',
+  cartelera: 'la Cartelera',
+  biblioteca: 'la Biblioteca',
+  arena: 'la Arena',
+  trofeos: 'la Sala de trofeos',
+  ruta: 'Mi ruta',
+  lab: 'el Laboratorio',
+};
+
+function placeOf(key: string, role: string | undefined) {
+  if (key === 'cuaderno') return role === 'coordinator' ? 'Coordinación' : role === 'rector' ? 'Rectoría' : role === 'student' ? 'el Cuaderno' : 'el Taller docente';
+  return PLACES[key] ?? key;
+}
+
+/** What the campus counts, said out loud: totals per building and the first two concrete items. */
+function pendingSpeech(data: CampusSnapshot, role: string | undefined) {
+  const parts = Object.entries(data.buildings).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]);
+  if (!parts.length) return { text: 'No tienes nada pendiente. Todo al día.', link: null as string | null };
+  const total = parts.reduce((sum, [, n]) => sum + n, 0);
+  const list = parts.map(([key, n]) => `${n} en ${placeOf(key, role)}`);
+  const items = Object.values(data.pending).flat().slice(0, 2);
+  const joined = list.length > 1 ? `${list.slice(0, -1).join(', ')} y ${list.at(-1)}` : list[0];
+  const firsts = items.length ? ` Lo primero: ${items.map((i) => `${i.title}${i.meta ? `, ${i.meta.charAt(0).toLowerCase()}${i.meta.slice(1)}` : ''}`).join('. Luego: ')}.` : '';
+  return { text: `Tienes ${total} ${total === 1 ? 'pendiente' : 'pendientes'}: ${joined}.${firsts}`, link: items[0]?.link ?? null };
+}
+
+const lessonText = () => {
+  const reader = document.querySelector('.reader');
+  const title = document.querySelector('.content h1, .m-content h1')?.textContent ?? '';
+  return reader ? `${title}. ${reader.textContent ?? ''}`.slice(0, 4000) : null;
+};
+
+interface HelpGroup { title: string; examples: { say: string; hint?: string }[] }
+
+/** Global spoken commands: navigation, «qué tengo pendiente», reading, library search, arcade and the companion. */
+export function VoiceNav({ compact = false }: { compact?: boolean }) {
   const { user } = useAuth();
   const navigate = useNavigate();
   const speech = useSpeech();
+  const client = useQueryClient();
+  const companion = useCompanion();
   const [toast, setToast] = useState<string | null>(null);
+  const [help, setHelp] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const floatingRef = useRef<HTMLDivElement>(null);
+  const student = user?.role === 'student';
+
+  const tell = useCallback((text: string) => { setToast(text); speech.speak(text); }, [speech]);
+
+  const readLesson = useCallback(async () => {
+    const now = lessonText();
+    if (now) { setToast('Leyendo la lección…'); speech.speak(now); return; }
+    const campus = await client.fetchQuery({ queryKey: ['campus'], queryFn: () => api<CampusSnapshot>('/api/campus'), staleTime: 30_000 }).catch(() => null);
+    const next = Object.values(campus?.pending ?? {}).flat().find((i) => i.link.startsWith('/app/lecciones/'));
+    if (!next) { tell('Abre una lección y vuelve a pedírmelo: te la leo completa.'); return; }
+    setToast(`Abriendo ${next.title}…`);
+    navigate(next.link);
+    for (let i = 0; i < 20; i += 1) {
+      await new Promise((r) => window.setTimeout(r, 400));
+      const text = lessonText();
+      if (text) { speech.speak(text); return; }
+    }
+    tell('La lección tardó en abrir. Dime «léeme la lección» cuando la veas.');
+  }, [client, navigate, speech, tell]);
 
   const commands = useMemo<(VoiceCommand & { say?: string })[]>(() => [
     ...destinations
       .filter((d) => !d.roles || (user && d.roles.includes(user.role)))
       .map((d) => ({ label: d.label, say: `Abriendo ${d.label}`, phrases: d.phrases, run: () => navigate(d.to) })),
+    { label: 'Notificaciones', say: 'Abriendo tus notificaciones', phrases: ['notificaciones', 'campana', 'mis avisos'], run: () => navigate('/app/notificaciones') },
+    {
+      label: 'Qué tengo pendiente',
+      phrases: ['que tengo pendiente', 'que tengo para hoy', 'que me falta', 'mis pendientes', 'que hay pendiente', 'que tengo que hacer'],
+      run: () => void client
+        .fetchQuery({ queryKey: ['campus'], queryFn: () => api<CampusSnapshot>('/api/campus'), staleTime: 30_000 })
+        .then((data) => tell(pendingSpeech(data, user?.role).text))
+        .catch(() => tell('No pude revisar tus pendientes ahora. Intenta de nuevo en un momento.')),
+    },
+    ...(student ? [{ label: 'Léeme la lección', phrases: ['leeme la leccion', 'lee la leccion', 'leer la leccion', 'leeme la clase'], run: () => void readLesson() }] : []),
+    { label: 'Qué puedo decir', phrases: ['que puedo decir', 'ayuda', 'comandos', 'que sabes hacer', 'que puedes hacer'], run: () => setHelp(true) },
     { label: 'Modo oscuro', say: 'Modo oscuro activado', phrases: ['modo oscuro', 'tema oscuro', 'apaga la luz'], run: () => setTheme('dark') },
     { label: 'Modo claro', say: 'Modo claro activado', phrases: ['modo claro', 'tema claro', 'prende la luz'], run: () => setTheme('light') },
     { label: 'Volver', phrases: ['volver', 'atras', 'regresar'], run: () => navigate(-1) },
-    { label: 'Leer página', phrases: ['lee la pagina', 'leer pagina', 'lee esto', 'leer en voz alta'], run: () => speech.speak(document.querySelector('.content')?.textContent?.slice(0, 1200) ?? '') },
+    { label: 'Leer página', phrases: ['lee la pagina', 'leer pagina', 'lee esto', 'leer en voz alta'], run: () => speech.speak(document.querySelector('.content, .m-content')?.textContent?.slice(0, 1200) ?? '') },
     { label: 'Silencio', phrases: ['silencio', 'callate', 'para de leer', 'detente'], run: () => speech.stop() },
-  ], [user, navigate, speech]);
+  ], [user, student, navigate, speech, client, tell, readLesson]);
 
-  const mic = useDictation((text) => {
-    const command = matchCommand(text, commands) as ((typeof commands)[number] | null);
-    if (command) {
+  const slots = useMemo<SlotCommand[]>(() => [
+    {
+      label: 'Buscar en la biblioteca',
+      prefixes: ['busca en la biblioteca', 'buscar en la biblioteca', 'busca en biblioteca', 'busca el libro', 'busca libros de', 'busca libros sobre', 'busca'],
+      run: (q) => navigate(`/app/biblioteca?q=${encodeURIComponent(q)}`),
+    },
+    {
+      label: `Preguntarle a ${companion.name}`,
+      prefixes: [`preguntale a ${companion.name}`, 'preguntale a luka', 'preguntale a luna', 'preguntale al tutor', 'pregunta al tutor', `${companion.name} pregunta`],
+      run: (q) => navigate(`/app/tutor?q=${encodeURIComponent(q)}&enviar=1`),
+    },
+    ...(student
+      ? [{
+          label: 'Empezar un reto',
+          prefixes: ['empieza un reto de', 'empieza un reto sobre', 'empezar un reto de', 'quiero un reto de', 'juguemos a', 'jugar a', 'reto de', 'empieza un juego de', 'juego de'],
+          run: (q: string) => navigate(`/app/jugar?buscar=${encodeURIComponent(q)}`),
+        }]
+      : []),
+  ], [navigate, companion.name, student]);
+
+  const groups = useMemo<HelpGroup[]>(() => [
+    { title: 'Moverte por el campus', examples: [{ say: 'abre la biblioteca' }, { say: 'ir a mis cursos' }, { say: student ? 'abre mi ruta' : 'abre la cartelera' }, { say: 'abre las notificaciones' }, { say: 'volver' }] },
+    {
+      title: 'Lo tuyo',
+      examples: [
+        { say: 'qué tengo pendiente', hint: 'te lo dice en voz alta' },
+        ...(student ? [{ say: 'léeme la lección', hint: 'la que tienes abierta o la siguiente pendiente' }] : []),
+        { say: 'lee la página' },
+        { say: 'silencio' },
+      ],
+    },
+    {
+      title: 'Buscar y preguntar',
+      examples: [
+        { say: 'busca en la biblioteca fotosíntesis' },
+        { say: `pregúntale a ${companion.name} cómo sumo fracciones` },
+        ...(student ? [{ say: 'empieza un reto de fracciones', hint: 'abre el juego del Arcade de ese tema' }] : []),
+      ],
+    },
+    { title: 'Apariencia', examples: [{ say: 'modo oscuro' }, { say: 'modo claro' }] },
+  ], [student, companion.name]);
+
+  const handle = useCallback((text: string) => {
+    const slot = matchSlot(text, slots);
+    const command = slot ? null : (matchCommand(text, commands) as (typeof commands)[number] | null);
+    if (slot) {
+      setToast(`«${text}» → ${slot.command.label}`);
+      slot.command.run(slot.arg);
+    } else if (command) {
       setToast(`«${text}» → ${command.label}`);
       if (command.say) speech.speak(command.say);
       command.run();
     } else {
-      setToast(`«${text}»: no encontré ese comando. Prueba «abre la biblioteca».`);
+      setToast(`«${text}»: no encontré ese comando.`);
+      setHelp(true);
     }
-  });
+  }, [slots, commands, speech]);
+
+  const mic = useDictation(handle);
 
   useEffect(() => {
     if (!toast) return;
-    const id = window.setTimeout(() => setToast(null), 3800);
+    const id = window.setTimeout(() => setToast(null), 4200);
     return () => window.clearTimeout(id);
   }, [toast]);
 
@@ -114,24 +239,82 @@ export function VoiceNav() {
     if (mic.error) setToast(mic.error);
   }, [mic.error]);
 
+  useEffect(() => {
+    if (!help) return;
+    const outside = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (!panelRef.current?.contains(target) && !floatingRef.current?.contains(target)) setHelp(false);
+    };
+    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') setHelp(false); };
+    document.addEventListener('pointerdown', outside);
+    document.addEventListener('keydown', escape);
+    return () => {
+      document.removeEventListener('pointerdown', outside);
+      document.removeEventListener('keydown', escape);
+    };
+  }, [help]);
+
+  const toggle = () => {
+    if (!voiceSupport.dictation) { setHelp((open) => !open); return; }
+    if (!mic.listening && !localStorage.getItem('eq_voice_help_seen')) {
+      localStorage.setItem('eq_voice_help_seen', '1');
+      setHelp(true);
+    }
+    mic.toggle();
+  };
+
+  const layers = (
+    <AnimatePresence>
+      {!help && (mic.listening || toast) && (
+        <motion.div className={`voice-toast${compact ? ' floating' : ''}`} initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}>
+          <span>{mic.listening ? mic.interim || 'Te escucho… di «qué tengo pendiente» o «abre la biblioteca».' : toast}</span>
+          <button type="button" className="voice-help-link" onClick={() => setHelp(true)}><HelpCircle size={14} /> Qué puedo decir</button>
+        </motion.div>
+      )}
+      {help && (
+        <motion.div className={`voice-help${compact ? ' floating' : ''}`} role="dialog" aria-label="Qué puedo decir" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}>
+          <div className="voice-help-head">
+            <span className="tile violet"><Mic size={16} /></span>
+            <div>
+              <b>Qué puedo decir</b>
+              <small>{mic.listening ? (mic.interim || 'Te escucho…') : 'Toca el micrófono y habla, o toca una frase para probarla.'}</small>
+            </div>
+            <button type="button" className="icon-btn sm" aria-label="Cerrar" onClick={() => setHelp(false)}><X size={16} /></button>
+          </div>
+          {groups.map((group) => (
+            <section key={group.title}>
+              <h3>{group.title}</h3>
+              <ul>
+                {group.examples.map((example) => (
+                  <li key={example.say}>
+                    <button type="button" onClick={() => { setHelp(false); handle(example.say); }}>
+                      «{example.say}»
+                      {example.hint && <small>{example.hint}</small>}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
+          {!voiceSupport.dictation && <p className="voice-help-note">{dictationUnavailable()} Puedes tocar las frases igual.</p>}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'relative' }} ref={panelRef}>
       <button
-        className={`icon-btn${mic.listening ? ' mic-on' : ''}`}
-        title={voiceSupport.dictation ? 'Comandos de voz: di «abre la biblioteca»' : dictationUnavailable()}
-        disabled={!voiceSupport.dictation}
-        onClick={mic.toggle}
+        className={`${compact ? 'm-icon' : 'icon-btn'}${mic.listening ? ' mic-on' : ''}`}
+        title={voiceSupport.dictation ? 'Comandos de voz: di «qué puedo decir»' : dictationUnavailable()}
+        aria-label="Comandos de voz"
+        onClick={toggle}
+        onContextMenu={(event) => { event.preventDefault(); setHelp(true); }}
         aria-pressed={mic.listening}
       >
-        {mic.listening ? <span className="mic-dot" /> : <Mic size={18} />}
+        {mic.listening ? <span className="mic-dot" /> : <Mic size={compact ? 21 : 18} />}
       </button>
-      <AnimatePresence>
-        {(mic.listening || toast) && (
-          <motion.div className="voice-toast" initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}>
-            {mic.listening ? mic.interim || 'Te escucho… di «abre la biblioteca» o «modo oscuro».' : toast}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {compact ? createPortal(<div ref={floatingRef}>{layers}</div>, document.body) : layers}
     </div>
   );
 }

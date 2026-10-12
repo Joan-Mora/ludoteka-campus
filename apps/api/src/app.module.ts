@@ -28,6 +28,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
 import { LegalModule } from './modules/legal/legal.module';
 import { GovernanceModule } from './modules/governance/governance.module';
 import { LearningProfileModule } from './modules/profile/profile.module';
+import { ArcadeModule } from './modules/arcade/arcade.module';
 import { throttlerModule } from './core/security/throttle';
 
 @Module({
@@ -66,6 +67,7 @@ import { throttlerModule } from './core/security/throttle';
     LegalModule,
     GovernanceModule,
     LearningProfileModule,
+    ArcadeModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: HttpExceptionFilter },

@@ -105,6 +105,16 @@ Constantes: modelo `face-api-resnet34-128`, descriptor de 128 valores entre −2
 
 No hay endpoints de voz. El dictado (`SpeechRecognition`), los comandos de navegación y la lectura en voz alta (`speechSynthesis`) corren solo en el navegador (`apps/web/src/shared/voice.ts`). El texto dictado llega a la API como texto normal, por ejemplo a `/tutor/chat`.
 
+El panel «Qué puedo decir» (`voice-ui.tsx`) lista los comandos según el rol y deja tocarlos. Los comandos usan rutas que ya existen:
+
+| Frase | Qué hace |
+|---|---|
+| «qué tengo pendiente» | Lee `GET /campus` y dice los totales por edificio y los dos primeros pendientes |
+| «léeme la lección» | Lee la lección abierta o abre la siguiente pendiente (`pending.aula`) y la lee |
+| «busca en la biblioteca …» | Abre `/app/biblioteca?q=…` |
+| «empieza un reto de …» | Abre `/app/jugar?buscar=…`, que busca el juego por código, tema o título y empieza la partida |
+| «pregúntale a Luka/Luna …» | Abre `/app/tutor?q=…&enviar=1`, que envía la pregunta y lee la respuesta en voz alta |
+
 ## 5. Reportes (PDF y Excel)
 
 Cada archivo lleva título, fecha, datos de la BD y el código `LK-AAAA-NNNNNN`, registrado en `report_log`.
@@ -160,6 +170,50 @@ El PDF lleva un QR y un pie con el código y la URL `APP_PUBLIC_URL/verificar-re
 
 `POST /news` acepta `official: true` solo de `rector` (`403 FORBIDDEN` para los demás); `GET /news/targets` devuelve `canOfficial`. En los foros, `canPost` es falso para coordinación y rectoría: leen y moderan, no publican.
 
+## 6 ter. Arcade, logros, notificaciones y campus (fase 4 de Ludoteka 2)
+
+**Arcade** (`arcade`, todo `@Roles('student')`). Las preguntas y respuestas viven en `arcade_sessions`; el cliente solo recibe enunciados y el servidor califica cada respuesta.
+
+| Método | Ruta | Notas |
+|---|---|---|
+| GET | `/arcade` | `{games[], daily, xpToday, xpCap}`. Cada juego trae su tema (el primero del estudiante para su generador), mejor puntaje y partidas. `daily` es el reto del día (mismo juego para todo el colegio, nivel 4, una partida) |
+| GET | `/arcade/ranking?scope=week\|daily` | Ranking del grupo: semana (suma del mejor puntaje por juego) o reto del día |
+| POST | `/arcade/sessions` | `{game, topicId?, daily?}` → `{id, game, level, daily, seconds, total, items[]}` sin respuestas. `403 KIOSK_ACTIVE` con un examen activo; `400 NOT_DAILY`, `409 DAILY_DONE`, `400 TOPIC_MISMATCH`, `409 NO_CONTENT` |
+| POST | `/arcade/sessions/:id/answer` | `{index, answer}` → `{ok, points, answer?, explanation}`. `409 TIME_UP` (plazo del juego más 3 s de gracia), `409 ALREADY_ANSWERED`, `400 BAD_INDEX`, `400 BAD_ANSWER` |
+| POST | `/arcade/sessions/:id/finish` | `{score, correct, total, xp, dailyBonus, capped, perfect, best, newBest}`. XP = hasta 30 por aciertos + 10 si es perfecta (máximo 40), +15 en el reto del día, con tope de 150 XP diarios. Repetir el cierre devuelve el mismo resultado |
+
+**Logros** (`gamification`).
+
+| Método | Ruta | Roles | Notas |
+|---|---|---|---|
+| GET | `/gamification/me` | Autenticado | XP, nivel, racha (vuelve a 0 si pasó más de un día), misiones, certificados y `achievements[]`: `{code, name, description, category, icon, tier (0 a 3), maxTier, thresholds[], progress, next, hidden, seasonal, isNew, awardedAt}`. Las ocultas no ganadas llegan sin nombre ni descripción. Más `season {id, name, endsAt}`, `pastSeasons[]` y `unseen` |
+| POST | `/gamification/seen` | `student` | Marca vistas las insignias nuevas; emite `badges.seen`, que también lee las notificaciones de logros |
+| GET | `/gamification/leaderboard` | Autenticado | Liga semanal |
+
+**Notificaciones** (`notifications`). Cada aviso tiene `kind` (`aviso`, `cartelera`, `foro`, `logro`, `integridad`, `seguimiento`, `citacion`, `mensaje`, `firma`, `certificado`), `link` (ruta interna `/app...` o nulo), `building` (edificio del campus) y `entity_id` (lo que lo originó).
+
+| Método | Ruta | Notas |
+|---|---|---|
+| GET | `/notifications?estado=sin-leer&tipo=<kind>&limite=<1..100>` | `{items[{id, title, body, kind, link, building, read_at, created_at}], unread, kinds[{kind, total, unread}]}` |
+| POST | `/notifications/:id/read` | Solo las propias (UUID validado) |
+| POST | `/notifications/read-all?tipo=<kind>` | Todas o solo las de un tipo |
+
+Leer un aviso de la cartelera (`news.read`) marca leída su notificación, y ver la sala de trofeos (`badges.seen`) marca leídas las de logros. Las insignias ganadas juntas generan una sola notificación.
+
+**Campus** (`analytics`). `GET /campus` → `{buildings: {aula, biblioteca, lab, arena, trofeos, cartelera, cuaderno, ruta}, pending: {<edificio>: [{title, meta, link}]}, pulse}`. Cada número cuenta lo que el usuario tiene **por hacer** en ese edificio y `pending` trae hasta 5 elementos navegables (solo para edificios con número mayor que 0):
+
+| Edificio | Estudiante | Docente | Acudiente | Coordinación | Rectoría |
+|---|---|---|---|---|---|
+| aula | Tareas sin entregar que vencen en ±7 días y la siguiente lección de cada curso | Entregas por calificar | Citaciones sin responder y mensajes sin leer | 0 | 0 |
+| cartelera | Avisos sin leer (todos los roles) | | | | |
+| biblioteca | Recursos visibles publicados desde la última visita (o en 14 días) | | | | |
+| arena | Salas de Arena y en vivo abiertas en las últimas 3 h | | | | |
+| trofeos | Insignias sin ver | 0 | 0 | 0 | 0 |
+| cuaderno | Tarjetas para repasar hoy | 0 | 0 | Alertas abiertas | Certificados y boletines por firmar |
+| ruta | Retos pendientes de la ruta | 0 | 0 | 0 | 0 |
+
+Las salas de Arena y en vivo sin cerrar en 3 horas se dan por terminadas al arrancar y cada 10 minutos.
+
 ## 7. Resto de módulos (resumen de rutas)
 
 | Módulo | Rutas principales |
@@ -177,9 +231,10 @@ El PDF lleva un QR y un pie con el código y la URL `APP_PUBLIC_URL/verificar-re
 | study | `/study`, `/study/pages[...]` (summary, cards), `/study/cards[...]`, `/study/goals`, `/study/focus[...]` |
 | library | `/library/{catalog,items,glossary,ask}`, `/library/uploads/ticket`, `/library/items/:id/{bookmark,reindex}` |
 | observatory | `GET /observatory/schema`, `GET /observatory/history`, `POST /observatory/ask` |
-| gamification | `/gamification/{me,leaderboard,minigames}` |
+| gamification | `GET /gamification/{me,leaderboard}`, `POST /gamification/seen` (sección 6 ter) |
+| arcade | `GET /arcade`, `GET /arcade/ranking`, `POST /arcade/sessions[/:id/{answer,finish}]` (sección 6 ter) |
 | certification | `POST /certificates`, `GET /certificates/mine` |
-| notifications | `GET /notifications`, `POST /notifications/:id/read` |
+| notifications | `GET /notifications`, `POST /notifications/:id/read`, `POST /notifications/read-all` (sección 6 ter) |
 | analytics | `GET /analytics/{courses/:id,institution,students/:id/overview}`, `GET /campus` |
 
 Los roles de cada ruta de `gradebook`, `study`, `observatory` y `library` (más allá de lo que muestra el listado): **no verificado** en detalle.
@@ -192,7 +247,7 @@ Los roles de cada ruta de `gradebook`, `study`, `observatory` y `library` (más 
 
 ## 9. Eventos de dominio (internos, `@nestjs/event-emitter`)
 
-`lesson.completed`, `submission.graded`, `attempt.graded`, `integrity.violation`, `integrity.suspend`, `password.reset`, `tutor.message`, `news.published`, `forum.reply`, `guardian.facial_revoked`, `route.solved`, `arena.finished`, `study.progress`, `risk.alert_raised`, `meeting.scheduled`, `meeting.responded`, `guardian.message`, `signature.requested`, `signature.decided` y `profile.saved`.
+`lesson.completed`, `submission.graded`, `attempt.graded`, `integrity.violation`, `integrity.suspend`, `password.reset`, `tutor.message`, `news.published`, `forum.reply`, `guardian.facial_revoked`, `route.solved`, `arena.finished`, `study.progress`, `risk.alert_raised`, `meeting.scheduled`, `meeting.responded`, `guardian.message`, `signature.requested`, `signature.decided`, `profile.saved`, `arcade.finished`, `badge.earned` (una sola vez por evaluación, con la lista `badges[{code, name, tier, maxTier}]`), `badges.seen` y `news.read`.
 
 ## 10. Códigos de error
 
@@ -212,8 +267,10 @@ Los roles de cada ruta de `gradebook`, `study`, `observatory` y `library` (más 
 | 403 | `FORBIDDEN`, `NO_ROLE`, `ACCOUNT_DISABLED`, `PASSWORD_CHANGE_REQUIRED`, `STEP_UP_REQUIRED` | Auth y roles |
 | 403 | `CONSENT_REQUIRED`, `GUARDIAN_CONSENT_REQUIRED`, `FACE_UNAVAILABLE` | Facial |
 | 403 | `GUARDIAN_MUST_ACCEPT` | Legal |
-| 403 | `KIOSK_ACTIVE` | Tutor |
+| 403 | `KIOSK_ACTIVE` | Tutor y Arcade |
+| 400 | `NOT_DAILY`, `TOPIC_MISMATCH`, `BAD_INDEX`, `BAD_ANSWER` | Arcade |
 | 404 | `NOT_FOUND` | General |
+| 409 | `DAILY_DONE`, `NO_CONTENT`, `FINISHED`, `TIME_UP`, `ALREADY_ANSWERED` | Arcade |
 | 423 | `FACE_LOCKED` | Facial |
 | 429 | `ACCOUNT_LOCKED`, `OTP_WAIT`, `OTP_LOCKED` | Login y OTP |
 | 500 | `INTERNAL` | Filtro global |

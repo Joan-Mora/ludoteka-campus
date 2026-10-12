@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useState, type ReactNode } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -104,7 +104,8 @@ export function NewsPage() {
   const { user } = useAuth();
   const canPublish = user && ['teacher', 'admin', 'coordinator', 'rector'].includes(user.role);
   const canForum = user && user.role !== 'guardian';
-  const [tab, setTab] = useState<'news' | 'forums'>('news');
+  const [params] = useSearchParams();
+  const [tab, setTab] = useState<'news' | 'forums'>(params.get('hilo') && canForum ? 'forums' : 'news');
   return (
     <div>
       <PageHeader eyebrow="Cartelera" title="Novedades y foros" subtitle="Circulares del colegio, avisos de tus cursos y conversación por materia." />
@@ -121,6 +122,9 @@ function NewsBoard({ canPublish }: { canPublish: boolean }) {
   const news = useQuery({ queryKey: ['news'], queryFn: () => api<NewsItem[]>('/api/news') });
   const [filter, setFilter] = useState<string>('all');
   const [open, setOpen] = useState<string | null>(null);
+  const [params] = useSearchParams();
+  const linked = params.get('aviso');
+  const opened = useRef(false);
   const items = (news.data ?? []).filter((n) => filter === 'all' || (filter === 'unread' ? !n.readAt && !n.canManage : n.category === filter));
   const unread = (news.data ?? []).filter((n) => !n.readAt && !n.canManage).length;
   const pendingAck = (news.data ?? []).filter((n) => n.requiresAck && !n.acknowledgedAt && !n.canManage).length;
@@ -136,8 +140,18 @@ function NewsBoard({ canPublish }: { canPublish: boolean }) {
     if (next && !item.readAt && !item.canManage && !item.scheduled) {
       await api(`/api/news/${item.id}/read`, { method: 'POST' });
       refresh();
+      client.invalidateQueries({ queryKey: ['notifications'] });
     }
   }
+
+  useEffect(() => {
+    if (!linked || opened.current || !news.data) return;
+    const item = news.data.find((n) => n.id === linked);
+    if (!item) return;
+    opened.current = true;
+    void expand(item);
+    window.setTimeout(() => document.getElementById(`aviso-${item.id}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 250);
+  });
 
   return (
     <div className="grid cols-3" style={{ alignItems: 'start' }}>
@@ -181,7 +195,7 @@ function NewsCard({ item, open, onToggle, onChange, delay }: { item: NewsItem; o
 
   return (
     <Reveal delay={delay} className={`card news-card${unread ? ' unread' : ''}${item.pinned ? ' pinned' : ''}${item.official ? ' official' : ''}`}>
-      <button className="news-head" onClick={onToggle} aria-expanded={open}>
+      <button id={`aviso-${item.id}`} className="news-head" onClick={onToggle} aria-expanded={open}>
         <Tile icon={item.official ? Crown : item.category === 'urgente' ? BellRing : item.category === 'evento' ? CalendarClock : Megaphone} tone={item.official ? 'gold' : cat.tone} />
         <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
           <div className="row g-8 wrap" style={{ marginBottom: 4 }}>
@@ -369,8 +383,9 @@ interface ThreadDetail extends ThreadSummary {
 
 function Forums() {
   const courses = useQuery({ queryKey: ['courses'], queryFn: () => api<{ id: string; title: string; subject: string; group_name: string }[]>('/api/courses') });
+  const [params] = useSearchParams();
   const [courseId, setCourseId] = useState<string>('');
-  const [threadId, setThreadId] = useState<string | null>(null);
+  const [threadId, setThreadId] = useState<string | null>(params.get('hilo'));
   const active = courseId || courses.data?.[0]?.id || '';
 
   if (!courses.isLoading && !courses.data?.length) return <Empty icon={BookOpen} title="Sin cursos" body="Los foros viven dentro de cada curso." />;

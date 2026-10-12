@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { sql } from 'kysely';
@@ -11,13 +11,39 @@ import { RealtimeService } from '../../core/realtime/realtime.service';
 import { LearningService } from '../learning/public-api';
 
 @Injectable()
-export class AssessmentService {
+export class AssessmentService implements OnApplicationBootstrap, OnModuleDestroy {
+  private readonly logger = new Logger('Evaluaciones');
+  private sweeper: NodeJS.Timeout | null = null;
+
   constructor(
     private readonly database: DatabaseService,
     private readonly learning: LearningService,
     private readonly events: EventEmitter2,
     private readonly realtime: RealtimeService,
   ) {}
+
+  onApplicationBootstrap() {
+    const sweep = () => void this.expireAbandonedLive().catch((error: Error) => this.logger.warn(`Barrido de salas en vivo: ${error.message}`));
+    this.sweeper = setInterval(sweep, 10 * 60_000);
+    this.sweeper.unref();
+    sweep();
+  }
+
+  onModuleDestroy() {
+    if (this.sweeper) clearInterval(this.sweeper);
+  }
+
+  /** Una sala en vivo que nadie cerró en 3 horas se da por terminada para que no siga contando en el campus. */
+  async expireAbandonedLive() {
+    const result = await this.database.db
+      .updateTable('live_sessions')
+      .set({ status: 'ended' })
+      .where('status', '<>', 'ended')
+      .where('created_at', '<', sql<Date>`now() - INTERVAL '3 hours'`)
+      .executeTakeFirst();
+    const closed = Number(result.numUpdatedRows);
+    if (closed) this.logger.log(`${closed} sala(s) en vivo abandonadas cerradas`);
+  }
 
   async listQuestions(subjectId?: string) {
     let query = this.database.db.selectFrom('questions').selectAll().orderBy('created_at', 'desc');

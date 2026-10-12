@@ -29,7 +29,7 @@ const LessonPage = page(classroom, 'LessonPage');
 const ExamPage = page(exam, 'ExamPage');
 const LivePage = page(exam, 'LivePage');
 const AchievementsPage = page(play, 'AchievementsPage');
-const GamesPage = page(play, 'GamesPage');
+const GamesPage = page(() => import('@/features/games/arcade'), 'GamesPage');
 const TutorPage = page(() => import('@/features/tutor'), 'TutorPage');
 const FacialPage = page(facial, 'FacialPage');
 const FacialLoginPage = page(facial, 'FacialLoginPage');
@@ -54,6 +54,7 @@ const ArenaRoomPage = page(arena, 'ArenaRoomPage');
 const ArenaProjectorPage = page(arena, 'ArenaProjectorPage');
 const StudyPage = page(() => import('@/features/study'), 'StudyPage');
 const GradebookPage = page(() => import('@/features/gradebook'), 'GradebookPage');
+const NotificationsPage = page(() => import('@/features/notifications'), 'NotificationsPage');
 const legal = () => import('@/features/legal');
 const LegalPage = page(legal, 'LegalPage');
 const AcceptPage = page(legal, 'AcceptPage');
@@ -106,6 +107,7 @@ const app: [string, ComponentType][] = [
   ['cursos/:id/aula', CourseDesk],
   ['lecciones/:id', LessonPage],
   ['logros', AchievementsPage],
+  ['notificaciones', NotificationsPage],
   ['jugar', GamesPage],
   ['tutor', TutorPage],
   ['rostro', FacialPage],

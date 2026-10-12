@@ -1,80 +1,229 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { AnimatePresence, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import {
   Award,
   BadgeCheck,
+  Book,
+  BookOpen,
+  Bookmark,
+  Brain,
+  Calendar,
+  CalendarCheck,
+  CalendarDays,
   Check,
-  Flag,
+  ClipboardCheck,
+  Compass,
+  Crown,
+  FileCheck,
   Flame,
+  Footprints,
   Gamepad2,
+  GraduationCap,
+  Grid3x3,
+  Heart,
+  HeartHandshake,
+  Layers,
+  Library,
+  Lightbulb,
   Lock,
+  Map as MapIcon,
+  Medal,
   MessageCircle,
+  MessagesSquare,
   PieChart,
-  Rocket,
+  Radio,
+  Shield,
+  Shuffle,
+  Sparkles,
+  SpellCheck,
   Star,
+  Sunrise,
+  Swords,
   Target,
   Timer,
   Trophy,
-  X,
+  UserCheck,
+  Video,
   Zap,
   type LucideIcon,
 } from 'lucide-react';
 import { api } from '@/shared/api';
-import { Bar, Empty, PageHeader, Reveal, Ring, Tile } from '@/ui';
+import { Bar, Empty, Reveal, Ring, Tile } from '@/ui';
 
-const badgeIcons: Record<string, LucideIcon> = { flag: Flag, flame: Flame, star: Star, message: MessageCircle };
-const badgeTones = ['var(--grad-brand)', 'linear-gradient(135deg, #ff9f43, #ff5d73)', 'var(--grad-gold)', 'var(--grad-sky)', 'var(--grad-mint)'];
+export interface Achievement {
+  code: string;
+  name: string;
+  description: string;
+  icon: string;
+  category: string;
+  hidden: boolean;
+  seasonal: boolean;
+  tier: number;
+  maxTier: number;
+  thresholds: number[];
+  progress: number;
+  next: number | null;
+  unit: string;
+  earnedAt: string | null;
+  isNew: boolean;
+}
+
+interface GameProfile {
+  xp: number;
+  level: { level: number; title: string; min_xp: number };
+  nextLevel: { min_xp: number; title: string } | null;
+  streak: { current: number; best: number; lastActivityOn: string | null };
+  achievements: Achievement[];
+  unseen: number;
+  season: { id: string; name: string; startsOn: string; endsOn: string } | null;
+  pastSeasons: { season: string; name: string; badges: number; golds: number }[];
+  missions: { code: string; title: string; description: string; progress: number; goal_count: number; xp_reward: number; completed_at: string | null }[];
+}
+
+const ICONS: Record<string, LucideIcon> = {
+  award: Award, book: Book, bookmark: Bookmark, brain: Brain, calendar: Calendar, 'calendar-check': CalendarCheck, 'calendar-days': CalendarDays,
+  clipboard: ClipboardCheck, compass: Compass, crown: Crown, 'file-check': FileCheck, flame: Flame, footprints: Footprints, gamepad: Gamepad2,
+  graduation: GraduationCap, grid: Grid3x3, heart: Heart, 'heart-handshake': HeartHandshake, layers: Layers, library: Library, lightbulb: Lightbulb,
+  lock: Lock, map: MapIcon, medal: Medal, message: MessageCircle, messages: MessagesSquare, pie: PieChart, radio: Radio, shield: Shield, shuffle: Shuffle,
+  sparkles: Sparkles, spell: SpellCheck, star: Star, stars: Sparkles, sunrise: Sunrise, swords: Swords, target: Target, timer: Timer, trophy: Trophy,
+  'user-check': UserCheck, video: Video, zap: Zap,
+};
+
+const SHELVES: { id: string; title: string; body: string; icon: LucideIcon }[] = [
+  { id: 'constancia', title: 'Constancia', body: 'Volver cada día es lo que más suma.', icon: Flame },
+  { id: 'dominio', title: 'Dominio', body: 'Lecciones, evaluaciones y el sendero de Mi ruta.', icon: GraduationCap },
+  { id: 'exploracion', title: 'Exploración', body: 'Usar todo el campus: Cuaderno, Luka y Mi espacio.', icon: Compass },
+  { id: 'colaboracion', title: 'Colaboración', body: 'Foros, Arena por equipos y clases en vivo.', icon: HeartHandshake },
+  { id: 'arcade', title: 'Arcade', body: 'Partidas verificadas y el reto del día.', icon: Gamepad2 },
+  { id: 'biblioteca', title: 'Biblioteca', body: 'Leer, ver y guardar recursos.', icon: BookOpen },
+  { id: 'perfil', title: 'Cómo aprendo', body: 'Conocer y aprovechar tu forma de aprender.', icon: Lightbulb },
+];
+
+const TIER_NAMES = ['Por ganar', 'Bronce', 'Plata', 'Oro'];
+type Filter = 'all' | 'earned' | 'pending' | 'new';
+
+function tierClass(badge: Achievement) {
+  if (!badge.tier) return 'none';
+  if (badge.maxTier === 1) return 'gold';
+  return ['none', 'bronze', 'silver', 'gold'][badge.tier] ?? 'gold';
+}
+
+function tierLabel(badge: Achievement) {
+  if (!badge.tier) return badge.hidden ? 'Secreta' : 'Por ganar';
+  if (badge.maxTier === 1) return 'Única';
+  return TIER_NAMES[badge.tier] ?? 'Oro';
+}
+
+function Medallion({ badge, fresh, index }: { badge: Achievement; fresh: boolean; index: number }) {
+  const Icon = ICONS[badge.icon] ?? Award;
+  const secret = badge.hidden && !badge.tier;
+  const floor = badge.tier ? badge.thresholds[badge.tier - 1] ?? 0 : 0;
+  const ratio = badge.next ? Math.max(0, Math.min(100, ((badge.progress - floor) / Math.max(1, badge.next - floor)) * 100)) : 100;
+  return (
+    <Reveal delay={Math.min(index, 8) * 0.03}>
+      <article className={`trophy tier-${tierClass(badge)} ${secret ? 'secret' : ''} ${fresh ? 'fresh' : ''}`} data-code={badge.code}>
+        {fresh && <span className="trophy-new">Nuevo</span>}
+        <motion.div className="trophy-medal" whileHover={badge.tier ? { rotate: [0, -6, 6, 0], scale: 1.05 } : undefined}>
+          {secret ? <Lock size={28} /> : <Icon size={32} strokeWidth={2.1} />}
+        </motion.div>
+        <h3>{badge.name}</h3>
+        <p>{badge.description}</p>
+        {!secret && badge.maxTier > 1 && (
+          <div className="trophy-pips" aria-label={`Nivel ${badge.tier} de ${badge.maxTier}`}>
+            {badge.thresholds.map((value, i) => (
+              <span key={value} className={i < badge.tier ? `on t${i + 1}` : ''} title={`${TIER_NAMES[i + 1]}: ${value} ${badge.unit}`} />
+            ))}
+          </div>
+        )}
+        <div className="trophy-foot">
+          <span className={`trophy-tier ${tierClass(badge)}`}>{tierLabel(badge)}</span>
+          {!secret && badge.next !== null && (
+            <span className="trophy-count">
+              {Math.min(badge.progress, badge.next)}/{badge.next} {badge.unit}
+            </span>
+          )}
+          {!secret && badge.next === null && badge.tier > 0 && <span className="trophy-count done"><Check size={13} /> Completa</span>}
+        </div>
+        {!secret && badge.next !== null && <Bar value={ratio} tone={badge.tier ? 'gold' : undefined} thin />}
+      </article>
+    </Reveal>
+  );
+}
 
 export function AchievementsPage() {
-  const game = useQuery({
-    queryKey: ['me-game'],
-    queryFn: () => api<{
-      xp: number;
-      level: { level: number; title: string; min_xp: number };
-      nextLevel: { min_xp: number; title: string } | null;
-      streak: { current: number; best: number };
-      badges: { code: string; name: string; description: string; icon: string }[];
-      catalog: { code: string; name: string; description: string; icon: string }[];
-      missions: { code: string; title: string; description: string; progress: number; goal_count: number; xp_reward: number; completed_at: string | null }[];
-    }>('/api/gamification/me'),
-  });
+  const client = useQueryClient();
+  const game = useQuery({ queryKey: ['me-game'], queryFn: () => api<GameProfile>('/api/gamification/me') });
   const certs = useQuery({
     queryKey: ['certs'],
     queryFn: () => api<{ code: string; title: string; course_title: string | null }[]>('/api/certificates/mine'),
   });
-  const owned = new Set(game.data?.badges.map((b) => b.code));
-  const xp = game.data?.xp ?? 0;
-  const floor = game.data?.level.min_xp ?? 0;
-  const next = game.data?.nextLevel?.min_xp ?? xp + 1;
-  const ratio = Math.round(((xp - floor) / Math.max(1, next - floor)) * 100);
+  const [filter, setFilter] = useState<Filter>('all');
+  const [fresh, setFresh] = useState<Set<string> | null>(null);
+
+  useEffect(() => {
+    if (!game.data || fresh) return;
+    setFresh(new Set(game.data.achievements.filter((a) => a.isNew).map((a) => a.code)));
+    if (game.data.unseen > 0) {
+      void api('/api/gamification/seen', { method: 'POST' })
+        .then(() => Promise.all(['me-game', 'campus', 'notifications'].map((key) => client.invalidateQueries({ queryKey: [key] }))))
+        .catch(() => undefined);
+    }
+  }, [game.data, fresh, client]);
+
+  const data = game.data;
+  const all = data?.achievements ?? [];
+  const isFresh = (code: string) => Boolean(fresh?.has(code));
+  const visible = (badge: Achievement) =>
+    filter === 'all' || (filter === 'earned' && badge.tier > 0) || (filter === 'pending' && badge.tier === 0) || (filter === 'new' && isFresh(badge.code));
+
+  const xp = data?.xp ?? 0;
+  const floor = data?.level.min_xp ?? 0;
+  const nextXp = data?.nextLevel?.min_xp ?? xp + 1;
+  const ratio = Math.round(((xp - floor) / Math.max(1, nextXp - floor)) * 100);
+  const permanent = all.filter((a) => !a.seasonal);
+  const points = permanent.reduce((sum, a) => sum + a.tier, 0);
+  const maxPoints = permanent.reduce((sum, a) => sum + a.maxTier, 0);
+  const golds = permanent.filter((a) => a.tier > 0 && a.tier === a.maxTier).length;
+  const earned = permanent.filter((a) => a.tier > 0).length;
+  const seasonal = all.filter((a) => a.seasonal);
+  const closest = permanent
+    .filter((a) => !a.hidden && a.next !== null)
+    .map((a) => {
+      const base = a.tier ? a.thresholds[a.tier - 1] ?? 0 : 0;
+      return { badge: a, ratio: (a.progress - base) / Math.max(1, (a.next ?? 0) - base) };
+    })
+    .sort((x, y) => y.ratio - x.ratio)
+    .slice(0, 3);
+  const newCount = fresh?.size ?? 0;
 
   return (
-    <div className="stack g-24">
+    <div className="stack g-24 trophy-room">
       <Reveal>
         <section className="hero">
           <div className="orb" style={{ width: 360, height: 360, right: -100, top: -140, background: 'radial-gradient(circle, rgba(255,200,61,.4), transparent 70%)' }} />
           <div className="row g-24 wrap" style={{ position: 'relative' }}>
             <Ring value={ratio} size={150} stroke={14}>
               <Trophy size={30} color="#ffd66b" />
-              <div className="display" style={{ fontSize: 34 }}>N{game.data?.level.level ?? 1}</div>
+              <div className="display" style={{ fontSize: 34 }}>N{data?.level.level ?? 1}</div>
             </Ring>
-            <div style={{ flex: 1, minWidth: 260 }}>
+            <div style={{ flex: 1, minWidth: 240 }}>
               <div className="eyebrow" style={{ color: '#ffd66b' }}>Sala de trofeos</div>
-              <h1 style={{ marginTop: 8 }}>{game.data?.level.title ?? 'Aprendiz'}</h1>
-              <p style={{ marginTop: 8, fontSize: 16 }}>{game.data?.nextLevel ? `Te faltan ${next - xp} XP para llegar a ${game.data.nextLevel.title}.` : 'Alcanzaste el nivel máximo.'}</p>
+              <h1 style={{ marginTop: 8 }}>{data?.level.title ?? 'Aprendiz'}</h1>
+              <p style={{ marginTop: 8, fontSize: 16 }}>{data?.nextLevel ? `Te faltan ${nextXp - xp} XP para llegar a ${data.nextLevel.title}.` : 'Alcanzaste el nivel máximo.'}</p>
               <div style={{ marginTop: 16, maxWidth: 420 }}><Bar value={ratio} tone="gold" /></div>
             </div>
-            <div className="row g-12 wrap">
+            <div className="trophy-stats">
               {[
                 { icon: Zap, label: 'XP total', value: xp },
-                { icon: Flame, label: 'Mejor racha', value: game.data?.streak.best ?? 0 },
-                { icon: Award, label: 'Insignias', value: `${owned.size}/${game.data?.catalog.length ?? 0}` },
+                { icon: Flame, label: data?.streak.current ? 'Racha actual' : 'Racha (rota)', value: `${data?.streak.current ?? 0} d` },
+                { icon: Award, label: 'Insignias', value: `${earned}/${permanent.length}` },
+                { icon: Crown, label: 'De oro', value: golds },
               ].map((item) => (
-                <div key={item.label} className="glass" style={{ padding: '14px 18px', minWidth: 120 }}>
-                  <item.icon size={20} color="#ffd66b" />
-                  <div className="display" style={{ fontSize: 26, marginTop: 6 }}>{item.value}</div>
-                  <div style={{ fontSize: 12, color: '#cfc9ff', fontWeight: 700 }}>{item.label}</div>
+                <div key={item.label} className="glass">
+                  <item.icon size={18} color="#ffd66b" />
+                  <div className="display">{item.value}</div>
+                  <div className="lbl">{item.label}</div>
                 </div>
               ))}
             </div>
@@ -82,33 +231,95 @@ export function AchievementsPage() {
         </section>
       </Reveal>
 
-      <div>
-        <h2 style={{ fontSize: 22, marginBottom: 14 }}>Insignias</h2>
-        <div className="grid cols-4">
-          {(game.data?.catalog ?? []).map((badge, i) => {
-            const Icon = badgeIcons[badge.icon] ?? Award;
-            const has = owned.has(badge.code);
-            return (
-              <Reveal key={badge.code} delay={i * 0.05}>
-                <article className={`card hover badge-card ${has ? '' : 'locked'}`}>
-                  <motion.div className="badge-medal" style={{ background: badgeTones[i % badgeTones.length] }} whileHover={has ? { rotate: [0, -8, 8, 0], scale: 1.06 } : undefined}>
-                    {has ? <Icon size={38} strokeWidth={2.2} /> : <Lock size={30} />}
-                  </motion.div>
-                  <h3 style={{ fontSize: 17 }}>{badge.name}</h3>
-                  <p className="muted" style={{ fontSize: 13.5, marginTop: 6, lineHeight: 1.5 }}>{badge.description}</p>
-                  <div style={{ marginTop: 12 }}>{has ? <span className="chip mint"><Check size={13} /> Desbloqueada</span> : <span className="chip">Bloqueada</span>}</div>
-                </article>
-              </Reveal>
-            );
-          })}
+      {data && (
+        <div className="trophy-top">
+          <Reveal className="card trophy-season">
+            <div className="card-head">
+              <div className="row g-12">
+                <Tile icon={CalendarDays} tone="gold" />
+                <div>
+                  <div className="card-title">Temporada {data.season?.name ?? 'sin periodo activo'}</div>
+                  <div className="muted" style={{ fontSize: 13 }}>
+                    {data.season ? `Del ${data.season.startsOn} al ${data.season.endsOn}. Se reinicia con cada periodo.` : 'Las insignias de temporada se activan cuando empieza un periodo.'}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="trophy-shelf season">
+              {seasonal.map((badge, i) => <Medallion key={badge.code} badge={badge} fresh={isFresh(badge.code)} index={i} />)}
+            </div>
+            {data.pastSeasons.length > 0 && (
+              <div className="trophy-past">
+                <b>Temporadas anteriores</b>
+                {data.pastSeasons.map((s) => (
+                  <span key={s.season} className="chip"><Medal size={13} /> {s.name}: {s.badges} insignias · {s.golds} de oro</span>
+                ))}
+              </div>
+            )}
+          </Reveal>
+          <Reveal className="card trophy-next" delay={0.05}>
+            <div className="card-head"><div className="row g-12"><Tile icon={Target} tone="mint" /><div className="card-title">Más cerca de subir</div></div></div>
+            <div className="stack g-12">
+              {closest.map(({ badge }) => {
+                const Icon = ICONS[badge.icon] ?? Award;
+                return (
+                  <div key={badge.code} className="trophy-close">
+                    <span className={`trophy-mini tier-${tierClass(badge)}`}><Icon size={18} /></span>
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <b>{badge.name}</b>
+                      <div className="muted" style={{ fontSize: 12.5 }}>{badge.maxTier > 1 ? TIER_NAMES[badge.tier + 1] : 'Desbloquear'}: {badge.progress}/{badge.next} {badge.unit}</div>
+                    </div>
+                  </div>
+                );
+              })}
+              {!closest.length && <Empty icon={Crown} title="Todo en oro" body="Ya no te quedan niveles por subir." />}
+            </div>
+            <div className="muted" style={{ fontSize: 12.5, marginTop: 12 }}>Puntos de colección: <b>{points}/{maxPoints}</b> (bronce 1, plata 2, oro 3).</div>
+          </Reveal>
         </div>
+      )}
+
+      <div className="seg-tabs" role="tablist" aria-label="Filtrar insignias">
+        {([
+          ['all', 'Todas'],
+          ['earned', 'Ganadas'],
+          ['pending', 'Por ganar'],
+          ['new', 'Nuevas'],
+        ] as [Filter, string][]).map(([id, label]) => (
+          <button key={id} role="tab" aria-selected={filter === id} className={filter === id ? 'on' : ''} onClick={() => setFilter(id)}>
+            {label}
+            {id === 'new' && newCount > 0 && <span className="seg-badge">{newCount}</span>}
+          </button>
+        ))}
       </div>
+
+      {SHELVES.map((shelf) => {
+        const items = permanent.filter((a) => a.category === shelf.id).filter(visible);
+        if (!items.length) return null;
+        const mine = permanent.filter((a) => a.category === shelf.id);
+        return (
+          <section key={shelf.id} className="trophy-section" aria-label={shelf.title}>
+            <header>
+              <Tile icon={shelf.icon} tone="violet" />
+              <div style={{ flex: 1 }}>
+                <h2>{shelf.title}</h2>
+                <p className="muted">{shelf.body}</p>
+              </div>
+              <span className="chip">{mine.filter((a) => a.tier > 0).length}/{mine.length}</span>
+            </header>
+            <div className="trophy-shelf">
+              {items.map((badge, i) => <Medallion key={badge.code} badge={badge} fresh={isFresh(badge.code)} index={i} />)}
+            </div>
+          </section>
+        );
+      })}
+      {data && filter === 'new' && newCount === 0 && <Empty icon={Sparkles} title="Nada nuevo por ahora" body="Cuando ganes o subas una insignia aparecerá aquí." />}
 
       <div className="grid cols-2" style={{ alignItems: 'start' }}>
         <Reveal className="card">
-          <div className="card-head"><div className="row g-12"><Tile icon={Target} tone="mint" /><div className="card-title">Misiones</div></div></div>
+          <div className="card-head"><div className="row g-12"><Tile icon={Target} tone="mint" /><div className="card-title">Misiones de la semana</div></div></div>
           <div className="stack g-16">
-            {(game.data?.missions ?? []).map((mission) => {
+            {(data?.missions ?? []).map((mission) => {
               const complete = mission.progress >= mission.goal_count;
               return (
                 <div key={mission.code} className="row g-16" style={{ padding: 14, borderRadius: 16, background: 'var(--surface-2)' }}>
@@ -139,172 +350,6 @@ export function AchievementsPage() {
           </div>
         </Reveal>
       </div>
-    </div>
-  );
-}
-
-function makeRace() {
-  const a = 2 + Math.floor(Math.random() * 9);
-  const b = 2 + Math.floor(Math.random() * 9);
-  return { prompt: `${a} × ${b}`, answer: a * b };
-}
-
-type Mode = 'carrera' | 'fracciones';
-
-export function GamesPage() {
-  const client = useQueryClient();
-  const [mode, setMode] = useState<Mode | null>(null);
-  const [index, setIndex] = useState(0);
-  const [score, setScore] = useState(0);
-  const [flash, setFlash] = useState<'ok' | 'bad' | null>(null);
-  const [result, setResult] = useState<{ xp: number; score: number } | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const race = useMemo(() => Array.from({ length: 6 }, makeRace), [mode]);
-  const fractions = [
-    { prompt: '¿Cuál es mayor?', left: '1/2', right: '1/3', answer: '1/2' },
-    { prompt: '¿Cuál es mayor?', left: '3/4', right: '2/3', answer: '3/4' },
-    { prompt: '¿Cuál equivale a 1/2?', left: '2/4', right: '2/5', answer: '2/4' },
-    { prompt: '¿Cuál es mayor?', left: '5/8', right: '1/2', answer: '5/8' },
-  ];
-  const total = mode === 'carrera' ? race.length : fractions.length;
-
-  function begin(next: Mode) {
-    setMode(next);
-    setIndex(0);
-    setScore(0);
-    setResult(null);
-    setTimeout(() => inputRef.current?.focus(), 50);
-  }
-
-  async function finish(game: Mode, points: number) {
-    const data = await api<{ xp: number }>('/api/gamification/minigames', { method: 'POST', body: JSON.stringify({ game, score: points }) });
-    setResult({ xp: data.xp, score: points });
-    setMode(null);
-    client.invalidateQueries({ queryKey: ['me-game'] });
-  }
-
-  function step(ok: boolean, gain: number, game: Mode) {
-    setFlash(ok ? 'ok' : 'bad');
-    setTimeout(() => setFlash(null), 350);
-    const nextScore = score + (ok ? gain : 0);
-    if (index + 1 >= total) finish(game, nextScore);
-    else { setScore(nextScore); setIndex(index + 1); }
-  }
-
-  const games = [
-    { id: 'carrera' as const, title: 'Carrera numérica', body: 'Seis multiplicaciones a toda velocidad. Sin calculadora.', icon: Rocket, bg: 'linear-gradient(135deg, #7c5cff, #3a7bff)', tag: '×  Tablas', meta: '6 rondas · 10 pts' },
-    { id: 'fracciones' as const, title: 'Fracciones al blanco', body: 'Elige la fracción correcta y da en el centro.', icon: PieChart, bg: 'linear-gradient(135deg, #ff9f43, #ff5d73)', tag: '½  Fracciones', meta: '4 rondas · 15 pts' },
-  ];
-
-  return (
-    <div>
-      <PageHeader eyebrow="Arcade" title="Refuerzo jugando" subtitle="Minijuegos cortos para después de la lección. Suman XP, nunca durante un examen." />
-
-      <AnimatePresence>
-        {result && (
-          <motion.div className="card" style={{ marginBottom: 20, background: 'var(--grad-night)', color: '#fff', border: 0 }} initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
-            <div className="row g-20 wrap">
-              <motion.div initial={{ rotate: -20, scale: 0 }} animate={{ rotate: 0, scale: 1 }} transition={{ type: 'spring' }}><Tile icon={Trophy} tone="gold" large /></motion.div>
-              <div style={{ flex: 1 }}>
-                <div className="display" style={{ fontSize: 28 }}>¡Partida terminada!</div>
-                <div style={{ color: '#cfc9ff' }}>Puntaje {result.score} · sumaste <b style={{ color: '#ffd66b' }}>+{result.xp} XP</b></div>
-              </div>
-              <button className="btn white" onClick={() => setResult(null)}>Seguir jugando</button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {!mode && (
-        <div className="grid cols-2">
-          {games.map((game, i) => (
-            <Reveal key={game.id} delay={i * 0.08}>
-              <button className="card hover arcade" style={{ width: '100%' }} onClick={() => begin(game.id)}>
-                <div className="arcade-top" style={{ background: game.bg, color: '#fff' }}>
-                  <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,.18) 1px, transparent 1px)', backgroundSize: '18px 18px' }} />
-                  <motion.div animate={{ y: [0, -8, 0] }} transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}>
-                    <game.icon size={72} strokeWidth={1.8} />
-                  </motion.div>
-                  <span className="chip" style={{ position: 'absolute', top: 14, left: 14, background: 'rgba(255,255,255,.2)', color: '#fff', border: 0 }}>{game.tag}</span>
-                </div>
-                <div style={{ padding: 22 }}>
-                  <h3 style={{ fontSize: 22 }}>{game.title}</h3>
-                  <p className="muted" style={{ marginTop: 6 }}>{game.body}</p>
-                  <div className="row between" style={{ marginTop: 16 }}>
-                    <span className="chip"><Timer size={13} /> {game.meta}</span>
-                    <span className="btn sm"><Gamepad2 size={15} /> Jugar</span>
-                  </div>
-                </div>
-              </button>
-            </Reveal>
-          ))}
-        </div>
-      )}
-
-      {mode && (
-        <motion.div
-          className="card"
-          style={{ padding: 0, overflow: 'hidden', maxWidth: 760, margin: '0 auto' }}
-          animate={flash === 'bad' ? { x: [0, -10, 10, -6, 6, 0] } : { x: 0 }}
-          transition={{ duration: 0.35 }}
-        >
-          <div style={{ background: mode === 'carrera' ? games[0]!.bg : games[1]!.bg, color: '#fff', padding: '18px 24px' }}>
-            <div className="row between">
-              <b>{mode === 'carrera' ? 'Carrera numérica' : 'Fracciones al blanco'}</b>
-              <div className="row g-12">
-                <span className="chip" style={{ background: 'rgba(255,255,255,.2)', color: '#fff', border: 0 }}><Zap size={13} /> {score} pts</span>
-                <button className="icon-btn" style={{ width: 34, height: 34, background: 'rgba(255,255,255,.15)', borderColor: 'transparent', color: '#fff' }} onClick={() => setMode(null)}><X size={16} /></button>
-              </div>
-            </div>
-            <div style={{ marginTop: 12 }}>
-              <div className="bar" style={{ background: 'rgba(255,255,255,.25)' }}><span style={{ width: `${(index / total) * 100}%`, background: '#fff' }} /></div>
-              <div style={{ fontSize: 12, fontWeight: 700, marginTop: 6, opacity: 0.85 }}>Ronda {index + 1} de {total}</div>
-            </div>
-          </div>
-          <div style={{ padding: '40px 28px', textAlign: 'center', background: flash === 'ok' ? 'rgba(25,195,156,.1)' : flash === 'bad' ? 'rgba(255,93,115,.08)' : undefined, transition: 'background .2s' }}>
-            {mode === 'carrera' && race[index] && (
-              <>
-                <AnimatePresence mode="wait">
-                  <motion.div key={index} className="big-number" initial={{ scale: 0.6, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 1.2, opacity: 0 }}>{race[index].prompt}</motion.div>
-                </AnimatePresence>
-                <form
-                  className="row g-12"
-                  style={{ justifyContent: 'center', marginTop: 24 }}
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    const input = inputRef.current;
-                    if (!input || input.value === '') return;
-                    step(Number(input.value) === race[index]!.answer, 10, 'carrera');
-                    input.value = '';
-                    input.focus();
-                  }}
-                >
-                  <input ref={inputRef} type="number" autoFocus placeholder="?" style={{ width: 180, textAlign: 'center', fontSize: 32, fontWeight: 800, padding: '12px 16px', borderRadius: 18, border: '2px solid var(--line)', background: 'var(--surface-2)' }} />
-                  <button className="btn lg" type="submit">Enviar</button>
-                </form>
-              </>
-            )}
-            {mode === 'fracciones' && fractions[index] && (
-              <>
-                <h2 style={{ fontSize: 30 }}>{fractions[index].prompt}</h2>
-                <div className="grid cols-2" style={{ marginTop: 28, maxWidth: 520, marginLeft: 'auto', marginRight: 'auto' }}>
-                  {[fractions[index].left, fractions[index].right].map((value, i) => (
-                    <motion.button
-                      key={value + index}
-                      whileHover={{ scale: 1.04 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => step(value === fractions[index]!.answer, 15, 'fracciones')}
-                      style={{ border: 0, borderRadius: 24, padding: '36px 0', color: '#fff', background: i === 0 ? 'var(--grad-brand)' : 'var(--grad-sky)', boxShadow: 'inset 0 -6px 0 rgba(0,0,0,.18)' }}
-                    >
-                      <div className="big-number" style={{ fontSize: 64 }}>{value}</div>
-                    </motion.button>
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
-        </motion.div>
-      )}
     </div>
   );
 }

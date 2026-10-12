@@ -246,9 +246,33 @@ export const liveJoinSchema = z.object({
   code: z.string().min(4).max(8),
 });
 
-export const minigameSchema = z.object({
-  game: z.enum(['carrera', 'fracciones']),
-  score: z.number().int().min(0).max(500),
+/** Arcade: el servidor genera y califica; `ui` dice qué tablero dibuja la web. */
+export const ARCADE_GAMES = ['carrera', 'fracciones', 'memoria', 'recta', 'ordena', 'torre', 'mercado', 'area', 'ahorcado', 'quiz'] as const;
+export type ArcadeGame = (typeof ARCADE_GAMES)[number];
+export type ArcadeUi = 'input' | 'choice' | 'memory' | 'line' | 'order' | 'grid' | 'hangman';
+
+export const ARCADE_INFO: Record<ArcadeGame, { title: string; body: string; ui: ArcadeUi; tag: string; topic: string | null }> = {
+  carrera: { title: 'Carrera numérica', body: 'Cálculo mental contra el reloj: tablas y operaciones combinadas.', ui: 'input', tag: '× Cálculo', topic: 'order_ops' },
+  fracciones: { title: 'Fracciones al blanco', body: 'Elige la fracción mayor o la equivalente y da en el centro.', ui: 'choice', tag: '½ Fracciones', topic: 'simplify' },
+  memoria: { title: 'Memoria de equivalencias', body: 'Voltea cartas y une la fracción con su decimal o su porcentaje.', ui: 'memory', tag: '% Equivalencias', topic: 'percent' },
+  recta: { title: 'Recta numérica', body: 'Ubica decimales y fracciones en la recta: entre más cerca, más puntos.', ui: 'line', tag: '0,5 Decimales', topic: 'decimal' },
+  ordena: { title: 'Ordena la operación', body: 'Pon los pasos en el orden correcto: paréntesis, multiplicación y suma.', ui: 'order', tag: '( ) Orden', topic: 'order_ops' },
+  torre: { title: 'Torre MCD/MCM', body: 'Cada respuesta correcta sube un bloque. ¿Hasta dónde llega tu torre?', ui: 'input', tag: 'MCD MCM', topic: 'gcd_lcm' },
+  mercado: { title: 'Mercado de porcentajes', body: 'Descuentos y aumentos de la tienda: ¿cuánto pagas?', ui: 'choice', tag: '$ Compras', topic: 'percent' },
+  area: { title: 'Construye el área', body: 'Arma rectángulos en la cuadrícula con el área o el perímetro pedido.', ui: 'grid', tag: 'cm² Área', topic: 'area' },
+  ahorcado: { title: 'Ahorcado del glosario', body: 'Adivina el término de la biblioteca a partir de su definición.', ui: 'hangman', tag: 'Aa Glosario', topic: null },
+  quiz: { title: 'Quiz relámpago', body: 'Definiciones de la biblioteca a toda velocidad: elige el término.', ui: 'choice', tag: '? Biblioteca', topic: null },
+};
+
+export const arcadeStartSchema = z.object({
+  game: z.enum(ARCADE_GAMES),
+  topicId: z.string().uuid().optional(),
+  daily: z.boolean().optional(),
+});
+
+export const arcadeAnswerSchema = z.object({
+  index: z.number().int().min(0).max(40),
+  answer: z.string().trim().min(1).max(40),
 });
 
 /** Métodos de «Descubre cómo aprendes»; el resto del cuestionario está más abajo. */

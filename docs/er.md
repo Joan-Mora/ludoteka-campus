@@ -2,7 +2,7 @@
 
 > Última revisión: 2026-10-09 · Responsable: Cronista
 > **Nombre:** Ludoteka Campus (nombre pendiente de confirmar por Darwin; antes EduQuest).
-> **Cobertura:** migraciones 0000 a 0019. Las tablas de 0018 y 0019 se transcribieron del SQL del repo (2Klair, sin commit al 2026-10-09). El resto sale del catálogo de producción.
+> **Cobertura:** migraciones 0000 a 0027. Las tablas de 0018 y 0019 se transcribieron del SQL del repo (2Klair, sin commit al 2026-10-09). El resto sale del catálogo de producción, salvo lo de Ludoteka 2 (0020 a 0027), que se transcribió del SQL y lleva el número de su migración en cada tabla o columna nueva. Los indicadores de abajo no incluyen 0020 a 0027.
 
 Evidencia de la base de datos del parcial. El SQL ejecutable está en `db/migrations/` (0000 a 0019) y se aplica con `npm run migrate`. La tabla `schema_migrations` registra qué archivo corrió y cuándo.
 
@@ -220,12 +220,15 @@ Documentos legales versionados (Ley 1581 de 2012 y Decreto 1377 de 2013) y solic
 |---|---|---|---|
 | `levels` | **level** INT8<br>min_xp INT8<br>title STRING | PK (level) | — |
 | `xp_ledger` | **id** UUID<br>user_id (FK) UUID<br>amount INT8<br>reason STRING<br>source_type STRING<br>source_id STRING NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK user_id → users(id) CASCADE | N:1 users |
-| `badges` | **id** UUID<br>code STRING<br>name STRING<br>description STRING<br>icon STRING | PK (id)<br>UNIQUE (code) | 1:N user_badges |
+| `badges` | **id** UUID<br>code STRING<br>name STRING<br>description STRING<br>icon STRING<br>category STRING (0026)<br>thresholds JSONB (0026)<br>hidden BOOL (0026)<br>seasonal BOOL (0026)<br>position INT8 (0026)<br>active BOOL (0026) | PK (id)<br>UNIQUE (code)<br>CHECK category IN (8 categorías) (0026) | 1:N user_badges<br>1:N user_achievements |
 | `user_badges` | **user_id** (FK) UUID<br>**badge_id** (FK) UUID<br>awarded_at TIMESTAMPTZ | PK (user_id, badge_id)<br>FK user_id → users(id) CASCADE<br>FK badge_id → badges(id) CASCADE | N:1 users<br>N:1 badges |
+| `user_achievements` (0026) | **user_id** (FK) UUID<br>**badge_id** (FK) UUID<br>**season** STRING<br>tier INT8<br>progress INT8<br>awarded_at TIMESTAMPTZ<br>upgraded_at TIMESTAMPTZ<br>seen_at TIMESTAMPTZ NULL | PK (user_id, badge_id, season)<br>FK user_id → users(id) CASCADE<br>FK badge_id → badges(id) CASCADE<br>CHECK tier 1 a 3, progress ≥ 0<br>INDEX parcial sin ver | N:1 users<br>N:1 badges |
 | `streaks` | **user_id** (FK) UUID<br>current_count INT8<br>best_count INT8<br>last_activity_on DATE NULL | PK (user_id)<br>FK user_id → users(id) CASCADE | 1:1 users |
 | `missions` | **id** UUID<br>code STRING<br>title STRING<br>description STRING<br>goal_type STRING<br>goal_count INT8<br>xp_reward INT8<br>active BOOL | PK (id)<br>UNIQUE (code)<br>1 CHECK | 1:N mission_progress |
 | `mission_progress` | **user_id** (FK) UUID<br>**mission_id** (FK) UUID<br>**week_key** STRING<br>progress INT8<br>completed_at TIMESTAMPTZ NULL | PK (user_id, mission_id, week_key)<br>FK user_id → users(id) CASCADE<br>FK mission_id → missions(id) CASCADE | N:1 users<br>N:1 missions |
-| `minigame_runs` | **id** UUID<br>user_id (FK) UUID<br>game STRING<br>score INT8<br>xp_awarded INT8<br>played_at TIMESTAMPTZ | PK (id)<br>FK user_id → users(id) CASCADE<br>1 CHECK | N:1 users |
+| `minigame_runs` | **id** UUID<br>user_id (FK) UUID<br>game (FK) STRING<br>score INT8<br>xp_awarded INT8<br>played_at TIMESTAMPTZ<br>session_id (FK) UUID NULL (0024)<br>daily BOOL (0024) | PK (id)<br>FK user_id → users(id) CASCADE<br>FK game → arcade_games(code) (0025)<br>FK session_id → arcade_sessions(id) SET NULL (0024) | N:1 users<br>N:1 arcade_games<br>N:1 arcade_sessions |
+| `arcade_games` (0024) | **code** STRING<br>title STRING<br>generator STRING NULL<br>rounds INT8<br>seconds INT8<br>position INT8<br>active BOOL | PK (code)<br>CHECK código, título, rondas 1 a 20 y segundos 20 a 600 | 1:N arcade_sessions<br>1:N minigame_runs |
+| `arcade_sessions` (0024) | **id** UUID<br>user_id (FK) UUID<br>game (FK) STRING<br>topic_id (FK) UUID NULL<br>level INT8<br>daily_on DATE NULL<br>items JSONB<br>state JSONB<br>total INT8<br>correct INT8 NULL<br>score INT8 NULL<br>xp_awarded INT8 NULL<br>started_at TIMESTAMPTZ<br>finished_at TIMESTAMPTZ NULL | PK (id)<br>FK user_id → users(id) CASCADE<br>FK game → arcade_games(code)<br>FK topic_id → topics(id) SET NULL<br>CHECK nivel 1 a 10, aciertos ≤ total, XP 0 a 60<br>INDEX (user_id, started_at DESC)<br>INDEX parcial (daily_on, game) | N:1 users<br>N:1 arcade_games<br>N:1 topics |
 | `leaderboard_snapshots` | **id** UUID<br>group_id (FK) UUID<br>week_key STRING<br>ranks JSONB<br>created_at TIMESTAMPTZ | PK (id)<br>FK group_id → groups_class(id) CASCADE<br>UNIQUE (group_id, week_key) | N:1 groups_class |
 
 ### Arena por equipos (arena)
@@ -246,6 +249,7 @@ Documentos legales versionados (Ley 1581 de 2012 y Decreto 1377 de 2013) y solic
 | `library_tags` | **item_id** (FK) UUID<br>**tag** STRING | PK (item_id, tag)<br>FK item_id → library_items(id) CASCADE<br>1 CHECK | N:1 library_items |
 | `bookmarks` | **user_id** (FK) UUID<br>**item_id** (FK) UUID<br>page INT8 NULL<br>note STRING<br>created_at TIMESTAMPTZ | PK (user_id, item_id)<br>FK user_id → users(id) CASCADE<br>FK item_id → library_items(id) CASCADE<br>1 CHECK | N:1 users<br>N:1 library_items |
 | `library_views` | **id** UUID<br>item_id (FK) UUID<br>user_id (FK) UUID NULL<br>viewed_at TIMESTAMPTZ | PK (id)<br>FK item_id → library_items(id) CASCADE<br>FK user_id → users(id) SET NULL | N:1 library_items<br>N:1 users |
+| `library_visits` (0027) | **user_id** (FK) UUID<br>visited_at TIMESTAMPTZ | PK (user_id)<br>FK user_id → users(id) CASCADE | 1:1 users |
 | `glossary_terms` | **id** UUID<br>subject_id (FK) UUID<br>term STRING<br>definition STRING<br>example STRING<br>source_item_id (FK) UUID NULL<br>created_by (FK) UUID NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK subject_id → subjects(id) CASCADE<br>FK source_item_id → library_items(id) SET NULL<br>FK created_by → users(id) SET NULL<br>UNIQUE (subject_id, lower(term))<br>2 CHECK | N:1 subjects<br>N:1 library_items<br>N:1 users |
 | `library_chunks` | **id** UUID<br>item_id (FK) UUID<br>ordinal INT8<br>page INT8 NULL<br>content STRING<br>tsv TSVECTOR NULL<br>embedding VECTOR NULL | PK (id)<br>FK item_id → library_items(id) CASCADE<br>UNIQUE (item_id, ordinal)<br>1 CHECK | N:1 library_items |
 
@@ -282,7 +286,7 @@ Documentos legales versionados (Ley 1581 de 2012 y Decreto 1377 de 2013) y solic
 | `certificate_templates` | **id** UUID<br>name STRING<br>body_md STRING<br>active BOOL | PK (id)<br>UNIQUE (name) | — |
 | `certificates` | **id** UUID<br>user_id (FK) UUID<br>course_id (FK) UUID NULL<br>code STRING<br>title STRING<br>issued_at TIMESTAMPTZ<br>meta JSONB NULL | PK (id)<br>FK user_id → users(id) CASCADE<br>FK course_id → courses(id) SET NULL<br>UNIQUE (code) | N:1 users<br>N:1 courses |
 | `report_log` | **id** UUID<br>seq INT8<br>code STRING<br>kind STRING<br>format STRING<br>title STRING<br>generated_by (FK) UUID NULL<br>params JSONB NULL<br>row_count INT8<br>created_at TIMESTAMPTZ | PK (id)<br>FK generated_by → users(id) SET NULL<br>UNIQUE (seq)<br>UNIQUE (code)<br>3 CHECK | N:1 users |
-| `notifications` | **id** UUID<br>user_id (FK) UUID<br>title STRING<br>body STRING<br>read_at TIMESTAMPTZ NULL<br>created_at TIMESTAMPTZ | PK (id)<br>FK user_id → users(id) CASCADE | N:1 users |
+| `notifications` | **id** UUID<br>user_id (FK) UUID<br>title STRING<br>body STRING<br>read_at TIMESTAMPTZ NULL<br>created_at TIMESTAMPTZ<br>kind STRING (0027)<br>link STRING NULL (0027)<br>building STRING NULL (0027)<br>entity_id UUID NULL (0027) | PK (id)<br>FK user_id → users(id) CASCADE<br>CHECK kind IN (10 tipos), link `/app…` ≤ 300, building IN (8 edificios) (0027)<br>INDEX parcial sin leer (user_id, created_at DESC)<br>INDEX parcial (user_id, entity_id) | N:1 users |
 | `email_outbox` | **id** UUID<br>to_email STRING<br>subject STRING<br>body STRING<br>status STRING<br>created_at TIMESTAMPTZ<br>sent_at TIMESTAMPTZ NULL | PK (id)<br>1 CHECK | — |
 
 ## Vistas y rol de lectura

@@ -301,11 +301,27 @@ export interface Database {
     name: string;
     description: string;
     icon: Generated<string>;
+    category: Generated<string>;
+    thresholds: JsonValue;
+    hidden: Generated<boolean>;
+    seasonal: Generated<boolean>;
+    position: Generated<number>;
+    active: Generated<boolean>;
   };
   user_badges: {
     user_id: string;
     badge_id: string;
     awarded_at: Ts;
+  };
+  user_achievements: {
+    user_id: string;
+    badge_id: string;
+    season: Generated<string>;
+    tier: number;
+    progress: Generated<number>;
+    awarded_at: Ts;
+    upgraded_at: Ts;
+    seen_at: NullableDate;
   };
   streaks: {
     user_id: string;
@@ -337,6 +353,33 @@ export interface Database {
     score: number;
     xp_awarded: number;
     played_at: Ts;
+    session_id: NullableString;
+    daily: Generated<boolean>;
+  };
+  arcade_games: {
+    code: string;
+    title: string;
+    generator: NullableString;
+    rounds: number;
+    seconds: number;
+    position: number;
+    active: Generated<boolean>;
+  };
+  arcade_sessions: {
+    id: Generated<string>;
+    user_id: string;
+    game: string;
+    topic_id: NullableString;
+    level: number;
+    daily_on: ColumnType<string | null, string | null | undefined, string | null>;
+    items: JsonValue;
+    state: JsonValue;
+    total: number;
+    correct: NullableInt;
+    score: NullableInt;
+    xp_awarded: NullableInt;
+    started_at: Ts;
+    finished_at: NullableDate;
   };
   leaderboard_snapshots: {
     id: Generated<string>;
@@ -442,6 +485,14 @@ export interface Database {
     body: string;
     read_at: NullableDate;
     created_at: Ts;
+    kind: Generated<string>;
+    link: NullableString;
+    building: NullableString;
+    entity_id: NullableString;
+  };
+  library_visits: {
+    user_id: string;
+    visited_at: Ts;
   };
   library_items: {
     id: Generated<string>;

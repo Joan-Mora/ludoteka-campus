@@ -1,8 +1,9 @@
 import { Suspense, useEffect, useMemo, useRef, useState, type RefObject } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Bell, LogOut, Menu, Search, Zap } from 'lucide-react';
+import { ArrowLeft, Bell, CheckCheck, LogOut, Menu, Search, Zap } from 'lucide-react';
 import { api } from '@/shared/api';
+import { NoteRow, useNoteActions, useNotifications, type NoteFeed } from '@/shared/notifications';
 import { useAuth } from '@/shared/auth';
 import { useCompanion } from '@/shared/companion';
 import { Avatar, Bar, Sheet, ThemeButton } from '@/ui';
@@ -16,12 +17,11 @@ function PageLoading() {
   return <div className="page-loading" role="status" aria-label="Cargando"><span /><span /><span /></div>;
 }
 
-interface Note { id: string; title: string; body: string; read_at: string | null }
 interface GameMe { xp: number; level: { level: number; title: string; min_xp: number }; nextLevel: { min_xp: number } | null }
 
 function useShellData() {
   const { user } = useAuth();
-  const notes = useQuery({ queryKey: ['notes'], queryFn: () => api<Note[]>('/api/notifications') });
+  const notes = useNotifications({ limit: 8 });
   const game = useQuery({ queryKey: ['me-game'], queryFn: () => api<GameMe>('/api/gamification/me'), enabled: user?.role === 'student' });
   const xp = game.data?.xp ?? 0;
   const floor = game.data?.level.min_xp ?? 0;
@@ -31,27 +31,24 @@ function useShellData() {
     game,
     xp,
     pct: Math.round(((xp - floor) / Math.max(1, next - floor)) * 100),
-    unread: notes.data?.filter((n) => !n.read_at).length ?? 0,
+    unread: notes.data?.unread ?? 0,
   };
 }
 
-function NotificationList({ notes, onRead }: { notes: Note[] | undefined; onRead: () => void }) {
+/** Latest notes in the bell: each opens where it came from; the full history lives in /app/notificaciones. */
+function NotificationList({ feed, onClose }: { feed: NoteFeed | undefined; onClose: () => void }) {
+  const navigate = useNavigate();
+  const actions = useNoteActions();
   return (
     <div className="note-list">
-      {(notes ?? []).map((note) => (
-        <button
-          key={note.id}
-          onClick={async () => { await api(`/api/notifications/${note.id}/read`, { method: 'POST' }); onRead(); }}
-          className={`note-item${note.read_at ? '' : ' unread'}`}
-        >
-          <span className="note-dot" />
-          <span>
-            <b>{note.title}</b>
-            <span className="muted">{note.body}</span>
-          </span>
-        </button>
+      {(feed?.items ?? []).map((note) => (
+        <NoteRow key={note.id} note={note} onOpen={(n) => { onClose(); void actions.open(n); }} />
       ))}
-      {!notes?.length && <p className="muted" style={{ padding: 20, textAlign: 'center', fontSize: 14 }}>Todo al día.</p>}
+      {!feed?.items.length && <p className="muted" style={{ padding: 20, textAlign: 'center', fontSize: 14 }}>Todo al día.</p>}
+      <div className="note-foot">
+        {Boolean(feed?.unread) && <button className="btn sm ghost" onClick={() => void actions.readAll()}><CheckCheck size={15} /> Marcar todo como leído</button>}
+        <button className="btn sm" onClick={() => { onClose(); navigate('/app/notificaciones'); }}>Ver todas</button>
+      </div>
     </div>
   );
 }
@@ -93,8 +90,17 @@ function DesktopShell({ sections }: { sections: NavSection[] }) {
   const navigate = useNavigate();
   const { notes, game, xp, pct, unread } = useShellData();
   const [open, setOpen] = useState(false);
+  const bellRef = useRef<HTMLDivElement>(null);
+  const location = useLocation();
   const isStudent = user?.role === 'student';
   useNoPinchZoom();
+  useEffect(() => setOpen(false), [location.pathname, location.search]);
+  useEffect(() => {
+    if (!open) return;
+    const outside = (event: PointerEvent) => { if (!bellRef.current?.contains(event.target as Node)) setOpen(false); };
+    document.addEventListener('pointerdown', outside);
+    return () => document.removeEventListener('pointerdown', outside);
+  }, [open]);
 
   return (
     <div className="shell">
@@ -141,19 +147,19 @@ function DesktopShell({ sections }: { sections: NavSection[] }) {
             )}
             <VoiceNav />
             <ThemeButton />
-            <div style={{ position: 'relative' }}>
-              <button className="icon-btn" title="Notificaciones" onClick={() => setOpen(!open)}>
+            <div style={{ position: 'relative' }} ref={bellRef}>
+              <button className="icon-btn" title="Notificaciones" aria-expanded={open} aria-label={`Notificaciones${unread ? `: ${unread} nuevas` : ''}`} onClick={() => setOpen(!open)}>
                 <Bell size={18} />
-                {unread > 0 && <span className="dot">{unread}</span>}
+                {unread > 0 && <span className="dot">{unread > 99 ? '99+' : unread}</span>}
               </button>
               {open && (
-                <div className="card" style={{ position: 'absolute', right: 0, top: 52, width: 340, padding: 0, boxShadow: 'var(--shadow-lg)', zIndex: 20 }}>
+                <div className="card bell-pop">
                   <div className="row between" style={{ padding: '14px 16px', borderBottom: '1px solid var(--line)' }}>
                     <b>Notificaciones</b>
-                    <span className="chip violet">{unread} nuevas</span>
+                    <span className="chip violet">{unread === 1 ? '1 nueva' : `${unread} nuevas`}</span>
                   </div>
-                  <div style={{ maxHeight: 360, overflowY: 'auto' }}>
-                    <NotificationList notes={notes.data} onRead={() => notes.refetch()} />
+                  <div style={{ maxHeight: 420, overflowY: 'auto' }}>
+                    <NotificationList feed={notes.data} onClose={() => setOpen(false)} />
                   </div>
                 </div>
               )}
@@ -242,9 +248,10 @@ function MobileShell({ sections }: { sections: NavSection[] }) {
         )}
         <div className="m-title">{current?.label ?? 'Ludoteka'}</div>
         {isStudent && <span className="m-xp"><Zap size={14} strokeWidth={2.6} /> {xp}</span>}
+        <VoiceNav compact />
         <button className="m-icon" onClick={() => setBell(true)} aria-label={`Notificaciones${unread ? `: ${unread} nuevas` : ''}`}>
           <Bell size={21} />
-          {unread > 0 && <span className="dot">{unread}</span>}
+          {unread > 0 && <span className="dot">{unread > 99 ? '99+' : unread}</span>}
         </button>
         <button className="m-avatar" onClick={() => setMore(true)} aria-label="Menú de la cuenta">
           <Avatar name={user?.fullName} />
@@ -296,13 +303,12 @@ function MobileShell({ sections }: { sections: NavSection[] }) {
         ))}
         <div className="m-actions">
           <ThemeButton className="btn ghost" label />
-          <VoiceNav />
           <button className="btn ghost" onClick={async () => { await logout(); navigate('/'); }}><LogOut size={17} /> Salir</button>
         </div>
       </Sheet>
 
       <Sheet open={bell} onClose={() => setBell(false)} title={`Notificaciones${unread ? ` · ${unread} nuevas` : ''}`}>
-        <NotificationList notes={notes.data} onRead={() => notes.refetch()} />
+        <NotificationList feed={notes.data} onClose={() => setBell(false)} />
       </Sheet>
     </div>
   );

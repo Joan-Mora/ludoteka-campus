@@ -57,3 +57,14 @@ export function unreadNewsCount(viewer: Viewer) {
     WHERE n.author_id <> ${viewer.id} AND ${visibleNews(viewer)}
     AND NOT EXISTS (SELECT 1 FROM news_reads r WHERE r.news_id = n.id AND r.user_id = ${viewer.id})`;
 }
+
+/** Unread news, newest first, with the total in every row (for the campus popover). */
+export function unreadNewsList(viewer: Viewer, limit = 5) {
+  return sql<{ title: string; meta: string; link: string; total: number }>`
+    SELECT n.title, initcap(n.category) AS meta, '/app/novedades?aviso=' || n.id::STRING AS link, count(*) OVER () AS total
+    FROM news n
+    WHERE n.author_id <> ${viewer.id} AND ${visibleNews(viewer)}
+      AND NOT EXISTS (SELECT 1 FROM news_reads r WHERE r.news_id = n.id AND r.user_id = ${viewer.id})
+    ORDER BY n.publish_at DESC
+    LIMIT ${limit}`;
+}

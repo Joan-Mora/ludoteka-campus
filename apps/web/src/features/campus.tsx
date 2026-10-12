@@ -99,7 +99,10 @@ type Shape = 'school' | 'library' | 'lab' | 'stadium' | 'hall' | 'board' | 'hous
 interface Building {
   key: BuildingKey;
   name: string;
+  /** Follows the pending count: "3 avisos sin leer". */
   caption: string;
+  /** Shown instead when nothing is pending. */
+  idle: string;
   to: string;
   icon: LucideIcon;
   color: string;
@@ -131,31 +134,101 @@ export function buildingsFor(role: string | undefined, companionName = 'Luka'): 
   const rector = role === 'admin' || role === 'rector';
   const coordinator = role === 'coordinator';
   const list: Omit<Building, keyof (typeof layout)[BuildingKey]>[] = [
-    { key: 'aula', name: guardian ? 'Familia' : 'Aula', caption: student ? 'lecciones pendientes' : role === 'teacher' ? 'entregas por calificar' : guardian ? 'acudidos' : 'cursos activos', to: guardian ? '/app/acudiente' : '/app/cursos', icon: School, voice: ['aula', 'cursos', 'mis cursos', 'clases', 'seguimiento'] },
-    { key: 'biblioteca', name: 'Biblioteca', caption: 'recursos publicados', to: '/app/biblioteca', icon: Library, voice: ['biblioteca', 'libros', 'recursos', 'documentos'] },
-    { key: 'lab', name: 'Laboratorio IA', caption: `consultas a ${companionName} hoy`, to: '/app/tutor', icon: BrainCircuit, voice: ['laboratorio', 'tutor', 'inteligencia artificial', 'luka', 'luna', 'preguntar'] },
-    { key: 'arena', name: 'Arena', caption: 'salas en vivo', to: '/app/arena', icon: Swords, voice: ['arena', 'competencia', 'equipos', 'en vivo', 'jugar en equipo'] },
+    {
+      key: 'aula',
+      name: guardian ? 'Familia' : 'Aula',
+      caption: student ? 'pendientes esta semana' : role === 'teacher' ? 'entregas por calificar' : guardian ? 'por atender' : 'pendientes',
+      idle: student ? 'al día esta semana' : role === 'teacher' ? 'sin entregas por calificar' : guardian ? 'todo al día' : 'cursos del colegio',
+      to: guardian ? '/app/acudiente' : '/app/cursos',
+      icon: School,
+      voice: ['aula', 'cursos', 'mis cursos', 'clases', 'seguimiento'],
+    },
+    { key: 'biblioteca', name: 'Biblioteca', caption: 'recursos nuevos', idle: 'sin novedades desde tu visita', to: '/app/biblioteca', icon: Library, voice: ['biblioteca', 'libros', 'recursos', 'documentos'] },
+    { key: 'lab', name: 'Laboratorio IA', caption: 'pendientes', idle: `pregúntale a ${companionName}`, to: '/app/tutor', icon: BrainCircuit, voice: ['laboratorio', 'tutor', 'inteligencia artificial', 'luka', 'luna', 'preguntar'] },
+    { key: 'arena', name: 'Arena', caption: 'salas abiertas ahora', idle: 'sin salas abiertas', to: '/app/arena', icon: Swords, voice: ['arena', 'competencia', 'equipos', 'en vivo', 'jugar en equipo'] },
     {
       key: 'trofeos',
       name: student ? 'Sala de trofeos' : 'Certificados',
-      caption: student ? 'insignias ganadas' : 'certificados emitidos',
+      caption: student ? 'insignias nuevas' : 'pendientes',
+      idle: student ? 'todo visto' : 'certificados y reportes',
       to: student ? '/app/logros' : rector ? '/app/rectoria' : '/app/cursos',
       icon: Trophy,
       voice: ['trofeos', 'logros', 'insignias', 'certificados'],
     },
-    { key: 'cartelera', name: 'Cartelera', caption: 'avisos sin leer', to: '/app/novedades', icon: Megaphone, voice: ['cartelera', 'novedades', 'noticias', 'avisos', 'anuncios', 'foros'] },
+    { key: 'cartelera', name: 'Cartelera', caption: 'avisos sin leer', idle: 'todo leído', to: '/app/novedades', icon: Megaphone, voice: ['cartelera', 'novedades', 'noticias', 'avisos', 'anuncios', 'foros'] },
     student || guardian
-      ? { key: 'cuaderno', name: 'Cuaderno', caption: 'tarjetas para repasar hoy', to: '/app/cuaderno', icon: NotebookPen, voice: ['cuaderno', 'apuntes', 'notas', 'flashcards', 'tarjetas', 'repasar'] }
+      ? { key: 'cuaderno', name: 'Cuaderno', caption: 'tarjetas para repasar hoy', idle: 'nada para repasar hoy', to: '/app/cuaderno', icon: NotebookPen, voice: ['cuaderno', 'apuntes', 'notas', 'flashcards', 'tarjetas', 'repasar'] }
       : coordinator
-        ? { key: 'cuaderno', name: 'Coordinación', caption: 'alertas y citaciones', to: '/app/coordinacion', icon: ClipboardList, voice: ['coordinacion', 'seguimiento', 'alertas', 'citaciones', 'asistencia'] }
+        ? { key: 'cuaderno', name: 'Coordinación', caption: 'alertas abiertas', idle: 'sin alertas abiertas', to: '/app/coordinacion', icon: ClipboardList, voice: ['coordinacion', 'seguimiento', 'alertas', 'citaciones', 'asistencia'] }
         : role === 'rector'
-          ? { key: 'cuaderno', name: 'Rectoría', caption: 'tablero y firmas', to: '/app/rectoria', icon: ClipboardList, voice: ['rectoria', 'tablero', 'firmas', 'indicadores'] }
-          : { key: 'cuaderno', name: 'Taller docente', caption: 'banco y calificaciones', to: '/app/banco', icon: ClipboardList, voice: ['taller', 'banco', 'preguntas', 'calificaciones'] },
+          ? { key: 'cuaderno', name: 'Rectoría', caption: 'documentos por firmar', idle: 'nada por firmar', to: '/app/rectoria', icon: ClipboardList, voice: ['rectoria', 'tablero', 'firmas', 'indicadores'] }
+          : { key: 'cuaderno', name: 'Taller docente', caption: 'pendientes', idle: 'banco y calificaciones', to: '/app/banco', icon: ClipboardList, voice: ['taller', 'banco', 'preguntas', 'calificaciones'] },
     student
-      ? { key: 'ruta', name: 'Mi ruta', caption: 'retos pendientes', to: '/app/ruta', icon: Compass, voice: ['mi ruta', 'ruta', 'retos', 'ejercicios', 'practicar'] }
-      : { key: 'ruta', name: 'Observatorio', caption: 'pregúntale a los datos', to: '/app/consultas', icon: Database, voice: ['observatorio', 'consultas', 'datos', 'estadisticas'] },
+      ? { key: 'ruta', name: 'Mi ruta', caption: 'retos pendientes', idle: 'sin retos pendientes', to: '/app/ruta', icon: Compass, voice: ['mi ruta', 'ruta', 'retos', 'ejercicios', 'practicar'] }
+      : { key: 'ruta', name: 'Observatorio', caption: 'pendientes', idle: 'pregúntale a los datos', to: '/app/consultas', icon: Database, voice: ['observatorio', 'consultas', 'datos', 'estadisticas'] },
   ];
   return list.map((item) => ({ ...item, ...layout[item.key] })).filter((b) => !(guardian && (b.key === 'arena' || b.key === 'ruta')));
+}
+
+export interface PendingItem { title: string; meta: string; link: string }
+export type CampusCounts = Partial<Record<BuildingKey, number>>;
+export type CampusPending = Partial<Record<BuildingKey, PendingItem[]>>;
+
+export const statusOf = (b: Pick<Building, 'caption' | 'idle'>, n: number | undefined) =>
+  !n ? b.idle : n === 1 ? `1 ${b.caption.replace(/(\p{L}{3,})s\b/gu, '$1')}` : `${n} ${b.caption}`;
+
+/** Red counter of a building; hover (on pointer devices) or tap opens what is pending, each with its own "Ir". */
+export function PendingBadge({ building, count, items }: { building: Pick<Building, 'key' | 'name' | 'caption' | 'idle' | 'to'>; count: number; items: PendingItem[] }) {
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+  const timer = useRef<number | undefined>(undefined);
+  const hover = typeof window !== 'undefined' && window.matchMedia?.('(hover: hover)').matches;
+
+  useEffect(() => {
+    if (!open) return;
+    const outside = (event: PointerEvent) => { if (!ref.current?.contains(event.target as Node)) setOpen(false); };
+    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') setOpen(false); };
+    document.addEventListener('pointerdown', outside);
+    document.addEventListener('keydown', escape);
+    return () => {
+      document.removeEventListener('pointerdown', outside);
+      document.removeEventListener('keydown', escape);
+    };
+  }, [open]);
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+
+  if (count <= 0) return null;
+  const go = (to: string) => { setOpen(false); navigate(to); };
+  return (
+    <span
+      ref={ref}
+      className={`pending${open ? ' open' : ''}`}
+      onMouseEnter={() => { if (!hover) return; window.clearTimeout(timer.current); timer.current = window.setTimeout(() => setOpen(true), 160); }}
+      onMouseLeave={() => { if (!hover) return; window.clearTimeout(timer.current); timer.current = window.setTimeout(() => setOpen(false), 220); }}
+      onClick={(event) => event.stopPropagation()}
+      onKeyDown={(event) => event.stopPropagation()}
+    >
+      <button type="button" className="iso-count pending-btn" aria-expanded={open} aria-label={`${statusOf(building, count)}. Ver detalle`} onClick={() => setOpen((o) => !o)}>
+        {count > 99 ? '99+' : count}
+      </button>
+      {open && (
+        <div className="pending-pop" role="dialog" aria-label={`Pendientes de ${building.name}`}>
+          <div className="pending-head"><b>{building.name}</b><small>{statusOf(building, count)}</small></div>
+          <ul>
+            {items.map((item) => (
+              <li key={`${item.link}-${item.title}`}>
+                <span><b>{item.title}</b>{item.meta && <small>{item.meta}</small>}</span>
+                <button type="button" className="btn sm" onClick={() => go(item.link)}>Ir</button>
+              </li>
+            ))}
+          </ul>
+          {count > items.length && <small className="pending-more">y {count - items.length} más</small>}
+          <button type="button" className="btn sm ghost pending-all" onClick={() => go(building.to)}>Abrir {building.name} <ChevronRight size={14} /></button>
+        </div>
+      )}
+    </span>
+  );
 }
 
 /* ---------- SVG primitives ---------- */
@@ -475,9 +548,10 @@ function hitArea(b: Building): [number, number][] {
   return [...half(sorted), ...half([...sorted].reverse())];
 }
 
-export function IsoCampus({ buildings, counts, phase, interactive = true, onPick }: {
+export function IsoCampus({ buildings, counts, pending, phase, interactive = true, onPick }: {
   buildings: Building[];
-  counts?: Partial<Record<BuildingKey, number>>;
+  counts?: CampusCounts;
+  pending?: CampusPending;
   phase: Phase;
   interactive?: boolean;
   onPick?: (b: Building) => void;
@@ -512,7 +586,7 @@ export function IsoCampus({ buildings, counts, phase, interactive = true, onPick
         className={`iso-b${interactive ? ' live' : ''}${active ? ' on' : ''}`}
         role={interactive ? 'link' : undefined}
         tabIndex={interactive ? 0 : undefined}
-        aria-label={interactive ? `${b.name}: ${counts?.[b.key] ?? 0} ${b.caption}` : undefined}
+        aria-label={interactive ? `${b.name}: ${statusOf(b, counts?.[b.key])}` : undefined}
         onMouseEnter={() => interactive && setHover(b.key)}
         onMouseLeave={() => interactive && setHover(null)}
         onFocus={() => interactive && setHover(b.key)}
@@ -584,7 +658,7 @@ export function IsoCampus({ buildings, counts, phase, interactive = true, onPick
 
         {scenery}
       </svg>
-      <div className="iso-labels" aria-hidden>
+      <div className="iso-labels">
         {buildings.map((b) => {
           const top = b.shape === 'stadium' ? iso(b.x + b.w / 2, b.y + b.d / 2, b.h + 1.6) : iso(b.x + b.w / 2, b.y + b.d / 2, b.h + (b.shape === 'board' ? 1.6 : b.shape === 'school' ? 1.85 : b.shape === 'tower' ? 1.9 : 1.4));
           const n = counts?.[b.key] ?? 0;
@@ -592,9 +666,11 @@ export function IsoCampus({ buildings, counts, phase, interactive = true, onPick
           return (
             <div key={`lbl-${b.key}`} className="iso-tag" style={{ left: `${((top[0] - VIEW.x) / VIEW.w) * 100}%`, top: `${((top[1] - VIEW.y) / VIEW.h) * 100}%` }}>
               <div className={`iso-label${active ? ' on' : ''}${night ? ' night' : ''}`}>
-                <span className="iso-label-ico" style={{ background: b.color }}><b.icon size={13} strokeWidth={2.6} /></span>
-                <span className="iso-label-name">{b.name}</span>
-                {counts && n > 0 && <span className="iso-count">{n > 99 ? '99+' : n}</span>}
+                <span className="iso-label-ico" style={{ background: b.color }} aria-hidden><b.icon size={13} strokeWidth={2.6} /></span>
+                <span className="iso-label-name" aria-hidden>{b.name}</span>
+                {counts && n > 0 && (interactive
+                  ? <PendingBadge building={b} count={n} items={pending?.[b.key] ?? []} />
+                  : <span className="iso-count" aria-hidden>{n > 99 ? '99+' : n}</span>)}
               </div>
             </div>
           );
@@ -666,7 +742,9 @@ function tipsFor(role: string | undefined, counts: Partial<Record<BuildingKey, n
   const greet = phase === 'night' ? `Buenas noches, ${name}.` : phase === 'dusk' ? `Buenas tardes, ${name}.` : `¡Hola, ${name}!`;
 
   if (role === 'student') {
-    if (n('aula')) tips.push({ text: `${greet} Tienes ${plural(n('aula'), 'lección pendiente', 'lecciones pendientes')} en el Aula. ¿Arrancamos con la siguiente?`, to: by('aula')?.to });
+    if (n('aula')) tips.push({ text: `${greet} Esta semana tienes ${plural(n('aula'), 'pendiente', 'pendientes')} en el Aula entre tareas y lecciones. ¿Arrancamos?`, to: by('aula')?.to });
+    if (n('trofeos')) tips.push({ text: `Ganaste ${plural(n('trofeos'), 'insignia nueva', 'insignias nuevas')}. Pasa por la Sala de trofeos a verlas.`, to: by('trofeos')?.to });
+    if (n('biblioteca')) tips.push({ text: `La Biblioteca tiene ${plural(n('biblioteca'), 'recurso nuevo', 'recursos nuevos')} desde tu última visita.`, to: by('biblioteca')?.to });
     if (n('arena')) tips.push({ text: `¡Hay ${plural(n('arena'), 'sala abierta', 'salas abiertas')} en la Arena! Únete con tu equipo antes de que empiece.`, to: by('arena')?.to });
     if (n('cuaderno')) tips.push({ text: `Tu Cuaderno tiene ${plural(n('cuaderno'), 'tarjeta', 'tarjetas')} para repasar hoy. Cinco minutos bastan para no olvidarlo.`, to: by('cuaderno')?.to });
     if (n('ruta')) tips.push({ text: `En Mi ruta te esperan ${plural(n('ruta'), 'reto', 'retos')} hechos a tu medida.`, to: by('ruta')?.to });
@@ -694,7 +772,7 @@ export function useCampusData() {
   const { user } = useAuth();
   return useQuery({
     queryKey: ['campus'],
-    queryFn: () => api<{ buildings: Partial<Record<BuildingKey, number>>; pulse: { lessonsToday: number; attemptsToday: number; online: number } }>('/api/campus'),
+    queryFn: () => api<{ buildings: CampusCounts; pending: CampusPending; pulse: { lessonsToday: number; attemptsToday: number; online: number } }>('/api/campus'),
     enabled: Boolean(user),
     refetchInterval: 60_000,
   });
@@ -711,6 +789,7 @@ export function MobileHub() {
   const buildings = useMemo(() => buildingsFor(user?.role, companion.name), [user?.role, companion.name]);
   const data = useCampusData();
   const counts = data.data?.buildings ?? {};
+  const details = data.data?.pending ?? {};
   const firstName = user?.fullName.split(' ')[0] ?? '';
   const tips = useMemo(() => tipsFor(user?.role, counts, buildings, firstName, phase, companion), [user?.role, counts, buildings, firstName, phase, companion]);
   const [tip, setTip] = useState(0);
@@ -754,12 +833,14 @@ export function MobileHub() {
           <h2 className="hub-title">Para hoy</h2>
           <div className="stack g-8">
             {pending.map((b) => (
-              <button key={b.key} className="hub-row" onClick={() => navigate(b.to)}>
-                <span className="campus-list-ico" style={{ background: b.color }}><b.icon size={20} strokeWidth={2.4} /></span>
-                <span className="campus-list-text"><b>{b.name}</b><small>{counts[b.key]} {b.caption}</small></span>
-                <span className="iso-count">{counts[b.key]}</span>
-                <ChevronRight size={18} />
-              </button>
+              <div key={b.key} className="row-with-badge">
+                <button className="hub-row" onClick={() => navigate(b.to)}>
+                  <span className="campus-list-ico" style={{ background: b.color }}><b.icon size={20} strokeWidth={2.4} /></span>
+                  <span className="campus-list-text"><b>{b.name}</b><small>{statusOf(b, counts[b.key])}</small></span>
+                  <ChevronRight size={18} />
+                </button>
+                <PendingBadge building={b} count={counts[b.key] ?? 0} items={details[b.key] ?? []} />
+              </div>
             ))}
           </div>
         </section>
@@ -772,7 +853,7 @@ export function MobileHub() {
             <button key={b.key} className="hub-tile" onClick={() => navigate(b.to)}>
               <span className="hub-tile-ico" style={{ background: b.color }}><b.icon size={22} strokeWidth={2.4} /></span>
               <b>{b.name}</b>
-              <small>{counts[b.key] ?? 0} {b.caption}</small>
+              <small>{statusOf(b, counts[b.key])}</small>
             </button>
           ))}
         </div>
@@ -858,21 +939,21 @@ export function CampusHome() {
       </header>
 
       <div className="campus-map">
-        <IsoCampus buildings={buildings} counts={counts} phase={phase} onPick={(b) => navigate(b.to)} />
+        <IsoCampus buildings={buildings} counts={counts} pending={data.data?.pending} phase={phase} onPick={(b) => navigate(b.to)} />
       </div>
 
       <ul className="campus-list">
         {buildings.map((b, i) => (
-          <motion.li key={b.key} initial={{ opacity: 0, x: i % 2 ? 20 : -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
-            <button onClick={() => navigate(b.to)}>
+          <motion.li key={b.key} className="row-with-badge" initial={{ opacity: 0, x: i % 2 ? 20 : -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}>
+            <button className="campus-go" onClick={() => navigate(b.to)}>
               <span className="campus-list-ico" style={{ background: b.color }}><b.icon size={22} strokeWidth={2.4} /></span>
               <span className="campus-list-text">
                 <b>{b.name}</b>
-                <small>{counts[b.key] ?? 0} {b.caption}</small>
+                <small>{statusOf(b, counts[b.key])}</small>
               </span>
-              {(counts[b.key] ?? 0) > 0 && <span className="iso-count">{counts[b.key]}</span>}
               <ChevronRight size={18} />
             </button>
+            <PendingBadge building={b} count={counts[b.key] ?? 0} items={data.data?.pending?.[b.key] ?? []} />
           </motion.li>
         ))}
       </ul>

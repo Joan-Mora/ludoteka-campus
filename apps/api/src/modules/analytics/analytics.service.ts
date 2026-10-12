@@ -1,12 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { sql } from 'kysely';
+import { Injectable, Logger } from '@nestjs/common';
+import { sql, type RawBuilder } from 'kysely';
 import { isBoard, ROLE_LABELS, type Role } from '@eduquest/contracts';
 import { DatabaseService } from '../../core/database/database.service';
 import { ApiError } from '../../core/errors/api-error';
 import type { AuthUser } from '../../core/auth/auth.decorators';
 import { renderPdf, renderWorkbook } from '../../core/reports/documents';
 import { ReportLog } from '../../core/reports/report-log.service';
-import { unreadNewsCount } from '../learning/public-api';
+import { unreadNewsList } from '../learning/public-api';
+import { visibleLibrary } from '../library/public-api';
+
+interface PendingRow {
+  title: string;
+  meta: string | null;
+  link: string;
+  total: number | string;
+}
+interface Pending {
+  total: number;
+  items: { title: string; meta: string; link: string }[];
+}
 
 const pct = (score: number, max: number) => (max > 0 ? Math.round((score * 100) / max) : 0);
 const day = (value: Date | string | null | undefined) => (value ? new Date(value).toLocaleDateString('es-CO', { timeZone: 'America/Bogota' }) : '—');
@@ -21,6 +33,8 @@ const violationLabel: Record<string, string> = {
 
 @Injectable()
 export class AnalyticsService {
+  private readonly logger = new Logger('Analítica');
+
   constructor(
     private readonly database: DatabaseService,
     private readonly reports: ReportLog,
@@ -119,47 +133,142 @@ export class AnalyticsService {
     return Number(result.rows[0]?.n ?? 0);
   }
 
-  /** Live counters for each campus building, scoped to what the viewer can see. */
+  /** Up to five pending items with the full total; each query returns `title, meta, link, total`. */
+  private async pending(query: RawBuilder<PendingRow>): Promise<Pending> {
+    const result = await query.execute(this.database.db).catch((error: Error) => {
+      this.logger.warn(`Pendientes del campus sin calcular: ${error.message}`);
+      return { rows: [] as PendingRow[] };
+    });
+    return {
+      total: Number(result.rows[0]?.total ?? 0),
+      items: result.rows.map((row) => ({ title: row.title, meta: row.meta ?? '', link: row.link })),
+    };
+  }
+
+  private studentAula(viewer: AuthUser) {
+    const courses = sql`SELECT c.id FROM courses c JOIN enrollments e ON e.group_id = c.group_id WHERE e.user_id = ${viewer.id} AND e.status = 'active' AND c.published`;
+    return sql<PendingRow>`
+      WITH tasks AS (
+        SELECT 'Tarea: ' || a.title AS title,
+               CASE WHEN a.due_at < now() THEN 'Venció el ' ELSE 'Vence el ' END || to_char(a.due_at AT TIME ZONE 'America/Bogota', 'DD/MM HH24:MI') AS meta,
+               '/app/cursos/' || a.course_id::STRING || '/aula' AS link, a.due_at AS sort_at
+        FROM assignments a
+        WHERE a.course_id IN (${courses})
+          AND a.due_at >= now() - INTERVAL '7 days' AND a.due_at < now() + INTERVAL '7 days'
+          AND NOT EXISTS (SELECT 1 FROM submissions s WHERE s.assignment_id = a.id AND s.user_id = ${viewer.id})
+      ),
+      next_lessons AS (
+        SELECT DISTINCT ON (u.course_id) 'Lección: ' || l.title AS title, c.title AS meta, '/app/lecciones/' || l.id::STRING AS link,
+               now() + INTERVAL '30 days' AS sort_at
+        FROM lessons l JOIN units u ON u.id = l.unit_id JOIN courses c ON c.id = u.course_id
+        WHERE l.published AND u.course_id IN (${courses})
+          AND NOT EXISTS (SELECT 1 FROM lesson_progress p WHERE p.lesson_id = l.id AND p.user_id = ${viewer.id} AND p.status = 'completed')
+        ORDER BY u.course_id, u.position, l.position
+      ),
+      everything AS (SELECT * FROM tasks UNION ALL SELECT * FROM next_lessons)
+      SELECT title, meta, link, count(*) OVER () AS total FROM everything ORDER BY sort_at LIMIT 5`;
+  }
+
+  private newLibrary(viewer: AuthUser) {
+    return sql<PendingRow>`
+      SELECT li.title, s.name AS meta, '/app/biblioteca/' || li.id::STRING AS link, count(*) OVER () AS total
+      FROM library_items li JOIN subjects s ON s.id = li.subject_id
+      WHERE ${visibleLibrary(viewer)} AND li.status = 'published' AND (li.uploaded_by IS NULL OR li.uploaded_by <> ${viewer.id})
+        AND li.created_at > coalesce((SELECT visited_at FROM library_visits WHERE user_id = ${viewer.id}), now() - INTERVAL '14 days')
+      ORDER BY li.created_at DESC LIMIT 5`;
+  }
+
+  /** Arena rooms and live quizzes open in the last 3 hours (older ones are closed by their modules). */
+  private openRooms(viewer: AuthUser) {
+    const board = isBoard(viewer.role);
+    const scope = viewer.role === 'student'
+      ? (column: RawBuilder<unknown>) => sql`${column} IN (SELECT c.id FROM courses c JOIN enrollments e ON e.group_id = c.group_id WHERE e.user_id = ${viewer.id} AND e.status = 'active')`
+      : null;
+    const arenaWhere = scope ? scope(sql.ref('r.course_id')) : board ? sql`true` : sql`r.host_id = ${viewer.id}`;
+    const liveWhere = scope ? scope(sql.ref('a.course_id')) : board ? sql`true` : sql`ls.host_id = ${viewer.id}`;
+    return sql<PendingRow>`
+      WITH rooms AS (
+        SELECT 'Arena: ' || r.title AS title, 'Código ' || r.code AS meta, '/app/arena/' || r.id::STRING AS link, r.created_at
+        FROM arena_rooms r WHERE r.status <> 'ended' AND r.created_at > now() - INTERVAL '3 hours' AND ${arenaWhere}
+        UNION ALL
+        SELECT 'Quiz en vivo: ' || a.title, 'Código ' || ls.code, '/app/en-vivo', ls.created_at
+        FROM live_sessions ls JOIN assessments a ON a.id = ls.assessment_id
+        WHERE ls.status <> 'ended' AND ls.created_at > now() - INTERVAL '3 hours' AND ${liveWhere}
+      )
+      SELECT title, meta, link, count(*) OVER () AS total FROM rooms ORDER BY created_at DESC LIMIT 5`;
+  }
+
+  /** What each campus building has pending for the viewer: counts for the badges and the first items for the popover. */
   async campus(viewer: AuthUser) {
     const today = sql`(now() AT TIME ZONE 'America/Bogota')::DATE`;
-    const studentCourses = sql`SELECT c.id FROM courses c JOIN enrollments e ON e.group_id = c.group_id WHERE e.user_id = ${viewer.id} AND e.status = 'active'`;
-    const isStudent = viewer.role === 'student';
-    const isTeacher = viewer.role === 'teacher';
-    const board = isBoard(viewer.role);
-
-    const [aula, cartelera, arena, trofeos, lab, biblioteca, cuaderno, ruta] = await Promise.all([
-      isStudent
-        ? this.count(sql`SELECT count(*) AS n FROM lessons l JOIN units u ON u.id = l.unit_id WHERE l.published AND u.course_id IN (${studentCourses})
-            AND NOT EXISTS (SELECT 1 FROM lesson_progress p WHERE p.lesson_id = l.id AND p.user_id = ${viewer.id} AND p.status = 'completed')`)
-        : isTeacher
-          ? this.count(sql`SELECT count(*) AS n FROM submissions s JOIN assignments a ON a.id = s.assignment_id JOIN courses c ON c.id = a.course_id WHERE c.teacher_id = ${viewer.id} AND s.status = 'submitted'`)
-          : this.count(sql`SELECT count(*) AS n FROM courses`),
-      Promise.all([
-        this.count(sql`SELECT count(*) AS n FROM notifications WHERE user_id = ${viewer.id} AND read_at IS NULL`),
-        this.count(unreadNewsCount(viewer)),
-      ]).then(([notes, news]) => notes + news),
-      isStudent
-        ? this.count(sql`SELECT (SELECT count(*) FROM live_sessions ls JOIN assessments a ON a.id = ls.assessment_id WHERE ls.status <> 'ended' AND a.course_id IN (${studentCourses}))
-            + (SELECT count(*) FROM arena_rooms WHERE status <> 'ended' AND course_id IN (${studentCourses})) AS n`)
-        : this.count(sql`SELECT (SELECT count(*) FROM live_sessions WHERE status <> 'ended' ${board ? sql`` : sql`AND host_id = ${viewer.id}`})
-            + (SELECT count(*) FROM arena_rooms WHERE status <> 'ended' ${board ? sql`` : sql`AND host_id = ${viewer.id}`}) AS n`),
-      isStudent
-        ? this.count(sql`SELECT count(*) AS n FROM user_badges WHERE user_id = ${viewer.id}`)
-        : this.count(sql`SELECT count(*) AS n FROM certificates ${board ? sql`` : sql`WHERE course_id IN (SELECT id FROM courses WHERE teacher_id = ${viewer.id})`}`),
-      this.count(sql`SELECT count(*) AS n FROM ai_usage WHERE ${board ? sql`true` : sql`user_id = ${viewer.id}`} AND (created_at AT TIME ZONE 'America/Bogota')::DATE = ${today}`),
-      this.count(sql`SELECT count(*) AS n FROM library_items WHERE status = 'published'`),
-      this.count(sql`SELECT count(*) AS n FROM flashcards WHERE user_id = ${viewer.id} AND due_at <= now()`),
-      this.count(sql`SELECT count(*) AS n FROM route_items WHERE user_id = ${viewer.id} AND status = 'pending'`),
-    ]);
-
-    const [lessonsToday, attemptsToday, online] = await Promise.all([
+    const role = viewer.role;
+    const none = Promise.resolve<Pending>({ total: 0, items: [] });
+    const pulse = Promise.all([
       this.count(sql`SELECT count(*) AS n FROM lesson_progress WHERE status = 'completed' AND (completed_at AT TIME ZONE 'America/Bogota')::DATE = ${today}`),
       this.count(sql`SELECT count(*) AS n FROM attempts WHERE (started_at AT TIME ZONE 'America/Bogota')::DATE = ${today}`),
       this.count(sql`SELECT count(DISTINCT user_id) AS n FROM refresh_tokens WHERE revoked_at IS NULL AND created_at > now() - INTERVAL '30 minutes'`),
     ]);
 
+    const [aula, cartelera, arena, trofeos, biblioteca, cuaderno, ruta] = await Promise.all([
+      role === 'student'
+        ? this.pending(this.studentAula(viewer))
+        : role === 'teacher'
+          ? this.pending(sql<PendingRow>`
+              SELECT u.full_name || ' entregó «' || a.title || '»' AS title, c.title AS meta, '/app/cursos/' || c.id::STRING || '/aula' AS link, count(*) OVER () AS total
+              FROM submissions s JOIN assignments a ON a.id = s.assignment_id JOIN courses c ON c.id = a.course_id JOIN users u ON u.id = s.user_id
+              WHERE c.teacher_id = ${viewer.id} AND s.status = 'submitted' ORDER BY s.submitted_at LIMIT 5`)
+          : role === 'guardian'
+            ? this.pending(sql<PendingRow>`
+                WITH items AS (
+                  SELECT 'Citación por confirmar: ' || st.full_name AS title, to_char(m.scheduled_at AT TIME ZONE 'America/Bogota', 'DD/MM HH24:MI') AS meta, '/app/acudiente' AS link, m.scheduled_at AS sort_at
+                  FROM meetings m JOIN users st ON st.id = m.student_id
+                  WHERE m.guardian_id = ${viewer.id} AND m.status = 'scheduled' AND m.scheduled_at > now()
+                  UNION ALL
+                  SELECT 'Mensaje de ' || au.full_name, 'Sobre ' || st.full_name, '/app/acudiente?estudiante=' || gm.student_id::STRING, gm.created_at
+                  FROM guardian_messages gm JOIN users au ON au.id = gm.author_id JOIN users st ON st.id = gm.student_id
+                  WHERE gm.guardian_id = ${viewer.id} AND gm.author_id <> ${viewer.id} AND gm.read_at IS NULL
+                )
+                SELECT title, meta, link, count(*) OVER () AS total FROM items ORDER BY sort_at LIMIT 5`)
+            : none,
+      this.pending(unreadNewsList(viewer)),
+      this.pending(this.openRooms(viewer)),
+      role === 'student'
+        ? this.pending(sql<PendingRow>`
+            SELECT CASE WHEN a.tier > 1 THEN 'Subiste de nivel: ' ELSE 'Insignia nueva: ' END || b.name AS title, b.description AS meta, '/app/logros' AS link, count(*) OVER () AS total
+            FROM user_achievements a JOIN badges b ON b.id = a.badge_id
+            WHERE a.user_id = ${viewer.id} AND a.seen_at IS NULL ORDER BY a.upgraded_at DESC LIMIT 5`)
+        : none,
+      this.pending(this.newLibrary(viewer)),
+      role === 'student'
+        ? this.pending(sql<PendingRow>`
+            SELECT f.front AS title, 'Tarjeta para repasar' AS meta, '/app/cuaderno' AS link, count(*) OVER () AS total
+            FROM flashcards f WHERE f.user_id = ${viewer.id} AND f.due_at <= now() ORDER BY f.due_at LIMIT 5`)
+        : role === 'coordinator'
+          ? this.pending(sql<PendingRow>`
+              SELECT 'Alerta ' || r.level || ': ' || u.full_name AS title, c.title AS meta, '/app/coordinacion' AS link, count(*) OVER () AS total
+              FROM risk_alerts r JOIN users u ON u.id = r.student_id JOIN courses c ON c.id = r.course_id
+              WHERE r.status = 'open' ORDER BY r.created_at DESC LIMIT 5`)
+          : role === 'rector'
+            ? this.pending(sql<PendingRow>`
+                WITH queue AS (
+                  SELECT 'Certificado: ' || ce.title AS title, u.full_name AS meta, ce.issued_at AS sort_at FROM certificates ce JOIN users u ON u.id = ce.user_id WHERE ce.status = 'pending_signature'
+                  UNION ALL
+                  SELECT 'Boletín por firmar', u.full_name, bs.created_at FROM bulletin_signatures bs JOIN users u ON u.id = bs.student_id WHERE bs.status = 'pending_signature'
+                )
+                SELECT title, meta, '/app/rectoria' AS link, count(*) OVER () AS total FROM queue ORDER BY sort_at LIMIT 5`)
+            : none,
+      role === 'student'
+        ? this.pending(sql<PendingRow>`
+            SELECT t.name AS title, CASE WHEN count(*) = 1 THEN '1 reto esperando' ELSE count(*)::STRING || ' retos esperando' END AS meta, '/app/ruta' AS link, sum(count(*)) OVER () AS total
+            FROM route_items r JOIN topics t ON t.id = r.topic_id
+            WHERE r.user_id = ${viewer.id} AND r.status = 'pending' GROUP BY t.name ORDER BY count(*) DESC LIMIT 5`)
+        : none,
+    ]);
+    const [lessonsToday, attemptsToday, online] = await pulse;
+    const all: Record<string, Pending> = { aula, cartelera, arena, trofeos, lab: { total: 0, items: [] }, biblioteca, cuaderno, ruta };
     return {
-      buildings: { aula, cartelera, arena, trofeos, lab, biblioteca, cuaderno, ruta },
+      buildings: Object.fromEntries(Object.entries(all).map(([key, value]) => [key, value.total])),
+      pending: Object.fromEntries(Object.entries(all).filter(([, value]) => value.total > 0).map(([key, value]) => [key, value.items])),
       pulse: { lessonsToday, attemptsToday, online },
     };
   }

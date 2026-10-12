@@ -389,8 +389,33 @@ export function spokenAnswer(text: string) {
 
 export interface VoiceCommand { phrases: string[]; label: string; run: () => void }
 
-function normalize(text: string) {
+export function normalize(text: string) {
   return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9ñ ]/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+export interface SlotCommand { label: string; prefixes: string[]; run: (arg: string) => void }
+
+/**
+ * Matches commands that carry free text after a fixed opening, e.g. «busca en la biblioteca fotosíntesis».
+ * The opening is compared without accents; the argument keeps the words as they were said.
+ */
+export function matchSlot(spoken: string, commands: SlotCommand[]) {
+  const words = spoken.trim().split(/\s+/).map((original) => ({ original: original.replace(/^[¿¡"«]+|[?!.,;:"»]+$/g, ''), plain: normalize(original) })).filter((w) => w.plain);
+  let start = 0;
+  if (['oye', 'hola'].includes(words[0]?.plain ?? '') && ['luka', 'luna'].includes(words[1]?.plain ?? '')) start = 2;
+  else if (['luka', 'luna'].includes(words[0]?.plain ?? '')) start = 1;
+  const plain = words.slice(start).map((w) => w.plain);
+  let best: { command: SlotCommand; arg: string; size: number } | null = null;
+  for (const command of commands) {
+    for (const prefix of command.prefixes) {
+      const target = normalize(prefix).split(' ');
+      if (target.length >= plain.length || best && target.length <= best.size) continue;
+      if (target.every((word, i) => plain[i] === word)) {
+        best = { command, arg: words.slice(start + target.length).map((w) => w.original).join(' '), size: target.length };
+      }
+    }
+  }
+  return best && best.arg ? { command: best.command, arg: best.arg } : null;
 }
 
 /** Matches a spoken phrase against command phrases, ignoring accents and filler words. */

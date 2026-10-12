@@ -30,7 +30,7 @@ const suggestions = [
 ];
 
 export function TutorPage() {
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
   const companion = useCompanion();
   const [messages, setMessages] = useState<Bubble[]>([]);
   const [conversationId, setConversationId] = useState<string>();
@@ -44,12 +44,25 @@ export function TutorPage() {
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth' }); }, [messages, thinking]);
 
+  const spokenAsk = useRef(false);
+  useEffect(() => {
+    const asked = params.get('q');
+    if (params.get('enviar') !== '1' || !asked || spokenAsk.current) return;
+    spokenAsk.current = true;
+    const next = new URLSearchParams(params);
+    next.delete('q');
+    next.delete('enviar');
+    setParams(next, { replace: true });
+    void send(asked, true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [params]);
+
   function onDictated(text: string) {
     if (handsFree) void send(text);
     else setDraft((current) => joinDictation(current, text));
   }
 
-  async function send(message: string) {
+  async function send(message: string, byVoice = false) {
     if (!message.trim()) return;
     setDraft('');
     setMessages((prev) => [...prev, { role: 'user', content: message }]);
@@ -67,7 +80,7 @@ export function TutorPage() {
       });
       setConversationId(reply.conversationId);
       setMessages((prev) => [...prev, { role: 'assistant', content: reply.content, citations: reply.citations }]);
-      if (readAloud) speech.speak(reply.content);
+      if (readAloud || byVoice) speech.speak(reply.content);
       setError('');
     } catch (err) {
       setError(err instanceof ApiException ? err.message : 'El tutor no respondió');

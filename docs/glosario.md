@@ -102,6 +102,14 @@
 | Estrellas | Hitos de dominio por tema: una al nivel 4, dos al 7 y tres al 10 |
 | Reto jefe | Reto único dos niveles por encima del actual. Se desbloquea al nivel 4; si se acierta sube un nivel y suma una corona, si se falla no baja |
 | Manipulativo | Ayuda interactiva por tipo de ejercicio (barra de fracciones, cuadrícula de porcentaje, triángulo, tabla de valor posicional…) que se arma con los mismos parámetros del reto |
+| Arcade | Diez minijuegos ligados a temas (`arcade_games`). Cada partida vive en `arcade_sessions`: el servidor genera las preguntas, guarda las respuestas y califica. Da hasta 40 XP por partida, con un tope de 150 XP al día |
+| Reto del día | Un juego del Arcade igual para todo el colegio cada día, de nivel 4 y una sola partida. Suma 15 XP extra si hay al menos un acierto y tiene su propio ranking |
+| Insignia por niveles | Insignia con umbrales de bronce, plata y oro (`badges.thresholds`). El nivel y el progreso de cada estudiante quedan en `user_achievements` |
+| Insignia oculta | No muestra nombre ni condición hasta ganarla |
+| Insignia de temporada | Se gana de nuevo en cada periodo académico (`user_achievements.season` = id del periodo). Las de temporadas pasadas quedan en la sala de trofeos |
+| Pendientes del campus | Número rojo de cada edificio: lo que el usuario tiene por hacer allí según su rol (`GET /campus`). Al tocarlo se abre la lista con «Ir» para cada elemento |
+| Tipo de notificación | `notifications.kind` (aviso, cartelera, foro, logro, integridad, seguimiento, citación, mensaje, firma, certificado). Con `link` la notificación lleva al lugar exacto |
+| «Qué puedo decir» | Panel del micrófono que lista los comandos de voz según el rol. Cada frase se puede tocar para probarla |
 | Snapshot | Estado efímero de una sala de Arena en `arena_rooms.snapshot` para sobrevivir a un reinicio |
 | `groups_class` | Tabla del grupo (evita la palabra reservada `GROUP`) |
 
@@ -115,4 +123,4 @@
 | `ai_usage` | Registro de cada llamada a IA (funcionalidad y modelo, sin contenido) |
 | SM-2 | Algoritmo de repaso espaciado de las tarjetas |
 | VECTOR INDEX | Índice vectorial de CockroachDB. Spike Nice después del 15-oct |
-| Captura de voz | Dictado (Web Speech API), comandos de navegación y lectura en voz alta (EQ-P11) |
+| Captura de voz | Dictado (Web Speech API), comandos de navegación y lectura en voz alta (EQ-P11). Comandos con texto libre: «busca en la biblioteca …», «empieza un reto de …» y «pregúntale a Luka …»; además, «qué tengo pendiente» y «léeme la lección» |

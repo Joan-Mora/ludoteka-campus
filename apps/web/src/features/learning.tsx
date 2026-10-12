@@ -353,10 +353,10 @@ function GamesSection({ topic }: { topic: RouteTopic }) {
           <b>Misión relámpago</b>
           <span>3 retos en formato de misión, con reloj y estrellas.</span>
         </button>
-        <Link to="/app/jugar" className="space-card tone-violet">
+        <Link to={`/app/jugar?tema=${topic.id}`} className="space-card tone-violet">
           <Gamepad2 size={26} />
           <b>Arcade</b>
-          <span>Minijuegos cortos que suman XP.</span>
+          <span>Juegos de este tema; el servidor califica y suma XP.</span>
         </Link>
         <Link to="/app/arena" className="space-card tone-gold">
           <Swords size={26} />

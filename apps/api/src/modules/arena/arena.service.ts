@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
+import { Injectable, Logger, OnApplicationBootstrap, OnModuleDestroy } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { randomInt } from 'crypto';
 import { sql } from 'kysely';
@@ -132,12 +132,13 @@ function tally(votes: Record<string, string> | undefined) {
 }
 
 @Injectable()
-export class ArenaService implements OnApplicationBootstrap {
+export class ArenaService implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly logger = new Logger('Arena');
   private readonly rooms = new Map<string, Room>();
   private readonly timers = new Map<string, NodeJS.Timeout>();
   private readonly saves = new Map<string, NodeJS.Timeout>();
   private readonly queues = new Map<string, Promise<unknown>>();
+  private sweeper: NodeJS.Timeout | null = null;
 
   constructor(
     private readonly database: DatabaseService,
@@ -146,8 +147,35 @@ export class ArenaService implements OnApplicationBootstrap {
     private readonly events: EventEmitter2,
   ) {}
 
+  onModuleDestroy() {
+    if (this.sweeper) clearInterval(this.sweeper);
+  }
+
+  /** Salas abiertas hace más de 3 horas se dan por abandonadas: se cierran sin premios y dejan de contar como en vivo. */
+  async expireAbandoned() {
+    const stale = await this.database.db
+      .updateTable('arena_rooms')
+      .set({ status: 'ended', ended_at: new Date(), started_at: sql<Date>`coalesce(started_at, created_at)` })
+      .where('status', '<>', 'ended')
+      .where('created_at', '<', sql<Date>`now() - INTERVAL '3 hours'`)
+      .returning('id')
+      .execute();
+    for (const { id } of stale) {
+      this.rooms.delete(id);
+      clearTimeout(this.timers.get(id));
+      this.timers.delete(id);
+      clearTimeout(this.saves.get(id));
+      this.saves.delete(id);
+    }
+    if (stale.length) this.logger.log(`${stale.length} sala(s) abandonadas cerradas`);
+  }
+
   /** Rehidrata las salas en juego para que sus cronómetros sigan corriendo tras un reinicio. */
   onApplicationBootstrap() {
+    const sweep = () => void this.expireAbandoned().catch((error: Error) => this.logger.warn(`Barrido de salas: ${error.message}`));
+    this.sweeper = setInterval(sweep, 10 * 60_000);
+    this.sweeper.unref();
+    sweep();
     void this.database.db
       .selectFrom('arena_rooms')
       .select('id')

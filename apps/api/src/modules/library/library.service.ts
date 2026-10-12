@@ -48,6 +48,16 @@ interface Hit {
 }
 
 const isBoard = (viewer: Viewer) => boardRole(viewer.role);
+
+/** WHERE fragment over `library_items li`: published (or own/board), and the viewer can see its visibility scope. */
+export function visibleLibrary(viewer: Viewer) {
+  if (isBoard(viewer)) return sql<boolean>`(li.status <> 'archived' OR li.uploaded_by = ${viewer.id})`;
+  return sql<boolean>`(
+    (li.status = 'published' OR li.uploaded_by = ${viewer.id})
+    AND (li.visibility IN ('public', 'institution') OR li.uploaded_by = ${viewer.id}
+         OR (li.visibility = 'course' AND li.course_id IN (${viewerCourses(viewer)})))
+  )`;
+}
 const isStaff = (viewer: Viewer) => isBoard(viewer) || viewer.role === 'teacher';
 const vectorLiteral = (values: number[]) => `[${values.map((v) => (Number.isFinite(v) ? v.toFixed(6) : '0')).join(',')}]`;
 
@@ -138,14 +148,8 @@ export class LibraryService implements OnApplicationBootstrap {
     await this.ingest(created.id, author?.id ?? null);
   }
 
-  /** WHERE fragment over `library_items li`: published (or own/board), and the viewer can see its visibility scope. */
   private visible(viewer: Viewer) {
-    if (isBoard(viewer)) return sql<boolean>`(li.status <> 'archived' OR li.uploaded_by = ${viewer.id})`;
-    return sql<boolean>`(
-      (li.status = 'published' OR li.uploaded_by = ${viewer.id})
-      AND (li.visibility IN ('public', 'institution') OR li.uploaded_by = ${viewer.id}
-           OR (li.visibility = 'course' AND li.course_id IN (${viewerCourses(viewer)})))
-    )`;
+    return visibleLibrary(viewer);
   }
 
   async catalog() {
@@ -187,6 +191,12 @@ export class LibraryService implements OnApplicationBootstrap {
       ORDER BY li.created_at DESC
       LIMIT 120
     `.execute(this.database.db);
+    await this.database.db
+      .insertInto('library_visits')
+      .values({ user_id: viewer.id, visited_at: new Date() })
+      .onConflict((oc) => oc.column('user_id').doUpdateSet({ visited_at: new Date() }))
+      .execute()
+      .catch((error: Error) => this.logger.warn(`Visita a la biblioteca sin registrar: ${error.message}`));
     return rows.rows.map((row) => ({
       ...row,
       tags: row.tags ?? [],

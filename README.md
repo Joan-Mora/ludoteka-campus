@@ -37,7 +37,8 @@ Ludoteka Campus reúne todo eso en una sola aplicación web para seis roles (adm
 - **Aula:** cursos, unidades, lecciones, tareas, cartelera con confirmación de lectura y foros.
 - **Evaluación:** banco de preguntas, prácticas, exámenes en kiosco con control de integridad y quiz en vivo.
 - **Libro de calificaciones:** ponderación por categorías (escala 1.0 a 5.0), asistencia, rúbricas y alertas de riesgo al docente y al acudiente.
-- **Juego:** campus isométrico, XP, rachas, misiones, insignias, Arcade y **Arena** por equipos con QR.
+- **Juego:** campus isométrico con los pendientes de cada edificio, XP, rachas, misiones, sala de trofeos (41 insignias con niveles, ocultas y de temporada), Arcade de 10 juegos calificados en el servidor con reto del día, y **Arena** por equipos con QR.
+- **Avisos y voz:** notificaciones que llevan al lugar exacto, página `/app/notificaciones` con filtros y comandos de voz con panel «Qué puedo decir» («qué tengo pendiente», «léeme la lección», «busca en la biblioteca…»).
 - **Estudio:**
   - Mi ruta adaptativa por maestría de temas;
   - Cuaderno con resumen IA y tarjetas SM-2;
@@ -123,7 +124,10 @@ flowchart LR
   learning -. "lesson.completed<br/>submission.graded" .-> gamification
   assessment -. "attempt.graded" .-> gamification
   arena -. "arena.finished" .-> gamification
+  arcade -. "arcade.finished" .-> gamification
   study -. "study.progress" .-> gamification
+  gamification -. "badge.earned<br/>badges.seen" .-> notifications
+  learning -. "news.read" .-> notifications
   integrity -. "integrity.violation" .-> notifications
   assessment -. "risk.alert_raised" .-> notifications
   identity -. "password.reset" .-> notifications
@@ -138,7 +142,7 @@ Decisiones técnicas principales (cada una con su ADR en [`docs/adr/`](docs/adr/
 
 - **Monolito modular con fronteras exigidas** (ADR-001): cada módulo expone su fachada en `public-api.ts` y `dependency-cruiser` impide importar archivos internos de otro módulo (`npm run deps:check`).
 - **Eventos para lo transversal** (ADR-003): gamificación y notificaciones escuchan eventos; la escritura de cada tabla la hace solo su módulo dueño y los tableros leen en solo lectura.
-- **CockroachDB con Kysely y SQL versionado** (ADR-004): claves `UUID`, `withTx()` reintenta ante el SQLSTATE `40001` y las migraciones (`db/migrations`, 0000 a 0023) se aplican al arrancar.
+- **CockroachDB con Kysely y SQL versionado** (ADR-004): claves `UUID`, `withTx()` reintenta ante el SQLSTATE `40001` y las migraciones (`db/migrations`, 0000 a 0027) se aplican al arrancar la API (o a mano con `npm run migrate`).
 - **Observatorio NL→SQL acotado** (ADR-006): la IA genera SQL que corre en una transacción `READ ONLY`, con `statement_timeout` y rol restringido, solo sobre vistas `v_*`.
 - **Biometría en el navegador** (ADR-002 y ADR-007): face-api calcula el descriptor de 128 dimensiones en el cliente; la API promedia 5 muestras, las cifra con AES-256-GCM y compara por distancia euclidiana, con el marco de la Ley 1581.
 - **IA con camino alterno:** `AiService` usa modelos de respaldo si el principal falla, quita datos personales antes de enviar texto y cada funcionalidad tiene una versión sin IA (el tutor responde con la lección, el Cuaderno usa un resumen local, Mi ruta usa plantillas).

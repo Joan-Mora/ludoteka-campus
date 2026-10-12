@@ -1,4 +1,5 @@
 import {
+  Bell,
   BookOpen,
   Building2,
   ClipboardList,
@@ -68,6 +69,7 @@ export const ROUTE_ROLES: Record<string, readonly Role[]> = {
   consultas: STAFF_READ,
   calificaciones: STAFF_READ,
   ajustes: ALL,
+  notificaciones: ALL,
 };
 
 export function canOpen(role: Role, to: string) {
@@ -122,7 +124,10 @@ export function navSections(role: Role, companionName: string): NavSection[] {
     { to: '/app/admin', label: 'Institución', icon: Building2, end: true },
     ...(!student ? [{ to: '/app/tutor', label: companionName, icon: Sparkles }] : []),
   ].filter((item) => !guardian || item.to === '/app/tutor');
-  const account: NavItem[] = [{ to: '/app/ajustes', label: 'Ajustes', icon: Settings }];
+  const account: NavItem[] = [
+    { to: '/app/notificaciones', label: 'Notificaciones', icon: Bell },
+    { to: '/app/ajustes', label: 'Ajustes', icon: Settings },
+  ];
 
   return [
     { label: guardian ? 'Familia' : 'Aprender', items: learn },

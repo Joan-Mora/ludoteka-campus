@@ -125,6 +125,93 @@ test.describe('aprendizaje del estudiante', () => {
     await signed!.close();
   });
 
+  test('Arcade: diez juegos, reto del día y respuesta calificada en el servidor', async ({ browser }, info) => {
+    test.skip(info.project.name !== 'android', 'una vez basta');
+    const signed = await signedContext(browser, info, 'student');
+    test.skip(!signed, 'sin sesión de estudiante');
+    const page = await signed!.newPage();
+    const errors = watchErrors(page);
+    await page.goto('/app/jugar');
+    await expect(page.locator('article.arcade')).toHaveCount(10, { timeout: 15_000 });
+    await expect(page.getByText('Reto del día').first()).toBeVisible();
+    await page.locator('article.arcade').filter({ hasText: 'Carrera numérica' }).getByRole('button', { name: 'Jugar' }).click();
+    await page.locator('.board-input').fill('0');
+    await page.getByRole('button', { name: 'Enviar' }).click();
+    await expect(page.locator('.runner-feedback')).toBeVisible();
+    await shoot(page, info, 'estudiante-arcade-partida');
+    await page.getByRole('button', { name: 'Salir del juego' }).click();
+    await expect(page.locator('.arcade-grid')).toBeVisible();
+    expect(errors).toEqual([]);
+    await signed!.close();
+  });
+
+  test('Sala de trofeos: estantes, niveles, secretas y temporada', async ({ browser }, info) => {
+    test.skip(info.project.name !== 'android', 'una vez basta');
+    const signed = await signedContext(browser, info, 'student');
+    test.skip(!signed, 'sin sesión de estudiante');
+    const page = await signed!.newPage();
+    const errors = watchErrors(page);
+    await page.goto('/app/logros');
+    await expect(page.locator('.trophy').first()).toBeVisible({ timeout: 15_000 });
+    expect(await page.locator('.trophy').count()).toBeGreaterThanOrEqual(40);
+    await expect(page.locator('.trophy-section')).toHaveCount(7);
+    await expect(page.getByText(/^Temporada /).first()).toBeVisible();
+    await page.getByRole('tab', { name: 'Por ganar' }).click();
+    await expect(page.locator('.trophy-section .trophy.tier-none').first()).toBeVisible();
+    await shoot(page, info, 'estudiante-trofeos');
+    expect(errors).toEqual([]);
+    await signed!.close();
+  });
+
+  test('Pendientes del campus y notificaciones navegables', async ({ browser }, info) => {
+    test.skip(info.project.name !== 'android', 'una vez basta');
+    const signed = await signedContext(browser, info, 'student');
+    test.skip(!signed, 'sin sesión de estudiante');
+    const page = await signed!.newPage();
+    const errors = watchErrors(page);
+    await page.goto('/app');
+    const badge = page.locator('.pending-btn').first();
+    if (await badge.isVisible({ timeout: 15_000 }).catch(() => false)) {
+      await badge.click();
+      const pop = page.locator('.pending-pop').first();
+      await expect(pop).toBeVisible();
+      await expect(pop.getByRole('button', { name: /^Abrir / })).toBeVisible();
+      await page.keyboard.press('Escape');
+      await expect(pop).toBeHidden();
+    }
+    await page.goto('/app/notificaciones');
+    await expect(page.locator('.notes-filters')).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole('tab', { name: /Sin leer/ })).toBeVisible();
+    await page.getByRole('tab', { name: /Sin leer/ }).click();
+    await expect(page.locator('.notes-item, .empty').first()).toBeVisible();
+    await shoot(page, info, 'estudiante-notificaciones');
+    expect(errors).toEqual([]);
+    await signed!.close();
+  });
+
+  test('Voz: panel «Qué puedo decir» y comandos con texto libre', async ({ browser }, info) => {
+    test.skip(info.project.name !== 'android', 'una vez basta');
+    const signed = await signedContext(browser, info, 'student');
+    test.skip(!signed, 'sin sesión de estudiante');
+    const page = await signed!.newPage();
+    const errors = watchErrors(page);
+    const phrase = async (text: string) => {
+      await page.getByRole('button', { name: 'Comandos de voz' }).first().click({ button: 'right' });
+      await page.getByRole('dialog', { name: 'Qué puedo decir' }).getByRole('button', { name: new RegExp(text) }).click();
+    };
+    await page.goto('/app');
+    await page.getByRole('button', { name: 'Comandos de voz' }).first().click({ button: 'right' });
+    await expect(page.getByRole('dialog', { name: 'Qué puedo decir' })).toBeVisible();
+    await page.keyboard.press('Escape');
+    await phrase('busca en la biblioteca');
+    await expect(page).toHaveURL(/\/app\/biblioteca\?q=/);
+    await expect(page.locator('.lib-search input')).toHaveValue(/fotos/);
+    await phrase('empieza un reto de fracciones');
+    await expect(page.getByText(/Ronda 1 de/)).toBeVisible({ timeout: 15_000 });
+    expect(errors).toEqual([]);
+    await signed!.close();
+  });
+
   test('Mi ruta: sendero con paradas, panel y jefe', async ({ browser }, info) => {
     test.skip(info.project.name !== 'android', 'una vez basta');
     const signed = await signedContext(browser, info, 'student');

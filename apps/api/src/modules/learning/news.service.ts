@@ -5,7 +5,7 @@ import { isBoard as boardRole, ROLE_LABELS, type NewsAudience } from '@eduquest/
 import { DatabaseService } from '../../core/database/database.service';
 import { ApiError } from '../../core/errors/api-error';
 import type { AuthUser } from '../../core/auth/auth.decorators';
-import { DomainEvents, type NewsPublishedEvent } from '../../core/events/domain-events';
+import { DomainEvents, type NewsPublishedEvent, type NewsReadEvent } from '../../core/events/domain-events';
 import { visibleNews } from './news.audience';
 
 interface NewsInput {
@@ -242,6 +242,7 @@ export class NewsService {
           : oc.columns(['news_id', 'user_id']).doNothing(),
       )
       .execute();
+    this.events.emit(DomainEvents.NewsRead, { userId: viewer.id, newsId: id } satisfies NewsReadEvent);
     return { ok: true };
   }
 

@@ -19,7 +19,38 @@ export const DomainEvents = {
   SignatureDecided: 'signature.decided',
   SignatureRequested: 'signature.requested',
   LearningProfileSaved: 'profile.saved',
+  ArcadeFinished: 'arcade.finished',
+  BadgeEarned: 'badge.earned',
+  BadgesSeen: 'badges.seen',
+  NewsRead: 'news.read',
 } as const;
+
+/** Una evaluación puede subir varias insignias a la vez; llegan juntas para avisar una sola vez. */
+export interface BadgeEarnedEvent {
+  userId: string;
+  badges: { code: string; name: string; tier: number; maxTier: number }[];
+}
+
+export interface BadgesSeenEvent {
+  userId: string;
+}
+
+export interface NewsReadEvent {
+  userId: string;
+  newsId: string;
+}
+
+export interface ArcadeFinishedEvent {
+  userId: string;
+  sessionId: string;
+  game: string;
+  score: number;
+  correct: number;
+  total: number;
+  xp: number;
+  daily: boolean;
+  perfect: boolean;
+}
 
 export interface LearningProfileSavedEvent {
   userId: string;

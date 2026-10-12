@@ -47,6 +47,7 @@ const NewsPage = page(community, 'NewsPage');
 const LibraryPage = page(library, 'LibraryPage');
 const LibraryItemPage = page(library, 'LibraryItemPage');
 const RoutePage = page(() => import('@/features/route'), 'RoutePage');
+const LearningPage = page(() => import('@/features/learning'), 'LearningPage');
 const ObservatoryPage = page(() => import('@/features/observatory'), 'ObservatoryPage');
 const ArenaPage = page(arena, 'ArenaPage');
 const ArenaRoomPage = page(arena, 'ArenaRoomPage');
@@ -122,6 +123,7 @@ const app: [string, ComponentType][] = [
   ['biblioteca', LibraryPage],
   ['biblioteca/:id', LibraryItemPage],
   ['ruta', RoutePage],
+  ['aprender', LearningPage],
   ['consultas', ObservatoryPage],
   ['arena', ArenaPage],
   ['arena/:id', ArenaRoomPage],

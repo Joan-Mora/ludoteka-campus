@@ -8,6 +8,8 @@ import { DomainEvents, type AttemptGradedEvent, type RouteSolvedEvent } from '..
 import type { AuthUser } from '../../core/auth/auth.decorators';
 import { AiService } from '../../core/ai/ai.service';
 import { IntegrityService } from '../integrity/public-api';
+import { LearningProfileService } from '../profile/public-api';
+import type { LearningMethod } from '@eduquest/contracts';
 import {
   checkAnswer,
   defaultHint,
@@ -36,6 +38,10 @@ const TOPICS: { code: string; name: string; generator: GeneratorKey; questions: 
 ];
 
 const MAX_PENDING = 6;
+const BOSS_MIN_LEVEL = 4;
+
+/** Una estrella al nivel 4, dos al 7 y tres al 10. */
+export const starsFor = (level: number) => (level >= 10 ? 3 : level >= 7 ? 2 : level >= 4 ? 1 : 0);
 
 interface AiExercise {
   params?: Params;
@@ -70,6 +76,12 @@ export function nextMastery(current: { level: number; streak: number }, correct:
   return { level, streak: Math.max(-2, Math.min(2, streak)), change };
 }
 
+/** Vencer al jefe sube un nivel de una vez; perder no castiga. */
+export function bossMastery(current: { level: number; streak: number }, correct: boolean) {
+  if (!correct || current.level >= 10) return { level: current.level, streak: current.streak, change: 0 as const };
+  return { level: current.level + 1, streak: 0, change: 1 as const };
+}
+
 @Injectable()
 export class RouteService implements OnApplicationBootstrap {
   private readonly logger = new Logger('MiRuta');
@@ -79,6 +91,7 @@ export class RouteService implements OnApplicationBootstrap {
     private readonly ai: AiService,
     private readonly integrity: IntegrityService,
     private readonly events: EventEmitter2,
+    private readonly profiles: LearningProfileService,
   ) {}
 
   onApplicationBootstrap() {
@@ -140,11 +153,14 @@ export class RouteService implements OnApplicationBootstrap {
     await this.seedMastery(user.id);
     const topics = await sql<{
       id: string; code: string; name: string; generator: string; level: number; streak: number; correct_count: number; attempt_count: number; pending: number;
+      crowns: number; boss_pending: boolean;
     }>`
       SELECT t.id, t.code, t.name, t.generator,
              coalesce(m.level, 1) AS level, coalesce(m.streak, 0) AS streak,
              coalesce(m.correct_count, 0) AS correct_count, coalesce(m.attempt_count, 0) AS attempt_count,
-             (SELECT count(*)::INT FROM route_items r WHERE r.user_id = ${user.id} AND r.topic_id = t.id AND r.status = 'pending') AS pending
+             (SELECT count(*)::INT FROM route_items r WHERE r.user_id = ${user.id} AND r.topic_id = t.id AND r.status = 'pending') AS pending,
+             (SELECT count(*)::INT FROM route_items r WHERE r.user_id = ${user.id} AND r.topic_id = t.id AND r.boss AND r.status = 'correct') AS crowns,
+             EXISTS (SELECT 1 FROM route_items r WHERE r.user_id = ${user.id} AND r.topic_id = t.id AND r.boss AND r.status = 'pending') AS boss_pending
       FROM topics t
       LEFT JOIN topic_mastery m ON m.topic_id = t.id AND m.user_id = ${user.id}
       ORDER BY t.position
@@ -152,7 +168,20 @@ export class RouteService implements OnApplicationBootstrap {
     const pending = await this.database.db
       .selectFrom('route_items')
       .innerJoin('topics', 'topics.id', 'route_items.topic_id')
-      .select(['route_items.id', 'route_items.topic_id', 'topics.name as topic', 'route_items.level', 'route_items.prompt', 'route_items.hint', 'route_items.source', 'route_items.created_at'])
+      .select([
+        'route_items.id',
+        'route_items.topic_id',
+        'topics.name as topic',
+        'route_items.level',
+        'route_items.prompt',
+        'route_items.hint',
+        'route_items.source',
+        'route_items.created_at',
+        'route_items.generator',
+        'route_items.params',
+        'route_items.method',
+        'route_items.boss',
+      ])
       .where('route_items.user_id', '=', user.id)
       .where('route_items.status', '=', 'pending')
       .orderBy('route_items.created_at')
@@ -161,19 +190,54 @@ export class RouteService implements OnApplicationBootstrap {
     const recent = await this.database.db
       .selectFrom('route_items')
       .innerJoin('topics', 'topics.id', 'route_items.topic_id')
-      .select(['route_items.id', 'topics.name as topic', 'route_items.level', 'route_items.prompt', 'route_items.status', 'route_items.given', 'route_items.answer', 'route_items.explanation', 'route_items.verification', 'route_items.answered_at'])
+      .select(['route_items.id', 'topics.name as topic', 'route_items.level', 'route_items.prompt', 'route_items.status', 'route_items.given', 'route_items.answer', 'route_items.explanation', 'route_items.verification', 'route_items.answered_at', 'route_items.method', 'route_items.boss'])
       .where('route_items.user_id', '=', user.id)
       .where('route_items.status', '!=', 'pending')
       .orderBy('route_items.answered_at', 'desc')
       .limit(8)
       .execute();
-    const rows = topics.rows;
+    const rows = topics.rows.map((t) => ({
+      ...t,
+      stars: starsFor(t.level),
+      crowns: Number(t.crowns),
+      bossReady: t.level >= BOSS_MIN_LEVEL && !t.boss_pending,
+    }));
     const suggestion = [...rows].sort((a, b) => a.level - b.level || a.attempt_count - b.attempt_count)[0] ?? null;
     const average = rows.length ? Math.round((rows.reduce((s, t) => s + t.level, 0) / rows.length) * 10) / 10 : 0;
-    return { topics: rows, pending, recent, suggestion: suggestion ? { topicId: suggestion.id, name: suggestion.name, level: suggestion.level } : null, average };
+    const method = await this.profiles.methodOf(user.id);
+    return {
+      topics: rows,
+      pending,
+      recent,
+      suggestion: suggestion ? { topicId: suggestion.id, name: suggestion.name, level: suggestion.level } : null,
+      average,
+      method,
+      stars: rows.reduce((s, t) => s + t.stars, 0),
+      bossMinLevel: BOSS_MIN_LEVEL,
+    };
   }
 
-  async generate(user: AuthUser, input: { topicId?: string; count?: number }) {
+  /** Ejemplos resueltos de plantilla al nivel del estudiante, para la sección «Ejemplos» de Mi espacio. */
+  async examples(user: AuthUser, topicId: string) {
+    const row = await sql<{ name: string; generator: string; level: number }>`
+      SELECT t.name, t.generator, coalesce(m.level, 1) AS level FROM topics t
+      LEFT JOIN topic_mastery m ON m.topic_id = t.id AND m.user_id = ${user.id}
+      WHERE t.id = ${topicId}`.execute(this.database.db);
+    const topic = row.rows[0];
+    if (!topic || !isGenerator(topic.generator)) throw new ApiError(404, 'NOT_FOUND', 'El tema no existe');
+    const generator = topic.generator;
+    const seen = new Set<string>();
+    const items = [];
+    for (let i = 0; i < 12 && items.length < 3; i++) {
+      const exercise = templateExercise(generator, Math.max(1, topic.level - 1 + (items.length % 2)));
+      if (seen.has(exercise.prompt)) continue;
+      seen.add(exercise.prompt);
+      items.push({ prompt: exercise.prompt, hint: exercise.hint, answer: exercise.answer, explanation: exercise.explanation, params: exercise.params });
+    }
+    return { topic: { id: topicId, name: topic.name, level: topic.level, generator }, items };
+  }
+
+  async generate(user: AuthUser, input: { topicId?: string; count?: number; method?: LearningMethod; boss?: boolean }) {
     if (await this.integrity.hasBlockingAttempt(user.id)) {
       throw new ApiError(403, 'KIOSK_ACTIVE', 'Mi ruta se pausa durante un examen. Termina la evaluación y vuelve.');
     }
@@ -186,7 +250,9 @@ export class RouteService implements OnApplicationBootstrap {
       .executeTakeFirstOrThrow();
     const room = MAX_PENDING - pending.n;
     if (room <= 0) throw new ApiError(409, 'ROUTE_FULL', 'Responde o salta los retos pendientes antes de pedir más.');
-    const count = Math.min(room, Math.max(1, Math.min(5, input.count ?? 3)));
+    if (input.boss && !input.topicId) throw new ApiError(400, 'TOPIC_REQUIRED', 'El reto jefe es de un tema');
+    const count = input.boss ? 1 : Math.min(room, Math.max(1, Math.min(5, input.count ?? 3)));
+    const method = input.method ?? (await this.profiles.methodOf(user.id));
 
     const topic = input.topicId
       ? await sql<{ id: string; name: string; generator: string; level: number }>`
@@ -199,14 +265,30 @@ export class RouteService implements OnApplicationBootstrap {
           ORDER BY coalesce(m.level, 1), coalesce(m.attempt_count, 0), t.position LIMIT 1`.execute(this.database.db);
     const row = topic.rows[0];
     if (!row || !isGenerator(row.generator)) throw new ApiError(404, 'NOT_FOUND', 'El tema no existe');
+    let level = row.level;
+    if (input.boss) {
+      if (row.level < BOSS_MIN_LEVEL) throw new ApiError(409, 'BOSS_LOCKED', `El jefe de este tema aparece desde el nivel ${BOSS_MIN_LEVEL}`);
+      const open = await this.database.db
+        .selectFrom('route_items')
+        .select('id')
+        .where('user_id', '=', user.id)
+        .where('topic_id', '=', row.id)
+        .where('boss', '=', true)
+        .where('status', '=', 'pending')
+        .executeTakeFirst();
+      if (open) throw new ApiError(409, 'BOSS_PENDING', 'Ya tienes el jefe de este tema esperándote');
+      level = Math.min(10, row.level + 2);
+    }
 
-    const items = await this.build(row.generator, row.name, row.level, count, user.id);
+    const items = await this.build(row.generator, row.name, level, count, user.id, method);
     const saved = await this.database.db
       .insertInto('route_items')
       .values(items.map((item) => ({
         user_id: user.id,
         topic_id: row.id,
-        level: row.level,
+        level,
+        method,
+        boss: Boolean(input.boss),
         generator: row.generator,
         params: JSON.stringify(item.params),
         prompt: item.prompt,
@@ -218,7 +300,7 @@ export class RouteService implements OnApplicationBootstrap {
         ai_answer: item.aiAnswer,
         verification: item.verification,
       })))
-      .returning(['id', 'prompt', 'hint', 'source', 'level'])
+      .returning(['id', 'prompt', 'hint', 'source', 'level', 'generator', 'params', 'method', 'boss'])
       .execute();
     return {
       topic: { id: row.id, name: row.name, level: row.level },
@@ -232,9 +314,10 @@ export class RouteService implements OnApplicationBootstrap {
    * The model proposes params, statement and its own answer. The server re-validates the params,
    * recomputes the answer and only keeps the model's statement if it quotes every number.
    */
-  private async build(generator: GeneratorKey, topicName: string, level: number, count: number, userId: string): Promise<NewItem[]> {
+  private async build(generator: GeneratorKey, topicName: string, level: number, count: number, userId: string, method: LearningMethod | null): Promise<NewItem[]> {
     const out: NewItem[] = [];
     const persona = await personaOf(this.database, userId);
+    const style = this.profiles.routeStyle(method);
     const proposal = await this.ai.chatJson<{ ejercicios?: AiExercise[] }>(
       [
         {
@@ -246,7 +329,8 @@ export class RouteService implements OnApplicationBootstrap {
           content: [
             `Tema: ${topicName}. Nivel ${level} de 10. Genera ${count} ejercicios distintos entre sí.`,
             `Cada ejercicio usa "params" con esta forma: ${schemaFor(generator, level)}.`,
-            '"enunciado": problema corto (máximo 2 frases) de la vida diaria en Colombia que incluya todos los números de params tal cual, sin dar la respuesta.',
+            '"enunciado": problema corto (máximo 3 frases) de la vida diaria en Colombia que incluya todos los números de params tal cual, sin dar la respuesta, y que termine con la pregunta que se debe responder.',
+            ...(style ? [`Estilo de redacción: ${style}`] : []),
             '"pista": orienta el primer paso sin resolver. "respuesta": tu resultado (fracciones como a/b irreducible, decimales con coma).',
             'Formato: {"ejercicios":[{"params":{},"enunciado":"","pista":"","respuesta":""}]}',
           ].join('\n'),
@@ -294,7 +378,9 @@ export class RouteService implements OnApplicationBootstrap {
       const current = await sql<{ level: number; streak: number }>`
         SELECT level, streak FROM topic_mastery WHERE user_id = ${user.id} AND topic_id = ${item.topic_id} FOR UPDATE
       `.execute(trx);
-      const next = nextMastery(current.rows[0] ?? { level: 1, streak: 0 }, correct);
+      const before = current.rows[0] ?? { level: 1, streak: 0 };
+      const next = item.boss ? bossMastery(before, correct) : nextMastery(before, correct);
+      await trx.updateTable('route_items').set({ level_change: next.change }).where('id', '=', id).execute();
       await sql`
         INSERT INTO topic_mastery (user_id, topic_id, level, streak, correct_count, attempt_count, updated_at)
         VALUES (${user.id}, ${item.topic_id}, ${next.level}, ${next.streak}, ${correct ? 1 : 0}, 1, now())
@@ -313,7 +399,8 @@ export class RouteService implements OnApplicationBootstrap {
       answer: item.answer,
       explanation: item.explanation,
       verification: item.verification,
-      mastery: { level: mastery.level, change: mastery.change },
+      boss: item.boss,
+      mastery: { level: mastery.level, change: mastery.change, stars: starsFor(mastery.level) },
     };
   }
 

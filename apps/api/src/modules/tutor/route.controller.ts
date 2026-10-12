@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
-import { routeAnswerSchema, routeGenerateSchema } from '@eduquest/contracts';
+import { routeAnswerSchema, routeGenerateSchema, type LearningMethod } from '@eduquest/contracts';
 import { CurrentUser, Roles, type AuthUser } from '../../core/auth/auth.decorators';
 import { ZodPipe } from '../../core/common/zod.pipe';
 import { RouteService } from './route.service';
@@ -16,8 +16,14 @@ export class RouteController {
 
   @Roles('student')
   @Post('route/generate')
-  generate(@CurrentUser() user: AuthUser, @Body(new ZodPipe(routeGenerateSchema)) body: { topicId?: string; count?: number }) {
+  generate(@CurrentUser() user: AuthUser, @Body(new ZodPipe(routeGenerateSchema)) body: { topicId?: string; count?: number; method?: LearningMethod; boss?: boolean }) {
     return this.route.generate(user, body);
+  }
+
+  @Roles('student')
+  @Get('route/topics/:id/examples')
+  examples(@CurrentUser() user: AuthUser, @Param('id', ParseUUIDPipe) id: string) {
+    return this.route.examples(user, id);
   }
 
   @Roles('student')

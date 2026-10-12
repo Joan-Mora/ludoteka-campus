@@ -106,6 +106,44 @@ test('llave de acceso: registrar en Ajustes y entrar sin contraseña', async ({ 
   await fresh.close();
 });
 
+test.describe('aprendizaje del estudiante', () => {
+  test('Mi espacio: seis métodos con navegación libre', async ({ browser }, info) => {
+    test.skip(info.project.name !== 'android', 'una vez basta');
+    const signed = await signedContext(browser, info, 'student');
+    test.skip(!signed, 'sin sesión de estudiante');
+    const page = await signed!.newPage();
+    const errors = watchErrors(page);
+    await page.goto('/app/aprender');
+    const tabs = page.getByRole('tablist', { name: 'Formas de aprender' }).getByRole('tab');
+    await expect(tabs).toHaveCount(6);
+    await tabs.filter({ hasText: 'Visual' }).click();
+    await expect(tabs.filter({ hasText: 'Visual' })).toHaveAttribute('aria-selected', 'true');
+    await expect(page).toHaveURL(/metodo=visual/);
+    await expect(page.locator('.manipulative')).toBeVisible({ timeout: 15_000 });
+    await shoot(page, info, 'estudiante-mi-espacio-visual');
+    expect(errors).toEqual([]);
+    await signed!.close();
+  });
+
+  test('Mi ruta: sendero con paradas, panel y jefe', async ({ browser }, info) => {
+    test.skip(info.project.name !== 'android', 'una vez basta');
+    const signed = await signedContext(browser, info, 'student');
+    test.skip(!signed, 'sin sesión de estudiante');
+    const page = await signed!.newPage();
+    const errors = watchErrors(page);
+    await page.goto('/app/ruta');
+    const nodes = page.locator('.trail-node');
+    await expect(nodes.first()).toBeVisible({ timeout: 15_000 });
+    expect(await nodes.count()).toBeGreaterThanOrEqual(10);
+    await nodes.first().click();
+    await expect(page).toHaveURL(/tema=/);
+    await expect(page.locator('.topic-panel').getByRole('button', { name: /Reto jefe/ })).toBeVisible();
+    await shoot(page, info, 'estudiante-sendero');
+    expect(errors).toEqual([]);
+    await signed!.close();
+  });
+});
+
 for (const role of ROLES) {
   test.describe(`rol ${role}`, () => {
     test.describe.configure({ mode: 'serial' });

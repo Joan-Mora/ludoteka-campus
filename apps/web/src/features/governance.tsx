@@ -947,7 +947,7 @@ export interface FamilyChild {
   alerts: { id: string; kind: string; level: string; detail: string; status: string; course: string }[];
   meetings: { id: string; scheduledAt: string; mode: string; place: string; reason: string; status: string; responseNote: string | null; outcome: string | null; organizer: string }[];
   unreadMessages: number;
-  learningProfile: { method: string; label: string; takenAt: string } | null;
+  learningProfile: { method: string; label: string; secondary: string | null; takenAt: string } | null;
 }
 export interface FamilyData { children: FamilyChild[]; digest: { enabled: boolean; lastSentAt: string | null } }
 
@@ -1056,7 +1056,11 @@ export function FamilyDetail({ child }: { child: FamilyChild }) {
       <div className="family-block">
         <div className="block-label"><Brain size={13} /> Cómo aprende</div>
         {child.learningProfile ? (
-          <p style={{ margin: 0 }}><b>{child.learningProfile.label}</b><br /><span className="muted" style={{ fontSize: 12.5 }}>Según «Descubre cómo aprendes», {day(child.learningProfile.takenAt)}.</span></p>
+          <p style={{ margin: 0 }}>
+            <b>{child.learningProfile.label}</b>
+            {child.learningProfile.secondary && <span className="muted"> · también {child.learningProfile.secondary.toLowerCase()}</span>}
+            <br /><span className="muted" style={{ fontSize: 12.5 }}>Según «Descubre cómo aprendes», {day(child.learningProfile.takenAt)}. En casa ayuda estudiar de esa forma.</span>
+          </p>
         ) : (
           <p className="muted" style={{ margin: 0, fontSize: 13.5 }}>Aún no responde «Descubre cómo aprendes». Cuando lo haga verás aquí su forma preferida de estudiar.</p>
         )}

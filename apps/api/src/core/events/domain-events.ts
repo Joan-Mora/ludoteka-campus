@@ -18,7 +18,14 @@ export const DomainEvents = {
   GuardianMessage: 'guardian.message',
   SignatureDecided: 'signature.decided',
   SignatureRequested: 'signature.requested',
+  LearningProfileSaved: 'profile.saved',
 } as const;
+
+export interface LearningProfileSavedEvent {
+  userId: string;
+  method: string;
+  retake: boolean;
+}
 
 export interface MeetingScheduledEvent {
   meetingId: string;

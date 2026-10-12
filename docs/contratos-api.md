@@ -172,7 +172,8 @@ El PDF lleva un QR y un pie con el código y la URL `APP_PUBLIC_URL/verificar-re
 | integrity | `POST /attempts/:id/integrity` (student; tipo `fullscreen_exit`, `visibility_hidden`, `blur` o `escape`), `GET /courses/:id/integrity` |
 | gradebook | `/gradebook/courses/:id/{categories,attendance,rubrics,alerts,report}`, `/gradebook/rubrics/:id[/scores]`, `/gradebook/alerts/:id` |
 | arena | `/arena/rooms[/:id/{vote,lock,command,control}]`, `/arena/join` |
-| tutor | `POST /tutor/chat` (student, teacher; `403 KIOSK_ACTIVE` con un examen o sala en vivo activos), `/tutor/drafts`, `/courses/:id/recommendations`, `/route[...]`, `/courses/:id/mastery` |
+| tutor | `POST /tutor/chat` (student, teacher; `403 KIOSK_ACTIVE` con un examen o sala en vivo activos; `method` opcional cambia el estilo y, si falta, se usa el del perfil del estudiante), `/tutor/drafts`, `/courses/:id/recommendations`, `/route[...]` (`POST /route/generate` acepta `method` y `boss`; el jefe exige nivel 4 y uno pendiente a la vez), `GET /route/topics/:id/examples` (student; 3 ejemplos resueltos sin IA), `/courses/:id/mastery` |
+| profile | `GET /profile` (student; perfil, `canTake`, estadísticas por método de 60 días y recomendación), `POST /profile` (student; `{version, answers[12]}`, `409 ALREADY_TAKEN` si ya respondió en el periodo), `POST /profile/activity` (student), `GET /profile/courses/:id/distribution` (teacher solo de sus cursos, admin, coordinator, rector) |
 | study | `/study`, `/study/pages[...]` (summary, cards), `/study/cards[...]`, `/study/goals`, `/study/focus[...]` |
 | library | `/library/{catalog,items,glossary,ask}`, `/library/uploads/ticket`, `/library/items/:id/{bookmark,reindex}` |
 | observatory | `GET /observatory/schema`, `GET /observatory/history`, `POST /observatory/ask` |
@@ -191,7 +192,7 @@ Los roles de cada ruta de `gradebook`, `study`, `observatory` y `library` (más 
 
 ## 9. Eventos de dominio (internos, `@nestjs/event-emitter`)
 
-`lesson.completed`, `submission.graded`, `attempt.graded`, `integrity.violation`, `integrity.suspend`, `password.reset`, `tutor.message`, `news.published`, `forum.reply`, `guardian.facial_revoked`, `route.solved`, `arena.finished`, `study.progress`, `risk.alert_raised`, `meeting.scheduled`, `meeting.responded`, `guardian.message`, `signature.requested` y `signature.decided`.
+`lesson.completed`, `submission.graded`, `attempt.graded`, `integrity.violation`, `integrity.suspend`, `password.reset`, `tutor.message`, `news.published`, `forum.reply`, `guardian.facial_revoked`, `route.solved`, `arena.finished`, `study.progress`, `risk.alert_raised`, `meeting.scheduled`, `meeting.responded`, `guardian.message`, `signature.requested`, `signature.decided` y `profile.saved`.
 
 ## 10. Códigos de error
 

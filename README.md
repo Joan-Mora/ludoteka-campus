@@ -138,7 +138,7 @@ Decisiones técnicas principales (cada una con su ADR en [`docs/adr/`](docs/adr/
 
 - **Monolito modular con fronteras exigidas** (ADR-001): cada módulo expone su fachada en `public-api.ts` y `dependency-cruiser` impide importar archivos internos de otro módulo (`npm run deps:check`).
 - **Eventos para lo transversal** (ADR-003): gamificación y notificaciones escuchan eventos; la escritura de cada tabla la hace solo su módulo dueño y los tableros leen en solo lectura.
-- **CockroachDB con Kysely y SQL versionado** (ADR-004): claves `UUID`, `withTx()` reintenta ante el SQLSTATE `40001` y las migraciones (`db/migrations`, 0000 a 0022) se aplican al arrancar.
+- **CockroachDB con Kysely y SQL versionado** (ADR-004): claves `UUID`, `withTx()` reintenta ante el SQLSTATE `40001` y las migraciones (`db/migrations`, 0000 a 0023) se aplican al arrancar.
 - **Observatorio NL→SQL acotado** (ADR-006): la IA genera SQL que corre en una transacción `READ ONLY`, con `statement_timeout` y rol restringido, solo sobre vistas `v_*`.
 - **Biometría en el navegador** (ADR-002 y ADR-007): face-api calcula el descriptor de 128 dimensiones en el cliente; la API promedia 5 muestras, las cifra con AES-256-GCM y compara por distancia euclidiana, con el marco de la Ley 1581.
 - **IA con camino alterno:** `AiService` usa modelos de respaldo si el principal falla, quita datos personales antes de enviar texto y cada funcionalidad tiene una versión sin IA (el tutor responde con la lección, el Cuaderno usa un resumen local, Mi ruta usa plantillas).

@@ -11,6 +11,8 @@ import type { AuthUser } from '../../core/auth/auth.decorators';
 import { GuardiansService } from '../identity/public-api';
 import { IntegrityService } from '../integrity/public-api';
 import { LibraryService } from '../library/public-api';
+import { LearningProfileService } from '../profile/public-api';
+import type { LearningMethod } from '@eduquest/contracts';
 import { AiService } from '../../core/ai/ai.service';
 
 const SYSTEM = `Eres el tutor de matemáticas de sexto del Colegio Francisco Arango, dentro de Ludoteka Campus.
@@ -29,9 +31,10 @@ export class TutorService {
     private readonly ai: AiService,
     private readonly guardians: GuardiansService,
     private readonly library: LibraryService,
+    private readonly profiles: LearningProfileService,
   ) {}
 
-  async chat(user: AuthUser, input: { message: string; courseId?: string; lessonId?: string; conversationId?: string }) {
+  async chat(user: AuthUser, input: { message: string; courseId?: string; lessonId?: string; conversationId?: string; method?: LearningMethod }) {
     if (await this.integrity.hasBlockingAttempt(user.id)) {
       throw new ApiError(403, 'KIOSK_ACTIVE', 'El tutor se apaga durante un examen. Termina la evaluación y vuelve a practicar.');
     }
@@ -66,10 +69,11 @@ export class TutorService {
     const sources = citations.length
       ? `Fragmentos de la biblioteca del colegio. Si los usas, cítalos con [n]:\n${citations.map((c) => `[${c.n}] «${c.title}»${c.page ? `, pág. ${c.page}` : ''}: ${c.excerpt}`).join('\n')}`
       : null;
-    const persona = await personaOf(this.database, user.id);
+    const [persona, method] = await Promise.all([personaOf(this.database, user.id), input.method ?? (user.role === 'student' ? this.profiles.methodOf(user.id) : null)]);
+    const style = this.profiles.tutorStyle(method);
     const llm = await this.ai.chatText(
       [
-        { role: 'system', content: `${SYSTEM}\n${personaLine(persona)}` },
+        { role: 'system', content: `${SYSTEM}\n${personaLine(persona)}${style ? `\n${style}` : ''}` },
         { role: 'system', content: context },
         ...(sources ? [{ role: 'system' as const, content: sources }] : []),
         ...history.map((message) => ({ role: message.role as 'user' | 'assistant', content: message.content })),

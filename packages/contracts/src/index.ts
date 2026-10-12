@@ -251,11 +251,16 @@ export const minigameSchema = z.object({
   score: z.number().int().min(0).max(500),
 });
 
+/** Métodos de «Descubre cómo aprendes»; el resto del cuestionario está más abajo. */
+export const LEARNING_METHODS = ['teoria', 'ejemplos', 'juegos', 'practica', 'visual', 'conversacion'] as const;
+export type LearningMethod = (typeof LEARNING_METHODS)[number];
+
 export const tutorChatSchema = z.object({
   message: z.string().min(1).max(2000),
   courseId: z.string().uuid().optional(),
   lessonId: z.string().uuid().optional(),
   conversationId: z.string().uuid().optional(),
+  method: z.enum(LEARNING_METHODS).optional(),
 });
 
 export const draftSchema = z.object({
@@ -401,9 +406,184 @@ export const libraryAskSchema = z.object({
   subjectId: z.string().uuid().optional(),
 });
 
+/* ---------- Descubre cómo aprendes ---------- */
+
+export const METHOD_INFO: Record<LearningMethod, { label: string; short: string; tone: 'violet' | 'mint' | 'gold' | 'coral' | 'sky' | 'soft' }> = {
+  teoria: { label: 'Teoría', short: 'Entender la regla y el porqué antes de practicar.', tone: 'violet' },
+  ejemplos: { label: 'Ejemplos resueltos', short: 'Ver cómo se resuelve paso a paso y luego imitarlo.', tone: 'sky' },
+  juegos: { label: 'Juegos', short: 'Aprender jugando, con puntos, tiempo y niveles.', tone: 'coral' },
+  practica: { label: 'Práctica y retos', short: 'Muchos ejercicios que van subiendo de nivel.', tone: 'mint' },
+  visual: { label: 'Visual', short: 'Dibujos, diagramas, colores y videos.', tone: 'gold' },
+  conversacion: { label: 'Conversación', short: 'Hablar, preguntar y explicar en voz alta.', tone: 'soft' },
+};
+
+export const LEARNING_QUIZ_VERSION = 1;
+
+export interface QuizQuestion {
+  id: string;
+  scene: string;
+  options: { text: string; method: LearningMethod }[];
+}
+
+/** Cada método aparece 8 veces en las 48 opciones, para que ninguno salga favorecido por diseño. */
+export const LEARNING_QUIZ: QuizQuestion[] = [
+  {
+    id: 'evaluacion',
+    scene: 'Mañana hay evaluación de fracciones. ¿Qué haces primero para prepararte?',
+    options: [
+      { text: 'Leo con calma la explicación del cuaderno o de la guía.', method: 'teoria' },
+      { text: 'Busco un ejercicio ya resuelto y miro paso a paso cómo se hizo.', method: 'ejemplos' },
+      { text: 'Hago muchos ejercicios hasta que me salen sin pensar.', method: 'practica' },
+      { text: 'Le pido a alguien que me lo explique y le hago preguntas.', method: 'conversacion' },
+    ],
+  },
+  {
+    id: 'juego-mesa',
+    scene: 'Llega un juego de mesa nuevo a tu casa. ¿Cómo aprendes a jugarlo?',
+    options: [
+      { text: 'Leo el reglamento completo antes de empezar.', method: 'teoria' },
+      { text: 'Miro una partida de otros y después juego.', method: 'ejemplos' },
+      { text: 'Empiezo a jugar de una y aprendo en el camino.', method: 'juegos' },
+      { text: 'Miro los dibujos y los esquemas de la caja.', method: 'visual' },
+    ],
+  },
+  {
+    id: 'clase',
+    scene: 'En clase, ¿cuándo entiendes mejor un tema nuevo?',
+    options: [
+      { text: 'Cuando el profe dibuja en el tablero con colores y flechas.', method: 'visual' },
+      { text: 'Cuando hacemos una competencia o un juego.', method: 'juegos' },
+      { text: 'Cuando lo discutimos en grupo y cada uno da su idea.', method: 'conversacion' },
+      { text: 'Cuando el profe resuelve un ejemplo completo antes de ponernos a trabajar.', method: 'ejemplos' },
+    ],
+  },
+  {
+    id: 'trabado',
+    scene: 'Te trabaste en un problema de la tarea. ¿Qué te ayuda más?',
+    options: [
+      { text: 'Una pista pequeña para intentarlo otra vez.', method: 'practica' },
+      { text: 'Ver un problema parecido ya resuelto.', method: 'ejemplos' },
+      { text: 'Volver a leer la regla o la definición.', method: 'teoria' },
+      { text: 'Convertirlo en reto: ¿lo saco en menos de dos minutos?', method: 'juegos' },
+    ],
+  },
+  {
+    id: 'video',
+    scene: '¿Qué tipo de video prefieres para aprender algo?',
+    options: [
+      { text: 'Uno con animaciones y diagramas que se mueven.', method: 'visual' },
+      { text: 'Uno donde alguien resuelve el ejercicio paso a paso.', method: 'ejemplos' },
+      { text: 'Uno corto con un reto al final para probarme.', method: 'juegos' },
+      { text: 'Prefiero que me lo cuenten en vivo y poder preguntar.', method: 'conversacion' },
+    ],
+  },
+  {
+    id: 'formula',
+    scene: 'Para recordar una fórmula, tú…',
+    options: [
+      { text: 'La escribes varias veces y la usas en ejercicios.', method: 'practica' },
+      { text: 'Entiendes de dónde sale y por qué funciona.', method: 'teoria' },
+      { text: 'Te inventas un dibujo, un color o un esquema.', method: 'visual' },
+      { text: 'Se la explicas a alguien en voz alta.', method: 'conversacion' },
+    ],
+  },
+  {
+    id: 'tarea',
+    scene: 'Si pudieras elegir la tarea de la semana, sería…',
+    options: [
+      { text: 'Un juego de puntos con niveles.', method: 'juegos' },
+      { text: 'Una guía con lectura y preguntas.', method: 'teoria' },
+      { text: 'Una serie de retos que van subiendo de dificultad.', method: 'practica' },
+      { text: 'Un cartel o un mapa mental del tema.', method: 'visual' },
+    ],
+  },
+  {
+    id: 'nota-baja',
+    scene: 'Sacaste una nota baja. ¿Qué te ayuda a mejorar?',
+    options: [
+      { text: 'Repasar los ejercicios en que fallé y repetirlos.', method: 'practica' },
+      { text: 'Hablar con el profe para entender qué pasó.', method: 'conversacion' },
+      { text: 'Ver la solución correcta al lado de la mía.', method: 'ejemplos' },
+      { text: 'Un juego de repaso para practicar sin presión.', method: 'juegos' },
+    ],
+  },
+  {
+    id: 'grupo',
+    scene: 'En un trabajo en grupo, tú prefieres…',
+    options: [
+      { text: 'Explicar y debatir las ideas con los demás.', method: 'conversacion' },
+      { text: 'Hacer los esquemas, las gráficas o la presentación.', method: 'visual' },
+      { text: 'Investigar y leer la información.', method: 'teoria' },
+      { text: 'Resolver los ejercicios y revisar los cálculos.', method: 'practica' },
+    ],
+  },
+  {
+    id: 'tablas',
+    scene: 'Para aprender las tablas de multiplicar, lo mejor es…',
+    options: [
+      { text: 'Un juego de rapidez contra el reloj.', method: 'juegos' },
+      { text: 'Una tabla de colores pegada en la pared.', method: 'visual' },
+      { text: 'Entender que multiplicar es sumar varias veces.', method: 'teoria' },
+      { text: 'Ver cómo alguien usa un truco y copiar la idea.', method: 'ejemplos' },
+    ],
+  },
+  {
+    id: 'ganas',
+    scene: '¿Qué te da más ganas de seguir estudiando?',
+    options: [
+      { text: 'Ganar puntos, insignias o subir en el ranking.', method: 'juegos' },
+      { text: 'Sentir que cada reto me sale más rápido.', method: 'practica' },
+      { text: 'Entender de verdad por qué las cosas son así.', method: 'teoria' },
+      { text: 'Contarle a alguien lo que aprendí.', method: 'conversacion' },
+    ],
+  },
+  {
+    id: 'tutor',
+    scene: 'Si tuvieras un tutor personal, le pedirías que…',
+    options: [
+      { text: 'Te muestre ejemplos resueltos antes de intentarlo.', method: 'ejemplos' },
+      { text: 'Te haga preguntas y converse contigo sobre el tema.', method: 'conversacion' },
+      { text: 'Te ponga retos y te diga si vas bien.', method: 'practica' },
+      { text: 'Te dibuje el problema para verlo claro.', method: 'visual' },
+    ],
+  },
+];
+
+export type MethodScores = Record<LearningMethod, number>;
+
+/** Puntaje de 0 a 100 por método (8 apariciones posibles cada uno). Empates: gana la elección más reciente. */
+export function scoreLearningQuiz(answers: number[]) {
+  const counts = Object.fromEntries(LEARNING_METHODS.map((m) => [m, 0])) as MethodScores;
+  const lastSeen = Object.fromEntries(LEARNING_METHODS.map((m) => [m, -1])) as MethodScores;
+  answers.forEach((choice, index) => {
+    const option = LEARNING_QUIZ[index]?.options[choice];
+    if (!option) return;
+    counts[option.method] += 1;
+    lastSeen[option.method] = index;
+  });
+  const ranked = [...LEARNING_METHODS].sort((a, b) => counts[b] - counts[a] || lastSeen[b] - lastSeen[a]);
+  const scores = Object.fromEntries(LEARNING_METHODS.map((m) => [m, Math.round((counts[m] / 8) * 100)])) as MethodScores;
+  const primary = ranked[0];
+  const secondary = counts[ranked[1]] >= 2 ? ranked[1] : null;
+  return { scores, primary, secondary };
+}
+
+export const learningProfileSchema = z.object({
+  version: z.literal(LEARNING_QUIZ_VERSION),
+  answers: z.array(z.number().int().min(0).max(3)).length(LEARNING_QUIZ.length, 'Responde todas las preguntas'),
+});
+
+export const learningActivitySchema = z.object({
+  method: z.enum(LEARNING_METHODS),
+  topicId: z.string().uuid().optional(),
+  resource: z.string().trim().max(120).optional(),
+});
+
 export const routeGenerateSchema = z.object({
   topicId: z.string().uuid().optional(),
   count: z.number().int().min(1).max(5).optional(),
+  method: z.enum(LEARNING_METHODS).optional(),
+  boss: z.boolean().optional(),
 });
 
 export const routeAnswerSchema = z.object({

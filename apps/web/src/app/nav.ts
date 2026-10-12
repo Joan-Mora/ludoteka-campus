@@ -10,6 +10,7 @@ import {
   HeartHandshake,
   LayoutDashboard,
   Library,
+  Lightbulb,
   Mail,
   Megaphone,
   NotebookPen,
@@ -45,6 +46,7 @@ export const ROUTE_ROLES: Record<string, readonly Role[]> = {
   logros: ['student'],
   jugar: ['student'],
   ruta: ['student'],
+  aprender: ['student'],
   cuaderno: ['student'],
   tutor: ALL,
   rostro: ALL,
@@ -101,6 +103,7 @@ export function navSections(role: Role, companionName: string): NavSection[] {
       ];
   const play: NavItem[] = student
     ? [
+        { to: '/app/aprender', label: 'Mi espacio', icon: Lightbulb },
         { to: '/app/ruta', label: 'Mi ruta', icon: Compass },
         { to: '/app/cuaderno', label: 'Cuaderno', icon: NotebookPen },
         { to: '/app/logros', label: 'Logros', icon: Trophy },

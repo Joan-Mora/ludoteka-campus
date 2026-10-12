@@ -5,6 +5,8 @@ import { BookMarked, Database, Download, Grid3x3, History, Loader2, Lock, Search
 import { api, ApiException } from '@/shared/api';
 import { MicButton } from '@/shared/voice-ui';
 import { Empty, PageHeader, Reveal } from '@/ui';
+import { METHOD_INFO, type LearningMethod } from '@eduquest/contracts';
+import { MethodChip } from './learning-kit';
 
 interface ViewDoc { name: string; description: string; columns: [string, string][] }
 interface Schema { views: ViewDoc[]; examples: string[]; maxRows: number; timeoutMs: number; aiEnabled: boolean }
@@ -251,6 +253,47 @@ function MasteryMap() {
         </div>
       )}
       {data && !data.students.length && <Empty icon={Grid3x3} title="Sin estudiantes" body="Este curso todavía no tiene estudiantes matriculados." />}
+      {selected && <MethodDistribution courseId={selected} />}
+    </div>
+  );
+}
+
+interface Distribution {
+  total: number;
+  pending: number;
+  methods: { method: LearningMethod; label: string; students: number; secondary: number; attempts: number; rate: number | null }[];
+  students: { id: string; name: string; method: LearningMethod | null; secondary: LearningMethod | null }[];
+}
+
+function MethodDistribution({ courseId }: { courseId: string }) {
+  const dist = useQuery({ queryKey: ['method-distribution', courseId], queryFn: () => api<Distribution>(`/api/profile/courses/${courseId}/distribution`) });
+  const [open, setOpen] = useState<LearningMethod | null>(null);
+  const d = dist.data;
+  if (!d) return null;
+  const answered = d.total - d.pending;
+  const max = Math.max(1, ...d.methods.map((m) => m.students));
+  return (
+    <div className="method-dist">
+      <div className="row g-8 wrap">
+        <h3 style={{ margin: 0 }}>Cómo aprende el grupo</h3>
+        <span className="chip soft" style={{ marginLeft: 'auto' }}>{answered} de {d.total} respondieron «Descubre cómo aprendes»</span>
+      </div>
+      <p className="muted" style={{ margin: 0, fontSize: 13.5 }}>Método principal de cada estudiante y qué tanto aciertan en Mi ruta los retos presentados en cada formato (últimos 60 días).</p>
+      <div className="dist-rows">
+        {d.methods.map((m) => (
+          <button key={m.method} className={`dist-row ${open === m.method ? 'on' : ''}`} onClick={() => setOpen(open === m.method ? null : m.method)} disabled={!m.students}>
+            <span className="dist-name"><MethodChip method={m.method} /></span>
+            <span className="dist-track"><i style={{ width: `${(m.students / max) * 100}%` }} /></span>
+            <b className="dist-n">{m.students}</b>
+            <span className="muted dist-rate">{m.rate === null ? 'sin retos' : `${Math.round(m.rate * 100)} % de acierto (${m.attempts})`}</span>
+          </button>
+        ))}
+      </div>
+      {open && (
+        <div className="row g-6 wrap">
+          {d.students.filter((s) => s.method === open).map((s) => <span key={s.id} className="chip">{s.name}{s.secondary ? ` · también ${METHOD_INFO[s.secondary].label.toLowerCase()}` : ''}</span>)}
+        </div>
+      )}
     </div>
   );
 }

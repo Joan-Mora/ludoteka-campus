@@ -8,6 +8,9 @@ import { MicButton, SpeakButton } from '@/shared/voice-ui';
 import { RichText, Sources, type Citation } from '@/shared/rich-text';
 import { useCompanion } from '@/shared/companion';
 import { PageHeader, Tile } from '@/ui';
+import { LEARNING_METHODS } from '@eduquest/contracts';
+
+const METHODS: readonly string[] = LEARNING_METHODS;
 
 function usePref(key: string, initial: boolean) {
   const [value, setValue] = useState(() => {
@@ -33,7 +36,7 @@ export function TutorPage() {
   const [conversationId, setConversationId] = useState<string>();
   const [error, setError] = useState('');
   const [thinking, setThinking] = useState(false);
-  const [draft, setDraft] = useState('');
+  const [draft, setDraft] = useState(() => params.get('q') ?? '');
   const endRef = useRef<HTMLDivElement>(null);
   const speech = useSpeech();
   const [readAloud, setReadAloud] = usePref('eq_tutor_voice', false);
@@ -59,6 +62,7 @@ export function TutorPage() {
           conversationId,
           lessonId: params.get('lesson') || undefined,
           courseId: params.get('course') || undefined,
+          method: METHODS.includes(params.get('method') ?? '') ? params.get('method') : undefined,
         }),
       });
       setConversationId(reply.conversationId);
@@ -91,6 +95,7 @@ export function TutorPage() {
               </div>
             </div>
             {params.get('lesson') && <span className="chip violet">Contexto de la lección</span>}
+            {params.get('method') === 'conversacion' && <span className="chip soft">Modo conversación</span>}
             {speech.supported && (
               <button className={`chip ${readAloud ? 'violet' : ''}`} onClick={() => { if (readAloud) speech.stop(); setReadAloud(!readAloud); }} title={`Leer las respuestas de ${companion.name} en voz alta`}>
                 <Volume2 size={13} /> Voz {readAloud ? 'activada' : 'apagada'}

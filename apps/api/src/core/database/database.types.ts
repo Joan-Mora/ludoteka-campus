@@ -542,6 +542,28 @@ export interface Database {
     given: NullableString;
     created_at: Ts;
     answered_at: NullableDate;
+    method: NullableString;
+    level_change: NullableInt;
+    boss: Generated<boolean>;
+  };
+  learning_profiles: {
+    id: Generated<string>;
+    user_id: string;
+    period_id: NullableString;
+    version: Generated<number>;
+    answers: JsonValue;
+    scores: JsonValue;
+    primary_method: string;
+    secondary_method: NullableString;
+    taken_at: Ts;
+  };
+  learning_activity: {
+    id: Generated<string>;
+    user_id: string;
+    method: string;
+    topic_id: NullableString;
+    resource: Generated<string>;
+    created_at: Ts;
   };
   nl_queries: {
     id: Generated<string>;

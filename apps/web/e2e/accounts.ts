@@ -23,7 +23,7 @@ export const accounts: Record<E2ERole, string> = {
 export const publicRoutes = ['/', '/ingresar', '/recuperar', '/legal/terminos', '/legal/privacidad', '/legal/cookies'];
 
 export const routesByRole: Record<E2ERole, string[]> = {
-  student: ['/app', '/app/cursos', '/app/biblioteca', '/app/novedades', '/app/arena', '/app/ruta', '/app/cuaderno', '/app/logros', '/app/jugar', '/app/tutor', '/app/en-vivo', '/app/ajustes'],
+  student: ['/app', '/app/cursos', '/app/biblioteca', '/app/novedades', '/app/arena', '/app/aprender', '/app/ruta', '/app/cuaderno', '/app/logros', '/app/jugar', '/app/tutor', '/app/en-vivo', '/app/ajustes'],
   teacher: ['/app', '/app/cursos', '/app/calificaciones', '/app/banco', '/app/consultas', '/app/mensajes', '/app/arena', '/app/novedades', '/app/ajustes'],
   coordinator: ['/app', '/app/coordinacion', '/app/calificaciones', '/app/consultas', '/app/novedades', '/app/ajustes'],
   rector: ['/app', '/app/rectoria', '/app/calificaciones', '/app/consultas', '/app/novedades', '/app/ajustes'],
@@ -34,10 +34,10 @@ export const routesByRole: Record<E2ERole, string[]> = {
 /** Routes each role must not open: the router shows «Esta sección no es para tu rol». */
 export const forbiddenByRole: Record<E2ERole, string[]> = {
   student: ['/app/calificaciones', '/app/banco', '/app/coordinacion', '/app/rectoria', '/app/admin', '/app/acudiente', '/app/mensajes'],
-  teacher: ['/app/coordinacion', '/app/rectoria', '/app/admin', '/app/acudiente', '/app/ruta'],
+  teacher: ['/app/coordinacion', '/app/rectoria', '/app/admin', '/app/acudiente', '/app/ruta', '/app/aprender'],
   coordinator: ['/app/rectoria', '/app/banco', '/app/admin', '/app/en-vivo', '/app/mensajes', '/app/acudiente'],
   rector: ['/app/coordinacion', '/app/banco', '/app/admin', '/app/en-vivo', '/app/mensajes', '/app/acudiente'],
-  guardian: ['/app/cursos', '/app/calificaciones', '/app/coordinacion', '/app/rectoria', '/app/admin', '/app/arena', '/app/jugar'],
+  guardian: ['/app/cursos', '/app/calificaciones', '/app/coordinacion', '/app/rectoria', '/app/admin', '/app/arena', '/app/jugar', '/app/aprender'],
   admin: ['/app/acudiente', '/app/mensajes', '/app/ruta'],
 };
 

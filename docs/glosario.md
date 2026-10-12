@@ -95,7 +95,13 @@
 | Libro de XP | Tabla `xp_ledger`. El total se suma; no hay contador editable |
 | Luka / Luna | Compañero del campus (a elección del usuario) que sugiere la siguiente actividad |
 | Maestría | Nivel de 1 a 10 por estudiante y tema (`topic_mastery`) |
-| Mi ruta | Retos adaptativos. El servidor verifica la respuesta que propone la IA |
+| Mi ruta | Retos adaptativos dibujados como un sendero: una parada por tema con anillo de nivel, estrellas y corona. El servidor verifica la respuesta que propone la IA |
+| Mi espacio | Página del estudiante (`/app/aprender`) con seis formas de aprender un tema. La recomendada por su perfil va primero con «Para ti», pero puede abrir cualquiera |
+| Perfil de aprendizaje | Resultado del cuestionario «Descubre cómo aprendes» (12 preguntas) en `learning_profiles`: método principal, secundario y puntajes. Se repite una vez por periodo o al cambiar la versión del cuestionario |
+| Métodos | `teoria`, `ejemplos`, `juegos`, `practica`, `visual` y `conversacion`. Cambian la redacción de los retos y del tutor, nunca la dificultad. Al tutor no se le envían datos personales |
+| Estrellas | Hitos de dominio por tema: una al nivel 4, dos al 7 y tres al 10 |
+| Reto jefe | Reto único dos niveles por encima del actual. Se desbloquea al nivel 4; si se acierta sube un nivel y suma una corona, si se falla no baja |
+| Manipulativo | Ayuda interactiva por tipo de ejercicio (barra de fracciones, cuadrícula de porcentaje, triángulo, tabla de valor posicional…) que se arma con los mismos parámetros del reto |
 | Snapshot | Estado efímero de una sala de Arena en `arena_rooms.snapshot` para sobrevivir a un reinicio |
 | `groups_class` | Tabla del grupo (evita la palabra reservada `GROUP`) |
 

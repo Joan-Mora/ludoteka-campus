@@ -8,6 +8,7 @@ import { ApiError } from '../../core/errors/api-error';
 import { DomainEvents, type GuardianMessageEvent, type MeetingRespondedEvent } from '../../core/events/domain-events';
 import { Mailer } from '../../core/mail/mailer';
 import { weeklyDigestEmail } from '../../core/mail/templates';
+import { LearningProfileService } from '../profile/public-api';
 
 const toGrade = (ratio: number) => Math.round((1 + 4 * Math.max(0, Math.min(1, ratio))) * 10) / 10;
 const shortDate = (value: Date) => value.toLocaleDateString('es-CO', { timeZone: 'America/Bogota', weekday: 'short', day: 'numeric', month: 'short' });
@@ -24,6 +25,7 @@ export class FamilyService implements OnModuleInit, OnModuleDestroy {
     private readonly events: EventEmitter2,
     private readonly mailer: Mailer,
     private readonly env: Env,
+    private readonly profiles: LearningProfileService,
   ) {}
 
   onModuleInit() {
@@ -162,9 +164,8 @@ export class FamilyService implements OnModuleInit, OnModuleDestroy {
     return { children, digest: { enabled: prefs?.weekly_digest ?? true, lastSentAt: prefs?.digest_sent_at ?? null } };
   }
 
-  /** Se llena cuando el estudiante responde «Descubre cómo aprendes». */
-  protected async learningProfile(_studentId: string): Promise<{ method: string; label: string; takenAt: Date } | null> {
-    return null;
+  private learningProfile(studentId: string) {
+    return this.profiles.summary(studentId);
   }
 
   async respondMeeting(guardian: AuthUser, id: string, input: { attending: boolean; note?: string }) {

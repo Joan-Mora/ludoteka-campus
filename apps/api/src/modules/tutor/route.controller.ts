@@ -32,7 +32,7 @@ export class RouteController {
     return this.route.skip(user, id);
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin', 'coordinator', 'rector')
   @Get('courses/:id/mastery')
   mastery(@CurrentUser() user: AuthUser, @Param('id', ParseUUIDPipe) id: string) {
     return this.route.courseMastery(user, id);

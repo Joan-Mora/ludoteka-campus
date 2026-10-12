@@ -30,7 +30,7 @@ It is a modular monolith in a single npm workspace: a NestJS 11 API with Kysely 
 
 El Colegio Francisco Arango no tenía un aula virtual propia. Las aplicaciones genéricas de quiz no conocen los grupos, no guardan el recorrido de cada estudiante, no avisan a tiempo cuando alguien va mal y no sostienen un examen en el aula frente a la copia. Docentes y coordinación llevaban notas, asistencia y reportes en hojas de cálculo.
 
-Ludoteka Campus reúne todo eso en una sola aplicación web para cinco roles (administrador, directivo, docente, estudiante y acudiente), con un MVP de Matemáticas de sexto grado. Está desplegada en producción y se apoya en CockroachDB como única base de datos; los servicios externos solo guardan lo que la base no debe guardar: archivos (Cloudinary), inferencia de IA (proveedor compatible con OpenAI, por defecto Gemini) y envío de correo (Resend).
+Ludoteka Campus reúne todo eso en una sola aplicación web para seis roles (administrador, coordinación, rectoría, docente, estudiante y acudiente), con un MVP de Matemáticas de sexto grado. Está desplegada en producción y se apoya en CockroachDB como única base de datos; los servicios externos solo guardan lo que la base no debe guardar: archivos (Cloudinary), inferencia de IA (proveedor compatible con OpenAI, por defecto Gemini) y envío de correo (Resend).
 
 ## Funcionalidades
 
@@ -70,9 +70,12 @@ Ludoteka Campus reúne todo eso en una sola aplicación web para cinco roles (ad
 |---|---|
 | Estudiante | Aprende y practica en el campus gamificado, presenta exámenes en kiosco, juega Arena y estudia con Mi ruta, el Cuaderno y el tutor |
 | Docente | Publica contenido, arma el banco de preguntas, evalúa con integridad, califica con rúbricas y recibe alertas de riesgo |
-| Coordinación y rectoría | Consultan indicadores, preguntan en lenguaje natural al Observatorio y descargan reportes numerados y verificables |
-| Acudiente | Sigue el avance y las alertas del menor, acepta los documentos legales por él y autoriza o revoca su acceso facial |
+| Coordinación | Atiende las alertas de riesgo de todos los grupos con una bitácora, consolida la asistencia con umbrales, cita a los acudientes (aviso y correo) y modera los foros |
+| Rectoría | Tablero estratégico por periodo con comparación, firma de certificados y boletines, y comunicados oficiales en la cartelera |
+| Acudiente | Sigue a cada hijo (lo que viene, notas, asistencia y alertas), confirma citaciones, escribe a los docentes, recibe un resumen semanal por correo, acepta los documentos legales por el menor y autoriza o revoca su acceso facial |
 | Administrador | Gestiona años, grupos, materias, matrículas y cuentas (alta individual o importación por Excel) |
+
+Solo el docente y la administración escriben contenido académico. Cada ruta de la web declara sus roles en `apps/web/src/app/nav.ts` y la API los exige con `@Roles`; la matriz completa está en [`docs/vision.md`](docs/vision.md#matriz-de-responsabilidades).
 
 ## Arquitectura
 
@@ -135,7 +138,7 @@ Decisiones técnicas principales (cada una con su ADR en [`docs/adr/`](docs/adr/
 
 - **Monolito modular con fronteras exigidas** (ADR-001): cada módulo expone su fachada en `public-api.ts` y `dependency-cruiser` impide importar archivos internos de otro módulo (`npm run deps:check`).
 - **Eventos para lo transversal** (ADR-003): gamificación y notificaciones escuchan eventos; la escritura de cada tabla la hace solo su módulo dueño y los tableros leen en solo lectura.
-- **CockroachDB con Kysely y SQL versionado** (ADR-004): claves `UUID`, `withTx()` reintenta ante el SQLSTATE `40001` y las migraciones (`db/migrations`, 0000 a 0019) se aplican al arrancar.
+- **CockroachDB con Kysely y SQL versionado** (ADR-004): claves `UUID`, `withTx()` reintenta ante el SQLSTATE `40001` y las migraciones (`db/migrations`, 0000 a 0022) se aplican al arrancar.
 - **Observatorio NL→SQL acotado** (ADR-006): la IA genera SQL que corre en una transacción `READ ONLY`, con `statement_timeout` y rol restringido, solo sobre vistas `v_*`.
 - **Biometría en el navegador** (ADR-002 y ADR-007): face-api calcula el descriptor de 128 dimensiones en el cliente; la API promedia 5 muestras, las cifra con AES-256-GCM y compara por distancia euclidiana, con el marco de la Ley 1581.
 - **IA con camino alterno:** `AiService` usa modelos de respaldo si el principal falla, quita datos personales antes de enviar texto y cada funcionalidad tiene una versión sin IA (el tutor responde con la lección, el Cuaderno usa un resumen local, Mi ruta usa plantillas).
@@ -174,8 +177,8 @@ La clave de todas es la que definas en `SEED_PASSWORD` dentro de `apps/api/.env`
 | Correo | Rol |
 |--------|-----|
 | admin@eduquest.local | Administrador |
-| coordinacion@eduquest.local | Coordinación (directivo) |
-| rectoria@eduquest.local | Rectoría (directivo) |
+| coordinacion@eduquest.local | Coordinación |
+| rectoria@eduquest.local | Rectoría |
 | docente@eduquest.local | Docente |
 | estudiante@eduquest.local | Estudiante |
 | estudiante2@eduquest.local | Estudiante |

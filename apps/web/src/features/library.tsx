@@ -80,7 +80,7 @@ function youtubeId(url: string) {
 
 export function LibraryPage() {
   const { user } = useAuth();
-  const staff = user && ['teacher', 'admin', 'directivo'].includes(user.role);
+  const staff = user && ['teacher', 'admin'].includes(user.role);
   const [tab, setTab] = useState<'items' | 'ask' | 'glossary'>('items');
   const companion = useCompanion();
   return (

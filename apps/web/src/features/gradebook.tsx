@@ -1,8 +1,9 @@
 import { type FormEvent, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { keepPreviousData, useQuery, useQueryClient } from '@tanstack/react-query';
-import { AlertTriangle, CalendarCheck, Check, ClipboardList, Download, FileSpreadsheet, FileText, Loader2, Plus, Save, Scale, ShieldAlert, Trash2, Users, X } from 'lucide-react';
+import { AlertTriangle, CalendarCheck, Check, ClipboardList, Download, Eye, FileSpreadsheet, FileText, Loader2, Plus, Save, Scale, ShieldAlert, Trash2, Users, X } from 'lucide-react';
 import { api, ApiException, download } from '@/shared/api';
+import { useAuth } from '@/shared/auth';
 import { Empty, PageHeader, Stat } from '@/ui';
 
 type Source = 'exam' | 'practice' | 'live' | 'assignment' | 'rubric' | 'attendance';
@@ -36,6 +37,9 @@ const errorText = (e: unknown, fallback: string) => (e instanceof ApiException ?
 const fmt = (n: number | null | undefined) => (n == null ? '—' : n.toFixed(1));
 
 export function GradebookPage() {
+  const { user } = useAuth();
+  const readOnly = user?.role !== 'teacher' && user?.role !== 'admin';
+  const canTriage = !readOnly || user?.role === 'coordinator';
   const courses = useQuery({ queryKey: ['courses'], queryFn: () => api<{ id: string; title: string }[]>('/api/courses') });
   const [params, setParams] = useSearchParams();
   const courseId = params.get('curso') ?? courses.data?.[0]?.id ?? '';
@@ -55,6 +59,7 @@ export function GradebookPage() {
           </select>
         }
       />
+      {readOnly && <p className="chip sky" style={{ marginBottom: 14, width: 'fit-content' }}><Eye size={13} /> Vista de consulta: las notas, la asistencia y las rúbricas las registra el docente del curso.</p>}
       {courses.data && !courses.data.length && <Empty icon={ClipboardList} title="No tienes cursos" body="Crea un curso para empezar a calificar." />}
       {courseId && (
         <>
@@ -72,10 +77,10 @@ export function GradebookPage() {
           {book.isLoading && <div className="card"><Loader2 className="spin" /></div>}
           {book.error && <p className="form-error">{errorText(book.error, 'No se pudo cargar el libro')}</p>}
           {book.data && tab === 'grades' && <Grades book={book.data} />}
-          {book.data && tab === 'weights' && <Weights key={courseId} book={book.data} />}
-          {tab === 'attendance' && <Attendance key={courseId} courseId={courseId} />}
-          {tab === 'rubrics' && <RubricsTab key={courseId} courseId={courseId} />}
-          {book.data && tab === 'alerts' && <Alerts book={book.data} />}
+          {book.data && tab === 'weights' && <Weights key={courseId} book={book.data} readOnly={readOnly} />}
+          {tab === 'attendance' && <Attendance key={courseId} courseId={courseId} readOnly={readOnly} />}
+          {tab === 'rubrics' && <RubricsTab key={courseId} courseId={courseId} readOnly={readOnly} />}
+          {book.data && tab === 'alerts' && <Alerts book={book.data} canTriage={canTriage} />}
         </>
       )}
     </div>
@@ -150,7 +155,7 @@ function Grades({ book }: { book: Book }) {
   );
 }
 
-function Weights({ book }: { book: Book }) {
+function Weights({ book, readOnly }: { book: Book; readOnly: boolean }) {
   const client = useQueryClient();
   const [rows, setRows] = useState<Category[]>(book.categories);
   const [error, setError] = useState<string | null>(null);
@@ -177,6 +182,23 @@ function Weights({ book }: { book: Book }) {
     } finally {
       setSaving(false);
     }
+  }
+
+  if (readOnly) {
+    return (
+      <div className="card" style={{ maxWidth: 720 }}>
+        <h3 style={{ marginTop: 0 }}>Ponderación del curso</h3>
+        <div className="stack" style={{ gap: 6 }}>
+          {book.categories.map((c) => (
+            <div key={c.source} className="row between" style={{ padding: '8px 0', borderBottom: '1px solid var(--line)' }}>
+              <span><b>{c.name}</b> <span className="muted">· {SOURCES[c.source]}</span></span>
+              <span className="chip">{c.weight} %</span>
+            </div>
+          ))}
+        </div>
+        {book.isDefault && <p className="muted" style={{ fontSize: 13, marginBottom: 0 }}>El curso usa la ponderación institucional.</p>}
+      </div>
+    );
   }
 
   return (
@@ -206,7 +228,7 @@ function Weights({ book }: { book: Book }) {
   );
 }
 
-function Attendance({ courseId }: { courseId: string }) {
+function Attendance({ courseId, readOnly }: { courseId: string; readOnly: boolean }) {
   const client = useQueryClient();
   const [date, setDate] = useState(todayBogota());
   const sheet = useQuery({ queryKey: ['attendance', courseId, date], queryFn: () => api<Sheet>(`/api/gradebook/courses/${courseId}/attendance?date=${date}`), placeholderData: keepPreviousData });
@@ -244,7 +266,7 @@ function Attendance({ courseId }: { courseId: string }) {
             <input className="note-select" type="date" value={date} max={todayBogota()} onChange={(e) => setDate(e.target.value)} />
             {sheet.data?.recorded && <span className="chip mint"><Check size={12} /> Ya registrada</span>}
           </div>
-          <button className="btn sm ghost" onClick={() => setMarks(Object.fromEntries(students.map((s) => [s.id, 'present'])))}>Todos presentes</button>
+          {!readOnly && <button className="btn sm ghost" onClick={() => setMarks(Object.fromEntries(students.map((s) => [s.id, 'present'])))}>Todos presentes</button>}
         </div>
         {sheet.isLoading && <Loader2 className="spin" />}
         {sheet.data && !students.length && <Empty icon={Users} title="Sin estudiantes matriculados" />}
@@ -254,14 +276,14 @@ function Attendance({ courseId }: { courseId: string }) {
               <b style={{ fontSize: 14.5 }}>{s.fullName}</b>
               <div className="row g-4">
                 {STATUS.map((st) => (
-                  <button key={st.key} className={`att-btn ${marks[s.id] === st.key ? st.tone : ''}`} title={st.label} onClick={() => setMarks({ ...marks, [s.id]: st.key })}>{st.short}</button>
+                  <button key={st.key} className={`att-btn ${marks[s.id] === st.key ? st.tone : ''}`} title={st.label} disabled={readOnly} onClick={() => setMarks({ ...marks, [s.id]: st.key })}>{st.short}</button>
                 ))}
               </div>
             </div>
           ))}
         </div>
         {message && <p className="chip mint" style={{ marginTop: 12, width: 'fit-content' }}>{message}</p>}
-        <button className="btn" style={{ marginTop: 14 }} disabled={saving || !Object.keys(marks).length} onClick={save}>{saving ? <Loader2 size={16} className="spin" /> : <Save size={16} />} Guardar asistencia</button>
+        {!readOnly && <button className="btn" style={{ marginTop: 14 }} disabled={saving || !Object.keys(marks).length} onClick={save}>{saving ? <Loader2 size={16} className="spin" /> : <Save size={16} />} Guardar asistencia</button>}
         <p className="muted" style={{ fontSize: 12.5, marginBottom: 0 }}>P presente · T tarde (cuenta media) · A ausente · E excusa (no cuenta). Desde 15 % de inasistencias se genera una alerta.</p>
       </div>
       <div className="card">
@@ -280,7 +302,7 @@ function Attendance({ courseId }: { courseId: string }) {
   );
 }
 
-function RubricsTab({ courseId }: { courseId: string }) {
+function RubricsTab({ courseId, readOnly }: { courseId: string; readOnly: boolean }) {
   const data = useQuery({ queryKey: ['rubrics', courseId], queryFn: () => api<Rubrics>(`/api/gradebook/courses/${courseId}/rubrics`) });
   const [open, setOpen] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
@@ -289,7 +311,7 @@ function RubricsTab({ courseId }: { courseId: string }) {
   return (
     <div className="grid cols-3" style={{ alignItems: 'start' }}>
       <div className="stack" style={{ gap: 10 }}>
-        <button className="btn sm" onClick={() => setCreating(!creating)}>{creating ? <X size={14} /> : <Plus size={14} />} {creating ? 'Cerrar' : 'Nueva rúbrica'}</button>
+        {!readOnly && <button className="btn sm" onClick={() => setCreating(!creating)}>{creating ? <X size={14} /> : <Plus size={14} />} {creating ? 'Cerrar' : 'Nueva rúbrica'}</button>}
         {creating && data.data && <RubricForm courseId={courseId} assignments={data.data.assignments} onDone={(id) => { setCreating(false); setOpen(id); }} />}
         {rubrics.map((r) => (
           <button key={r.id} className={`note-row ${current?.id === r.id ? 'active' : ''}`} onClick={() => setOpen(r.id)}>
@@ -300,7 +322,7 @@ function RubricsTab({ courseId }: { courseId: string }) {
         {data.data && !rubrics.length && !creating && <p className="muted" style={{ fontSize: 14 }}>Crea una rúbrica para calificar exposiciones, proyectos o talleres.</p>}
       </div>
       <div className="span-2">
-        {current && data.data ? <RubricMatrix key={current.id} courseId={courseId} rubric={current} students={data.data.students} /> : <div className="card"><Empty icon={FileText} title="Sin rúbricas" body="Las notas de rúbrica cuentan en la categoría «Rúbricas» si la incluyes en la ponderación." /></div>}
+        {current && data.data ? <RubricMatrix key={current.id} courseId={courseId} rubric={current} students={data.data.students} readOnly={readOnly} /> : <div className="card"><Empty icon={FileText} title="Sin rúbricas" body="Las notas de rúbrica cuentan en la categoría «Rúbricas» si la incluyes en la ponderación." /></div>}
       </div>
     </div>
   );
@@ -346,7 +368,7 @@ function RubricForm({ courseId, assignments, onDone }: { courseId: string; assig
   );
 }
 
-function RubricMatrix({ courseId, rubric, students }: { courseId: string; rubric: Rubric; students: { id: string; fullName: string }[] }) {
+function RubricMatrix({ courseId, rubric, students, readOnly }: { courseId: string; rubric: Rubric; students: { id: string; fullName: string }[]; readOnly: boolean }) {
   const client = useQueryClient();
   const [draft, setDraft] = useState<Record<string, Record<string, string>>>({});
   const [status, setStatus] = useState<Record<string, string>>({});
@@ -384,7 +406,7 @@ function RubricMatrix({ courseId, rubric, students }: { courseId: string; rubric
           <div className="card-title">{rubric.title}</div>
           <div className="muted" style={{ fontSize: 13 }}>{rubric.maxPoints} puntos en total · la nota es 1 + 4 × (puntos / máximo)</div>
         </div>
-        <button className="btn sm ghost" onClick={remove}><Trash2 size={14} /></button>
+        {!readOnly && <button className="btn sm ghost" onClick={remove}><Trash2 size={14} /></button>}
       </div>
       <div className="table-wrap">
         <table className="table">
@@ -414,6 +436,7 @@ function RubricMatrix({ courseId, rubric, students }: { courseId: string; rubric
                           min={0}
                           max={c.max_points}
                           value={v}
+                          readOnly={readOnly}
                           onChange={(e) => setDraft({ ...draft, [s.id]: { ...draft[s.id], [c.id]: e.target.value } })}
                         />
                       </td>
@@ -433,7 +456,7 @@ function RubricMatrix({ courseId, rubric, students }: { courseId: string; rubric
   );
 }
 
-function Alerts({ book }: { book: Book }) {
+function Alerts({ book, canTriage }: { book: Book; canTriage: boolean }) {
   const client = useQueryClient();
   const all = useQuery({ queryKey: ['alerts', book.course.id], queryFn: () => api<Alert[]>(`/api/gradebook/courses/${book.course.id}/alerts`) });
   const [showResolved, setShowResolved] = useState(false);
@@ -463,9 +486,9 @@ function Alerts({ book }: { book: Book }) {
               <div style={{ fontWeight: 700 }}>{a.full_name} · {KIND[a.kind] ?? a.kind}</div>
               <div className="muted" style={{ fontSize: 13 }}>{a.detail} · desde {new Date(a.created_at).toLocaleDateString('es-CO', { day: 'numeric', month: 'short' })}</div>
             </div>
-            {a.status === 'open' && <button className="btn sm ghost" onClick={() => update(a.id, 'acknowledged')}>En seguimiento</button>}
+            {a.status === 'open' && (canTriage ? <button className="btn sm ghost" onClick={() => update(a.id, 'acknowledged')}>En seguimiento</button> : <span className="chip gold">Abierta</span>)}
             {a.status === 'acknowledged' && <span className="chip sky">En seguimiento</span>}
-            {a.status !== 'resolved' ? <button className="btn sm" onClick={() => update(a.id, 'resolved')}><Check size={13} /> Resolver</button> : <span className="chip mint">Resuelta</span>}
+            {a.status === 'resolved' ? <span className="chip mint">Resuelta</span> : canTriage && <button className="btn sm" onClick={() => update(a.id, 'resolved')}><Check size={13} /> Resolver</button>}
           </div>
         ))}
       </div>

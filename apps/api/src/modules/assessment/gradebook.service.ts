@@ -55,9 +55,9 @@ export class GradebookService {
     private readonly events: EventEmitter2,
   ) {}
 
-  private async staffCourse(user: AuthUser, courseId: string) {
-    if (user.role === 'student' || user.role === 'guardian') throw new ApiError(403, 'FORBIDDEN', 'Solo docentes y coordinación');
-    return this.learning.assertAccess(user, courseId);
+  private async staffCourse(user: AuthUser, courseId: string, mode: 'read' | 'write' = 'read') {
+    if (user.role === 'student' || user.role === 'guardian') throw new ApiError(403, 'FORBIDDEN', 'Solo docentes, coordinación y rectoría');
+    return this.learning.assertAccess(user, courseId, mode);
   }
 
   private students(course: { group_id: string; academic_year_id: string }) {
@@ -86,7 +86,7 @@ export class GradebookService {
   }
 
   async saveCategories(user: AuthUser, courseId: string, categories: { name: string; source: GradeSource; weight: number }[]) {
-    await this.staffCourse(user, courseId);
+    await this.staffCourse(user, courseId, 'write');
     const sources = new Set(categories.map((c) => c.source));
     const names = new Set(categories.map((c) => c.name.toLowerCase()));
     if (sources.size !== categories.length) throw new ApiError(400, 'DUPLICATE_SOURCE', 'Cada fuente de nota puede aparecer una sola vez');
@@ -354,7 +354,7 @@ export class GradebookService {
   }
 
   async saveAttendance(user: AuthUser, courseId: string, input: { date: string; entries: { studentId: string; status: string; note?: string }[] }) {
-    const course = await this.staffCourse(user, courseId);
+    const course = await this.staffCourse(user, courseId, 'write');
     if (input.date > bogotaToday()) throw new ApiError(400, 'FUTURE_DATE', 'No se puede tomar asistencia de una fecha futura');
     const enrolled = new Set((await this.students(course)).map((s) => s.id));
     const foreign = input.entries.filter((entry) => !enrolled.has(entry.studentId));
@@ -406,7 +406,7 @@ export class GradebookService {
   }
 
   async createRubric(user: AuthUser, courseId: string, input: { title: string; assignmentId?: string; criteria: { name: string; description?: string; maxPoints: number }[] }) {
-    await this.staffCourse(user, courseId);
+    await this.staffCourse(user, courseId, 'write');
     if (input.assignmentId) {
       const assignment = await this.database.db.selectFrom('assignments').select('course_id').where('id', '=', input.assignmentId).executeTakeFirst();
       if (assignment?.course_id !== courseId) throw new ApiError(400, 'BAD_ASSIGNMENT', 'La tarea no pertenece al curso');
@@ -424,7 +424,7 @@ export class GradebookService {
   async deleteRubric(user: AuthUser, rubricId: string) {
     const rubric = await this.database.db.selectFrom('rubrics').select('course_id').where('id', '=', rubricId).executeTakeFirst();
     if (!rubric) throw new ApiError(404, 'NOT_FOUND', 'La rúbrica no existe');
-    await this.staffCourse(user, rubric.course_id);
+    await this.staffCourse(user, rubric.course_id, 'write');
     await this.database.db.deleteFrom('rubrics').where('id', '=', rubricId).execute();
     return { ok: true };
   }
@@ -432,7 +432,7 @@ export class GradebookService {
   async scoreRubric(user: AuthUser, rubricId: string, input: { studentId: string; scores: { criterionId: string; points: number; comment?: string }[] }) {
     const rubric = await this.database.db.selectFrom('rubrics').select('course_id').where('id', '=', rubricId).executeTakeFirst();
     if (!rubric) throw new ApiError(404, 'NOT_FOUND', 'La rúbrica no existe');
-    const course = await this.staffCourse(user, rubric.course_id);
+    const course = await this.staffCourse(user, rubric.course_id, 'write');
     const enrolled = (await this.students(course)).some((s) => s.id === input.studentId);
     if (!enrolled) throw new ApiError(400, 'NOT_ENROLLED', 'El estudiante no pertenece al curso');
     const criteria = new Map((await this.database.db.selectFrom('rubric_criteria').select(['id', 'max_points', 'name']).where('rubric_id', '=', rubricId).execute()).map((c) => [c.id, c]));

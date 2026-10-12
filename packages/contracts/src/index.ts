@@ -1,7 +1,22 @@
 import { z } from 'zod';
 
-export const ROLES = ['admin', 'directivo', 'teacher', 'student', 'guardian'] as const;
+export const ROLES = ['admin', 'coordinator', 'rector', 'teacher', 'student', 'guardian'] as const;
 export type Role = (typeof ROLES)[number];
+
+export const ROLE_LABELS: Record<Role, string> = {
+  admin: 'Administración',
+  coordinator: 'Coordinación',
+  rector: 'Rectoría',
+  teacher: 'Docente',
+  student: 'Estudiante',
+  guardian: 'Acudiente',
+};
+
+/** Roles that see every course but only read it: they follow up, they don't edit. */
+export const OVERSIGHT_ROLES = ['coordinator', 'rector'] as const satisfies readonly Role[];
+export const isOversight = (role: Role) => role === 'coordinator' || role === 'rector';
+/** Roles with a school-wide view: administration plus coordination and the rector's office. */
+export const isBoard = (role: Role) => role === 'admin' || isOversight(role);
 
 const strongPassword = z
   .string()
@@ -310,6 +325,7 @@ export const newsSchema = z
     category: z.enum(NEWS_CATEGORIES).default('general'),
     pinned: z.boolean().default(false),
     requiresAck: z.boolean().default(false),
+    official: z.boolean().default(false),
     publishAt: z.string().datetime({ offset: true }).optional(),
     expiresAt: z.string().datetime({ offset: true }).optional(),
     audience: z.array(newsAudienceSchema).min(1).max(20),
@@ -481,6 +497,48 @@ export const rubricScoreSchema = z.object({
 
 export const riskAlertUpdateSchema = z.object({
   status: z.enum(['acknowledged', 'resolved']),
+});
+
+export const alertNoteSchema = z.object({
+  body: z.string().trim().min(2, 'Escribe la nota').max(1000),
+  status: z.enum(['acknowledged', 'resolved']).optional(),
+});
+
+export const MEETING_MODES = ['presencial', 'virtual'] as const;
+export const meetingSchema = z.object({
+  studentId: z.string().uuid(),
+  scheduledAt: z.string().datetime({ offset: true }),
+  mode: z.enum(MEETING_MODES).default('presencial'),
+  place: z.string().trim().max(200).default(''),
+  reason: z.string().trim().min(3, 'Explica el motivo').max(600),
+  alertId: z.string().uuid().optional(),
+  courseId: z.string().uuid().optional(),
+});
+
+export const meetingResponseSchema = z.object({
+  attending: z.boolean(),
+  note: z.string().trim().max(400).optional(),
+});
+
+export const meetingCloseSchema = z.object({
+  status: z.enum(['held', 'cancelled']),
+  outcome: z.string().trim().max(1000).optional(),
+});
+
+/** `counterpartId` es el docente si escribe el acudiente, o el acudiente si escribe el docente. */
+export const guardianMessageSchema = z.object({
+  studentId: z.string().uuid(),
+  counterpartId: z.string().uuid(),
+  body: z.string().trim().min(1, 'Escribe el mensaje').max(2000),
+});
+
+export const signatureDecisionSchema = z.object({
+  approve: z.boolean(),
+  note: z.string().trim().max(400).optional(),
+});
+
+export const bulletinRequestSchema = z.object({
+  studentId: z.string().uuid(),
 });
 
 export const ARENA_ACTIONS = ['rebalance', 'start', 'next', 'pause', 'resume', 'extra'] as const;

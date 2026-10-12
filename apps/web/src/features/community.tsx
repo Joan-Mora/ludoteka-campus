@@ -1,5 +1,5 @@
 import { FormEvent, useMemo, useState, type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
@@ -9,6 +9,7 @@ import {
   CheckCheck,
   CheckCircle2,
   ChevronLeft,
+  Crown,
   Download,
   Eye,
   FileText,
@@ -27,11 +28,13 @@ import {
   Zap,
   type LucideIcon,
 } from 'lucide-react';
+import { ROLE_LABELS } from '@eduquest/contracts';
 import { api, download } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
 import { MicButton, SpeakButton } from '@/shared/voice-ui';
 import { joinDictation } from '@/shared/voice';
 import { Avatar, Bar, Empty, PageHeader, Reveal, Stat, Tile, type Tone } from '@/ui';
+import { DigestControl, FamilyDetail, useFamily, type FamilyChild } from './governance';
 
 const when = (value: string | null | undefined) =>
   value ? new Date(value).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' }) : '—';
@@ -84,6 +87,7 @@ interface NewsItem {
   category: string;
   pinned: boolean;
   requiresAck: boolean;
+  official?: boolean;
   publishAt: string;
   expiresAt: string | null;
   author: string;
@@ -98,7 +102,7 @@ interface NewsItem {
 
 export function NewsPage() {
   const { user } = useAuth();
-  const canPublish = user && ['teacher', 'admin', 'directivo'].includes(user.role);
+  const canPublish = user && ['teacher', 'admin', 'coordinator', 'rector'].includes(user.role);
   const canForum = user && user.role !== 'guardian';
   const [tab, setTab] = useState<'news' | 'forums'>('news');
   return (
@@ -176,11 +180,12 @@ function NewsCard({ item, open, onToggle, onChange, delay }: { item: NewsItem; o
   }
 
   return (
-    <Reveal delay={delay} className={`card news-card${unread ? ' unread' : ''}${item.pinned ? ' pinned' : ''}`}>
+    <Reveal delay={delay} className={`card news-card${unread ? ' unread' : ''}${item.pinned ? ' pinned' : ''}${item.official ? ' official' : ''}`}>
       <button className="news-head" onClick={onToggle} aria-expanded={open}>
-        <Tile icon={item.category === 'urgente' ? BellRing : item.category === 'evento' ? CalendarClock : Megaphone} tone={cat.tone} />
+        <Tile icon={item.official ? Crown : item.category === 'urgente' ? BellRing : item.category === 'evento' ? CalendarClock : Megaphone} tone={item.official ? 'gold' : cat.tone} />
         <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
           <div className="row g-8 wrap" style={{ marginBottom: 4 }}>
+            {item.official && <span className="chip gold"><Crown size={12} /> Comunicado oficial de Rectoría</span>}
             {item.pinned && <span className="chip gold"><Pin size={12} /> Fijada</span>}
             <span className={`chip ${cat.tone}`}>{cat.label}</span>
             {item.scheduled && <span className="chip sky"><CalendarClock size={12} /> Programada · {when(item.publishAt)}</span>}
@@ -253,15 +258,18 @@ function Receipts({ id, requiresAck }: { id: string; requiresAck: boolean }) {
   );
 }
 
-const roleLabel: Record<string, string> = { admin: 'Administración', directivo: 'Coordinación', teacher: 'Docente', student: 'Estudiante', guardian: 'Acudiente' };
-const roleAudience: Record<string, string> = { student: 'Estudiantes', guardian: 'Acudientes', teacher: 'Docentes', directivo: 'Coordinación' };
+const roleLabel: Record<string, string> = ROLE_LABELS;
+const toGrade = (percent: number) => Math.round((1 + (4 * percent) / 100) * 10) / 10;
+const roleAudience: Record<string, string> = { student: 'Estudiantes', guardian: 'Acudientes', teacher: 'Docentes', coordinator: 'Coordinación', rector: 'Rectoría' };
 
-interface Targets { allowAll: boolean; roles: string[]; groups: { id: string; label: string }[]; courses: { id: string; title: string }[] }
+interface Targets { allowAll: boolean; canOfficial?: boolean; roles: string[]; groups: { id: string; label: string }[]; courses: { id: string; title: string }[] }
 type Target = { kind: 'all' } | { kind: 'role' | 'group' | 'course'; value: string };
 const targetKey = (t: Target) => `${t.kind}:${'value' in t ? t.value : ''}`;
 
 function Composer({ onDone }: { onDone: () => void }) {
   const targets = useQuery({ queryKey: ['news-targets'], queryFn: () => api<Targets>('/api/news/targets') });
+  const [params] = useSearchParams();
+  const officialPreset = params.get('oficial') === '1';
   const [body, setBody] = useState('');
   const [audience, setAudience] = useState<Target[]>([]);
   const [error, setError] = useState('');
@@ -291,6 +299,7 @@ function Composer({ onDone }: { onDone: () => void }) {
           category: d.get('category'),
           pinned: d.get('pinned') === 'on',
           requiresAck: d.get('requiresAck') === 'on',
+          official: d.get('official') === 'on',
           publishAt: publishAt ? new Date(publishAt).toISOString() : undefined,
           expiresAt: expiresAt ? new Date(expiresAt).toISOString() : undefined,
           audience,
@@ -334,6 +343,9 @@ function Composer({ onDone }: { onDone: () => void }) {
         </div>
         <label className="check"><input name="pinned" type="checkbox" /> Fijar arriba</label>
         <label className="check"><input name="requiresAck" type="checkbox" /> Pedir confirmación de lectura</label>
+        {t?.canOfficial && (
+          <label className="check"><input name="official" type="checkbox" defaultChecked={officialPreset} /> <Crown size={15} color="var(--gold)" /> Comunicado oficial de Rectoría</label>
+        )}
         {error && <p className="form-error">{error}</p>}
         <button className="btn" type="submit" disabled={busy} style={{ width: '100%' }}>{busy ? 'Publicando…' : 'Publicar'}</button>
       </form>
@@ -349,6 +361,7 @@ interface ThreadSummary { id: string; title: string; body: string; pinned: boole
 interface ThreadDetail extends ThreadSummary {
   moderator: boolean;
   canAnswer: boolean;
+  canPost?: boolean;
   course_id: string;
   created_at: string;
   posts: { id: string; body: string; is_answer: boolean; created_at: string; author_id: string; author: string; role: string }[];
@@ -379,6 +392,8 @@ function Forums() {
 }
 
 function ThreadList({ courseId, onOpen }: { courseId: string; onOpen: (id: string) => void }) {
+  const { user } = useAuth();
+  const canPost = user != null && ['student', 'teacher', 'admin'].includes(user.role);
   const client = useQueryClient();
   const data = useQuery({ queryKey: ['forum', courseId], queryFn: () => api<{ moderator: boolean; threads: ThreadSummary[] }>(`/api/courses/${courseId}/forum`) });
   const [composing, setComposing] = useState(false);
@@ -402,7 +417,7 @@ function ThreadList({ courseId, onOpen }: { courseId: string; onOpen: (id: strin
   }
 
   return (
-    <Panel icon={MessagesSquare} tone="sky" title="Foro del curso" subtitle={`${data.data?.threads.length ?? 0} temas`} actions={<button className="btn sm" onClick={() => setComposing(!composing)}><MessageCircle size={15} /> Nuevo tema</button>}>
+    <Panel icon={MessagesSquare} tone="sky" title="Foro del curso" subtitle={`${data.data?.threads.length ?? 0} temas`} actions={canPost ? <button className="btn sm" onClick={() => setComposing(!composing)}><MessageCircle size={15} /> Nuevo tema</button> : undefined}>
       {composing && (
         <form onSubmit={create} className="card" style={{ padding: 16, marginBottom: 16, background: 'var(--surface-2)' }}>
           <label className="field">Título<input name="title" required minLength={3} maxLength={160} placeholder="¿Cómo se simplifica 18/24?" /></label>
@@ -508,7 +523,9 @@ function ThreadView({ id, onBack }: { id: string; onBack: () => void }) {
         ))}
         {!thread.posts.length && <p className="muted">Nadie ha respondido todavía.</p>}
       </div>
-      {thread.locked && !thread.moderator ? (
+      {thread.canPost === false ? (
+        <p className="chip" style={{ marginTop: 16 }}><Eye size={13} /> Coordinación y rectoría leen y moderan los foros; participan docentes y estudiantes.</p>
+      ) : thread.locked && !thread.moderator ? (
         <p className="chip" style={{ marginTop: 16 }}><Lock size={13} /> El docente cerró este tema.</p>
       ) : (
         <form onSubmit={send} style={{ marginTop: 18 }}>
@@ -555,26 +572,35 @@ const scopeHelp: Record<string, { icon: LucideIcon; text: string }> = {
 
 export function GuardianPage() {
   const data = useQuery({ queryKey: ['guardian-students'], queryFn: () => api<{ policyVersion: string; students: GuardianStudent[] }>('/api/guardian/students') });
+  const family = useFamily();
   const students = data.data?.students ?? [];
   return (
     <div>
       <PageHeader
-        eyebrow="Acudiente"
+        eyebrow="Familia"
         title="Seguimiento familiar"
-        subtitle="Progreso, evaluaciones y autorizaciones de tus acudidos."
-        actions={<Link className="btn ghost" to="/app/novedades"><Megaphone size={16} /> Cartelera</Link>}
+        subtitle="Lo que viene, notas, asistencia, citaciones y mensajes con los docentes de tus hijos."
+        actions={
+          <>
+            <Link className="btn ghost" to="/app/mensajes"><MessageCircle size={16} /> Mensajes</Link>
+            <Link className="btn ghost" to="/app/novedades"><Megaphone size={16} /> Cartelera</Link>
+          </>
+        }
       />
+      {family.data && <DigestControl digest={family.data.digest} />}
       {!data.isLoading && !students.length && (
         <Empty icon={HeartHandshake} title="Aún no tienes estudiantes vinculados" body="Coordinación vincula tu cuenta con la de tu hijo o acudido." />
       )}
       <div className="stack" style={{ gap: 22 }}>
-        {students.map((s) => <StudentCard key={s.id} student={s} policyVersion={data.data!.policyVersion} />)}
+        {students.map((s) => (
+          <StudentCard key={s.id} student={s} policyVersion={data.data!.policyVersion} family={family.data?.children.find((c) => c.id === s.id)} />
+        ))}
       </div>
     </div>
   );
 }
 
-function StudentCard({ student, policyVersion }: { student: GuardianStudent; policyVersion: string }) {
+function StudentCard({ student, policyVersion, family }: { student: GuardianStudent; policyVersion: string; family?: FamilyChild }) {
   const client = useQueryClient();
   const overview = useQuery({ queryKey: ['overview', student.id], queryFn: () => api<Overview>(`/api/analytics/students/${student.id}/overview`) });
   const [busy, setBusy] = useState<string | null>(null);
@@ -612,10 +638,12 @@ function StudentCard({ student, policyVersion }: { student: GuardianStudent; pol
 
       <div className="grid cols-4" style={{ marginBottom: 18 }}>
         <Stat icon={BookOpen} tone="violet" value={o ? `${o.lessons.completed}/${o.lessons.total}` : '—'} label="Lecciones" extra={<Bar value={lessonPct} thin />} />
-        <Stat icon={CheckCircle2} tone="mint" value={o?.average != null ? `${o.average}%` : '—'} label="Promedio reciente" />
+        <Stat icon={CheckCircle2} tone="mint" value={o?.average != null ? toGrade(o.average).toFixed(1) : '—'} label="Promedio reciente (1 a 5)" />
         <Stat icon={FileText} tone="sky" value={o?.pendingAssignments ?? '—'} label="Tareas pendientes" />
         <Stat icon={Zap} tone="gold" value={o?.xp ?? '—'} label={`XP · ${o?.badges ?? 0} insignias`} />
       </div>
+
+      {family && <FamilyDetail child={family} />}
 
       <div className="grid cols-2" style={{ alignItems: 'start' }}>
         <div>
@@ -628,7 +656,7 @@ function StudentCard({ student, policyVersion }: { student: GuardianStudent; pol
                   <tr key={r.id}>
                     <td><b>{r.title}</b><div className="muted" style={{ fontSize: 12 }}>{when(r.at)}</div></td>
                     <td className="muted">{r.course}</td>
-                    <td style={{ textAlign: 'right' }}><span className={`chip ${r.percent >= 75 ? 'mint' : r.percent >= 60 ? 'gold' : 'coral'}`}>{r.percent}%</span></td>
+                    <td style={{ textAlign: 'right' }}><span className={`chip ${toGrade(r.percent) >= 4 ? 'mint' : toGrade(r.percent) >= 3 ? 'gold' : 'coral'}`}>{toGrade(r.percent).toFixed(1)}</span></td>
                   </tr>
                 ))}
               </tbody>

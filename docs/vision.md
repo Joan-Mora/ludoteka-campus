@@ -1,6 +1,6 @@
 # Ludoteka Campus — Visión
 
-> Última revisión: 2026-10-09 · Responsable: Cronista
+> Última revisión: 2026-10-11 · Responsable: Cronista
 > **Nombre:** Ludoteka Campus (nombre pendiente de confirmar por Darwin; antes EduQuest). La carpeta sigue siendo `Proyectos\EduQuest`.
 
 **Cliente institucional:** Colegio Francisco Arango (CFA)
@@ -19,19 +19,41 @@ Que una sola aplicación sea el campus virtual del CFA (MVP de Matemáticas de s
 
 - **Estudiante:** aprende y practica en un campus gamificado (XP, rachas, Arena) con un tutor que cita las guías y no le da la respuesta en el examen.
 - **Docente:** publica, evalúa con integridad (kiosco), califica con rúbricas y recibe alertas de riesgo.
-- **Coordinación y rectoría:** ven indicadores, consultan en lenguaje natural (Observatorio) y descargan reportes numerados y verificables.
-- **Acudiente:** sigue el avance y las alertas, y autoriza o revoca el facial del menor.
+- **Coordinación:** atiende las alertas de riesgo de todos los grupos con una bitácora, consolida la asistencia y cita a los acudientes.
+- **Rectoría:** mira el tablero estratégico por periodo, firma certificados y boletines, y publica comunicados oficiales.
+- **Acudiente:** sigue a cada hijo (lo que viene, notas, asistencia, alertas), responde citaciones, escribe a los docentes, recibe un resumen semanal y autoriza o revoca el facial del menor.
 - **Universidad:** evidencia de diseño de BD distribuida, seguridad, IA y deploy.
 
 ## Usuarios y roles
 
+Desde Ludoteka 2 (11-oct) el antiguo rol `directivo` se separó en `coordinator` y `rector` (migraciones `0020_roles_a` a `0020_roles_c`). Solo el docente y la administración escriben contenido académico; los demás roles consultan según su función.
+
 | Rol | Código |
 |-----|--------|
 | Administrador | `admin` |
-| Coordinación y rectoría | `directivo` |
+| Coordinación | `coordinator` |
+| Rectoría | `rector` |
 | Docente | `teacher` |
 | Estudiante | `student` |
 | Acudiente | `guardian` |
+
+### Matriz de responsabilidades
+
+L = lee, E = escribe, M = modera, F = firma, — = sin acceso (la web muestra «Esta sección no es para tu rol» y la API responde 403).
+
+| Función | Estudiante | Docente | Coordinación | Rectoría | Acudiente | Admin |
+|---|---|---|---|---|---|---|
+| Cursos, lecciones y tareas | L y entrega | E | L | L | — | E |
+| Calificaciones, asistencia y rúbricas | — | E (sus cursos) | L | L | L (sus hijos, en Familia) | E |
+| Alertas de riesgo | — | E (sus cursos) | E (todas, con bitácora) | L (agregadas) | L (sus hijos) | E |
+| Citaciones a acudientes | — | — | E | — | Responde | E |
+| Banco de preguntas y sala en vivo | Juega en vivo | E | — | — | — | E |
+| Observatorio y reportes | — | L | L | L | Boletín de sus hijos | L |
+| Certificados y boletines oficiales | Descarga | Pide | Pide boletín | F | Descarga | Pide |
+| Cartelera | L | E | E | E y comunicado oficial | L | E |
+| Foros por curso | E | E y M | L y M | L | — | E y M |
+| Mensajes acudiente–docente | — | E | — | — | E | — |
+| Usuarios, grupos y vínculos | — | — | Vínculos de acudientes | — | — | E |
 
 ## Estado al 2026-10-09
 
@@ -47,7 +69,7 @@ Que una sola aplicación sea el campus virtual del CFA (MVP de Matemáticas de s
 
 ## Qué no pretende esta versión
 
-Proctoring forense, huella, firma criptográfica del rector, app nativa, multi-colegio, otra base que no sea CockroachDB, ni rostros reales de menores en la demo.
+Proctoring forense, huella, firma criptográfica del rector (la firma es una aprobación registrada en la BD y en `audit_log`, no un certificado digital), app nativa, multi-colegio, otra base que no sea CockroachDB, ni rostros reales de menores en la demo.
 
 ## Documentos relacionados
 

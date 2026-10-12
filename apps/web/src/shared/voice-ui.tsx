@@ -65,11 +65,13 @@ const destinations: Destination[] = [
   { label: 'Arcade', to: '/app/jugar', phrases: ['arcade', 'juegos', 'minijuegos'], roles: ['student'] },
   { label: 'Sala en vivo', to: '/app/en-vivo', phrases: ['sala en vivo', 'en vivo', 'quiz en vivo'] },
   { label: 'Acceso facial', to: '/app/rostro', phrases: ['acceso facial', 'rostro', 'mi cara'] },
-  { label: 'Calificaciones', to: '/app/calificaciones', phrases: ['calificaciones', 'notas', 'asistencia', 'rubricas', 'alertas'], roles: ['teacher', 'admin', 'directivo'] },
+  { label: 'Calificaciones', to: '/app/calificaciones', phrases: ['calificaciones', 'notas', 'rubricas', 'libro de notas'], roles: ['teacher', 'admin', 'coordinator', 'rector'] },
   { label: 'Banco de preguntas', to: '/app/banco', phrases: ['banco', 'preguntas'], roles: ['teacher', 'admin'] },
-  { label: 'Observatorio', to: '/app/consultas', phrases: ['observatorio', 'consultas', 'datos'], roles: ['teacher', 'admin', 'directivo'] },
-  { label: 'Coordinación', to: '/app/rectoria', phrases: ['coordinacion', 'rectoria', 'panorama', 'indicadores'], roles: ['admin', 'directivo'] },
-  { label: 'Seguimiento', to: '/app/acudiente', phrases: ['seguimiento', 'mis hijos', 'acudidos'], roles: ['guardian'] },
+  { label: 'Observatorio', to: '/app/consultas', phrases: ['observatorio', 'consultas', 'datos'], roles: ['teacher', 'admin', 'coordinator', 'rector'] },
+  { label: 'Coordinación', to: '/app/coordinacion', phrases: ['coordinacion', 'seguimiento de alertas', 'alertas', 'citaciones', 'asistencia'], roles: ['admin', 'coordinator'] },
+  { label: 'Rectoría', to: '/app/rectoria', phrases: ['rectoria', 'tablero', 'indicadores', 'firmas', 'por firmar'], roles: ['admin', 'rector'] },
+  { label: 'Mensajes', to: '/app/mensajes', phrases: ['mensajes', 'chat', 'escribir al docente', 'escribir al acudiente'], roles: ['teacher', 'guardian'] },
+  { label: 'Familia', to: '/app/acudiente', phrases: ['familia', 'seguimiento', 'mis hijos', 'acudidos'], roles: ['guardian'] },
 ];
 
 /** Global spoken navigation, e.g. «abre la biblioteca», «ir a mis cursos», «modo oscuro». */

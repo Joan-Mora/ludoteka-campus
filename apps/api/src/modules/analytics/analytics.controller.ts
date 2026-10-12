@@ -14,7 +14,7 @@ function send(res: Response, file: Buffer, type: 'pdf' | 'xlsx', name: string) {
 export class AnalyticsController {
   constructor(private readonly analytics: AnalyticsService) {}
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin', 'coordinator', 'rector')
   @Get('analytics/courses/:id')
   course(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     return this.analytics.course(user, id);
@@ -25,56 +25,56 @@ export class AnalyticsController {
     return this.analytics.campus(user);
   }
 
-  @Roles('admin', 'directivo')
+  @Roles('admin', 'coordinator', 'rector')
   @Get('analytics/institution')
   institution() {
     return this.analytics.institution();
   }
 
-  @Roles('teacher', 'admin', 'directivo', 'student', 'guardian')
+  @Roles('teacher', 'admin', 'coordinator', 'rector', 'student', 'guardian')
   @Get('analytics/students/:id/overview')
   studentOverview(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     return this.analytics.studentOverview(user, id);
   }
 
-  @Roles('teacher', 'admin', 'directivo', 'student', 'guardian')
+  @Roles('teacher', 'admin', 'coordinator', 'rector', 'student', 'guardian')
   @Get('reports/bulletin/:userId/pdf')
   async bulletin(@CurrentUser() user: AuthUser, @Param('userId') userId: string, @Res() res: Response) {
     send(res, await this.analytics.bulletin(user, userId), 'pdf', 'boletin');
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin', 'coordinator', 'rector')
   @Get('reports/courses/:id/excel')
   async courseExcel(@CurrentUser() user: AuthUser, @Param('id') id: string, @Res() res: Response) {
     send(res, await this.analytics.courseExcel(user, id), 'xlsx', 'curso');
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin', 'coordinator', 'rector')
   @Get('reports/assessments/:id/excel')
   async assessment(@CurrentUser() user: AuthUser, @Param('id') id: string, @Res() res: Response) {
     send(res, await this.analytics.assessmentExcel(user, id), 'xlsx', 'resultados');
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin', 'coordinator', 'rector')
   @Get('reports/integrity/:courseId/pdf')
   async integrityPdf(@CurrentUser() user: AuthUser, @Param('courseId') courseId: string, @Res() res: Response) {
     send(res, await this.analytics.integrityPdf(user, courseId), 'pdf', 'integridad');
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin', 'coordinator', 'rector')
   @Get('reports/integrity/:courseId/excel')
   async integrityExcel(@CurrentUser() user: AuthUser, @Param('courseId') courseId: string, @Res() res: Response) {
     send(res, await this.analytics.integrityExcel(user, courseId), 'xlsx', 'integridad');
   }
 
-  @Roles('admin', 'directivo')
+  @Roles('admin', 'coordinator', 'rector')
   @Get('reports/usage/excel')
   async usage(@CurrentUser() user: AuthUser, @Query('days') days: string | undefined, @Res() res: Response) {
     const span = Math.min(365, Math.max(1, Number(days) || 30));
     send(res, await this.analytics.usageExcel(user, span), 'xlsx', 'uso-biblioteca-ia');
   }
 
-  @Roles('admin', 'directivo')
+  @Roles('admin', 'coordinator', 'rector')
   @Get('reports/roster/excel')
   async roster(@CurrentUser() user: AuthUser, @Res() res: Response) {
     send(res, await this.analytics.rosterExcel(user), 'xlsx', 'usuarios');

@@ -12,7 +12,7 @@ class ReportLogController {
     return this.reports.verify(code);
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin', 'coordinator', 'rector')
   @Get('reports/log')
   history(@CurrentUser() user: AuthUser) {
     return this.reports.history(user);

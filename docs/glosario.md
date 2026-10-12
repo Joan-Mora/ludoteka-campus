@@ -76,7 +76,14 @@
 | Capitán | Miembro del equipo que bloquea la respuesta en la Arena. Rota en cada pregunta |
 | Cartelera | Novedades con audiencia, fijado, programación y confirmación de lectura |
 | Código LK | Consecutivo `LK-AAAA-NNNNNN` de cada reporte, guardado en `report_log` y verificable en `/verificar-reporte/<código>` |
-| Coordinación | Rol `directivo`. Ve indicadores, el Observatorio y los reportes |
+| Coordinación | Rol `coordinator`. Mesa de seguimiento de alertas con bitácora, asistencia consolidada, citaciones a acudientes y moderación de foros. Consulta notas sin editarlas |
+| Rectoría | Rol `rector`. Tablero estratégico por periodo, firma de certificados y boletines, y comunicados oficiales |
+| Citación | Reunión que coordinación agenda con los acudientes de un estudiante (`meetings`). Llega como aviso y correo, y el acudiente responde «Asistiré» o «No puedo» |
+| Bitácora de alerta | Notas de seguimiento de una alerta (`risk_alert_notes`). Anotar una alerta abierta la pasa a «en seguimiento» |
+| `pending_signature` | Estado de un certificado (`certificates.status`) o boletín (`bulletin_signatures`) que espera la firma de rectoría. Solo los certificados firmados se verifican públicamente |
+| Comunicado oficial | Novedad de la cartelera marcada `official` por rectoría; se muestra con sello dorado |
+| Resumen semanal | Correo de los viernes al acudiente con lo que viene, notas, faltas y alertas de cada hijo (`user_preferences.weekly_digest`) |
+| Mensajes | Conversación privada acudiente–docente sobre un estudiante (`guardian_messages`) |
 | Cuaderno | Apuntes con resumen IA, tarjetas de repaso, metas y sesiones de enfoque |
 | Estación | Unidad del mapa de un curso |
 | Kiosco | Examen en pantalla completa que registra salida, pérdida de foco, pestaña oculta y Esc |

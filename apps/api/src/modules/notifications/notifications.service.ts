@@ -2,15 +2,22 @@ import { Injectable } from '@nestjs/common';
 import { OnEvent } from '@nestjs/event-emitter';
 import { DatabaseService } from '../../core/database/database.service';
 import { Mailer } from '../../core/mail/mailer';
-import { passwordResetEmail } from '../../core/mail/templates';
+import { guardianMessageEmail, meetingEmail, passwordResetEmail } from '../../core/mail/templates';
 import {
   DomainEvents,
   type ForumReplyEvent,
+  type GuardianMessageEvent,
   type IntegrityViolationEvent,
+  type MeetingRespondedEvent,
+  type MeetingScheduledEvent,
   type NewsPublishedEvent,
   type PasswordResetEvent,
   type RiskAlertRaisedEvent,
+  type SignatureDecidedEvent,
+  type SignatureRequestedEvent,
 } from '../../core/events/domain-events';
+
+const when = (value: Date) => value.toLocaleString('es-CO', { timeZone: 'America/Bogota', dateStyle: 'medium', timeStyle: 'short' });
 
 @Injectable()
 export class NotificationsService {
@@ -82,6 +89,103 @@ export class NotificationsService {
         })),
       ])
       .execute();
+  }
+
+  private notify(rows: { user_id: string; title: string; body: string }[]) {
+    if (!rows.length) return Promise.resolve();
+    return this.database.db
+      .insertInto('notifications')
+      .values(rows.map((row) => ({ ...row, title: row.title.slice(0, 200), body: row.body.slice(0, 1000) })))
+      .execute()
+      .then(() => undefined);
+  }
+
+  @OnEvent(DomainEvents.MeetingScheduled)
+  async onMeeting(event: MeetingScheduledEvent) {
+    await this.notify([
+      {
+        user_id: event.guardianId,
+        title: `Citación: ${event.studentName}`,
+        body: `${event.organizer} te cita el ${when(event.scheduledAt)}. Confirma tu asistencia en Familia.`,
+      },
+    ]);
+    const to = this.mailer.deliveryAddress(event.guardianEmail);
+    await this.mailer.send(
+      to,
+      meetingEmail({
+        baseUrl: this.mailer.baseUrl,
+        fullName: event.guardianName,
+        account: event.guardianEmail,
+        studentName: event.studentName,
+        scheduledAt: event.scheduledAt,
+        mode: event.mode,
+        place: event.place,
+        reason: event.reason,
+        organizer: event.organizer,
+        forLab: to !== event.guardianEmail,
+      }),
+    );
+  }
+
+  @OnEvent(DomainEvents.MeetingResponded)
+  async onMeetingResponse(event: MeetingRespondedEvent) {
+    await this.notify([
+      {
+        user_id: event.organizerId,
+        title: event.attending ? `Citación confirmada: ${event.studentName}` : `Citación declinada: ${event.studentName}`,
+        body: `${event.guardianName} ${event.attending ? 'asistirá' : 'no puede asistir'}.${event.note ? ` Nota: ${event.note}` : ''}`,
+      },
+    ]);
+  }
+
+  @OnEvent(DomainEvents.GuardianMessage)
+  async onGuardianMessage(event: GuardianMessageEvent) {
+    await this.notify([{ user_id: event.recipientId, title: `Mensaje de ${event.authorName}`, body: `Sobre ${event.studentName}: ${event.body.slice(0, 160)}` }]);
+    const to = this.mailer.deliveryAddress(event.recipientEmail);
+    const path = event.recipientRole === 'guardian' ? '/app/acudiente' : '/app/mensajes';
+    await this.mailer.send(
+      to,
+      guardianMessageEmail({
+        baseUrl: this.mailer.baseUrl,
+        fullName: event.recipientName,
+        account: event.recipientEmail,
+        authorName: event.authorName,
+        studentName: event.studentName,
+        preview: event.body,
+        link: `${this.mailer.baseUrl}${path}?estudiante=${event.studentId}`,
+        forLab: to !== event.recipientEmail,
+      }),
+    );
+  }
+
+  @OnEvent(DomainEvents.SignatureRequested)
+  async onSignatureRequested(event: SignatureRequestedEvent) {
+    const rectors = await this.database.db
+      .selectFrom('user_roles')
+      .innerJoin('users', 'users.id', 'user_roles.user_id')
+      .select('users.id')
+      .where('user_roles.role', '=', 'rector')
+      .where('users.status', '=', 'active')
+      .execute();
+    const what = event.kind === 'certificate' ? 'Certificado' : 'Boletín';
+    await this.notify(rectors.map((r) => ({ user_id: r.id, title: `${what} por firmar`, body: `${event.title} · ${event.studentName}` })));
+  }
+
+  @OnEvent(DomainEvents.SignatureDecided)
+  async onSignatureDecided(event: SignatureDecidedEvent) {
+    const what = event.kind === 'certificate' ? 'certificado' : 'boletín';
+    const rows: { user_id: string; title: string; body: string }[] = [];
+    if (event.requesterId) {
+      rows.push({
+        user_id: event.requesterId,
+        title: event.approved ? `Rectoría firmó el ${what}` : `Rectoría devolvió el ${what}`,
+        body: `${event.title} · ${event.studentName}.${event.note ? ` Nota: ${event.note}` : ''}`,
+      });
+    }
+    if (event.approved) {
+      rows.push({ user_id: event.studentId, title: event.kind === 'certificate' ? 'Tienes un certificado nuevo' : 'Tu boletín está firmado', body: event.title });
+    }
+    await this.notify(rows);
   }
 
   list(userId: string) {

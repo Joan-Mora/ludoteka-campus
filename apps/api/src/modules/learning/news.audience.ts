@@ -1,4 +1,5 @@
 import { sql, type RawBuilder } from 'kysely';
+import { isBoard } from '@eduquest/contracts';
 import type { AuthUser } from '../../core/auth/auth.decorators';
 
 type Viewer = Pick<AuthUser, 'id' | 'role'>;
@@ -31,7 +32,7 @@ export function viewerCourses(viewer: Viewer): RawBuilder<unknown> {
  * Authors always see their own items; admin and coordinación also see scheduled ones when `includeScheduled`.
  */
 export function visibleNews(viewer: Viewer, includeScheduled = false): RawBuilder<boolean> {
-  const board = viewer.role === 'admin' || viewer.role === 'directivo';
+  const board = isBoard(viewer.role);
   if (board && includeScheduled) return sql<boolean>`true`;
   return sql<boolean>`(
     n.author_id = ${viewer.id}

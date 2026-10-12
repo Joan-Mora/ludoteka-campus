@@ -7,8 +7,8 @@ import { seedsDir, splitSql, withClient } from './sql-runner';
 
 const PEOPLE = [
   { email: 'admin@eduquest.local', name: 'Ada Admin', role: 'admin', minor: false },
-  { email: 'rectoria@eduquest.local', name: 'Rectoría CFA', role: 'directivo', minor: false },
-  { email: 'coordinacion@eduquest.local', name: 'Coordinación Académica', role: 'directivo', minor: false },
+  { email: 'rectoria@eduquest.local', name: 'Rectoría CFA', role: 'rector', minor: false },
+  { email: 'coordinacion@eduquest.local', name: 'Coordinación Académica', role: 'coordinator', minor: false },
   { email: 'docente@eduquest.local', name: 'Marta López', role: 'teacher', minor: false },
   { email: 'estudiante@eduquest.local', name: 'Juan Esteban Ruiz', role: 'student', minor: false },
   { email: 'estudiante2@eduquest.local', name: 'Lucía Fernández', role: 'student', minor: true },

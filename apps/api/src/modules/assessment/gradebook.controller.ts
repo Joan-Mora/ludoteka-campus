@@ -12,7 +12,8 @@ function send(res: Response, file: Buffer, type: 'pdf' | 'xlsx', name: string) {
   res.send(file);
 }
 
-@Roles('teacher', 'admin', 'directivo')
+/** Coordinación y rectoría consultan; solo el docente del curso y la administración escriben. */
+@Roles('teacher', 'admin', 'coordinator', 'rector')
 @Controller('gradebook')
 export class GradebookController {
   constructor(private readonly gradebook: GradebookService) {}
@@ -22,6 +23,7 @@ export class GradebookController {
     return this.gradebook.gradebook(user, id);
   }
 
+  @Roles('teacher', 'admin')
   @Put('courses/:id/categories')
   categories(@CurrentUser() user: AuthUser, @Param('id', ParseUUIDPipe) id: string, @Body(new ZodPipe(gradeCategoriesSchema)) body: { categories: { name: string; source: GradeSource; weight: number }[] }) {
     return this.gradebook.saveCategories(user, id, body.categories);
@@ -32,6 +34,7 @@ export class GradebookController {
     return this.gradebook.attendanceSheet(user, id, date);
   }
 
+  @Roles('teacher', 'admin')
   @Put('courses/:id/attendance')
   saveAttendance(@CurrentUser() user: AuthUser, @Param('id', ParseUUIDPipe) id: string, @Body(new ZodPipe(attendanceSchema)) body: { date: string; entries: { studentId: string; status: string; note?: string }[] }) {
     return this.gradebook.saveAttendance(user, id, body);
@@ -42,16 +45,19 @@ export class GradebookController {
     return this.gradebook.rubrics(user, id);
   }
 
+  @Roles('teacher', 'admin')
   @Post('courses/:id/rubrics')
   createRubric(@CurrentUser() user: AuthUser, @Param('id', ParseUUIDPipe) id: string, @Body(new ZodPipe(rubricSchema)) body: { title: string; assignmentId?: string; criteria: { name: string; description?: string; maxPoints: number }[] }) {
     return this.gradebook.createRubric(user, id, body);
   }
 
+  @Roles('teacher', 'admin')
   @Delete('rubrics/:id')
   deleteRubric(@CurrentUser() user: AuthUser, @Param('id', ParseUUIDPipe) id: string) {
     return this.gradebook.deleteRubric(user, id);
   }
 
+  @Roles('teacher', 'admin')
   @Put('rubrics/:id/scores')
   score(@CurrentUser() user: AuthUser, @Param('id', ParseUUIDPipe) id: string, @Body(new ZodPipe(rubricScoreSchema)) body: { studentId: string; scores: { criterionId: string; points: number; comment?: string }[] }) {
     return this.gradebook.scoreRubric(user, id, body);
@@ -62,6 +68,7 @@ export class GradebookController {
     return this.gradebook.alerts(user, id);
   }
 
+  @Roles('teacher', 'admin', 'coordinator')
   @Patch('alerts/:id')
   updateAlert(@CurrentUser() user: AuthUser, @Param('id', ParseUUIDPipe) id: string, @Body(new ZodPipe(riskAlertUpdateSchema)) body: { status: 'acknowledged' | 'resolved' }) {
     return this.gradebook.updateAlert(user, id, body.status);

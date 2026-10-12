@@ -146,10 +146,10 @@ export function Landing() {
               <div className="row g-24 wrap" style={{ marginTop: 44 }}>
                 {[
                   ['8', 'edificios para aprender'],
-                  ['5', 'roles: estudiante, docente, directivo (coordinación y rectoría), acudiente y administrador'],
+                  ['6', 'roles: estudiante, docente, coordinación, rectoría, acudiente y administración'],
                   ['QR', 'en cada reporte y certificado'],
                 ].map(([value, label]) => (
-                  <div key={label} style={{ maxWidth: value === '5' ? 240 : 170 }}>
+                  <div key={label} style={{ maxWidth: value === '6' ? 240 : 170 }}>
                     <div className="display" style={{ fontSize: 36 }}>{value}</div>
                     <div className="landing-stat">{label}</div>
                   </div>

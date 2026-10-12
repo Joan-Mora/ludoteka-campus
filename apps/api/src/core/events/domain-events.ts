@@ -13,7 +13,61 @@ export const DomainEvents = {
   ArenaFinished: 'arena.finished',
   StudyProgress: 'study.progress',
   RiskAlertRaised: 'risk.alert_raised',
+  MeetingScheduled: 'meeting.scheduled',
+  MeetingResponded: 'meeting.responded',
+  GuardianMessage: 'guardian.message',
+  SignatureDecided: 'signature.decided',
+  SignatureRequested: 'signature.requested',
 } as const;
+
+export interface MeetingScheduledEvent {
+  meetingId: string;
+  guardianId: string;
+  guardianEmail: string;
+  guardianName: string;
+  studentName: string;
+  scheduledAt: Date;
+  mode: string;
+  place: string;
+  reason: string;
+  organizer: string;
+}
+
+export interface MeetingRespondedEvent {
+  meetingId: string;
+  organizerId: string;
+  guardianName: string;
+  studentName: string;
+  attending: boolean;
+  note: string | null;
+}
+
+export interface GuardianMessageEvent {
+  recipientId: string;
+  recipientEmail: string;
+  recipientName: string;
+  recipientRole: 'guardian' | 'teacher';
+  authorName: string;
+  studentId: string;
+  studentName: string;
+  body: string;
+}
+
+export interface SignatureRequestedEvent {
+  kind: 'certificate' | 'bulletin';
+  title: string;
+  studentName: string;
+}
+
+export interface SignatureDecidedEvent {
+  kind: 'certificate' | 'bulletin';
+  requesterId: string | null;
+  studentId: string;
+  title: string;
+  studentName: string;
+  approved: boolean;
+  note: string | null;
+}
 
 export interface StudyProgressEvent {
   userId: string;

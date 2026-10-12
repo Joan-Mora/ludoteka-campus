@@ -8,7 +8,7 @@ import { ArenaService } from './arena.service';
 export class ArenaController {
   constructor(private readonly arena: ArenaService) {}
 
-  @Roles('student', 'teacher', 'admin', 'directivo')
+  @Roles('student', 'teacher', 'admin', 'coordinator', 'rector')
   @Get('rooms')
   list(@CurrentUser() user: AuthUser) {
     return this.arena.list(user);
@@ -29,7 +29,7 @@ export class ArenaController {
     return this.arena.join(user, body.code);
   }
 
-  @Roles('student', 'teacher', 'admin', 'directivo')
+  @Roles('student', 'teacher', 'admin', 'coordinator', 'rector')
   @Get('rooms/:id')
   state(@CurrentUser() user: AuthUser, @Param('id', ParseUUIDPipe) id: string) {
     return this.arena.state(user, id);

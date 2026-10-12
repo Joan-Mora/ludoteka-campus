@@ -91,7 +91,7 @@ Los tableros leen tablas de otros módulos en solo lectura. La escritura de una 
 
 ## Auth
 
-JWT de acceso corto en memoria del cliente. Refresh opaco, con hash en `refresh_tokens`, en cookie `HttpOnly`. Contraseñas con argon2id. La recuperación no revela si el correo existe. Roles: `admin`, `directivo` (coordinación y rectoría), `teacher`, `student`, `guardian`.
+JWT de acceso corto en memoria del cliente. Refresh opaco, con hash en `refresh_tokens`, en cookie `HttpOnly`. Contraseñas con argon2id. La recuperación no revela si el correo existe. Roles: `admin`, `coordinator`, `rector`, `teacher`, `student`, `guardian` (`directivo` se separó en coordinación y rectoría el 11-oct). Solo `teacher` y `admin` escriben contenido académico; la web declara los roles de cada ruta en `ROUTE_ROLES` y la API con `@Roles`.
 
 Flujo de ingreso (ADR-010). Las cuentas las crea el administrador, una a una o por Excel.
 

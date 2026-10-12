@@ -30,7 +30,7 @@ export class TutorController {
     return this.tutor.recommend(user, id);
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin', 'coordinator', 'rector')
   @Get('courses/:id/recommendations')
   list(@Param('id') id: string) {
     return this.tutor.listRecommendations(id);

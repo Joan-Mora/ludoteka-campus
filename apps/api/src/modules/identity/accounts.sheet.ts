@@ -6,7 +6,8 @@ import type { Role } from '@eduquest/contracts';
 export const ROLE_LABELS: Record<Role, string> = {
   student: 'estudiante',
   teacher: 'docente',
-  directivo: 'directivo',
+  coordinator: 'coordinador',
+  rector: 'rector',
   guardian: 'acudiente',
   admin: 'administrador',
 };
@@ -14,7 +15,8 @@ export const ROLE_LABELS: Record<Role, string> = {
 const ROLE_ALIASES: Record<string, Role> = {
   estudiante: 'student', alumno: 'student', alumna: 'student', student: 'student',
   docente: 'teacher', profesor: 'teacher', profesora: 'teacher', teacher: 'teacher',
-  directivo: 'directivo', coordinador: 'directivo', coordinadora: 'directivo', coordinacion: 'directivo', rector: 'directivo', rectora: 'directivo', rectoria: 'directivo',
+  coordinador: 'coordinator', coordinadora: 'coordinator', coordinacion: 'coordinator', directivo: 'coordinator', coordinator: 'coordinator',
+  rector: 'rector', rectora: 'rector', rectoria: 'rector',
   acudiente: 'guardian', padre: 'guardian', madre: 'guardian', tutor: 'guardian', guardian: 'guardian',
   administrador: 'admin', administradora: 'admin', admin: 'admin',
 };

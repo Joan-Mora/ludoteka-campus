@@ -27,6 +27,7 @@ import {
   Wand2,
   type LucideIcon,
 } from 'lucide-react';
+import { isBoard as isBoardRole } from '@eduquest/contracts';
 import { api, download } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
 import { Avatar, Empty, PageHeader, Reveal, Ring, Stat, Tile, type Tone } from '@/ui';
@@ -280,10 +281,28 @@ export function ReportsPage() {
   const students = useQuery({
     queryKey: ['enroll', groupId],
     queryFn: () => api<{ user_id: string; full_name: string }[]>(`/api/institution/enrollments?groupId=${groupId}`),
-    enabled: Boolean(groupId) && (user?.role === 'admin' || user?.role === 'directivo' || user?.role === 'teacher'),
+    enabled: Boolean(groupId),
+  });
+  const ids = (students.data ?? []).map((s) => s.user_id);
+  const bulletins = useQuery({
+    queryKey: ['bulletin-status', ids.join(',')],
+    queryFn: () => api<Record<string, { status: string; at: string }>>(`/api/bulletins/status?students=${ids.join(',')}`),
+    enabled: ids.length > 0,
   });
   const stats = useQuery({ queryKey: ['analytics', id], queryFn: () => api<{ title: string; average: number; lessons: number; flaggedAttempts: number }>(`/api/analytics/courses/${id}`) });
-  const isBoard = user?.role === 'admin' || user?.role === 'directivo';
+  const isBoard = user ? isBoardRole(user.role) : false;
+  const canCertify = user?.role === 'teacher' || user?.role === 'admin';
+  const canRequest = user?.role === 'teacher' || user?.role === 'coordinator' || user?.role === 'admin';
+  const [notice, setNotice] = useState('');
+  async function requestBulletin(studentId: string) {
+    setNotice('');
+    try {
+      await api('/api/bulletins/requests', { method: 'POST', body: JSON.stringify({ studentId }) });
+      void bulletins.refetch();
+    } catch (err) {
+      setNotice((err as Error).message);
+    }
+  }
 
   const client = useQueryClient();
   const fetchDoc = async (path: string, name: string) => {
@@ -324,25 +343,51 @@ export function ReportsPage() {
         ))}
       </div>
 
-      <Panel icon={GraduationCap} tone="violet" title="Estudiantes" subtitle="Boletín individual y certificado del curso.">
+      <Panel icon={GraduationCap} tone="violet" title="Estudiantes" subtitle="Boletín individual y certificado del curso. Rectoría firma ambos antes de que sean oficiales.">
+        {notice && <p className="form-error">{notice}</p>}
         <div className="table-scroll"><table className="table">
-          <thead><tr><th>Estudiante</th><th style={{ textAlign: 'right' }}>Acciones</th></tr></thead>
+          <thead><tr><th>Estudiante</th><th>Boletín oficial</th><th style={{ textAlign: 'right' }}>Acciones</th></tr></thead>
           <tbody>
-            {(students.data ?? []).map((student) => (
-              <tr key={student.user_id}>
-                <td><div className="row g-12"><Avatar name={student.full_name} /><b>{student.full_name}</b></div></td>
-                <td style={{ textAlign: 'right' }}>
-                  <div className="row g-8" style={{ justifyContent: 'flex-end' }}>
-                    <button className="btn sm ghost" onClick={() => fetchDoc(`/api/reports/bulletin/${student.user_id}/pdf`, 'boletin.pdf')}><FileText size={14} /> Boletín</button>
-                    {issued.includes(student.user_id) ? (
-                      <span className="chip mint"><BadgeCheck size={13} /> Emitido</span>
-                    ) : (
-                      <button className="btn sm" onClick={async () => { await api('/api/certificates', { method: 'POST', body: JSON.stringify({ userId: student.user_id, courseId: id }) }); setIssued((prev) => [...prev, student.user_id]); }}><Award size={14} /> Certificar</button>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {(students.data ?? []).map((student) => {
+              const bulletin = bulletins.data?.[student.user_id];
+              return (
+                <tr key={student.user_id}>
+                  <td><div className="row g-12"><Avatar name={student.full_name} /><b>{student.full_name}</b></div></td>
+                  <td>
+                    {bulletin?.status === 'signed' ? <span className="chip mint"><BadgeCheck size={13} /> Firmado</span>
+                      : bulletin?.status === 'pending_signature' ? <span className="chip gold">Esperando firma</span>
+                      : bulletin?.status === 'rejected' ? <span className="chip coral">Devuelto</span>
+                      : <span className="chip">Sin solicitar</span>}
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    <div className="row g-8" style={{ justifyContent: 'flex-end' }}>
+                      <button className="btn sm ghost" onClick={() => fetchDoc(`/api/reports/bulletin/${student.user_id}/pdf`, 'boletin.pdf')}><FileText size={14} /> Boletín</button>
+                      {canRequest && bulletin?.status !== 'pending_signature' && (
+                        <button className="btn sm ghost" onClick={() => requestBulletin(student.user_id)}><ClipboardCheck size={14} /> Pedir firma</button>
+                      )}
+                      {canCertify && (issued.includes(student.user_id) ? (
+                        <span className="chip gold"><Award size={13} /> En firma</span>
+                      ) : (
+                        <button
+                          className="btn sm"
+                          onClick={async () => {
+                            setNotice('');
+                            try {
+                              await api('/api/certificates', { method: 'POST', body: JSON.stringify({ userId: student.user_id, courseId: id }) });
+                              setIssued((prev) => [...prev, student.user_id]);
+                            } catch (err) {
+                              setNotice((err as Error).message);
+                            }
+                          }}
+                        >
+                          <Award size={14} /> Certificar
+                        </button>
+                      ))}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table></div>
         {!students.data?.length && <Empty icon={Users} title="Sin estudiantes matriculados" />}
@@ -354,7 +399,7 @@ export function ReportsPage() {
 
 type ReportRow = { id: string; code: string; kind: string; format: string; title: string; row_count: number; created_at: string; full_name: string | null };
 
-function ReportHistory() {
+export function ReportHistory() {
   const log = useQuery({ queryKey: ['report-log'], queryFn: () => api<ReportRow[]>('/api/reports/log') });
   return (
     <Panel icon={ClipboardCheck} tone="gold" title="Historial de reportes" subtitle="Cada documento lleva un consecutivo LK verificable con su código QR.">
@@ -378,7 +423,7 @@ function ReportHistory() {
   );
 }
 
-function InstitutionReports() {
+export function InstitutionReports() {
   const client = useQueryClient();
   const [days, setDays] = useState(30);
   const fetchDoc = async (path: string, name: string) => {
@@ -401,58 +446,7 @@ function InstitutionReports() {
   );
 }
 
-export function RectoriaPage() {
-  const overview = useQuery({ queryKey: ['overview'], queryFn: () => api<{ students: number; teachers: number; courses: number; completedAttempts: number }>('/api/institution/overview') });
-  const board = useQuery({ queryKey: ['inst'], queryFn: () => api<{ byGrade: { level: number; name: string; students: number }[] }>('/api/analytics/institution') });
-  const grades = board.data?.byGrade ?? [];
-  const max = Math.max(1, ...grades.map((g) => g.students));
-  return (
-    <div className="stack g-24">
-      <Reveal>
-        <section className="hero">
-          <div className="orb" style={{ width: 380, height: 380, right: -120, top: -160, background: 'radial-gradient(circle, rgba(58,184,255,.45), transparent 70%)' }} />
-          <div style={{ position: 'relative' }}>
-            <div className="eyebrow" style={{ color: '#ffd66b' }}>Coordinación</div>
-            <h1 style={{ marginTop: 8 }}>Panorama institucional</h1>
-            <p style={{ marginTop: 8, fontSize: 16, maxWidth: 560 }}>Indicadores del Colegio Francisco Arango en tiempo real para decidir con datos.</p>
-          </div>
-        </section>
-      </Reveal>
-      <div className="grid cols-4">
-        <Reveal delay={0.05}><Stat icon={GraduationCap} tone="violet" value={overview.data?.students ?? '—'} label="Estudiantes" /></Reveal>
-        <Reveal delay={0.1}><Stat icon={Users} tone="sky" value={overview.data?.teachers ?? '—'} label="Docentes" /></Reveal>
-        <Reveal delay={0.15}><Stat icon={BookOpen} tone="gold" value={overview.data?.courses ?? '—'} label="Cursos" /></Reveal>
-        <Reveal delay={0.2}><Stat icon={ClipboardCheck} tone="mint" value={overview.data?.completedAttempts ?? '—'} label="Evaluaciones cerradas" /></Reveal>
-      </div>
-      <div className="grid cols-3" style={{ alignItems: 'start' }}>
-        <Panel icon={Building2} tone="violet" title="Matrícula por grado" className="span-2">
-          <div className="row bar-chart" style={{ alignItems: 'flex-end', height: 240, padding: '10px 4px 0' }}>
-            {grades.map((grade, i) => (
-              <div key={grade.level} className="stack g-8" style={{ flex: 1, minWidth: 0, alignItems: 'center', height: '100%', justifyContent: 'flex-end' }}>
-                <b style={{ fontSize: 14 }}>{grade.students}</b>
-                <motion.div
-                  initial={{ height: 0 }}
-                  animate={{ height: `${Math.max(4, (grade.students / max) * 100)}%` }}
-                  transition={{ delay: 0.2 + i * 0.07, duration: 0.7, ease: [0.2, 0.8, 0.2, 1] }}
-                  style={{ width: '100%', maxWidth: 64, borderRadius: '12px 12px 6px 6px', background: 'var(--grad-brand)', boxShadow: '0 10px 20px -10px rgba(124,92,255,.8)' }}
-                />
-                <span className="muted ellipsis" style={{ fontSize: 12.5, fontWeight: 700, maxWidth: '100%' }}>{grade.name}</span>
-              </div>
-            ))}
-            {!grades.length && <Empty icon={Building2} title="Sin datos de matrícula" />}
-          </div>
-        </Panel>
-        <div className="stack g-20">
-          <InstitutionReports />
-          <CourseLinks />
-        </div>
-      </div>
-      <ReportHistory />
-    </div>
-  );
-}
-
-function CourseLinks() {
+export function CourseLinks() {
   const courses = useQuery({ queryKey: ['courses'], queryFn: () => api<{ id: string; title: string }[]>('/api/courses') });
   return (
     <Panel icon={BookOpen} tone="gold" title="Ir a un curso" delay={0.1}>

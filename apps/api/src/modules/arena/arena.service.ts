@@ -2,7 +2,7 @@ import { Injectable, Logger, OnApplicationBootstrap } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { randomInt } from 'crypto';
 import { sql } from 'kysely';
-import type { ArenaAction } from '@eduquest/contracts';
+import { isBoard, type ArenaAction } from '@eduquest/contracts';
 import type { AuthUser } from '../../core/auth/auth.decorators';
 import { shortCode } from '../../core/common/crypto';
 import { DatabaseService } from '../../core/database/database.service';
@@ -209,7 +209,7 @@ export class ArenaService implements OnApplicationBootstrap {
   /* ---------- Creación e ingreso ---------- */
 
   async create(user: AuthUser, input: { courseId: string; title?: string; assessmentId?: string; count?: number; teamSize?: number; questionSec?: number }) {
-    const course = await this.learning.assertAccess(user, input.courseId);
+    const course = await this.learning.assertAccess(user, input.courseId, 'write');
     const hasCorrect = sql<boolean>`EXISTS (SELECT 1 FROM question_options o WHERE o.question_id = questions.id AND o.is_correct)`;
     let questionIds: string[];
     if (input.assessmentId) {
@@ -769,7 +769,7 @@ export class ArenaService implements OnApplicationBootstrap {
   }
 
   private assertViewer(user: AuthUser, room: Room) {
-    if (room.hostId === user.id || user.role === 'admin' || user.role === 'directivo') return;
+    if (room.hostId === user.id || isBoard(user.role)) return;
     if (room.teams.some((team) => team.members.includes(user.id))) return;
     throw new ApiError(403, 'NOT_MEMBER', 'Únete a la sala con su código');
   }

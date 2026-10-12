@@ -23,7 +23,15 @@ export class ForumsService {
 
   private async canModerate(user: AuthUser, courseId: string) {
     const course = await this.learning.assertAccess(user, courseId);
-    return user.role === 'admin' || user.role === 'directivo' || course.teacher_id === user.id;
+    return user.role === 'admin' || user.role === 'coordinator' || course.teacher_id === user.id;
+  }
+
+  /** Writers in a course forum: its students and teacher (and admin). Coordination moderates but doesn't post. */
+  private async assertCanPost(user: AuthUser, courseId: string) {
+    if (user.role !== 'student' && user.role !== 'teacher' && user.role !== 'admin') {
+      throw new ApiError(403, 'READ_ONLY', 'En los foros de curso participan estudiantes y docentes');
+    }
+    await this.learning.assertAccess(user, courseId);
   }
 
   async threads(user: AuthUser, courseId: string) {
@@ -52,7 +60,7 @@ export class ForumsService {
   }
 
   async createThread(user: AuthUser, courseId: string, input: { title: string; body: string }) {
-    await this.learning.assertAccess(user, courseId);
+    await this.assertCanPost(user, courseId);
     return this.database.db
       .insertInto('forum_threads')
       .values({ course_id: courseId, author_id: user.id, title: input.title, body: input.body })
@@ -76,13 +84,15 @@ export class ForumsService {
       ...thread,
       author: author?.full_name ?? '—',
       moderator,
-      canAnswer: moderator || thread.author_id === user.id,
+      canPost: user.role === 'student' || user.role === 'teacher' || user.role === 'admin',
+      canAnswer: (moderator && user.role !== 'coordinator') || thread.author_id === user.id,
       posts,
     };
   }
 
   async reply(user: AuthUser, threadId: string, body: string) {
     const thread = await this.threadRow(threadId);
+    await this.assertCanPost(user, thread.course_id);
     const moderator = await this.canModerate(user, thread.course_id);
     if (thread.locked && !moderator) throw new ApiError(409, 'THREAD_LOCKED', 'El docente cerró este tema');
     const post = await this.database.withTx(async (trx) => {

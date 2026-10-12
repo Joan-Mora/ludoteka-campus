@@ -1,6 +1,6 @@
 import { Injectable, Logger, type OnApplicationBootstrap } from '@nestjs/common';
 import { sql } from 'kysely';
-import type { Citation } from '@eduquest/contracts';
+import { isBoard as boardRole, type Citation } from '@eduquest/contracts';
 import { personaLine, personaOf } from '../../core/common/companion';
 import { DatabaseService } from '../../core/database/database.service';
 import { ApiError } from '../../core/errors/api-error';
@@ -47,7 +47,7 @@ interface Hit {
   content: string;
 }
 
-const isBoard = (viewer: Viewer) => viewer.role === 'admin' || viewer.role === 'directivo';
+const isBoard = (viewer: Viewer) => boardRole(viewer.role);
 const isStaff = (viewer: Viewer) => isBoard(viewer) || viewer.role === 'teacher';
 const vectorLiteral = (values: number[]) => `[${values.map((v) => (Number.isFinite(v) ? v.toFixed(6) : '0')).join(',')}]`;
 

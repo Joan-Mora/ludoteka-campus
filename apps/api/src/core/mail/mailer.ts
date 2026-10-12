@@ -7,6 +7,7 @@ import { DatabaseService } from '../database/database.service';
 import type { RenderedEmail } from './templates';
 
 const REDACTED = '[Contenido con código, enlace o clave de acceso: no se guarda en la base de datos]';
+export const LAB_DOMAIN = '@eduquest.local';
 
 interface InlineAttachment {
   filename: string;
@@ -36,6 +37,16 @@ export class Mailer {
       );
     }
     return this.assets.get(file) ?? null;
+  }
+
+  /** Lab accounts have no real mailbox, so their mail goes to LAB_OTP_INBOX when set. */
+  deliveryAddress(email: string) {
+    const lab = email.endsWith(LAB_DOMAIN) && this.env.values.LAB_OTP_INBOX;
+    return lab ? this.env.values.LAB_OTP_INBOX : email;
+  }
+
+  get baseUrl() {
+    return this.env.values.APP_PUBLIC_URL.replace(/\/$/, '');
   }
 
   /** `sensitive` mails (codes, reset links, temporary passwords) are delivered but stored redacted in the outbox. */

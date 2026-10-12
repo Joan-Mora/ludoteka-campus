@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { sql } from 'kysely';
+import { isBoard, ROLE_LABELS, type Role } from '@eduquest/contracts';
 import { DatabaseService } from '../../core/database/database.service';
 import { ApiError } from '../../core/errors/api-error';
 import type { AuthUser } from '../../core/auth/auth.decorators';
@@ -39,7 +40,7 @@ export class AnalyticsService {
   }
 
   private async assertStudentAccess(viewer: AuthUser, studentId: string) {
-    if (['admin', 'directivo'].includes(viewer.role) || viewer.id === studentId) return;
+    if (isBoard(viewer.role) || viewer.id === studentId) return;
     if (viewer.role === 'teacher') {
       const teaches = await this.database.db
         .selectFrom('enrollments')
@@ -124,7 +125,7 @@ export class AnalyticsService {
     const studentCourses = sql`SELECT c.id FROM courses c JOIN enrollments e ON e.group_id = c.group_id WHERE e.user_id = ${viewer.id} AND e.status = 'active'`;
     const isStudent = viewer.role === 'student';
     const isTeacher = viewer.role === 'teacher';
-    const isBoard = viewer.role === 'admin' || viewer.role === 'directivo';
+    const board = isBoard(viewer.role);
 
     const [aula, cartelera, arena, trofeos, lab, biblioteca, cuaderno, ruta] = await Promise.all([
       isStudent
@@ -140,12 +141,12 @@ export class AnalyticsService {
       isStudent
         ? this.count(sql`SELECT (SELECT count(*) FROM live_sessions ls JOIN assessments a ON a.id = ls.assessment_id WHERE ls.status <> 'ended' AND a.course_id IN (${studentCourses}))
             + (SELECT count(*) FROM arena_rooms WHERE status <> 'ended' AND course_id IN (${studentCourses})) AS n`)
-        : this.count(sql`SELECT (SELECT count(*) FROM live_sessions WHERE status <> 'ended' ${isBoard ? sql`` : sql`AND host_id = ${viewer.id}`})
-            + (SELECT count(*) FROM arena_rooms WHERE status <> 'ended' ${isBoard ? sql`` : sql`AND host_id = ${viewer.id}`}) AS n`),
+        : this.count(sql`SELECT (SELECT count(*) FROM live_sessions WHERE status <> 'ended' ${board ? sql`` : sql`AND host_id = ${viewer.id}`})
+            + (SELECT count(*) FROM arena_rooms WHERE status <> 'ended' ${board ? sql`` : sql`AND host_id = ${viewer.id}`}) AS n`),
       isStudent
         ? this.count(sql`SELECT count(*) AS n FROM user_badges WHERE user_id = ${viewer.id}`)
-        : this.count(sql`SELECT count(*) AS n FROM certificates ${isBoard ? sql`` : sql`WHERE course_id IN (SELECT id FROM courses WHERE teacher_id = ${viewer.id})`}`),
-      this.count(sql`SELECT count(*) AS n FROM ai_usage WHERE ${isBoard ? sql`true` : sql`user_id = ${viewer.id}`} AND (created_at AT TIME ZONE 'America/Bogota')::DATE = ${today}`),
+        : this.count(sql`SELECT count(*) AS n FROM certificates ${board ? sql`` : sql`WHERE course_id IN (SELECT id FROM courses WHERE teacher_id = ${viewer.id})`}`),
+      this.count(sql`SELECT count(*) AS n FROM ai_usage WHERE ${board ? sql`true` : sql`user_id = ${viewer.id}`} AND (created_at AT TIME ZONE 'America/Bogota')::DATE = ${today}`),
       this.count(sql`SELECT count(*) AS n FROM library_items WHERE status = 'published'`),
       this.count(sql`SELECT count(*) AS n FROM flashcards WHERE user_id = ${viewer.id} AND due_at <= now()`),
       this.count(sql`SELECT count(*) AS n FROM route_items WHERE user_id = ${viewer.id} AND status = 'pending'`),
@@ -244,6 +245,20 @@ export class AnalyticsService {
       .select(['badges.name', 'user_badges.awarded_at'])
       .where('user_badges.user_id', '=', userId)
       .execute();
+    const signature = await this.database.db
+      .selectFrom('bulletin_signatures')
+      .leftJoin('users as signer', 'signer.id', 'bulletin_signatures.signed_by')
+      .leftJoin('periods', 'periods.id', 'bulletin_signatures.period_id')
+      .select(['bulletin_signatures.status', 'bulletin_signatures.signed_at', 'signer.full_name as signer', 'periods.name as period'])
+      .where('bulletin_signatures.student_id', '=', userId)
+      .where('bulletin_signatures.status', '<>', 'rejected')
+      .orderBy('bulletin_signatures.created_at', 'desc')
+      .executeTakeFirst();
+    const signatureText = !signature
+      ? 'Documento informativo: no se ha solicitado la firma de rectoría'
+      : signature.status === 'signed'
+        ? `Boletín oficial${signature.period ? ` del ${signature.period}` : ''}, firmado por ${signature.signer ?? 'Rectoría'} (Rectoría) el ${day(signature.signed_at)}`
+        : 'Pendiente de firma de rectoría';
     const meta = await this.reports.register({
       kind: 'boletin',
       format: 'pdf',
@@ -263,6 +278,7 @@ export class AnalyticsService {
         ['Lecciones completadas', Number(lessons.n)],
         ['Experiencia acumulada', `${Number(xp.xp)} XP`],
         ['Insignias', badges.length ? badges.map((b) => b.name).join(', ') : 'Ninguna todavía'],
+        ['Firma de rectoría', signatureText],
       ]);
       h.section('Promedio por curso');
       h.table(
@@ -556,10 +572,9 @@ export class AnalyticsService {
       kind: 'usuarios', format: 'xlsx', title: 'Reporte de usuarios', userId: viewer.id, rowCount: rows.length,
       source: 'users, user_roles, enrollments, groups_class',
     });
-    const roleLabel: Record<string, string> = { admin: 'Administración', directivo: 'Coordinación', teacher: 'Docente', student: 'Estudiante', guardian: 'Acudiente' };
     return renderWorkbook(meta, (h) => {
       h.sheet('Usuarios', [{ header: 'Nombre', width: 30 }, { header: 'Correo', width: 32 }, { header: 'Rol', width: 16 }, { header: 'Menor', width: 8 }, { header: 'Grupo', width: 10 }, { header: 'Creado', width: 14 }],
-        rows.map((row) => [row.full_name, row.email, roleLabel[row.role] ?? row.role, row.is_minor ? 'Sí' : 'No', row.group_name, day(row.created_at)]));
+        rows.map((row) => [row.full_name, row.email, ROLE_LABELS[row.role as Role] ?? row.role, row.is_minor ? 'Sí' : 'No', row.group_name, day(row.created_at)]));
     });
   }
 }

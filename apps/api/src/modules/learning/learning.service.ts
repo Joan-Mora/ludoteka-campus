@@ -5,6 +5,7 @@ import { DatabaseService } from '../../core/database/database.service';
 import { ApiError } from '../../core/errors/api-error';
 import type { AuthUser } from '../../core/auth/auth.decorators';
 import { DomainEvents } from '../../core/events/domain-events';
+import { isOversight } from '@eduquest/contracts';
 
 @Injectable()
 export class LearningService {
@@ -38,9 +39,14 @@ export class LearningService {
     return course;
   }
 
-  async assertAccess(user: AuthUser, courseId: string) {
+  /** `write` is for editing the course: coordination and the rector's office can read any course but never edit it. */
+  async assertAccess(user: AuthUser, courseId: string, mode: 'read' | 'write' = 'read') {
     const course = await this.courseRow(courseId);
-    if (user.role === 'admin' || user.role === 'directivo') return course;
+    if (user.role === 'admin') return course;
+    if (isOversight(user.role)) {
+      if (mode === 'write') throw new ApiError(403, 'READ_ONLY', 'Coordinación y rectoría consultan los cursos; solo el docente los edita');
+      return course;
+    }
     if (user.role === 'teacher' && course.teacher_id === user.id) return course;
     if (user.role === 'student') {
       const enrolled = await this.database.db
@@ -198,7 +204,7 @@ export class LearningService {
   }
 
   async addUnit(user: AuthUser, courseId: string, input: { title: string; summary?: string }) {
-    await this.assertAccess(user, courseId);
+    await this.assertAccess(user, courseId, 'write');
     if (user.role === 'student') throw new ApiError(403, 'FORBIDDEN', 'Solo el docente edita el curso');
     const last = await this.database.db
       .selectFrom('units')
@@ -215,7 +221,7 @@ export class LearningService {
   async addLesson(user: AuthUser, unitId: string, input: { title: string; bodyMd: string; estimatedMin?: number }) {
     const unit = await this.database.db.selectFrom('units').selectAll().where('id', '=', unitId).executeTakeFirst();
     if (!unit) throw new ApiError(404, 'NOT_FOUND', 'La unidad no existe');
-    await this.assertAccess(user, unit.course_id);
+    await this.assertAccess(user, unit.course_id, 'write');
     if (user.role === 'student') throw new ApiError(403, 'FORBIDDEN', 'Solo el docente edita el curso');
     const last = await this.database.db
       .selectFrom('lessons')
@@ -315,7 +321,7 @@ export class LearningService {
   }
 
   async createAssignment(user: AuthUser, courseId: string, input: { title: string; instructions: string; dueAt?: string; maxScore?: number; lessonId?: string }) {
-    const course = await this.assertAccess(user, courseId);
+    const course = await this.assertAccess(user, courseId, 'write');
     if (course.teacher_id !== user.id && user.role !== 'admin') {
       throw new ApiError(403, 'FORBIDDEN', 'Solo el docente del curso publica tareas');
     }

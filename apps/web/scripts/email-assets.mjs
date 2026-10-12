@@ -21,6 +21,9 @@ const banners = [
   { file: 'banner-code.jpg', eyebrow: 'Ingreso seguro', title: 'Tu código para<br>entrar al campus', accent: '#ffd66b' },
   { file: 'banner-reset.jpg', eyebrow: 'Recuperar acceso', title: 'Elige una<br>contraseña nueva', accent: '#ff8fa0' },
   { file: 'banner-welcome.jpg', eyebrow: 'Tu cuenta está lista', title: 'Bienvenida<br>al campus', accent: '#7ff0cf' },
+  { file: 'banner-meeting.jpg', eyebrow: 'Citación del colegio', title: 'Te esperamos<br>en el colegio', accent: '#ffd66b' },
+  { file: 'banner-message.jpg', eyebrow: 'Mensaje nuevo', title: 'Tienes un<br>mensaje nuevo', accent: '#9fd8ff' },
+  { file: 'banner-digest.jpg', eyebrow: 'Resumen semanal', title: 'Tu resumen<br>de la semana', accent: '#7ff0cf' },
 ];
 
 const isolate = (selector) => `

@@ -26,19 +26,19 @@ export class GuardiansController {
     return this.guardians.authorize(user, body, req.ip || req.socket.remoteAddress || null);
   }
 
-  @Roles('admin', 'directivo')
+  @Roles('admin', 'coordinator')
   @Get('admin/guardian-links')
   links() {
     return this.guardians.listLinks();
   }
 
-  @Roles('admin', 'directivo')
+  @Roles('admin', 'coordinator')
   @Post('admin/guardian-links')
   link(@CurrentUser() user: AuthUser, @Body(new ZodPipe(guardianLinkSchema)) body: z.infer<typeof guardianLinkSchema>) {
     return this.guardians.createLink(user, body);
   }
 
-  @Roles('admin', 'directivo')
+  @Roles('admin', 'coordinator')
   @Delete('admin/guardian-links/:id')
   unlink(@CurrentUser() user: AuthUser, @Param('id', new ParseUUIDPipe()) id: string) {
     return this.guardians.revokeLink(user, id);

@@ -1,7 +1,10 @@
 import { lazy, Suspense, type ComponentType, type ReactNode } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Link, Navigate, Route, Routes } from 'react-router-dom';
+import { ShieldOff } from 'lucide-react';
 import { useAuth } from '@/shared/auth';
+import { Tile } from '@/ui';
 import { Shell } from './shell';
+import { roleLabel, ROUTE_ROLES } from './nav';
 import { ChangePasswordPage, ForgotPage, Landing, LoginPage, ResetPage, VerifyPage, VerifyReportPage } from '@/features/public';
 
 function page<M extends Record<string, unknown>>(load: () => Promise<M>, name: keyof M & string) {
@@ -11,6 +14,7 @@ function page<M extends Record<string, unknown>>(load: () => Promise<M>, name: k
 const classroom = () => import('@/features/classroom');
 const staff = () => import('@/features/staff');
 const community = () => import('@/features/community');
+const governance = () => import('@/features/governance');
 const library = () => import('@/features/library');
 const arena = () => import('@/features/arena');
 const exam = () => import('@/features/exam');
@@ -34,8 +38,10 @@ const UsuariosPage = page(() => import('@/features/accounts'), 'UsuariosPage');
 const SettingsPage = page(() => import('@/features/settings'), 'SettingsPage');
 const BankPage = page(staff, 'BankPage');
 const IntegrityPage = page(staff, 'IntegrityPage');
-const RectoriaPage = page(staff, 'RectoriaPage');
 const ReportsPage = page(staff, 'ReportsPage');
+const CoordinationPage = page(governance, 'CoordinationPage');
+const RectoriaPage = page(governance, 'RectoriaPage');
+const MessagesPage = page(governance, 'MessagesPage');
 const GuardianPage = page(community, 'GuardianPage');
 const NewsPage = page(community, 'NewsPage');
 const LibraryPage = page(library, 'LibraryPage');
@@ -71,6 +77,59 @@ function Gate({ children }: { children: ReactNode }) {
   return children;
 }
 
+export function NotForRole() {
+  const { user } = useAuth();
+  return (
+    <div className="card not-for-role" role="alert">
+      <Tile icon={ShieldOff} tone="coral" large />
+      <h1>Esta sección no es para tu rol</h1>
+      <p className="muted">
+        Entraste como <b>{user ? roleLabel[user.role] : 'invitado'}</b>. Cada rol del colegio tiene su propio espacio en el campus; desde el inicio
+        encuentras todo lo que te corresponde.
+      </p>
+      <Link className="btn" to="/app">Volver al inicio</Link>
+    </div>
+  );
+}
+
+function RoleRoute({ path, children }: { path: string; children: ReactNode }) {
+  const { user } = useAuth();
+  const allowed = ROUTE_ROLES[path];
+  if (user && allowed && !allowed.includes(user.role)) return <NotForRole />;
+  return children;
+}
+
+const app: [string, ComponentType][] = [
+  ['cursos', CoursesPage],
+  ['cursos/:id', CoursePage],
+  ['cursos/:id/aula', CourseDesk],
+  ['lecciones/:id', LessonPage],
+  ['logros', AchievementsPage],
+  ['jugar', GamesPage],
+  ['tutor', TutorPage],
+  ['rostro', FacialPage],
+  ['en-vivo', LivePage],
+  ['banco', BankPage],
+  ['integridad/:id', IntegrityPage],
+  ['reportes/:id', ReportsPage],
+  ['coordinacion', CoordinationPage],
+  ['rectoria', RectoriaPage],
+  ['mensajes', MessagesPage],
+  ['admin', AdminPage],
+  ['admin/usuarios', UsuariosPage],
+  ['novedades', NewsPage],
+  ['acudiente', GuardianPage],
+  ['biblioteca', LibraryPage],
+  ['biblioteca/:id', LibraryItemPage],
+  ['ruta', RoutePage],
+  ['consultas', ObservatoryPage],
+  ['arena', ArenaPage],
+  ['arena/:id', ArenaRoomPage],
+  ['cuaderno', StudyPage],
+  ['calificaciones', GradebookPage],
+  ['ajustes', SettingsPage],
+];
+
 export function AppRouter() {
   return (
     <Suspense fallback={<Splash />}>
@@ -89,32 +148,10 @@ export function AppRouter() {
         <Route path="/arena/:id/proyector" element={<Gate><ArenaProjectorPage /></Gate>} />
         <Route path="/app" element={<Gate><Shell /></Gate>}>
           <Route index element={<HomePage />} />
-          <Route path="cursos" element={<CoursesPage />} />
-          <Route path="cursos/:id" element={<CoursePage />} />
-          <Route path="cursos/:id/aula" element={<CourseDesk />} />
-          <Route path="lecciones/:id" element={<LessonPage />} />
-          <Route path="logros" element={<AchievementsPage />} />
-          <Route path="jugar" element={<GamesPage />} />
-          <Route path="tutor" element={<TutorPage />} />
-          <Route path="rostro" element={<FacialPage />} />
-          <Route path="en-vivo" element={<LivePage />} />
-          <Route path="banco" element={<BankPage />} />
-          <Route path="integridad/:id" element={<IntegrityPage />} />
-          <Route path="reportes/:id" element={<ReportsPage />} />
-          <Route path="rectoria" element={<RectoriaPage />} />
-          <Route path="admin" element={<AdminPage />} />
-          <Route path="admin/usuarios" element={<UsuariosPage />} />
-          <Route path="novedades" element={<NewsPage />} />
-          <Route path="acudiente" element={<GuardianPage />} />
-          <Route path="biblioteca" element={<LibraryPage />} />
-          <Route path="biblioteca/:id" element={<LibraryItemPage />} />
-          <Route path="ruta" element={<RoutePage />} />
-          <Route path="consultas" element={<ObservatoryPage />} />
-          <Route path="arena" element={<ArenaPage />} />
-          <Route path="arena/:id" element={<ArenaRoomPage />} />
-          <Route path="cuaderno" element={<StudyPage />} />
-          <Route path="calificaciones" element={<GradebookPage />} />
-          <Route path="ajustes" element={<SettingsPage />} />
+          {app.map(([path, Page]) => (
+            <Route key={path} path={path} element={<RoleRoute path={path}><Page /></RoleRoute>} />
+          ))}
+          <Route path="*" element={<Navigate to="/app" replace />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

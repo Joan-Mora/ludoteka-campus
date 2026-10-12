@@ -18,7 +18,7 @@ export class IntegrityController {
     return this.integrity.record(user, id, body.type);
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin', 'coordinator', 'rector')
   @Get('courses/:id/integrity')
   events(@CurrentUser() user: AuthUser, @Param('id') id: string) {
     return this.integrity.courseEvents(user, id);

@@ -94,7 +94,7 @@ export class ReportLog {
       .select(['report_log.id', 'report_log.code', 'report_log.kind', 'report_log.format', 'report_log.title', 'report_log.row_count', 'report_log.created_at', 'users.full_name'])
       .orderBy('report_log.seq', 'desc')
       .limit(40);
-    if (!['admin', 'directivo'].includes(viewer.role)) query = query.where('report_log.generated_by', '=', viewer.id);
+    if (!['admin', 'coordinator', 'rector'].includes(viewer.role)) query = query.where('report_log.generated_by', '=', viewer.id);
     return query.execute();
   }
 }

@@ -19,7 +19,7 @@ import { api, ApiException, download } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
 import { Avatar, Empty, PageHeader, Sheet, Stat } from '@/ui';
 
-type Role = 'student' | 'teacher' | 'directivo' | 'guardian' | 'admin';
+type Role = 'student' | 'teacher' | 'coordinator' | 'rector' | 'guardian' | 'admin';
 
 interface Account {
   id: string;
@@ -65,8 +65,8 @@ interface ImportLog { id: string; kind: string; file_name: string; total_rows: n
 
 interface Activity { id: string; action: string; created_at: string; actor_name: string | null }
 
-const ROLE_NAME: Record<Role, string> = { student: 'Estudiante', teacher: 'Docente', directivo: 'Directivo', guardian: 'Acudiente', admin: 'Administrador' };
-const ROLE_TONE: Record<Role, string> = { student: 'violet', teacher: 'sky', directivo: 'gold', guardian: 'mint', admin: 'coral' };
+const ROLE_NAME: Record<Role, string> = { student: 'Estudiante', teacher: 'Docente', coordinator: 'Coordinación', rector: 'Rectoría', guardian: 'Acudiente', admin: 'Administrador' };
+const ROLE_TONE: Record<Role, string> = { student: 'violet', teacher: 'sky', coordinator: 'gold', rector: 'gold', guardian: 'mint', admin: 'coral' };
 
 const ACTION_NAME: Record<string, string> = {
   'user.create': 'Cuenta creada',

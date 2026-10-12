@@ -33,31 +33,31 @@ export class LibraryController {
     return this.library.get(user, id);
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin')
   @Post('uploads/ticket')
   ticket() {
     return this.library.uploadTicket();
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin')
   @Post('items')
   create(@CurrentUser() user: AuthUser, @Body(new ZodPipe(libraryItemSchema)) body: z.infer<typeof libraryItemSchema>) {
     return this.library.create(user, body);
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin')
   @Patch('items/:id')
   update(@CurrentUser() user: AuthUser, @Param('id', uuid) id: string, @Body(new ZodPipe(libraryUpdateSchema)) body: z.infer<typeof libraryUpdateSchema>) {
     return this.library.update(user, id, body);
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin')
   @Post('items/:id/reindex')
   reindex(@CurrentUser() user: AuthUser, @Param('id', uuid) id: string) {
     return this.library.reindex(user, id);
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin')
   @Delete('items/:id')
   remove(@CurrentUser() user: AuthUser, @Param('id', uuid) id: string) {
     return this.library.remove(user, id);
@@ -78,13 +78,13 @@ export class LibraryController {
     return this.library.glossary({ subjectId, q });
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin')
   @Post('glossary')
   addTerm(@CurrentUser() user: AuthUser, @Body(new ZodPipe(glossarySchema)) body: z.infer<typeof glossarySchema>) {
     return this.library.addTerm(user, body);
   }
 
-  @Roles('teacher', 'admin', 'directivo')
+  @Roles('teacher', 'admin')
   @Delete('glossary/:id')
   removeTerm(@CurrentUser() user: AuthUser, @Param('id', uuid) id: string) {
     return this.library.removeTerm(user, id);

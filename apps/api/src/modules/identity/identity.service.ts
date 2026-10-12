@@ -23,7 +23,6 @@ const LOCK_AFTER = 5;
 const LOCK_MAX_MINUTES = 60;
 /** A rotated refresh token presented again within this window is a race between tabs, not theft. */
 const ROTATION_GRACE_MS = 30_000;
-const LAB_DOMAIN = '@eduquest.local';
 
 export interface ClientInfo {
   ip?: string | null;
@@ -173,10 +172,8 @@ export class IdentityService {
     return hmac(this.env.values.JWT_SECRET, `otp:${challengeId}:${code}`);
   }
 
-  /** Lab accounts have no real mailbox, so their mail goes to LAB_OTP_INBOX when set. */
   deliveryAddress(email: string) {
-    const lab = email.endsWith(LAB_DOMAIN) && this.env.values.LAB_OTP_INBOX;
-    return lab ? this.env.values.LAB_OTP_INBOX : email;
+    return this.mailer.deliveryAddress(email);
   }
 
   private async createChallenge(user: Pick<UserRow, 'id' | 'email' | 'full_name'>, client: ClientInfo) {

@@ -26,6 +26,7 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { CertificationModule } from './modules/certification/certification.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { LegalModule } from './modules/legal/legal.module';
+import { GovernanceModule } from './modules/governance/governance.module';
 import { throttlerModule } from './core/security/throttle';
 
 @Module({
@@ -62,6 +63,7 @@ import { throttlerModule } from './core/security/throttle';
     CertificationModule,
     NotificationsModule,
     LegalModule,
+    GovernanceModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: HttpExceptionFilter },

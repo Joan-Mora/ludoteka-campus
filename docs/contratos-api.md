@@ -82,7 +82,7 @@ No hay ruta pública de autoregistro. El cuerpo de `POST /admin/users` y si la c
 |---|---|---|---|
 | GET | `/guardian/students` | `guardian` | Hijos vinculados y estado de cada autorización |
 | POST | `/guardian/authorizations` | `guardian` | `{studentId, scope, granted}`. Con `scope=facial` y `granted=false`: anota `guardian_authorizations`, pone `users.guardian_consent_at = NULL`, escribe `audit_log` `guardian.revoke` y, después del commit, emite `guardian.facial_revoked` |
-| GET / POST / DELETE | `/admin/guardian-links[/:id]` | `admin`, `directivo` | Vínculos entre acudiente y estudiante |
+| GET / POST / DELETE | `/admin/guardian-links[/:id]` | `admin`, `coordinator` | Vínculos entre acudiente y estudiante |
 
 ## 3. Facial (`biometrics`, prefijo `/facial`)
 
@@ -97,7 +97,7 @@ Constantes: modelo `face-api-resnet34-128`, descriptor de 128 valores entre −2
 | DELETE | `/facial/enroll` | Autenticado | Borra la propia plantilla y deja `audit_log` `facial.delete` |
 | GET | `/facial/attempts` | Autenticado | Intentos propios (`face_attempts`) |
 | POST | `/facial/login` | Público | `{email?, descriptor, challengeId, modelId}` → `{accessToken, user, distance}` más la cookie `eq_refresh`. Sin OTP |
-| POST | `/facial/guardian-consent` | `admin`, `directivo` | `{userId}`: registra el consentimiento del acudiente para un menor |
+| POST | `/facial/guardian-consent` | `admin`, `coordinator` | `{userId}`: registra el consentimiento del acudiente para un menor |
 
 **Claves de imagen rechazadas:** `image`, `photo`, `selfie`, `picture`, `blob`, `dataurl`, `data_url`, `frame`, `jpeg`, `png`, `base64`.
 
@@ -111,12 +111,12 @@ Cada archivo lleva título, fecha, datos de la BD y el código `LK-AAAA-NNNNNN`,
 
 | Método | Ruta | Roles |
 |---|---|---|
-| GET | `/reports/bulletin/:userId/pdf` | teacher, admin, directivo, student, guardian |
-| GET | `/reports/courses/:id/excel` | teacher, admin, directivo |
-| GET | `/reports/assessments/:id/excel` | teacher, admin, directivo |
-| GET | `/reports/integrity/:courseId/pdf` · `/excel` | teacher, admin, directivo |
-| GET | `/reports/usage/excel` | admin, directivo |
-| GET | `/reports/roster/excel` | admin, directivo |
+| GET | `/reports/bulletin/:userId/pdf` | teacher, admin, coordinator, rector, student, guardian. El PDF muestra la firma de rectoría si el boletín del periodo está firmado |
+| GET | `/reports/courses/:id/excel` | teacher, admin, coordinator, rector |
+| GET | `/reports/assessments/:id/excel` | teacher, admin, coordinator, rector |
+| GET | `/reports/integrity/:courseId/pdf` · `/excel` | teacher, admin, coordinator, rector |
+| GET | `/reports/usage/excel` | admin, coordinator, rector |
+| GET | `/reports/roster/excel` | admin, coordinator, rector |
 | GET | `/gradebook/courses/:id/report/excel` · `/pdf` | Según los roles del controlador `gradebook` |
 | GET | `/public/certificates/:code` · `/:code/pdf` | Público |
 | GET | `/public/reports/:code` | Pública según el uso de la web (`VerifyReportPage`). La presencia del decorador `@Public` en `core/reports/reports.module.ts`: **no verificado**. Devuelve código, tipo, formato, título, filas, fecha y autor |
@@ -134,6 +134,31 @@ El PDF lleva un QR y un pie con el código y la URL `APP_PUBLIC_URL/verificar-re
 | GET / POST | `/me/data-requests` | Autenticado | Pedir exportar o borrar datos |
 | GET | `/me/export` | Autenticado | Exportación de los datos propios |
 | GET / PATCH | `/admin/data-requests[/:id]` | `admin` | Atender solicitudes |
+
+## 6 bis. Gobierno escolar (`governance`, fase 2 de Ludoteka 2)
+
+| Método | Ruta | Acceso | Notas |
+|---|---|---|---|
+| GET | `/coordination/alerts[?status=open\|acknowledged\|resolved]` | `coordinator`, `admin` | Alertas de todos los cursos con conteo de notas, última nota, citaciones próximas y acudientes. Sin `status`: abiertas y en seguimiento, más el resumen por estado |
+| GET | `/coordination/alerts/:id` | `coordinator`, `admin` | Bitácora, acudientes y citaciones del estudiante |
+| POST | `/coordination/alerts/:id/notes` | `coordinator`, `admin` | `{body, status?}`. Una alerta abierta pasa a `acknowledged`; `resolved` la cierra y guarda quién |
+| GET | `/coordination/attendance?days=30` | `coordinator`, `admin` | Por grupo, estudiantes sobre el umbral (3 faltas o 15 %) y faltas por día |
+| GET / POST | `/coordination/meetings[?scope=upcoming\|past]` | `coordinator`, `admin` | Citaciones. POST `{studentId, scheduledAt, mode, place, reason, alertId?}` crea una por acudiente activo (mínimo 30 minutos a futuro), avisa en el campus y envía correo |
+| PATCH | `/coordination/meetings/:id` | `coordinator`, `admin` | `{status: held\|cancelled, outcome?}` |
+| GET | `/coordination/students?q=` | `coordinator`, `admin` | Buscador para citar |
+| GET | `/rectoria/dashboard[?period=<id>\|year]` | `rector`, `admin` | Promedio (1 a 5), aprobación, asistencia, alertas y uso de IA por grado y grupo, con diferencia frente al periodo anterior |
+| GET | `/rectoria/signatures` | `rector`, `admin` | Certificados y boletines en `pending_signature`, y las 15 decisiones más recientes |
+| POST | `/rectoria/signatures/certificates/:id` · `/bulletins/:id` | `rector` | `{approve, note?}`. Devolver exige nota. Queda en `audit_log` y avisa al solicitante (y al estudiante si se firma) |
+| POST | `/bulletins/requests` | `teacher`, `coordinator`, `admin` | `{studentId}`. El docente solo para sus estudiantes; `409 ALREADY_PENDING` si ya espera firma |
+| GET | `/bulletins/status?students=a,b` | Personal | Estado del boletín del periodo por estudiante |
+| GET | `/family/children` | `guardian` | Por hijo: lo que viene en 14 días, notas recientes, asistencia de 30 días, docentes, alertas, citaciones, mensajes sin leer y perfil de aprendizaje; más el estado del resumen semanal |
+| POST | `/family/meetings/:id/respond` | `guardian` | `{attending, note?}` |
+| PUT / POST | `/family/digest` | `guardian` | PUT `{enabled}` activa o apaga el resumen de los viernes; POST lo envía ya |
+| GET | `/messages/contacts` · `/messages/threads` · `/messages/unread` | `guardian`, `teacher` | Contactos permitidos, conversaciones y conteo sin leer |
+| GET | `/messages/:studentId/:counterpartId` | `guardian`, `teacher` | Mensajes del par acudiente–docente sobre un estudiante; los marca como leídos |
+| POST | `/messages` | `guardian`, `teacher` | `{studentId, counterpartId, body}`. Solo si el acudiente está vinculado al estudiante y el docente le dicta clase |
+
+`POST /news` acepta `official: true` solo de `rector` (`403 FORBIDDEN` para los demás); `GET /news/targets` devuelve `canOfficial`. En los foros, `canPost` es falso para coordinación y rectoría: leen y moderan, no publican.
 
 ## 7. Resto de módulos (resumen de rutas)
 
@@ -166,7 +191,7 @@ Los roles de cada ruta de `gradebook`, `study`, `observatory` y `library` (más 
 
 ## 9. Eventos de dominio (internos, `@nestjs/event-emitter`)
 
-`lesson.completed`, `submission.graded`, `attempt.graded`, `integrity.violation`, `integrity.suspend`, `password.reset`, `tutor.message`, `news.published`, `forum.reply`, `guardian.facial_revoked`, `route.solved`, `arena.finished`, `study.progress` y `risk.alert_raised`.
+`lesson.completed`, `submission.graded`, `attempt.graded`, `integrity.violation`, `integrity.suspend`, `password.reset`, `tutor.message`, `news.published`, `forum.reply`, `guardian.facial_revoked`, `route.solved`, `arena.finished`, `study.progress`, `risk.alert_raised`, `meeting.scheduled`, `meeting.responded`, `guardian.message`, `signature.requested` y `signature.decided`.
 
 ## 10. Códigos de error
 

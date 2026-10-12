@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { sql } from 'kysely';
+import { isBoard } from '@eduquest/contracts';
 import { DatabaseService } from '../../core/database/database.service';
 import { ApiError } from '../../core/errors/api-error';
 import type { AuthUser } from '../../core/auth/auth.decorators';
@@ -67,7 +68,7 @@ export class ObservatoryService {
 
   /** Groups a teacher can see; null means no restriction (coordination and admin). */
   private async scopeFor(user: AuthUser): Promise<string[] | null> {
-    if (user.role === 'admin' || user.role === 'directivo') return null;
+    if (isBoard(user.role)) return null;
     const rows = await sql<{ group_id: string }>`
       SELECT group_id FROM courses WHERE teacher_id = ${user.id}
       UNION SELECT group_id FROM teaching_assignments WHERE teacher_id = ${user.id}

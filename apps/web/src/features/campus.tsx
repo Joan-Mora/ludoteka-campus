@@ -128,9 +128,10 @@ const layout: Record<BuildingKey, Pick<Building, 'x' | 'y' | 'w' | 'd' | 'h' | '
 export function buildingsFor(role: string | undefined, companionName = 'Luka'): Building[] {
   const student = role === 'student';
   const guardian = role === 'guardian';
-  const board = role === 'admin' || role === 'directivo';
+  const rector = role === 'admin' || role === 'rector';
+  const coordinator = role === 'coordinator';
   const list: Omit<Building, keyof (typeof layout)[BuildingKey]>[] = [
-    { key: 'aula', name: guardian ? 'Seguimiento' : 'Aula', caption: student ? 'lecciones pendientes' : role === 'teacher' ? 'entregas por calificar' : guardian ? 'acudidos' : 'cursos activos', to: guardian ? '/app/acudiente' : '/app/cursos', icon: School, voice: ['aula', 'cursos', 'mis cursos', 'clases', 'seguimiento'] },
+    { key: 'aula', name: guardian ? 'Familia' : 'Aula', caption: student ? 'lecciones pendientes' : role === 'teacher' ? 'entregas por calificar' : guardian ? 'acudidos' : 'cursos activos', to: guardian ? '/app/acudiente' : '/app/cursos', icon: School, voice: ['aula', 'cursos', 'mis cursos', 'clases', 'seguimiento'] },
     { key: 'biblioteca', name: 'Biblioteca', caption: 'recursos publicados', to: '/app/biblioteca', icon: Library, voice: ['biblioteca', 'libros', 'recursos', 'documentos'] },
     { key: 'lab', name: 'Laboratorio IA', caption: `consultas a ${companionName} hoy`, to: '/app/tutor', icon: BrainCircuit, voice: ['laboratorio', 'tutor', 'inteligencia artificial', 'luka', 'luna', 'preguntar'] },
     { key: 'arena', name: 'Arena', caption: 'salas en vivo', to: '/app/arena', icon: Swords, voice: ['arena', 'competencia', 'equipos', 'en vivo', 'jugar en equipo'] },
@@ -138,14 +139,18 @@ export function buildingsFor(role: string | undefined, companionName = 'Luka'): 
       key: 'trofeos',
       name: student ? 'Sala de trofeos' : 'Certificados',
       caption: student ? 'insignias ganadas' : 'certificados emitidos',
-      to: student ? '/app/logros' : board ? '/app/rectoria' : '/app/cursos',
+      to: student ? '/app/logros' : rector ? '/app/rectoria' : '/app/cursos',
       icon: Trophy,
       voice: ['trofeos', 'logros', 'insignias', 'certificados'],
     },
     { key: 'cartelera', name: 'Cartelera', caption: 'avisos sin leer', to: '/app/novedades', icon: Megaphone, voice: ['cartelera', 'novedades', 'noticias', 'avisos', 'anuncios', 'foros'] },
     student || guardian
       ? { key: 'cuaderno', name: 'Cuaderno', caption: 'tarjetas para repasar hoy', to: '/app/cuaderno', icon: NotebookPen, voice: ['cuaderno', 'apuntes', 'notas', 'flashcards', 'tarjetas', 'repasar'] }
-      : { key: 'cuaderno', name: 'Taller docente', caption: 'banco y calificaciones', to: role === 'directivo' ? '/app/rectoria' : '/app/banco', icon: ClipboardList, voice: ['taller', 'banco', 'preguntas', 'calificaciones'] },
+      : coordinator
+        ? { key: 'cuaderno', name: 'Coordinación', caption: 'alertas y citaciones', to: '/app/coordinacion', icon: ClipboardList, voice: ['coordinacion', 'seguimiento', 'alertas', 'citaciones', 'asistencia'] }
+        : role === 'rector'
+          ? { key: 'cuaderno', name: 'Rectoría', caption: 'tablero y firmas', to: '/app/rectoria', icon: ClipboardList, voice: ['rectoria', 'tablero', 'firmas', 'indicadores'] }
+          : { key: 'cuaderno', name: 'Taller docente', caption: 'banco y calificaciones', to: '/app/banco', icon: ClipboardList, voice: ['taller', 'banco', 'preguntas', 'calificaciones'] },
     student
       ? { key: 'ruta', name: 'Mi ruta', caption: 'retos pendientes', to: '/app/ruta', icon: Compass, voice: ['mi ruta', 'ruta', 'retos', 'ejercicios', 'practicar'] }
       : { key: 'ruta', name: 'Observatorio', caption: 'pregúntale a los datos', to: '/app/consultas', icon: Database, voice: ['observatorio', 'consultas', 'datos', 'estadisticas'] },

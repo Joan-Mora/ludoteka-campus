@@ -91,7 +91,7 @@ export class AssessmentService {
   }
 
   async createAssessment(user: AuthUser, input: { courseId: string; title: string; kind: string; timeLimitSec?: number; questionIds: string[] }) {
-    const course = await this.learning.assertAccess(user, input.courseId);
+    const course = await this.learning.assertAccess(user, input.courseId, 'write');
     if (course.teacher_id !== user.id && user.role !== 'admin') throw new ApiError(403, 'FORBIDDEN', 'Solo el docente arma la evaluación');
     return this.database.withTx(async (trx) => {
       const assessment = await trx

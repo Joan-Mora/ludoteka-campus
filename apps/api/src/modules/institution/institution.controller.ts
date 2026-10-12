@@ -15,7 +15,7 @@ import { InstitutionService } from './institution.service';
 export class InstitutionController {
   constructor(private readonly institution: InstitutionService) {}
 
-  @Roles('admin', 'directivo', 'teacher')
+  @Roles('admin', 'coordinator', 'rector', 'teacher')
   @Get('years')
   years() {
     return this.institution.listYears();
@@ -27,7 +27,7 @@ export class InstitutionController {
     return this.institution.createYear(body);
   }
 
-  @Roles('admin', 'directivo', 'teacher')
+  @Roles('admin', 'coordinator', 'rector', 'teacher')
   @Get('grades')
   grades() {
     return this.institution.listGrades();
@@ -39,7 +39,7 @@ export class InstitutionController {
     return this.institution.createGrade(body);
   }
 
-  @Roles('admin', 'directivo', 'teacher')
+  @Roles('admin', 'coordinator', 'rector', 'teacher')
   @Get('groups')
   groups() {
     return this.institution.listGroups();
@@ -51,7 +51,7 @@ export class InstitutionController {
     return this.institution.createGroup(body);
   }
 
-  @Roles('admin', 'directivo', 'teacher')
+  @Roles('admin', 'coordinator', 'rector', 'teacher')
   @Get('subjects')
   subjects() {
     return this.institution.listSubjects();
@@ -63,7 +63,7 @@ export class InstitutionController {
     return this.institution.createSubject(body);
   }
 
-  @Roles('admin', 'directivo', 'teacher')
+  @Roles('admin', 'coordinator', 'rector', 'teacher')
   @Get('enrollments')
   enrollments(@CurrentUser() user: AuthUser, @Query('groupId') groupId?: string) {
     return this.institution.listEnrollments(user, groupId || undefined);
@@ -75,7 +75,7 @@ export class InstitutionController {
     return this.institution.createEnrollment(body);
   }
 
-  @Roles('admin', 'directivo', 'teacher')
+  @Roles('admin', 'coordinator', 'rector', 'teacher')
   @Get('teaching')
   teaching() {
     return this.institution.listTeaching();
@@ -90,7 +90,7 @@ export class InstitutionController {
     return this.institution.createTeaching(body);
   }
 
-  @Roles('admin', 'directivo')
+  @Roles('admin', 'coordinator', 'rector')
   @Get('overview')
   overview() {
     return this.institution.overview();

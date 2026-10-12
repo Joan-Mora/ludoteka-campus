@@ -5,7 +5,7 @@ import { ZodPipe } from '../../core/common/zod.pipe';
 import { ObservatoryService } from './observatory.service';
 
 @Controller('observatory')
-@Roles('teacher', 'admin', 'directivo')
+@Roles('teacher', 'admin', 'coordinator', 'rector')
 export class ObservatoryController {
   constructor(private readonly observatory: ObservatoryService) {}
 

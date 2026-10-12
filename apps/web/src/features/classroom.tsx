@@ -157,7 +157,7 @@ export function HomePage() {
             {!courses.isLoading && !courses.data?.length && <div className="card full-row"><Empty icon={BookOpen} title="Aún no tienes cursos" body="Cuando te asignen a un grupo aparecerán aquí." /></div>}
           </div>
 
-          {!isStudent && firstCourse && (
+          {(user?.role === 'teacher' || user?.role === 'admin') && firstCourse && (
             <Reveal className="card">
               <div className="card-head">
                 <div className="row g-12"><Tile icon={ClipboardList} tone="violet" /><div className="card-title">Tu semana docente</div></div>
@@ -350,7 +350,7 @@ export function CoursePage() {
               </div>
             </div>
           ))}
-          {user && user.role !== 'student' && <TeacherCompose courseId={id} />}
+          <TeacherCompose courseId={id} />
         </div>
 
         <aside className="stack" style={{ gap: 18, position: 'sticky', top: 90 }}>
@@ -465,6 +465,7 @@ export function CourseDesk() {
   const { user } = useAuth();
   const client = useQueryClient();
   const isStudent = user?.role === 'student';
+  const canTeach = user?.role === 'teacher' || user?.role === 'admin';
   const desk = useQuery({
     queryKey: ['desk', id],
     queryFn: () => api<{
@@ -524,7 +525,7 @@ export function CourseDesk() {
                     <div className="row g-8 wrap" style={{ marginTop: 14 }}>
                       {isStudent && item.kind !== 'live' && <button className="btn sm" onClick={() => start(item.id)}><Play size={14} fill="currentColor" /> Comenzar</button>}
                       {isStudent && item.kind === 'live' && <Link to="/app/en-vivo" className="btn sm"><Radio size={14} /> Unirme</Link>}
-                      {!isStudent && <Link to={`/app/en-vivo?assessment=${item.id}`} className="btn sm"><Radio size={14} /> Abrir en vivo</Link>}
+                      {canTeach && <Link to={`/app/en-vivo?assessment=${item.id}`} className="btn sm"><Radio size={14} /> Abrir en vivo</Link>}
                       {!isStudent && (
                         <button className="btn sm ghost" onClick={() => download(`/api/reports/assessments/${item.id}/excel`, 'resultados.xlsx')}><FileSpreadsheet size={14} /> Excel</button>
                       )}
@@ -565,9 +566,16 @@ export function CourseDesk() {
                     )}
                     {!isStudent && (
                       <div className="stack g-12" style={{ marginTop: 14 }}>
-                        {subs.map((submission) => (
-                          <GradeBox key={submission.id} submission={submission} onDone={() => client.invalidateQueries({ queryKey: ['desk', id] })} />
-                        ))}
+                        {subs.map((submission) =>
+                          canTeach ? (
+                            <GradeBox key={submission.id} submission={submission} onDone={() => client.invalidateQueries({ queryKey: ['desk', id] })} />
+                          ) : (
+                            <div key={submission.id} className="row between g-8" style={{ padding: '8px 0', borderBottom: '1px solid var(--line)' }}>
+                              <b>{submission.full_name}</b>
+                              <span className={`chip ${submission.score != null ? 'mint' : 'gold'}`}>{submission.score != null ? `Nota ${submission.score}` : 'Por calificar'}</span>
+                            </div>
+                          ),
+                        )}
                         {!subs.length && <p className="muted" style={{ fontSize: 14 }}>Aún no hay entregas.</p>}
                       </div>
                     )}
@@ -603,7 +611,7 @@ function TeacherCompose({ courseId }: { courseId: string }) {
   const { user } = useAuth();
   const client = useQueryClient();
   const [unitId, setUnitId] = useState('');
-  if (!user || user.role === 'student' || user.role === 'directivo') return null;
+  if (!user || (user.role !== 'teacher' && user.role !== 'admin')) return null;
   return (
     <form className="card" style={{ marginTop: 12, border: '2px dashed var(--line)', background: 'var(--surface-2)' }} onSubmit={async (event) => {
       event.preventDefault();

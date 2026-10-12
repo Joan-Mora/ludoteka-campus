@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { sql } from 'kysely';
-import type { NewsAudience } from '@eduquest/contracts';
+import { isBoard as boardRole, ROLE_LABELS, type NewsAudience } from '@eduquest/contracts';
 import { DatabaseService } from '../../core/database/database.service';
 import { ApiError } from '../../core/errors/api-error';
 import type { AuthUser } from '../../core/auth/auth.decorators';
@@ -14,6 +14,7 @@ interface NewsInput {
   category: string;
   pinned: boolean;
   requiresAck: boolean;
+  official?: boolean;
   publishAt?: string;
   expiresAt?: string;
   audience: NewsAudience[];
@@ -28,6 +29,7 @@ interface NewsRow {
   category: string;
   pinned: boolean;
   requires_ack: boolean;
+  official: boolean;
   publish_at: Date;
   expires_at: Date | null;
   created_at: Date;
@@ -37,7 +39,8 @@ interface NewsRow {
   acks: number;
 }
 
-const isBoard = (user: AuthUser) => user.role === 'admin' || user.role === 'directivo';
+const isBoard = (user: AuthUser) => boardRole(user.role);
+const AUDIENCE_LABELS: Record<string, string> = { ...ROLE_LABELS, teacher: 'Docentes', student: 'Estudiantes', guardian: 'Acudientes' };
 
 @Injectable()
 export class NewsService {
@@ -48,7 +51,7 @@ export class NewsService {
 
   async feed(viewer: AuthUser, limit = 40) {
     const rows = await sql<NewsRow>`
-      SELECT n.id, n.author_id, u.full_name AS author_name, n.title, n.body, n.category, n.pinned, n.requires_ack,
+      SELECT n.id, n.author_id, u.full_name AS author_name, n.title, n.body, n.category, n.pinned, n.requires_ack, n.official,
              n.publish_at, n.expires_at, n.created_at, r.read_at, r.acknowledged_at,
              (SELECT count(*) FROM news_reads x WHERE x.news_id = n.id) AS reads,
              (SELECT count(*) FROM news_reads x WHERE x.news_id = n.id AND x.acknowledged_at IS NOT NULL) AS acks
@@ -74,6 +77,7 @@ export class NewsService {
         category: row.category,
         pinned: row.pinned,
         requiresAck: row.requires_ack,
+        official: row.official,
         publishAt: row.publish_at,
         expiresAt: row.expires_at,
         author: row.author_name,
@@ -89,9 +93,8 @@ export class NewsService {
   }
 
   private async audienceLabels(rows: { kind: string; value: string }[]) {
-    const roleLabel: Record<string, string> = { admin: 'Administración', directivo: 'Coordinación', teacher: 'Docentes', student: 'Estudiantes', guardian: 'Acudientes' };
     const labels = new Map<string, string>([['all:', 'Toda la comunidad']]);
-    for (const [role, label] of Object.entries(roleLabel)) labels.set(`role:${role}`, label);
+    for (const [role, label] of Object.entries(AUDIENCE_LABELS)) labels.set(`role:${role}`, label);
     const groupIds = [...new Set(rows.filter((r) => r.kind === 'group').map((r) => r.value))];
     const courseIds = [...new Set(rows.filter((r) => r.kind === 'course').map((r) => r.value))];
     if (groupIds.length) {
@@ -136,7 +139,8 @@ export class NewsService {
       .execute();
     return {
       allowAll: board,
-      roles: board ? ['student', 'guardian', 'teacher', 'directivo'] : [],
+      roles: board ? ['student', 'guardian', 'teacher', 'coordinator', 'rector'] : [],
+      canOfficial: viewer.role === 'rector',
       groups: groups.map((g) => ({ id: g.id, label: `${g.grade} · ${g.name}` })),
       courses,
     };
@@ -158,6 +162,7 @@ export class NewsService {
     if (input.requiresAck && !isBoard(viewer) && input.category === 'urgente') {
       throw new ApiError(403, 'FORBIDDEN', 'Las circulares urgentes con confirmación las emite coordinación');
     }
+    if (input.official && viewer.role !== 'rector') throw new ApiError(403, 'FORBIDDEN', 'Los comunicados oficiales los firma rectoría');
     const publishAt = input.publishAt ? new Date(input.publishAt) : new Date();
     const unique = new Map(input.audience.map((a) => [`${a.kind}:${'value' in a ? a.value : ''}`, a]));
     const news = await this.database.withTx(async (trx) => {
@@ -170,6 +175,7 @@ export class NewsService {
           category: input.category,
           pinned: input.pinned,
           requires_ack: input.requiresAck,
+          official: Boolean(input.official),
           publish_at: publishAt,
           expires_at: input.expiresAt ? new Date(input.expiresAt) : null,
         })

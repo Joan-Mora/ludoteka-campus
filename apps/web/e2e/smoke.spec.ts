@@ -1,7 +1,7 @@
 import { existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
 import { expect, test, type Browser, type BrowserContext, type Page, type TestInfo } from '@playwright/test';
-import { accounts, labPassword, publicRoutes, ROLES, routesByRole, shotsDir, slug, storageFor, type E2ERole } from './accounts';
+import { accounts, forbiddenByRole, labPassword, publicRoutes, ROLES, routesByRole, shotsDir, slug, storageFor, type E2ERole } from './accounts';
 
 async function shoot(page: Page, info: TestInfo, name: string) {
   const dir = path.join(shotsDir, info.project.name);
@@ -131,6 +131,16 @@ for (const role of ROLES) {
         await expect(page).toHaveURL(new RegExp(`${route.replace(/\//g, '\\/')}$`));
       });
     }
+
+    test('rutas de otros roles', async ({}, info) => {
+      test.skip(!context, `sin sesión para ${role}`);
+      test.skip(info.project.name !== 'android', 'el permiso no depende del dispositivo');
+      for (const route of forbiddenByRole[role]) {
+        await page.goto(route, { waitUntil: 'domcontentloaded' });
+        await expect(page.getByText('Esta sección no es para tu rol'), `${role} no debe abrir ${route}`).toBeVisible({ timeout: 15_000 });
+      }
+      await shoot(page, info, `${role}-no-permitido`);
+    });
 
     test('menú Más en el teléfono', async ({}, info) => {
       test.skip(!context, `sin sesión para ${role}`);

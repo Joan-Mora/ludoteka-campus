@@ -429,6 +429,11 @@ export interface Database {
     title: string;
     issued_at: Ts;
     meta: JsonValue;
+    status: Generated<string>;
+    requested_by: NullableString;
+    signed_by: NullableString;
+    signed_at: NullableDate;
+    decision_note: NullableString;
   };
   notifications: {
     id: Generated<string>;
@@ -738,6 +743,7 @@ export interface Database {
     category: Generated<string>;
     pinned: Generated<boolean>;
     requires_ack: Generated<boolean>;
+    official: Generated<boolean>;
     publish_at: Ts;
     expires_at: NullableDate;
     created_at: Ts;
@@ -841,7 +847,54 @@ export interface Database {
     user_id: string;
     companion: Generated<string>;
     theme: Generated<string>;
+    weekly_digest: Generated<boolean>;
+    digest_sent_at: NullableDate;
     updated_at: Ts;
+  };
+  risk_alert_notes: {
+    id: Generated<string>;
+    alert_id: string;
+    author_id: string;
+    body: string;
+    created_at: Ts;
+  };
+  meetings: {
+    id: Generated<string>;
+    student_id: string;
+    guardian_id: string;
+    course_id: NullableString;
+    alert_id: NullableString;
+    created_by: string;
+    scheduled_at: Ts;
+    mode: Generated<string>;
+    place: Generated<string>;
+    reason: string;
+    status: Generated<string>;
+    response_note: NullableString;
+    responded_at: NullableDate;
+    outcome: NullableString;
+    created_at: Ts;
+  };
+  guardian_messages: {
+    id: Generated<string>;
+    student_id: string;
+    guardian_id: string;
+    teacher_id: string;
+    author_id: string;
+    body: string;
+    read_at: NullableDate;
+    created_at: Ts;
+  };
+  bulletin_signatures: {
+    id: Generated<string>;
+    student_id: string;
+    period_id: NullableString;
+    requested_by: string;
+    status: Generated<string>;
+    signed_by: NullableString;
+    signed_at: NullableDate;
+    decision_note: NullableString;
+    created_at: Ts;
   };
   legal_documents: {
     id: Generated<string>;

@@ -12,7 +12,8 @@ type Block =
   | { kind: 'p'; text: string }
   | { kind: 'code'; code: string; minutes: number }
   | { kind: 'button'; label: string; href: string }
-  | { kind: 'facts'; rows: [string, string, boolean?][] }
+  | { kind: 'facts'; title?: string; rows: [string, string, boolean?][] }
+  | { kind: 'list'; title: string; items: { title: string; detail: string; tag?: string }[]; empty: string }
   | { kind: 'steps'; title: string; items: string[] }
   | { kind: 'notice'; tone: 'warn' | 'info'; title: string; text: string }
   | { kind: 'campus' };
@@ -93,12 +94,27 @@ ${label('Tu código de ingreso')}
 <p style="margin:0 0 22px;font-family:${FONT};font-size:12.5px;line-height:1.6;color:${C.muted};">Si el botón no funciona, copia este enlace en el navegador:<br><a href="${esc(b.href)}" style="color:${C.violet2};word-break:break-all;">${esc(b.href)}</a></p>`;
     case 'facts':
       return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:2px 0 22px;background:${C.soft};border:1px solid #e6defe;border-radius:18px;border-collapse:separate;">
-<tr><td style="padding:16px 20px 4px;">${label('Tus datos de acceso')}</td></tr>${b.rows
+<tr><td style="padding:16px 20px 4px;">${label(b.title ?? 'Tus datos de acceso')}</td></tr>${b.rows
         .map(
           ([name, value, mono]) => `<tr><td style="padding:10px 20px 12px;"><div style="font-family:${FONT};font-size:12.5px;font-weight:700;color:${C.muted};">${esc(name)}</div>
 <div style="margin-top:4px;font-family:${mono ? MONO : FONT};font-size:${mono ? 19 : 15.5}px;font-weight:800;color:${mono ? C.violet2 : C.ink};word-break:break-all;${mono ? 'letter-spacing:1px;' : ''}">${esc(value)}</div></td></tr>`,
         )
         .join('')}<tr><td style="height:6px;font-size:0;">&nbsp;</td></tr></table>`;
+    case 'list':
+      return `<div style="margin:6px 0 10px;font-family:${DISPLAY};font-size:17px;font-weight:800;color:${C.ink};">${esc(b.title)}</div>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px;border:1px solid ${C.line};border-radius:18px;border-collapse:separate;">${
+        b.items.length
+          ? b.items
+              .map(
+                (item, i) => `<tr><td style="padding:12px 18px;${i ? `border-top:1px solid ${C.line};` : ''}">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td valign="top">
+<div style="font-family:${FONT};font-size:14.5px;font-weight:800;color:${C.ink};">${esc(item.title)}</div>
+<div style="margin-top:2px;font-family:${FONT};font-size:13px;line-height:1.5;color:${C.muted};">${esc(item.detail)}</div></td>
+${item.tag ? `<td valign="top" align="right" style="padding-left:10px;white-space:nowrap;">${chip(item.tag, '#ece7ff', C.violet2)}</td>` : ''}</tr></table></td></tr>`,
+              )
+              .join('')
+          : `<tr><td style="padding:14px 18px;font-family:${FONT};font-size:13.5px;color:${C.muted};">${esc(b.empty)}</td></tr>`
+      }</table>`;
     case 'steps':
       return `<div style="margin:6px 0 14px;font-family:${DISPLAY};font-size:17px;font-weight:800;color:${C.ink};">${esc(b.title)}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 14px;">${b.items
@@ -137,6 +153,8 @@ function plain(b: Block): string {
       return `${b.label}: ${b.href}`;
     case 'facts':
       return b.rows.map(([name, value]) => `${name}: ${value}`).join('\n');
+    case 'list':
+      return [b.title, ...(b.items.length ? b.items.map((item) => `- ${item.title}${item.tag ? ` (${item.tag})` : ''}: ${item.detail}`) : [b.empty])].join('\n');
     case 'steps':
       return [b.title, ...b.items.map((item, i) => `${i + 1}. ${item}`)].join('\n');
     case 'notice':
@@ -296,5 +314,122 @@ export function welcomeEmail(input: { baseUrl: string; fullName: string; account
     ],
     luka: 'Soy Luka, tu compañero IA. Cuando entres, búscame en el campus: te ayudo a estudiar con pistas, nunca con las respuestas.',
     recipientNote: `Cuenta creada por el colegio para ${input.account}.`,
+  });
+}
+
+const longDate = (value: Date) =>
+  value.toLocaleString('es-CO', { timeZone: 'America/Bogota', weekday: 'long', day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit' });
+
+export function meetingEmail(input: {
+  baseUrl: string;
+  fullName: string;
+  account: string;
+  studentName: string;
+  scheduledAt: Date;
+  mode: string;
+  place: string;
+  reason: string;
+  organizer: string;
+  forLab: boolean;
+}): RenderedEmail {
+  const base = input.baseUrl.replace(/\/$/, '');
+  const when = longDate(input.scheduledAt);
+  return render({
+    baseUrl: input.baseUrl,
+    subject: `Citación del colegio sobre ${firstName(input.studentName)} · ${when}`,
+    preheader: `Te esperamos el ${when}. Confirma tu asistencia en Ludoteka Campus.`,
+    banner: 'banner-meeting.jpg',
+    title: 'Te esperamos en el colegio',
+    greeting: `Hola, ${firstName(input.fullName)}`,
+    blocks: [
+      { kind: 'p', text: `${input.organizer} te cita para conversar sobre el proceso de ${input.studentName}.` },
+      {
+        kind: 'facts',
+        title: 'Detalles de la citación',
+        rows: [
+          ['Fecha y hora', when],
+          ['Modalidad', input.mode === 'virtual' ? 'Virtual' : 'Presencial'],
+          ...(input.place ? ([['Lugar o enlace', input.place]] as [string, string][]) : []),
+          ['Motivo', input.reason],
+        ],
+      },
+      { kind: 'button', label: 'Confirmar asistencia', href: `${base}/app/acudiente` },
+      ...(input.forLab ? [labNotice(input.account)] : []),
+      { kind: 'notice', tone: 'info', title: '¿No puedes asistir?', text: 'Indícalo en el campus y deja una nota: coordinación te propondrá otra fecha.' },
+    ],
+    luka: 'Estas reuniones son para acompañar, no para castigar. Llevar preguntas ayuda mucho.',
+    recipientNote: `Enviado al acudiente ${input.account}.`,
+  });
+}
+
+export function guardianMessageEmail(input: {
+  baseUrl: string;
+  fullName: string;
+  account: string;
+  authorName: string;
+  studentName: string;
+  preview: string;
+  link: string;
+  forLab: boolean;
+}): RenderedEmail {
+  return render({
+    baseUrl: input.baseUrl,
+    subject: `Mensaje de ${input.authorName} sobre ${firstName(input.studentName)}`,
+    preheader: input.preview.slice(0, 90),
+    banner: 'banner-message.jpg',
+    title: 'Tienes un mensaje nuevo',
+    greeting: `Hola, ${firstName(input.fullName)}`,
+    blocks: [
+      { kind: 'p', text: `${input.authorName} escribió sobre ${input.studentName}:` },
+      { kind: 'notice', tone: 'info', title: 'Vista previa', text: input.preview.length > 240 ? `${input.preview.slice(0, 237)}…` : input.preview },
+      { kind: 'button', label: 'Leer y responder', href: input.link },
+      ...(input.forLab ? [labNotice(input.account)] : []),
+    ],
+    luka: 'Responde desde el campus: así la conversación queda registrada para ambos.',
+    recipientNote: `Enviado a ${input.account}.`,
+  });
+}
+
+export function weeklyDigestEmail(input: {
+  baseUrl: string;
+  fullName: string;
+  account: string;
+  forLab: boolean;
+  children: {
+    name: string;
+    group: string | null;
+    upcoming: { title: string; detail: string; tag?: string }[];
+    grades: { title: string; detail: string; tag?: string }[];
+    absences: number;
+    alerts: number;
+  }[];
+}): RenderedEmail {
+  const base = input.baseUrl.replace(/\/$/, '');
+  return render({
+    baseUrl: input.baseUrl,
+    subject: 'Resumen semanal de Ludoteka Campus',
+    preheader: input.children.map((c) => firstName(c.name)).join(', ') + ': tareas que vienen y notas recientes.',
+    banner: 'banner-digest.jpg',
+    title: 'Tu resumen de la semana',
+    greeting: `Hola, ${firstName(input.fullName)}`,
+    blocks: [
+      { kind: 'p', text: 'Esto es lo que pasó esta semana en el campus y lo que viene en los próximos días.' },
+      ...input.children.flatMap((child): Block[] => [
+        {
+          kind: 'facts',
+          title: child.group ? `${child.name} · ${child.group}` : child.name,
+          rows: [
+            ['Inasistencias en 7 días', String(child.absences)],
+            ['Alertas abiertas', child.alerts ? `${child.alerts} (revísalas en el campus)` : 'Ninguna'],
+          ],
+        },
+        { kind: 'list', title: `Próximas entregas de ${firstName(child.name)}`, items: child.upcoming, empty: 'Nada pendiente para los próximos 7 días.' },
+        { kind: 'list', title: 'Notas recientes', items: child.grades, empty: 'Sin notas nuevas esta semana.' },
+      ]),
+      { kind: 'button', label: 'Ver en el campus', href: `${base}/app/acudiente` },
+      ...(input.forLab ? [labNotice(input.account)] : []),
+    ],
+    luka: 'Si quieres dejar de recibir este resumen, apágalo desde Ajustes.',
+    recipientNote: `Resumen semanal para ${input.account}.`,
   });
 }

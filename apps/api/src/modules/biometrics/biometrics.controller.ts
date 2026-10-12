@@ -78,7 +78,7 @@ export class BiometricsController {
     return { accessToken: session.accessToken, user: session.user, distance: Number(session.distance.toFixed(3)) };
   }
 
-  @Roles('admin', 'directivo')
+  @Roles('admin', 'coordinator')
   @Post('guardian-consent')
   guardian(@CurrentUser() actor: AuthUser, @Body(new ZodPipe(guardianConsentSchema)) body: { userId: string }) {
     return this.identity.setGuardianConsent(body.userId, actor.id);

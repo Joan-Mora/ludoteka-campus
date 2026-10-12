@@ -200,7 +200,7 @@ export function AchievementsPage() {
   return (
     <div className="stack g-24 trophy-room">
       <Reveal>
-        <section className="hero">
+        <section className="hero facade m-laton" data-at="/app/logros" data-building="trofeos">
           <div className="orb" style={{ width: 360, height: 360, right: -100, top: -140, background: 'radial-gradient(circle, rgba(255,200,61,.4), transparent 70%)' }} />
           <div className="row g-24 wrap" style={{ position: 'relative' }}>
             <Ring value={ratio} size={150} stroke={14}>
@@ -208,8 +208,8 @@ export function AchievementsPage() {
               <div className="display" style={{ fontSize: 34 }}>N{data?.level.level ?? 1}</div>
             </Ring>
             <div style={{ flex: 1, minWidth: 240 }}>
-              <div className="eyebrow" style={{ color: '#ffd66b' }}>Sala de trofeos</div>
-              <h1 style={{ marginTop: 8 }}>{data?.level.title ?? 'Aprendiz'}</h1>
+              <span className="placa"><Trophy size={14} aria-hidden="true" /> Sala de trofeos</span>
+              <h1>{data?.level.title ?? 'Aprendiz'}</h1>
               <p style={{ marginTop: 8, fontSize: 16 }}>{data?.nextLevel ? `Te faltan ${nextXp - xp} XP para llegar a ${data.nextLevel.title}.` : 'Alcanzaste el nivel máximo.'}</p>
               <div style={{ marginTop: 16, maxWidth: 420 }}><Bar value={ratio} tone="gold" /></div>
             </div>

@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useMemo, useRef, useState, type RefObject } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type RefObject } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { ArrowLeft, Bell, CheckCheck, LogOut, Menu, Search, Zap } from 'lucide-react';
@@ -9,7 +9,10 @@ import { useCompanion } from '@/shared/companion';
 import { Avatar, Bar, Sheet, ThemeButton } from '@/ui';
 import { VoiceNav } from '@/shared/voice-ui';
 import { configureSpeech } from '@/shared/voice';
-import { hasDeviceTheme, setTheme, type ThemeChoice } from '@/shared/theme';
+import { hasDeviceTheme, setTheme, useTheme, type ThemeChoice } from '@/shared/theme';
+import { buildingForPath, buildingsFor } from '@/shared/buildings';
+import { enterBuilding } from '@/shared/enter';
+import { MiniCampus } from '@/ui/campus-mini';
 import { useLayout } from './layout';
 import { mobileTabs, navSections, roleLabel, type NavItem, type NavSection } from './nav';
 
@@ -53,17 +56,54 @@ function NotificationList({ feed, onClose }: { feed: NoteFeed | undefined; onClo
   );
 }
 
-function Section({ section }: { section: NavSection }) {
+type Campus = ReturnType<typeof useCampus>;
+
+/** The role's buildings, the one we are in, and a way to walk into another one. */
+function useCampus() {
+  const { user } = useAuth();
+  const companion = useCompanion();
+  const { dark } = useTheme();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const buildings = useMemo(() => buildingsFor(user?.role, companion.name), [user?.role, companion.name]);
+  const here = useMemo(() => buildingForPath(pathname, buildings), [pathname, buildings]);
+  return {
+    buildings,
+    here,
+    dark,
+    of: (to: string) => buildingForPath(to, buildings),
+    enter: (to: string, source?: Element | null) => enterBuilding(navigate, to, source),
+  };
+}
+
+const plainClick = (event: MouseEvent) => event.button === 0 && !event.metaKey && !event.ctrlKey && !event.shiftKey && !event.altKey;
+
+function Section({ section, campus }: { section: NavSection; campus: Campus }) {
   return (
     <div>
       <div className="nav-label">{section.label}</div>
       <nav className="nav">
-        {section.items.map((item) => (
-          <NavLink key={item.to} to={item.to} end={item.end} className={({ isActive }) => (isActive ? 'active' : '')}>
-            <span className="nav-ico"><item.icon size={16} strokeWidth={2.4} /></span>
-            {item.label}
-          </NavLink>
-        ))}
+        {section.items.map((item) => {
+          const building = campus.of(item.to);
+          return (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) => (isActive ? 'active' : '')}
+              style={building ? ({ '--b': building.color } as CSSProperties) : undefined}
+              data-building={building?.key}
+              onClick={(event) => {
+                if (!building || !plainClick(event)) return;
+                event.preventDefault();
+                campus.enter(item.to, document.querySelector(`[data-mini="${building.key}"] .mini-art`));
+              }}
+            >
+              <span className="nav-ico"><item.icon size={16} strokeWidth={2.4} /></span>
+              {item.label}
+            </NavLink>
+          );
+        })}
       </nav>
     </div>
   );
@@ -92,6 +132,7 @@ function DesktopShell({ sections }: { sections: NavSection[] }) {
   const [open, setOpen] = useState(false);
   const bellRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
+  const campus = useCampus();
   const isStudent = user?.role === 'student';
   useNoPinchZoom();
   useEffect(() => setOpen(false), [location.pathname, location.search]);
@@ -112,7 +153,8 @@ function DesktopShell({ sections }: { sections: NavSection[] }) {
             <div className="brand-sub">Colegio Francisco Arango</div>
           </div>
         </div>
-        {sections.map((section) => <Section key={section.label} section={section} />)}
+        <MiniCampus buildings={campus.buildings} current={campus.here?.key ?? null} dark={campus.dark} onEnter={(b, source) => campus.enter(b.to, source)} />
+        {sections.map((section) => <Section key={section.label} section={section} campus={campus} />)}
         <div className="side-card">
           <div className="row g-12">
             <Avatar name={user?.fullName} />
@@ -212,6 +254,7 @@ function MobileShell({ sections }: { sections: NavSection[] }) {
   const { notes, game, xp, pct, unread } = useShellData();
   const [more, setMore] = useState(false);
   const [bell, setBell] = useState(false);
+  const campus = useCampus();
   const content = useRef<HTMLElement>(null);
   useTableCards(content);
 
@@ -288,6 +331,7 @@ function MobileShell({ sections }: { sections: NavSection[] }) {
             )}
           </div>
         </div>
+        <MiniCampus buildings={campus.buildings} current={campus.here?.key ?? null} dark={campus.dark} onEnter={(b, source) => campus.enter(b.to, source)} />
         {sections.map((section) => (
           <div key={section.label} className="m-section">
             <div className="eyebrow">{section.label}</div>

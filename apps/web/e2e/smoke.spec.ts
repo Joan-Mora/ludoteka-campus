@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync } from 'node:fs';
 import path from 'node:path';
-import { expect, test, type Browser, type BrowserContext, type Page, type TestInfo } from '@playwright/test';
+import { expect, test, type Browser, type BrowserContext, type BrowserContextOptions, type Page, type TestInfo } from '@playwright/test';
 import { accounts, forbiddenByRole, labPassword, publicRoutes, ROLES, routesByRole, shotsDir, slug, storageFor, type E2ERole } from './accounts';
 
 async function shoot(page: Page, info: TestInfo, name: string) {
@@ -52,11 +52,11 @@ test('ingreso con contraseña y código', async ({ page }, info) => {
   await shoot(page, info, 'ingreso-codigo');
 });
 
-async function signedContext(browser: Browser, info: TestInfo, role: E2ERole): Promise<BrowserContext | null> {
+async function signedContext(browser: Browser, info: TestInfo, role: E2ERole, overrides: BrowserContextOptions = {}): Promise<BrowserContext | null> {
   const storage = storageFor(role);
   if (!existsSync(storage)) return null;
   const { baseURL, ...use } = info.project.use;
-  const context = await browser.newContext({ ...use, baseURL, storageState: storage });
+  const context = await browser.newContext({ ...use, baseURL, storageState: storage, ...overrides });
   const login = await context.request.post('/api/auth/login', { data: { email: accounts[role], password: labPassword() } });
   const body = login.ok() ? ((await login.json()) as { accessToken?: string }) : {};
   if (!body.accessToken) {
@@ -314,6 +314,83 @@ test('Foro: mención, adjunto, reacción, mejor respuesta y resumen de Luka', as
     await teacher!.close();
     await student!.close();
   }
+});
+
+const CAMPUS_SIZES = [[1280, 800], [1440, 900], [1920, 1080], [2560, 1440], [3840, 2160]] as const;
+/** Each page and the material its facade must show (null: home, where the pin rests on the plaza). */
+const CAMPUS_PAGES = [
+  ['/app', null], ['/app/biblioteca', 'papel'], ['/app/cursos', 'pizarra'], ['/app/tutor', 'cuadricula'], ['/app/arena', 'neon'], ['/app/jugar', 'neon'],
+  ['/app/novedades', 'corcho'], ['/app/cuaderno', 'rayado'], ['/app/ruta', 'topografia'], ['/app/logros', 'laton'],
+] as const;
+
+async function deskContext(browser: Browser, info: TestInfo, width: number, height: number, dark: boolean) {
+  const context = await signedContext(browser, info, 'student', {
+    viewport: { width, height },
+    isMobile: false,
+    hasTouch: false,
+    deviceScaleFactor: 1,
+    userAgent: undefined,
+    colorScheme: dark ? 'dark' : 'light',
+  });
+  await context?.addInitScript((theme) => localStorage.setItem('lk_theme', theme), dark ? 'dark' : 'light');
+  return context;
+}
+
+test.describe('Campus: fachadas y mapa en cada resolución y tema', () => {
+  for (const dark of [false, true]) {
+    const theme = dark ? 'oscuro' : 'claro';
+    test(`tema ${theme}`, async ({ browser }, info) => {
+      test.skip(info.project.name !== 'android', 'una vez basta: la prueba fija el tamaño de la ventana');
+      test.setTimeout(420_000);
+      // One session per theme: logins are rate limited per account.
+      const context = await deskContext(browser, info, CAMPUS_SIZES[0][0], CAMPUS_SIZES[0][1], dark);
+      test.skip(!context, 'sin sesión de estudiante');
+      const page = await context!.newPage();
+      const errors = watchErrors(page);
+      for (const [width, height] of CAMPUS_SIZES) {
+        await page.setViewportSize({ width, height });
+        for (const [route, material] of CAMPUS_PAGES) {
+          await page.goto(route, { waitUntil: 'domcontentloaded' });
+          const map = page.getByRole('navigation', { name: 'Mapa del campus' });
+          await expect(map, `${width}px ${route}: mini mapa`).toBeVisible({ timeout: 20_000 });
+          if (material) {
+            await expect(page.locator('.facade').first(), `${width}px ${route}: material`).toHaveClass(new RegExp(`\\bm-${material}\\b`), { timeout: 20_000 });
+            await expect(map.locator('.mini-b.here')).toHaveCount(1);
+          } else {
+            await expect(map.locator('.mini-here')).toContainText('la plaza');
+          }
+          const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+          expect.soft(overflow, `${width}px ${route}: desborde horizontal de ${overflow}px`).toBeLessThanOrEqual(1);
+          await page.waitForTimeout(700);
+          await shoot(page, info, `campus-${width}-${theme}-${slug(route)}`);
+        }
+        expect(errors, `${width}px: errores de JavaScript`).toEqual([]);
+      }
+      await context!.close();
+    });
+  }
+});
+
+test('Campus: entrar al edificio desde el mini mapa y el menú', async ({ browser }, info) => {
+  test.skip(info.project.name !== 'android', 'una vez basta');
+  const context = await deskContext(browser, info, 1440, 900, false);
+  test.skip(!context, 'sin sesión de estudiante');
+  const page = await context!.newPage();
+  const errors = watchErrors(page);
+  await page.goto('/app/cursos');
+  await expect(page.locator('.page-head.facade.m-pizarra')).toBeVisible({ timeout: 15_000 });
+  await page.locator('[data-mini="biblioteca"]').click();
+  await expect(page).toHaveURL(/\/app\/biblioteca$/);
+  await expect(page.locator('.page-head.facade.m-papel')).toBeVisible();
+  await expect(page.locator('.mini-here')).toContainText('Biblioteca');
+  await page.locator('.nav a[href="/app/arena"]').click();
+  await expect(page).toHaveURL(/\/app\/arena$/);
+  await expect(page.locator('.page-head.facade.m-neon')).toBeVisible();
+  await expect(page.locator('.enter-ghost')).toHaveCount(0);
+  await expect(page.locator('html')).not.toHaveClass(/entering/);
+  await shoot(page, info, 'campus-entrar-arena');
+  expect(errors).toEqual([]);
+  await context!.close();
 });
 
 for (const role of ROLES) {

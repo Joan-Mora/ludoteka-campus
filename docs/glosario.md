@@ -37,6 +37,10 @@
 | Mejor respuesta | Respuesta del foro marcada por el autor del tema o por quien modera. Si es de un estudiante y la marca otra persona, suma 20 XP una sola vez y cuenta para la insignia «Respuesta estrella» |
 | Mención | `@Nombre completo` en una respuesta del foro, elegido en el autocompletado entre las personas del curso. Avisa a la persona nombrada (`forum_mentions`) |
 | Resumen del hilo | Síntesis que Luka o Luna hace de un tema del foro para quien modera: ideas principales, dudas sin resolver y quién podría necesitar apoyo. La IA solo ve seudónimos y el servidor pone los nombres después |
+| Fachada | Cabecera de una página que pertenece a un edificio del campus: placa con el nombre del edificio, título, descripción, acciones y el dibujo isométrico del edificio, sobre el material de ese edificio (`PageHeader`) |
+| Material | Textura de cada edificio: ficha bibliográfica (Biblioteca), pizarra (Aula), papel milimetrado (Laboratorio IA), neón (Arena y Arcade), corcho (Cartelera), hoja rayada (Cuaderno, Coordinación, Rectoría, Taller), curvas de nivel (Mi ruta, Observatorio) y terciopelo con latón (Sala de trofeos). Cada material ajusta tinta, líneas y superficies para mantener el contraste en ambos temas |
+| Mini mapa | Campus en miniatura de la barra lateral (y del menú «Más» en el teléfono), con los mismos edificios del inicio. El marcador «Estás aquí» se posa sobre el edificio de la página actual, o sobre la plaza en el inicio |
+| Entrar al edificio | Única transición orquestada de la app: el dibujo del edificio tocado crece hasta la fachada de la página (View Transitions API). Sin la API o con «reducir movimiento», navega sin animar |
 | `schema_migrations` | Tabla que registra qué migraciones SQL se aplicaron |
 | `/api/health` | Healthcheck público. Hace ping a la base |
 | `SEED_PASSWORD` | Variable con la clave de las cuentas demo. En Render debe ser fuerte; nunca se escribe su valor en docs |

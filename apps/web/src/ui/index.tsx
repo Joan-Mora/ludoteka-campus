@@ -1,8 +1,13 @@
-import { useEffect, type ReactNode } from 'react';
+import { useEffect, useMemo, type CSSProperties, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
+import { useLocation } from 'react-router-dom';
 import { AnimatePresence, motion, useDragControls } from 'framer-motion';
 import { Moon, Sun, X, type LucideIcon } from 'lucide-react';
 import { useTheme } from '@/shared/theme';
+import { useAuth } from '@/shared/auth';
+import { useCompanion } from '@/shared/companion';
+import { buildingForPath, buildingsFor, materialOf } from '@/shared/buildings';
+import { BuildingArt } from './campus-mini';
 
 export function ThemeButton({ className = 'icon-btn', label }: { className?: string; label?: boolean }) {
   const { dark, toggleTheme } = useTheme();
@@ -105,16 +110,46 @@ export function Reveal({ children, delay = 0, className }: { children: ReactNode
   );
 }
 
+/** Inside a building the header is its facade (material, plate and drawing); elsewhere a plain title. */
 export function PageHeader({ eyebrow, title, subtitle, actions }: { eyebrow?: string; title: ReactNode; subtitle?: ReactNode; actions?: ReactNode }) {
+  const { pathname } = useLocation();
+  const { user } = useAuth();
+  const companion = useCompanion();
+  const { dark } = useTheme();
+  const building = useMemo(() => buildingForPath(pathname, buildingsFor(user?.role, companion.name)), [pathname, user?.role, companion.name]);
+
+  if (!building) {
+    return (
+      <header className="page-head" data-at={pathname}>
+        <div>
+          {eyebrow && <div className="page-kicker">{eyebrow}</div>}
+          <h1>{title}</h1>
+          {subtitle && <p>{subtitle}</p>}
+        </div>
+        {actions && <div className="row g-8 wrap">{actions}</div>}
+      </header>
+    );
+  }
+  const Icon = building.icon;
   return (
-    <Reveal className="page-head">
-      <div>
-        {eyebrow && <div className="eyebrow" style={{ marginBottom: 8 }}>{eyebrow}</div>}
+    <header
+      className={`page-head facade m-${materialOf[building.key]}`}
+      data-at={pathname}
+      data-building={building.key}
+      style={{ '--b': building.color } as CSSProperties}
+    >
+      <div className="facade-text">
+        <span className="placa">
+          <Icon size={14} aria-hidden="true" />
+          {building.name}
+          {eyebrow && eyebrow !== building.name && <span className="placa-sub">· {eyebrow}</span>}
+        </span>
         <h1>{title}</h1>
         {subtitle && <p>{subtitle}</p>}
+        {actions && <div className="row g-8 wrap facade-actions">{actions}</div>}
       </div>
-      {actions && <div className="row g-8 wrap">{actions}</div>}
-    </Reveal>
+      <BuildingArt className="facade-art" building={building} dark={dark} />
+    </header>
   );
 }
 

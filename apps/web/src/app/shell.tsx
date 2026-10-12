@@ -10,10 +10,12 @@ import { Avatar, Bar, Sheet, ThemeButton } from '@/ui';
 import { VoiceNav } from '@/shared/voice-ui';
 import { configureSpeech } from '@/shared/voice';
 import { hasDeviceTheme, setTheme, useTheme, type ThemeChoice } from '@/shared/theme';
-import { buildingForPath, buildingsFor } from '@/shared/buildings';
+import { buildingForPath, campusFor } from '@/shared/buildings';
 import { enterBuilding } from '@/shared/enter';
 import { MiniCampus } from '@/ui/campus-mini';
 import { useLayout } from './layout';
+import { Guide } from './guide';
+import { PasskeyOffer } from '@/shared/passkey';
 import { mobileTabs, navSections, roleLabel, type NavItem, type NavSection } from './nav';
 
 function PageLoading() {
@@ -65,9 +67,11 @@ function useCampus() {
   const { dark } = useTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const buildings = useMemo(() => buildingsFor(user?.role, companion.name), [user?.role, companion.name]);
+  const layout = useMemo(() => campusFor(user?.role, companion.name), [user?.role, companion.name]);
+  const buildings = layout.buildings;
   const here = useMemo(() => buildingForPath(pathname, buildings), [pathname, buildings]);
   return {
+    layout,
     buildings,
     here,
     dark,
@@ -107,6 +111,39 @@ function Section({ section, campus }: { section: NavSection; campus: Campus }) {
       </nav>
     </div>
   );
+}
+
+/**
+ * While the user scrolls, decorative animations (clouds, walkers, pins) pause so the main thread is free and
+ * two-finger touchpad scrolling stays smooth on slower laptops.
+ */
+function useScrollQuiet() {
+  useEffect(() => {
+    const root = document.documentElement;
+    let timer: number | undefined;
+    const busy = () => {
+      if (!root.classList.contains('scrolling')) {
+        root.classList.add('scrolling');
+        document.querySelectorAll('svg.iso-svg').forEach((svg) => (svg as SVGSVGElement).pauseAnimations());
+      }
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        root.classList.remove('scrolling');
+        document.querySelectorAll('.iso-wrap:not(.paused) svg.iso-svg').forEach((svg) => (svg as SVGSVGElement).unpauseAnimations());
+      }, 200);
+    };
+    const options = { passive: true, capture: true } as const;
+    document.addEventListener('scroll', busy, options);
+    document.addEventListener('wheel', busy, options);
+    document.addEventListener('touchmove', busy, options);
+    return () => {
+      window.clearTimeout(timer);
+      root.classList.remove('scrolling');
+      document.removeEventListener('scroll', busy, options);
+      document.removeEventListener('wheel', busy, options);
+      document.removeEventListener('touchmove', busy, options);
+    };
+  }, []);
 }
 
 /** Touchpad pinch arrives as ctrl+wheel (Chromium, Firefox) or gesture events (Safari); keyboard zoom stays available. */
@@ -153,7 +190,7 @@ function DesktopShell({ sections }: { sections: NavSection[] }) {
             <div className="brand-sub">Colegio Francisco Arango</div>
           </div>
         </div>
-        <MiniCampus buildings={campus.buildings} current={campus.here?.key ?? null} dark={campus.dark} onEnter={(b, source) => campus.enter(b.to, source)} />
+        <MiniCampus layout={campus.layout} current={campus.here?.key ?? null} dark={campus.dark} onEnter={(b, source) => campus.enter(b.to, source)} />
         {sections.map((section) => <Section key={section.label} section={section} campus={campus} />)}
         <div className="side-card">
           <div className="row g-12">
@@ -331,7 +368,7 @@ function MobileShell({ sections }: { sections: NavSection[] }) {
             )}
           </div>
         </div>
-        <MiniCampus buildings={campus.buildings} current={campus.here?.key ?? null} dark={campus.dark} onEnter={(b, source) => campus.enter(b.to, source)} />
+        <MiniCampus layout={campus.layout} current={campus.here?.key ?? null} dark={campus.dark} onEnter={(b, source) => campus.enter(b.to, source)} />
         {sections.map((section) => (
           <div key={section.label} className="m-section">
             <div className="eyebrow">{section.label}</div>
@@ -364,10 +401,17 @@ export function Shell() {
   const layout = useLayout();
   const sections = useMemo(() => (user ? navSections(user.role, companion.name) : []), [user, companion.name]);
   useEffect(() => configureSpeech(companion.female ? 'female' : 'male'), [companion.female]);
+  useScrollQuiet();
   const preferences = useQuery({ queryKey: ['preferences'], queryFn: () => api<{ theme: ThemeChoice }>('/api/me/preferences'), staleTime: Infinity, enabled: Boolean(user) });
   useEffect(() => {
     const theme = preferences.data?.theme;
     if (theme && theme !== 'system' && !hasDeviceTheme()) setTheme(theme);
   }, [preferences.data?.theme]);
-  return layout === 'mobile' ? <MobileShell sections={sections} /> : <DesktopShell sections={sections} />;
+  return (
+    <>
+      {layout === 'mobile' ? <MobileShell sections={sections} /> : <DesktopShell sections={sections} />}
+      <Guide />
+      {user && <PasskeyOffer key={user.id} />}
+    </>
+  );
 }

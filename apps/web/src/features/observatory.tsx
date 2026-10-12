@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { BookMarked, Database, Download, Grid3x3, History, Loader2, Lock, Search, ShieldCheck, Sparkles, TableProperties } from 'lucide-react';
@@ -79,6 +79,10 @@ function AskData({ schema }: { schema?: Schema }) {
   const history = useQuery({ queryKey: ['observatory-history'], queryFn: () => api<HistoryRow[]>('/api/observatory/history') });
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState<Answer | null>(null);
+  const numeric = useMemo(
+    () => new Set((answer?.columns ?? []).filter((c) => answer!.rows.some((r) => r[c] != null) && answer!.rows.every((r) => r[c] == null || typeof r[c] === 'number' || (typeof r[c] === 'string' && /^-?\d+([.,]\d+)?%?$/.test(r[c] as string))))),
+    [answer],
+  );
   const [failure, setFailure] = useState<{ message: string; sql?: string } | null>(null);
   const [busy, setBusy] = useState(false);
   const [showExecuted, setShowExecuted] = useState(false);
@@ -183,8 +187,8 @@ function AskData({ schema }: { schema?: Schema }) {
               {answer.rows.length ? (
                 <div className="table-wrap">
                   <table className="table">
-                    <thead><tr>{answer.columns.map((c) => <th key={c}>{c}</th>)}</tr></thead>
-                    <tbody>{answer.rows.map((row, i) => <tr key={i}>{answer.columns.map((c) => <td key={c}>{format(row[c])}</td>)}</tr>)}</tbody>
+                    <thead><tr>{answer.columns.map((c) => <th key={c} className={numeric.has(c) ? 'num' : undefined}>{c}</th>)}</tr></thead>
+                    <tbody>{answer.rows.map((row, i) => <tr key={i}>{answer.columns.map((c) => <td key={c} className={numeric.has(c) ? 'num' : undefined}>{format(row[c])}</td>)}</tr>)}</tbody>
                   </table>
                 </div>
               ) : (
@@ -230,7 +234,7 @@ function MasteryMap() {
         <div className="table-wrap">
           <table className="table heat">
             <thead>
-              <tr><th>Estudiante</th>{data.topics.map((t) => <th key={t.id} title={t.name}><span className="heat-head">{t.name}</span></th>)}<th>Promedio</th></tr>
+              <tr><th>Estudiante</th>{data.topics.map((t) => <th key={t.id} title={t.name} className="num"><span className="heat-head">{t.name}</span></th>)}<th className="num">Promedio</th></tr>
             </thead>
             <tbody>
               {data.students.map((s) => (
@@ -240,7 +244,7 @@ function MasteryMap() {
                     const level = s.levels[t.id];
                     return <td key={t.id} className="heat-cell" style={level ? { background: `hsl(${(level - 1) * 13} 75% ${92 - level * 2}%)` } : undefined}>{level ?? '·'}</td>;
                   })}
-                  <td><b>{s.average ?? '—'}</b></td>
+                  <td className="num"><b>{s.average ?? '—'}</b></td>
                 </tr>
               ))}
               <tr>

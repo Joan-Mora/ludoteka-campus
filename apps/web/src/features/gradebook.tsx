@@ -127,9 +127,9 @@ function Grades({ book }: { book: Book }) {
             <thead>
               <tr>
                 <th>Estudiante</th>
-                {book.categories.map((c) => <th key={c.source} style={{ textAlign: 'right' }}>{c.name}<div style={{ fontWeight: 600, textTransform: 'none', letterSpacing: 0 }}>{c.weight} %</div></th>)}
-                <th style={{ textAlign: 'right' }}>Definitiva</th>
-                <th>Desempeño</th>
+                {book.categories.map((c) => <th key={c.source} className="num">{c.name}<div style={{ fontWeight: 600 }}>{c.weight} %</div></th>)}
+                <th className="num">Definitiva</th>
+                <th className="num">Desempeño</th>
               </tr>
             </thead>
             <tbody>
@@ -143,7 +143,7 @@ function Grades({ book }: { book: Book }) {
                   </td>
                   {book.categories.map((c) => <td key={c.source} className={`grade-cell ${s.grades[c.source] != null && s.grades[c.source]! < 3 ? 'low' : ''}`}>{fmt(s.grades[c.source])}</td>)}
                   <td className={`grade-cell final ${s.final != null && s.final < 3 ? 'low' : ''}`}>{fmt(s.final)}</td>
-                  <td><span className={`chip ${perfTone[s.performance] ?? ''}`}>{s.performance}</span></td>
+                  <td className="num"><span className={`chip ${perfTone[s.performance] ?? ''}`}>{s.performance}</span></td>
                 </tr>
               ))}
             </tbody>
@@ -413,9 +413,9 @@ function RubricMatrix({ courseId, rubric, students, readOnly }: { courseId: stri
           <thead>
             <tr>
               <th>Estudiante</th>
-              {rubric.criteria.map((c) => <th key={c.id} style={{ textAlign: 'center' }}>{c.name}<div style={{ fontWeight: 600, textTransform: 'none', letterSpacing: 0 }}>máx. {c.max_points}</div></th>)}
-              <th style={{ textAlign: 'right' }}>Nota</th>
-              <th />
+              {rubric.criteria.map((c) => <th key={c.id} className="num">{c.name}<div style={{ fontWeight: 600 }}>máx. {c.max_points}</div></th>)}
+              <th className="num">Nota</th>
+              <th className="act" />
             </tr>
           </thead>
           <tbody>

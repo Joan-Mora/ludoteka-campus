@@ -8,12 +8,14 @@ import {
   meetingResponseSchema,
   meetingSchema,
   signatureDecisionSchema,
+  staffMessageSchema,
 } from '@eduquest/contracts';
 import { CurrentUser, Roles, type AuthUser } from '../../core/auth/auth.decorators';
 import { ZodPipe } from '../../core/common/zod.pipe';
 import { CoordinationService } from './coordination.service';
 import { FamilyService } from './family.service';
 import { RectoriaService } from './rectoria.service';
+import { StaffMessagesService } from './staff-messages.service';
 
 const uuid = new ParseUUIDPipe();
 const digestSchema = z.object({ enabled: z.boolean() });
@@ -24,6 +26,7 @@ export class GovernanceController {
     private readonly coordination: CoordinationService,
     private readonly rectoria: RectoriaService,
     private readonly family: FamilyService,
+    private readonly staff: StaffMessagesService,
   ) {}
 
   /* ---------- Coordinación ---------- */
@@ -169,5 +172,37 @@ export class GovernanceController {
   @Post('messages')
   post(@CurrentUser() user: AuthUser, @Body(new ZodPipe(guardianMessageSchema)) body: z.infer<typeof guardianMessageSchema>) {
     return this.family.post(user, body);
+  }
+
+  /* ---------- Mensajes entre el personal ---------- */
+
+  @Roles('teacher', 'coordinator', 'rector', 'admin')
+  @Get('staff-messages/contacts')
+  staffContacts(@CurrentUser() user: AuthUser) {
+    return this.staff.contacts(user);
+  }
+
+  @Roles('teacher', 'coordinator', 'rector', 'admin')
+  @Get('staff-messages/threads')
+  staffThreads(@CurrentUser() user: AuthUser) {
+    return this.staff.threads(user);
+  }
+
+  @Roles('teacher', 'coordinator', 'rector', 'admin')
+  @Get('staff-messages/unread')
+  async staffUnread(@CurrentUser() user: AuthUser) {
+    return { unread: await this.staff.unreadCount(user) };
+  }
+
+  @Roles('teacher', 'coordinator', 'rector', 'admin')
+  @Get('staff-messages/:userId')
+  staffMessages(@CurrentUser() user: AuthUser, @Param('userId', uuid) userId: string) {
+    return this.staff.messages(user, userId);
+  }
+
+  @Roles('teacher', 'coordinator', 'rector', 'admin')
+  @Post('staff-messages')
+  staffPost(@CurrentUser() user: AuthUser, @Body(new ZodPipe(staffMessageSchema)) body: z.infer<typeof staffMessageSchema>) {
+    return this.staff.post(user, body);
   }
 }

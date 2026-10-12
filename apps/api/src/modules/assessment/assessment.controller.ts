@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { answerSchema, assessmentSchema, liveCreateSchema, liveJoinSchema, questionSchema } from '@eduquest/contracts';
 import { CurrentUser, Roles, type AuthUser } from '../../core/auth/auth.decorators';
 import { ZodPipe } from '../../core/common/zod.pipe';
@@ -73,16 +73,30 @@ export class AssessmentController {
   }
 
   @Roles('teacher', 'admin')
+  @Get('live/hostable')
+  hostable(@CurrentUser() user: AuthUser) {
+    return this.assessment.hostable(user);
+  }
+
+  @Roles('teacher', 'admin')
   @Post('live')
   open(@CurrentUser() user: AuthUser, @Body(new ZodPipe(liveCreateSchema)) body: { assessmentId: string }) {
     return this.assessment.createLive(user, body.assessmentId);
   }
 
+  @Roles('student')
   @Post('live/join')
   join(@CurrentUser() user: AuthUser, @Body(new ZodPipe(liveJoinSchema)) body: { code: string }) {
     return this.assessment.joinLive(user, body.code);
   }
 
+  @Roles('teacher', 'admin')
+  @Get('live/:id/state')
+  state(@CurrentUser() user: AuthUser, @Param('id', new ParseUUIDPipe()) id: string) {
+    return this.assessment.liveState(user, id);
+  }
+
+  @Roles('student', 'teacher', 'admin')
   @Get('live/:code')
   live(@Param('code') code: string) {
     return this.assessment.liveByCode(code);
@@ -90,8 +104,14 @@ export class AssessmentController {
 
   @Roles('teacher', 'admin')
   @Post('live/:id/next')
-  next(@CurrentUser() user: AuthUser, @Param('id') id: string) {
+  next(@CurrentUser() user: AuthUser, @Param('id', new ParseUUIDPipe()) id: string) {
     return this.assessment.advanceLive(user, id);
+  }
+
+  @Roles('teacher', 'admin')
+  @Post('live/:id/end')
+  end(@CurrentUser() user: AuthUser, @Param('id', new ParseUUIDPipe()) id: string) {
+    return this.assessment.endLive(user, id);
   }
 
   @Roles('student')

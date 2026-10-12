@@ -16,15 +16,18 @@ import {
   VolumeX,
   type LucideIcon,
 } from 'lucide-react';
+import type { Role } from '@eduquest/contracts';
 import { api } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
 import { matchCommand, useDictation, useSpeech, type VoiceCommand } from '@/shared/voice';
 import { useCompanion, type Companion, type CompanionId } from '@/shared/companion';
-import { buildingsFor, G, type Building, type BuildingKey } from '@/shared/buildings';
+import { campusFor, ROAD, roofTop, type Building, type BuildingKey, type CampusLayout } from '@/shared/buildings';
 import { BuildingShape, iso, mix, pts, type Paint } from '@/ui/iso';
+import { campusView, Roads } from '@/ui/campus-mini';
 import { enterBuilding } from '@/shared/enter';
+import { openGuide } from '@/shared/guide';
 
-export { buildingsFor, type BuildingKey } from '@/shared/buildings';
+export { buildingsFor, campusFor, type BuildingKey } from '@/shared/buildings';
 
 /* ---------- Day / night ---------- */
 
@@ -162,20 +165,11 @@ function Lamp({ x, y, paint }: { x: number; y: number; paint: Paint }) {
   );
 }
 
-const trees: [number, number, 0 | 1][] = [
-  [0.5, 0.5, 0], [0.5, 4.5, 1], [0.5, 9, 0], [0.6, 13.3, 1], [4.2, 0.5, 0], [8.6, 0.6, 1], [13.4, 0.6, 0], [13.3, 4.5, 1],
-  [13.4, 8.4, 0], [4.3, 13.4, 1], [8.8, 13.3, 0], [13.4, 13.4, 1], [4, 10.8, 0], [3.9, 4.2, 1], [10.4, 4.2, 0], [3.4, 8.8, 1],
-  [9.9, 8.4, 0], [2.3, 4.6, 0], [11.9, 4.7, 1],
-];
-const lamps: [number, number][] = [[4.1, 6.1], [9.7, 6.1], [4.1, 8.1], [9.7, 8.1], [6.1, 3.3], [8.1, 10.5], [3.3, 6.2], [10.7, 7.9]];
-
 /* ---------- Isometric campus ---------- */
-
-const VIEW = { x: -430, y: -110, w: 860, h: 640 };
 
 /** Fixed silhouette covering the building at rest and lifted, so hovering never moves the target out from under the cursor. */
 function hitArea(b: Building): [number, number][] {
-  const top = b.h + (b.shape === 'board' || b.shape === 'stadium' ? 1.6 : 1.9);
+  const top = roofTop(b) + 0.35;
   const corners: [number, number][] = [];
   for (const [x, y] of [[b.x - 0.2, b.y - 0.2], [b.x + b.w + 0.2, b.y - 0.2], [b.x + b.w + 0.2, b.y + b.d + 0.2], [b.x - 0.2, b.y + b.d + 0.2]] as const) {
     corners.push(iso(x, y, 0), iso(x, y, top));
@@ -194,8 +188,24 @@ function hitArea(b: Building): [number, number][] {
   return [...half(sorted), ...half([...sorted].reverse())];
 }
 
-export function IsoCampus({ buildings, counts, pending, phase, interactive = true, onPick }: {
-  buildings: Building[];
+/** Pauses SVG and CSS animations while the map is off screen, so they never compete with scrolling. */
+function useOffscreenPause(ref: React.RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const observer = new IntersectionObserver(([entry]) => {
+      const visible = Boolean(entry?.isIntersecting);
+      el.classList.toggle('paused', !visible);
+      const svg = el.querySelector('svg');
+      if (svg) visible ? svg.unpauseAnimations() : svg.pauseAnimations();
+    });
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref]);
+}
+
+export function IsoCampus({ layout, counts, pending, phase, interactive = true, onPick }: {
+  layout: CampusLayout;
   counts?: CampusCounts;
   pending?: CampusPending;
   phase: Phase;
@@ -204,6 +214,8 @@ export function IsoCampus({ buildings, counts, pending, phase, interactive = tru
 }) {
   const [hover, setHover] = useState<BuildingKey | null>(null);
   const wrap = useRef<HTMLDivElement>(null);
+  const { buildings, gx, gy, plaza: square } = layout;
+  const VIEW = useMemo(() => campusView(layout, 34), [layout]);
   const [scale, setScale] = useState(1);
   useEffect(() => {
     const el = wrap.current;
@@ -214,12 +226,13 @@ export function IsoCampus({ buildings, counts, pending, phase, interactive = tru
     });
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [VIEW.w]);
+  useOffscreenPause(wrap);
   const paint: Paint = useMemo(() => ({ tone: toner(phase), night: phase === 'night' }), [phase]);
   const night = phase === 'night';
 
   const grass = paint.tone('#86dc8f');
-  const plaza = paint.tone('#efe6d2');
+  const stone = paint.tone('#efe6d2');
   const sideA = paint.tone('#c2925e');
   const sideB = paint.tone('#9a6d42');
   const P = (x: number, y: number) => iso(x, y, 0);
@@ -230,6 +243,7 @@ export function IsoCampus({ buildings, counts, pending, phase, interactive = tru
       <g
         key={b.key}
         className={`iso-b${interactive ? ' live' : ''}${active ? ' on' : ''}`}
+        data-building={b.key}
         role={interactive ? 'link' : undefined}
         tabIndex={interactive ? 0 : undefined}
         aria-label={interactive ? `${b.name}: ${statusOf(b, counts?.[b.key])}` : undefined}
@@ -251,17 +265,24 @@ export function IsoCampus({ buildings, counts, pending, phase, interactive = tru
 
   const items: { depth: number; node: ReactNode }[] = [];
   buildings.forEach((b, i) => items.push({ depth: b.x + b.w / 2 + b.y + b.d / 2, node: renderBuilding(b, i) }));
-  trees.forEach(([x, y, k]) => items.push({ depth: x + y, node: <Tree key={`t${x}-${y}`} x={x} y={y} kind={k} paint={paint} /> }));
-  lamps.forEach(([x, y]) => items.push({ depth: x + y, node: <Lamp key={`l${x}-${y}`} x={x} y={y} paint={paint} /> }));
+  layout.trees.forEach(([x, y, k]) => items.push({ depth: x + y, node: <Tree key={`t${x}-${y}`} x={x} y={y} kind={k} paint={paint} /> }));
+  layout.lamps.forEach(([x, y]) => items.push({ depth: x + y, node: <Lamp key={`l${x}-${y}`} x={x} y={y} paint={paint} /> }));
   const scenery = items.sort((a, b) => a.depth - b.depth).map((item) => item.node);
 
-  const walkLoop = [P(4.5, 4.4), P(9.3, 4.4), P(9.3, 9.2), P(4.5, 9.2)];
-  const loopD = `M${walkLoop.map((p) => p.join(',')).join(' L')} Z`;
+  // Students walk on the street ring around the plaza.
+  const r0x = square.x - ROAD / 2;
+  const r0y = square.y - ROAD / 2;
+  const r1x = square.x + square.size + ROAD / 2;
+  const r1y = square.y + square.size + ROAD / 2;
+  const walkLoop = [P(r0x, r0y), P(r1x, r0y), P(r1x, r1y), P(r0x, r1y)];
+  const loopD = `M${walkLoop.map((p) => p.map((v) => v.toFixed(1)).join(',')).join(' L')} Z`;
   const walkers = ['#ff5d73', '#7c5cff', '#ffc83d', '#19c39c', '#3ab8ff'];
+  const [fx, fy] = P(square.x + square.size / 2, square.y + square.size / 2);
+  const inset = 0.45;
 
   return (
     <div className="iso-wrap" ref={wrap} style={{ '--iso-scale': scale } as CSSProperties}>
-      <svg className="iso-svg" viewBox={`${VIEW.x} ${VIEW.y} ${VIEW.w} ${VIEW.h}`} role="img" aria-label="Mapa del campus Ludoteka">
+      <svg className="iso-svg" viewBox={`${VIEW.x.toFixed(1)} ${VIEW.y.toFixed(1)} ${VIEW.w.toFixed(1)} ${VIEW.h.toFixed(1)}`} role="img" aria-label="Mapa del campus Ludoteka">
         <defs>
           <filter id="glow" x="-80%" y="-80%" width="260%" height="260%">
             <feGaussianBlur stdDeviation="2.4" result="b" />
@@ -271,28 +292,25 @@ export function IsoCampus({ buildings, counts, pending, phase, interactive = tru
           <linearGradient id="water" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stopColor={paint.tone('#7fd6ff')} /><stop offset="100%" stopColor={paint.tone('#3a9bff')} /></linearGradient>
         </defs>
 
-        <polygon points={pts([P(0, G), P(G, G), iso(G, G, -0.7), iso(0, G, -0.7)])} fill={sideA} />
-        <polygon points={pts([P(G, 0), P(G, G), iso(G, G, -0.7), iso(G, 0, -0.7)])} fill={sideB} />
-        <polygon points={pts([iso(0, G, -0.7), iso(G, G, -0.7), iso(G, G, -0.9), iso(0, G, -0.9)])} fill={paint.tone('#7a5232')} />
-        <polygon points={pts([iso(G, 0, -0.7), iso(G, G, -0.7), iso(G, G, -0.9), iso(G, 0, -0.9)])} fill={paint.tone('#5e3e25')} />
-        <polygon points={pts([P(0, 0), P(G, 0), P(G, G), P(0, G)])} fill={grass} />
-        <polygon points={pts([P(0, 0), P(G, 0), P(G, 0.12), P(0.12, 0.12), P(0.12, G), P(0, G)])} fill={paint.tone('#a6eaa9')} />
+        <polygon points={pts([P(0, gy), P(gx, gy), iso(gx, gy, -0.7), iso(0, gy, -0.7)])} fill={sideA} />
+        <polygon points={pts([P(gx, 0), P(gx, gy), iso(gx, gy, -0.7), iso(gx, 0, -0.7)])} fill={sideB} />
+        <polygon points={pts([iso(0, gy, -0.7), iso(gx, gy, -0.7), iso(gx, gy, -0.9), iso(0, gy, -0.9)])} fill={paint.tone('#7a5232')} />
+        <polygon points={pts([iso(gx, 0, -0.7), iso(gx, gy, -0.7), iso(gx, gy, -0.9), iso(gx, 0, -0.9)])} fill={paint.tone('#5e3e25')} />
+        <polygon points={pts([P(0, 0), P(gx, 0), P(gx, gy), P(0, gy)])} fill={grass} />
+        <polygon points={pts([P(0, 0), P(gx, 0), P(gx, 0.12), P(0.12, 0.12), P(0.12, gy), P(0, gy)])} fill={paint.tone('#a6eaa9')} />
 
-        <polygon points={pts([P(0, 6.5), P(G, 6.5), P(G, 7.3), P(0, 7.3)])} fill={plaza} />
-        <polygon points={pts([P(6.5, 0), P(7.3, 0), P(7.3, G), P(6.5, G)])} fill={plaza} />
-        <path d={loopD} fill="none" stroke={plaza} strokeWidth={13} strokeLinejoin="round" />
+        <Roads layout={layout} fill={stone} />
+        <polygon points={pts([P(square.x, square.y), P(square.x + square.size, square.y), P(square.x + square.size, square.y + square.size), P(square.x, square.y + square.size)])} fill={stone} />
+        <polygon points={pts([P(square.x + inset, square.y + inset), P(square.x + square.size - inset, square.y + inset), P(square.x + square.size - inset, square.y + square.size - inset), P(square.x + inset, square.y + square.size - inset)])} fill="none" stroke={paint.tone('#d9ccb0')} strokeWidth={1.2} strokeDasharray="4 6" />
         <path d={loopD} fill="none" stroke={paint.tone('#d9ccb0')} strokeWidth={1} strokeDasharray="3 7" />
 
-        {(() => {
-          const [px, py] = iso(4.9, 2, 0);
-          return (
-            <g>
-              <ellipse cx={px} cy={py} rx={34} ry={17} fill={paint.tone('#5a8f5e')} />
-              <ellipse cx={px} cy={py - 1} rx={30} ry={14.5} fill="url(#water)" />
-              <ellipse className="iso-ripple" cx={px - 6} cy={py - 3} rx={8} ry={3} fill="none" stroke="#fff" strokeOpacity={0.6} />
-            </g>
-          );
-        })()}
+        <g aria-hidden>
+          <ellipse cx={fx} cy={fy} rx={40} ry={20} fill={paint.tone('#b9ab8e')} />
+          <ellipse cx={fx} cy={fy - 2} rx={35} ry={17} fill="url(#water)" />
+          <rect x={fx - 4} y={fy - 22} width={8} height={20} rx={3} fill={paint.tone('#d9ccb0')} />
+          <ellipse cx={fx} cy={fy - 22} rx={12} ry={5} fill={paint.tone('#efe6d2')} />
+          <ellipse className="iso-ripple" cx={fx - 10} cy={fy - 4} rx={8} ry={3} fill="none" stroke="#fff" strokeOpacity={0.6} />
+        </g>
 
         {walkers.map((c, i) => (
           <g key={c}>
@@ -306,7 +324,7 @@ export function IsoCampus({ buildings, counts, pending, phase, interactive = tru
       </svg>
       <div className="iso-labels">
         {buildings.map((b) => {
-          const top = b.shape === 'stadium' ? iso(b.x + b.w / 2, b.y + b.d / 2, b.h + 1.6) : iso(b.x + b.w / 2, b.y + b.d / 2, b.h + (b.shape === 'board' ? 1.6 : b.shape === 'school' ? 1.85 : b.shape === 'tower' ? 1.9 : 1.4));
+          const top = iso(b.x + b.w / 2, b.y + b.d / 2, roofTop(b) + 0.25);
           const n = counts?.[b.key] ?? 0;
           const active = hover === b.key;
           return (
@@ -386,33 +404,56 @@ function tipsFor(role: string | undefined, counts: Partial<Record<BuildingKey, n
   const n = (k: BuildingKey) => counts[k] ?? 0;
   const plural = (v: number, one: string, many: string) => `${v} ${v === 1 ? one : many}`;
   const greet = phase === 'night' ? `Buenas noches, ${name}.` : phase === 'dusk' ? `Buenas tardes, ${name}.` : `¡Hola, ${name}!`;
+  const add = (k: BuildingKey, text: string) => { if (by(k)) tips.push({ text, to: by(k)!.to }); };
 
   if (role === 'student') {
-    if (n('aula')) tips.push({ text: `${greet} Esta semana tienes ${plural(n('aula'), 'pendiente', 'pendientes')} en el Aula entre tareas y lecciones. ¿Arrancamos?`, to: by('aula')?.to });
-    if (n('trofeos')) tips.push({ text: `Ganaste ${plural(n('trofeos'), 'insignia nueva', 'insignias nuevas')}. Pasa por la Sala de trofeos a verlas.`, to: by('trofeos')?.to });
-    if (n('biblioteca')) tips.push({ text: `La Biblioteca tiene ${plural(n('biblioteca'), 'recurso nuevo', 'recursos nuevos')} desde tu última visita.`, to: by('biblioteca')?.to });
-    if (n('arena')) tips.push({ text: `¡Hay ${plural(n('arena'), 'sala abierta', 'salas abiertas')} en la Arena! Únete con tu equipo antes de que empiece.`, to: by('arena')?.to });
-    if (n('cuaderno')) tips.push({ text: `Tu Cuaderno tiene ${plural(n('cuaderno'), 'tarjeta', 'tarjetas')} para repasar hoy. Cinco minutos bastan para no olvidarlo.`, to: by('cuaderno')?.to });
-    if (n('ruta')) tips.push({ text: `En Mi ruta te esperan ${plural(n('ruta'), 'reto', 'retos')} hechos a tu medida.`, to: by('ruta')?.to });
-    if (n('cartelera')) tips.push({ text: `Hay ${plural(n('cartelera'), 'aviso nuevo', 'avisos nuevos')} en la Cartelera.`, to: by('cartelera')?.to });
-    if (!tips.length) tips.push({ text: `${greet} Estás al día. ¿Exploramos la Biblioteca o me haces una pregunta en el Laboratorio?`, to: by('lab')?.to });
-    tips.push({ text: 'Si no entiendes un tema, pregúntame en el Laboratorio IA. Te explico paso a paso sin darte la respuesta de una.', to: by('lab')?.to });
+    if (n('aula')) add('aula', `${greet} Esta semana tienes ${plural(n('aula'), 'pendiente', 'pendientes')} en Mis cursos entre tareas y lecciones. ¿Arrancamos?`);
+    if (n('envivo')) add('envivo', `Tu docente abrió ${plural(n('envivo'), 'una sala en vivo', 'salas en vivo')}. Entra con el código que proyecta en clase.`);
+    if (n('arena')) add('arena', `¡Hay ${plural(n('arena'), 'sala abierta', 'salas abiertas')} en la Arena! Únete con tu equipo antes de que empiece.`);
+    if (n('cuaderno')) add('cuaderno', `Tu Cuaderno tiene ${plural(n('cuaderno'), 'tarjeta', 'tarjetas')} para repasar hoy. Cinco minutos bastan.`);
+    if (n('ruta')) add('ruta', `En Mi ruta te esperan ${plural(n('ruta'), 'reto', 'retos')} hechos a tu medida.`);
+    if (n('trofeos')) add('trofeos', `Ganaste ${plural(n('trofeos'), 'insignia nueva', 'insignias nuevas')}. Pasa por la Sala de trofeos a verlas.`);
+    if (n('biblioteca')) add('biblioteca', `La Biblioteca tiene ${plural(n('biblioteca'), 'recurso nuevo', 'recursos nuevos')} desde tu última visita.`);
+    if (n('cartelera')) add('cartelera', `Hay ${plural(n('cartelera'), 'aviso nuevo', 'avisos nuevos')} en la Cartelera.`);
+    if (!tips.length) add('arcade', `${greet} Estás al día. ¿Un reto rápido en el Arcade?`);
+    add('tutor', `Si no entiendes un tema, pregúntame en el Laboratorio IA. Te explico paso a paso sin darte la respuesta de una.`);
   } else if (role === 'teacher') {
-    tips.push(n('aula')
-      ? { text: `${greet} Tienes ${plural(n('aula'), 'entrega', 'entregas')} por calificar en el Aula.`, to: by('aula')?.to }
-      : { text: `${greet} No hay entregas pendientes. Buen momento para preparar una evaluación en el Taller docente.`, to: by('cuaderno')?.to });
-    tips.push({ text: 'En el Observatorio puedes preguntarme por tus cursos en lenguaje natural, por ejemplo: «¿quiénes no han entregado esta semana?».', to: by('ruta')?.to });
-    tips.push({ text: 'Abre una sala en la Arena y proyecta el código QR: los equipos compiten en vivo.', to: by('arena')?.to });
+    add('aula', n('aula') ? `${greet} Tienes ${plural(n('aula'), 'entrega', 'entregas')} por calificar en Mis cursos.` : `${greet} No hay entregas pendientes. Buen momento para preparar una evaluación.`);
+    add('envivo', 'En la Sala en vivo eliges una evaluación publicada, proyectas el código y avanzas pregunta por pregunta mientras ves quién respondió.');
+    if (n('mensajes')) add('mensajes', `Tienes ${plural(n('mensajes'), 'mensaje sin leer', 'mensajes sin leer')} de familias o colegas.`);
+    add('banco', 'Guarda tus preguntas en el Banco: luego las reutilizas en quices, exámenes y salas en vivo.');
+    add('observatorio', 'En el Observatorio pregunta por tus cursos en lenguaje natural, por ejemplo: «¿quiénes no han entregado esta semana?».');
+  } else if (role === 'coordinator') {
+    add('alertas', n('alertas') ? `${greet} Hay ${plural(n('alertas'), 'alerta abierta', 'alertas abiertas')} esperando seguimiento.` : `${greet} No hay alertas abiertas. Revisa la asistencia consolidada de la semana.`);
+    if (n('citaciones')) add('citaciones', `Tienes ${plural(n('citaciones'), 'citación próxima', 'citaciones próximas')} con acudientes.`);
+    add('asistencia', 'En Asistencia ves qué estudiantes superan el umbral de faltas y puedes citar a su acudiente desde ahí.');
+    if (n('mensajes')) add('mensajes', `Tienes ${plural(n('mensajes'), 'mensaje sin leer', 'mensajes sin leer')} de colegas.`);
+  } else if (role === 'rector') {
+    add('firmas', n('firmas') ? `${greet} Hay ${plural(n('firmas'), 'documento', 'documentos')} esperando tu firma.` : `${greet} No hay documentos por firmar.`);
+    add('tablero', 'En el Tablero comparas los grupos del periodo y publicas comunicados oficiales.');
+    if (n('mensajes')) add('mensajes', `Tienes ${plural(n('mensajes'), 'mensaje sin leer', 'mensajes sin leer')}.`);
+    add('mensajes', 'Desde Mensajes puedes escribirle a cualquier docente o directivo; verás su nombre, su rol y lo que enseña.');
   } else if (role === 'guardian') {
-    tips.push({ text: `${greet} En Seguimiento ves el avance, las alertas y los boletines de tus acudidos.`, to: by('aula')?.to });
-    if (n('cartelera')) tips.push({ text: `El colegio publicó ${plural(n('cartelera'), 'aviso', 'avisos')} que aún no lees.`, to: by('cartelera')?.to });
-  } else {
-    tips.push({ text: `${greet} El campus registra hoy actividad en tiempo real; revisa los indicadores en Certificados y reportes.`, to: by('trofeos')?.to });
-    tips.push({ text: 'Pregúntale al Observatorio cosas como «promedio por grado este periodo» y te respondo con una consulta segura de solo lectura.', to: by('ruta')?.to });
+    add('familia', n('familia') ? `${greet} Hay ${plural(n('familia'), 'novedad', 'novedades')} de tus hijos por atender.` : `${greet} En Mis hijos ves notas, asistencia, alertas y citaciones de cada uno.`);
+    if (n('mensajes')) add('mensajes', `Tienes ${plural(n('mensajes'), 'mensaje sin leer', 'mensajes sin leer')} de los docentes.`);
+    if (n('cartelera')) add('cartelera', `El colegio publicó ${plural(n('cartelera'), 'aviso', 'avisos')} que aún no lees.`);
+  } else if (role === 'admin') {
+    add('usuarios', n('usuarios') ? `${greet} Hay ${plural(n('usuarios'), 'solicitud de datos', 'solicitudes de datos')} por atender.` : `${greet} En Usuarios creas cuentas, cambias roles e importas listas.`);
+    add('institucion', 'En Institución organizas grados, grupos, asignaturas y la carga de cada docente.');
+    add('observatorio', 'Pregúntale al Observatorio cosas como «promedio por grado este periodo»: respondo con una consulta segura de solo lectura.');
   }
-  tips.push({ text: `Soy ${companion.name}, tu ${companion.noun} IA. Tócame el micrófono y di, por ejemplo, «abre la biblioteca» o «ir a la arena». Te llevo de una.` });
+  tips.push({ text: `Soy ${companion.name}, tu ${companion.noun}. Tócame cuando quieras: te explico dónde estás y te llevo a donde necesites.` });
   return tips;
 }
+
+const ROLE_INTRO: Record<string, string> = {
+  student: 'Tu campus del Colegio Francisco Arango: estudia, practica y juega.',
+  teacher: 'Tu campus docente: cursos, notas, salas en vivo y comunicación con familias y colegas.',
+  coordinator: 'Campus de coordinación: alertas, asistencia, citaciones y consolidado académico.',
+  rector: 'Campus de rectoría: indicadores, firmas, reportes y comunicados oficiales.',
+  guardian: 'Campus de familia: el avance de tus hijos y la comunicación con el colegio.',
+  admin: 'Campus de administración: cuentas, roles y estructura del colegio.',
+};
 
 export function useCampusData() {
   const { user } = useAuth();
@@ -432,7 +473,7 @@ export function MobileHub() {
   const now = useClock();
   const phase = phaseOf(bogotaHour(now));
   const meta = phaseMeta[phase];
-  const buildings = useMemo(() => buildingsFor(user?.role, companion.name), [user?.role, companion.name]);
+  const buildings = useMemo(() => campusFor(user?.role, companion.name).buildings, [user?.role, companion.name]);
   const data = useCampusData();
   const counts = data.data?.buildings ?? {};
   const details = data.data?.pending ?? {};
@@ -450,13 +491,13 @@ export function MobileHub() {
         <span className="campus-chip"><PhaseIcon size={14} /> {capitalize(now.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Bogota' }))}</span>
         <h1>{meta.greet}, {firstName}!</h1>
         <div className="hub-pulse">
-          <span className="campus-chip live"><i /> {data.data?.pulse.online ?? 0} en línea</span>
-          <span className="campus-chip">{data.data?.pulse.lessonsToday ?? 0} lecciones hoy</span>
+          {user?.role !== 'guardian' && <span className="campus-chip live"><i /> {data.data?.pulse.online ?? 0} en línea</span>}
+          {pulseFor(user?.role, data.data?.pulse, counts).slice(0, 1).map((text) => <span key={text} className="campus-chip">{text}</span>)}
         </div>
       </section>
 
       <section className="hub-companion">
-        <button className="luka-btn" onClick={() => navigate('/app/tutor')} aria-label={`Hablar con ${companion.name}`}>
+        <button className="luka-btn" onClick={() => openGuide()} aria-label={`Abrir la guía de ${companion.name}`}>
           <Luka mood={speech.speaking ? 'talking' : 'idle'} size={64} variant={companion.id} />
         </button>
         <div style={{ minWidth: 0, flex: 1 }}>
@@ -508,6 +549,29 @@ export function MobileHub() {
   );
 }
 
+type CampusPulse = { online: number; lessonsToday: number; attemptsToday: number };
+
+/** What each role cares about at a glance; classroom activity only means something to students and teachers. */
+function pulseFor(role: Role | undefined, pulse: CampusPulse | undefined, counts: Partial<Record<BuildingKey, number>>): string[] {
+  const n = (k: BuildingKey) => counts[k] ?? 0;
+  const plural = (value: number, one: string, many: string) => `${value} ${value === 1 ? one : many}`;
+  switch (role) {
+    case 'student':
+    case 'teacher':
+      return [plural(pulse?.lessonsToday ?? 0, 'lección hoy', 'lecciones hoy'), plural(pulse?.attemptsToday ?? 0, 'intento hoy', 'intentos hoy')];
+    case 'coordinator':
+      return [plural(n('alertas'), 'alerta abierta', 'alertas abiertas'), plural(n('citaciones'), 'citación esta semana', 'citaciones esta semana')];
+    case 'rector':
+      return [plural(n('firmas'), 'documento por firmar', 'documentos por firmar'), plural(n('mensajes'), 'mensaje sin leer', 'mensajes sin leer')];
+    case 'guardian':
+      return [plural(n('familia'), 'asunto por atender', 'asuntos por atender'), plural(n('mensajes'), 'mensaje sin leer', 'mensajes sin leer')];
+    case 'admin':
+      return [plural(n('usuarios'), 'solicitud de datos', 'solicitudes de datos'), plural(n('mensajes'), 'mensaje sin leer', 'mensajes sin leer')];
+    default:
+      return [];
+  }
+}
+
 export function CampusHome() {
   const { user } = useAuth();
   const companion = useCompanion();
@@ -517,7 +581,8 @@ export function CampusHome() {
   const autoPhase = phaseOf(bogotaHour(now));
   const phase = override ?? autoPhase;
   const meta = phaseMeta[phase];
-  const buildings = useMemo(() => buildingsFor(user?.role, companion.name), [user?.role, companion.name]);
+  const layout = useMemo(() => campusFor(user?.role, companion.name), [user?.role, companion.name]);
+  const buildings = layout.buildings;
   const data = useCampusData();
   const counts = data.data?.buildings ?? {};
   const firstName = user?.fullName.split(' ')[0] ?? '';
@@ -572,12 +637,11 @@ export function CampusHome() {
         <div>
           <span className="campus-chip">{capitalize(now.toLocaleDateString('es-CO', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'America/Bogota' }))}</span>
           <h1>{meta.greet}, {firstName}!</h1>
-          <p>Bienvenido al campus del Colegio Francisco Arango. Toca un edificio para entrar.</p>
+          <p>{ROLE_INTRO[user?.role ?? 'student']} Toca un edificio para entrar.</p>
         </div>
         <div className="campus-hud">
-          <span className="campus-chip live"><i /> {data.data?.pulse.online ?? 0} en línea</span>
-          <span className="campus-chip">{data.data?.pulse.lessonsToday ?? 0} lecciones hoy</span>
-          <span className="campus-chip">{data.data?.pulse.attemptsToday ?? 0} intentos hoy</span>
+          {user?.role !== 'guardian' && <span className="campus-chip live"><i /> {data.data?.pulse.online ?? 0} en línea</span>}
+          {pulseFor(user?.role, data.data?.pulse, counts).map((text) => <span key={text} className="campus-chip">{text}</span>)}
           <button className="campus-chip btnish" title="Ver el campus en otro momento del día" onClick={() => setOverride((o) => (o === 'night' ? null : cycle[o === null ? 0 : cycle.indexOf(o) + 1]!))}>
             <PhaseIcon size={14} /> {time} · {meta.label}{override ? ' (vista previa)' : ''}
           </button>
@@ -585,7 +649,7 @@ export function CampusHome() {
       </header>
 
       <div className="campus-map">
-        <IsoCampus buildings={buildings} counts={counts} pending={data.data?.pending} phase={phase} onPick={(b, source) => enterBuilding(navigate, b.to, source)} />
+        <IsoCampus layout={layout} counts={counts} pending={data.data?.pending} phase={phase} onPick={(b, source) => enterBuilding(navigate, b.to, source)} />
       </div>
 
       <ul className="campus-list">
@@ -605,7 +669,7 @@ export function CampusHome() {
       </ul>
 
       <div className="campus-luka">
-        <button className="luka-btn" onClick={() => navigate('/app/tutor')} title={`Hablar con ${companion.name} en el Laboratorio IA`}><Luka mood={mood} variant={companion.id} /></button>
+        <button className="luka-btn" onClick={() => openGuide('tour')} title={`Recorrido del campus con ${companion.name}`}><Luka mood={mood} variant={companion.id} /></button>
         <AnimatePresence mode="wait">
           <motion.div key={tip + (heard ?? '')} className="luka-bubble" initial={{ opacity: 0, y: 8, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6 }}>
             <div className="luka-name"><Sparkles size={13} /> {companion.name} · tu {companion.noun} IA</div>

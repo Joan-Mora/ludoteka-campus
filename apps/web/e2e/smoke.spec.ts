@@ -106,6 +106,32 @@ test('llave de acceso: registrar en Ajustes y entrar sin contraseña', async ({ 
   await fresh.close();
 });
 
+test('llave de acceso: el inicio la ofrece tras el código y se activa en un toque', async ({ browser }, info) => {
+  test.skip(info.project.name !== 'android' || (process.env.E2E_TARGET ?? 'local') !== 'local', 'autenticador virtual de Chromium, contra el servidor local');
+  const signed = await signedContext(browser, info, 'teacher');
+  test.skip(!signed, 'sin sesión de docente');
+  const page = await signed!.newPage();
+  const cdp = await signed!.newCDPSession(page);
+  await cdp.send('WebAuthn.enable');
+  await cdp.send('WebAuthn.addVirtualAuthenticator', { options: VIRTUAL_AUTHENTICATOR });
+  await page.goto('/app');
+  const offer = page.locator('.passkey-offer');
+  await expect(offer).toBeVisible({ timeout: 15_000 });
+  await offer.getByRole('button', { name: /^Activar/ }).click();
+  await expect(offer).toContainText('activado');
+  await shoot(page, info, 'passkey-oferta');
+  await page.goto('/app/notificaciones');
+  await expect(offer).toHaveCount(0);
+
+  page.on('dialog', (dialog) => dialog.accept());
+  await page.goto('/app/ajustes?seccion=seguridad');
+  const remove = page.getByRole('button', { name: /^Quitar / });
+  await expect(remove).toHaveCount(1);
+  await remove.click();
+  await expect(page.getByText('Aún no tienes llaves de acceso')).toBeVisible();
+  await signed!.close();
+});
+
 test.describe('aprendizaje del estudiante', () => {
   test('Mi espacio: seis métodos con navegación libre', async ({ browser }, info) => {
     test.skip(info.project.name !== 'android', 'una vez basta');
@@ -316,6 +342,96 @@ test('Foro: mención, adjunto, reacción, mejor respuesta y resumen de Luka', as
   }
 });
 
+const bearer = async (page: Page) => ({ Authorization: `Bearer ${await page.evaluate(() => sessionStorage.getItem('eq_access'))}` });
+
+test('Sala en vivo: el docente abre y conduce, el estudiante se une y responde', async ({ browser }, info) => {
+  test.skip(info.project.name !== 'android', 'una vez basta');
+  test.setTimeout(120_000);
+  const teacher = await signedContext(browser, info, 'teacher');
+  const student = await signedContext(browser, info, 'student');
+  test.skip(!teacher || !student, 'sin sesiones de docente y estudiante');
+  const teacherPage = await teacher!.newPage();
+  const studentPage = await student!.newPage();
+  const errors = watchErrors(teacherPage);
+  teacherPage.on('dialog', (dialog) => dialog.accept());
+  await teacherPage.goto('/app/en-vivo');
+  await studentPage.goto('/app');
+  await expect(teacherPage.getByRole('button', { name: /Abrir sala|Volver a la sala/ }).first()).toBeVisible({ timeout: 20_000 });
+
+  const mine = (await (await student!.request.get('/api/courses', { headers: await bearer(studentPage) })).json()) as { title: string }[];
+  const hostable = (await (await teacher!.request.get('/api/live/hostable', { headers: await bearer(teacherPage) })).json()) as { id: string; course: string; questions: number; open: { id: string } | null }[];
+  const pick = hostable.find((h) => h.questions > 0 && mine.some((c) => c.title === h.course));
+  test.skip(!pick, 'sin evaluaciones del docente en los cursos del estudiante');
+  if (pick!.open) await teacher!.request.post(`/api/live/${pick!.open.id}/end`, { headers: await bearer(teacherPage) });
+  const session = (await (await teacher!.request.post('/api/live', { headers: await bearer(teacherPage), data: { assessmentId: pick!.id } })).json()) as { id: string; code: string };
+
+  await teacherPage.goto(`/app/en-vivo?sala=${session.id}`);
+  await expect(teacherPage.locator('.live-code-value')).toHaveText(session.code, { timeout: 15_000 });
+  await expect(teacherPage.getByRole('button', { name: 'Empezar' })).toBeDisabled();
+
+  await studentPage.goto(`/app/en-vivo?codigo=${session.code}`);
+  await studentPage.getByRole('button', { name: 'Entrar' }).click();
+  await expect(studentPage.getByText('¡Estás dentro!')).toBeVisible({ timeout: 15_000 });
+
+  await expect(teacherPage.getByText('1 en la sala')).toBeVisible({ timeout: 15_000 });
+  await teacherPage.getByRole('button', { name: 'Empezar' }).click();
+  await expect(teacherPage.locator('.live-stage h2')).not.toHaveText('Sala abierta', { timeout: 15_000 });
+  await shoot(teacherPage, info, 'docente-sala-en-vivo');
+
+  const options = studentPage.locator('.kahoot button');
+  await expect(options.first()).toBeVisible({ timeout: 15_000 });
+  await options.first().click();
+  await expect(studentPage.getByText('¡Respuesta enviada!')).toBeVisible();
+  await expect(teacherPage.getByText('1 de 1 respondieron')).toBeVisible({ timeout: 15_000 });
+
+  await teacherPage.getByRole('button', { name: 'Cerrar sala' }).click();
+  await expect(teacherPage.getByText(/Resultados ·/)).toBeVisible({ timeout: 15_000 });
+  await expect(teacherPage.locator('table tbody tr')).toHaveCount(1);
+  await expect(studentPage.getByText('¡Sala terminada!')).toBeVisible({ timeout: 15_000 });
+  await shoot(teacherPage, info, 'docente-sala-resultados');
+  expect(errors).toEqual([]);
+  await teacher!.close();
+  await student!.close();
+});
+
+test('Mensajes entre colegas: el docente escribe a coordinación con nombre y rol', async ({ browser }, info) => {
+  test.skip(info.project.name !== 'android', 'una vez basta');
+  test.setTimeout(90_000);
+  const teacher = await signedContext(browser, info, 'teacher');
+  const coordinator = await signedContext(browser, info, 'coordinator');
+  test.skip(!teacher || !coordinator, 'sin sesiones de docente y coordinación');
+  const teacherPage = await teacher!.newPage();
+  const coordPage = await coordinator!.newPage();
+  const errors = watchErrors(teacherPage);
+  await coordPage.goto('/app');
+  const me = (await (await coordinator!.request.get('/api/auth/me', { headers: await bearer(coordPage) })).json()) as { id: string; fullName: string };
+  const text = `Prueba e2e ${Date.now()}: ¿revisamos la asistencia de 6.° A?`;
+
+  await teacherPage.goto('/app/mensajes?vista=colegas');
+  await teacherPage.getByRole('button', { name: 'Nuevo mensaje' }).click();
+  await teacherPage.getByLabel('Buscar colega').fill(me.fullName);
+  const row = teacherPage.getByRole('dialog').locator('.thread-row').filter({ hasText: me.fullName }).first();
+  await expect(row).toContainText('Coordinación');
+  await row.click();
+  await expect(teacherPage).toHaveURL(new RegExp(`colega=${me.id}`));
+  await expect(teacherPage.locator('.sheet-layer')).toHaveCount(0);
+  await teacherPage.getByLabel('Mensaje', { exact: true }).fill(text);
+  await teacherPage.getByRole('button', { name: 'Enviar' }).click();
+  await expect(teacherPage.locator('.msg-bubble.mine').last()).toContainText(text);
+  await shoot(teacherPage, info, 'docente-mensaje-colega');
+
+  await coordPage.goto('/app/mensajes');
+  const thread = coordPage.locator('.inbox-row').filter({ hasText: text.slice(0, 20) }).first();
+  await expect(thread).toBeVisible({ timeout: 15_000 });
+  await expect(thread).toContainText('Docente');
+  await thread.click();
+  await expect(coordPage.locator('.msg-bubble').filter({ hasText: text })).toBeVisible();
+  await shoot(coordPage, info, 'coordinacion-mensaje-colega');
+  expect(errors).toEqual([]);
+  await teacher!.close();
+  await coordinator!.close();
+});
+
 const CAMPUS_SIZES = [[1280, 800], [1440, 900], [1920, 1080], [2560, 1440], [3840, 2160]] as const;
 /** Each page and the material its facade must show (null: home, where the pin rests on the plaza). */
 const CAMPUS_PAGES = [
@@ -422,6 +538,7 @@ for (const role of ROLES) {
     test('rutas de otros roles', async ({}, info) => {
       test.skip(!context, `sin sesión para ${role}`);
       test.skip(info.project.name !== 'android', 'el permiso no depende del dispositivo');
+      test.setTimeout(30_000 + forbiddenByRole[role].length * 12_000);
       for (const route of forbiddenByRole[role]) {
         await page.goto(route, { waitUntil: 'domcontentloaded' });
         await expect(page.getByText('Esta sección no es para tu rol'), `${role} no debe abrir ${route}`).toBeVisible({ timeout: 15_000 });

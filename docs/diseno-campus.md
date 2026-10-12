@@ -68,6 +68,23 @@ Escritorio                                         Teléfono
 - La **cabecera de página es la fachada**: placa, título, descripción y acciones alineados a la izquierda; a la derecha, el edificio isométrico (el mismo dibujo del mapa, en grande). En teléfonos el dibujo se oculta y queda el material.
 - **Alineación:** todo a la izquierda; nada centrado salvo estados vacíos.
 
+### Un campus por rol
+
+Cada rol tiene su propio mapa, con solo sus módulos y sin edificios repetidos. El mapa crece con el número de módulos: cada edificio ocupa una manzana de la cuadrícula de calles, la manzana central es la plaza y las que sobran se vuelven parques. El marcador «Estás aquí» se apoya en el techo del edificio (`roofTop`), no en su base.
+
+| Rol | Distritos y edificios |
+|---|---|
+| Estudiante | Mi día (Mis cursos, Mi ruta, Cuaderno) · A mi manera (Mi espacio, Laboratorio IA) · Jugar (Sala en vivo, Arena, Arcade, Sala de trofeos) · Colegio (Biblioteca, Cartelera) |
+| Docente | Enseñar (Mis cursos, Planilla de notas, Banco de preguntas) · En clase (Sala en vivo, Arena) · Comunicación (Mensajes, Cartelera) · Recursos (Biblioteca, Observatorio) |
+| Coordinación | Seguimiento (Alertas, Asistencia, Citaciones) · Académico (Grupos y cursos, Consolidado de notas, Observatorio) · Comunicación (Mensajes, Cartelera, Biblioteca) |
+| Rectoría | Dirección (Tablero, Sala de firmas, Archivo de reportes) · Datos (Observatorio) · Comunicación (Mensajes, Cartelera, Biblioteca) |
+| Acudiente | Familia (Mis hijos, Mensajes) · Colegio (Cartelera, Biblioteca) |
+| Administración | Administración (Usuarios, Institución) · Datos (Observatorio) · Comunicación (Mensajes, Cartelera, Biblioteca) |
+
+Un módulo pertenece a los roles cuyo mapa tiene su edificio: el menú y el router (`ROUTE_ROLES`) salen de esta tabla, y la API valida el rol en cada ruta, así nadie ve módulos de otro rol. El inicio también cambia: estudiante y docente ven su semana; coordinación, rectoría, acudiente y administración ven su campus, sus edificios con lo pendiente y, el acudiente, una tarjeta por hijo.
+
+Luka o Luna acompaña siempre desde un botón flotante: la primera vez recorre el mapa distrito por distrito y, dentro de cada edificio, explica cómo se usa para ese rol.
+
 ### Movimiento
 
 Un solo momento orquestado: **entrar al edificio**. Al tocar un edificio (en el mapa del inicio, en el mini mapa o en el menú), el dibujo crece hasta ocupar su lugar en la fachada con la View Transitions API, mientras la página anterior se aleja un poco. Sin la API o con «reducir movimiento» se navega sin animación. Nada más se mueve solo: se quitan las entradas con desvanecimiento de la cabecera.
@@ -93,7 +110,8 @@ Un solo momento orquestado: **entrar al edificio**. Al tocar un edificio (en el 
 
 | Pieza | Archivo |
 |---|---|
-| Edificios compartidos (posición, color, forma, material, ruta → edificio) | `apps/web/src/shared/buildings.ts` |
+| Edificios, mapa de cada rol y trazado de la cuadrícula (`campusFor`, `roofTop`, ruta → edificio) | `apps/web/src/shared/buildings.ts` |
+| Guía persistente de Luka o Luna con recorrido por rol | `apps/web/src/app/guide.tsx` |
 | Geometría isométrica y dibujo de cada edificio (compartidos con el inicio) | `apps/web/src/ui/iso.tsx` |
 | Dibujo isométrico de un edificio y mini mapa con «Estás aquí» | `apps/web/src/ui/campus-mini.tsx` |
 | Entrar al edificio (View Transitions con respaldo) | `apps/web/src/shared/enter.ts` |

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
 import {
   browserSupportsWebAuthn,
   platformAuthenticatorIsAvailable,
@@ -9,7 +10,7 @@ import {
   type PublicKeyCredentialRequestOptionsJSON,
 } from '@simplewebauthn/browser';
 import { Fingerprint, KeyRound, Pencil, Plus, Trash2 } from 'lucide-react';
-import { api, ApiException } from './api';
+import { api, ApiException, getToken } from './api';
 import { useAuth, type SessionUser } from './auth';
 
 /** What the device calls its built-in authenticator, so the button speaks the user's language. */
@@ -74,11 +75,89 @@ export function PasskeyLogin({ onDone }: { onDone: (user: SessionUser) => void }
         <Fingerprint size={18} /> {busy ? 'Esperando tu dispositivo…' : `Entrar con ${platform ? platformName() : 'llave de acceso'}`}
       </button>
       {error && <p className="form-error" style={{ marginTop: 8 }}>{error}</p>}
+      <p className="muted" style={{ margin: '8px 0 0', fontSize: 13, textAlign: 'center' }}>
+        ¿Aún no la tienes? Entra una vez con tu contraseña y el código: al terminar te ofrecemos activar {platform ? platformName() : 'la llave'} en este equipo. También en Ajustes → Llaves de acceso.
+      </p>
     </div>
   );
 }
 
 interface Passkey { id: string; label: string; synced: boolean; createdAt: string; lastUsedAt: string | null }
+
+const offerKey = (userId: string) => `eq.passkey.offer.${userId}`;
+
+/** How the current session was verified, read from the access token; only verified sessions may register a passkey. */
+function sessionMethod() {
+  try {
+    const payload = getToken()?.split('.')[1];
+    if (!payload) return '';
+    return (JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/'))) as { amr?: string }).amr ?? '';
+  } catch {
+    return '';
+  }
+}
+
+/** After a verified sign-in, offers on the home screen to save Windows Hello / Face ID so the next login skips the code. */
+export function PasskeyOffer() {
+  const { user } = useAuth();
+  const { pathname } = useLocation();
+  const client = useQueryClient();
+  const { platform } = usePasskeySupport();
+  const [hidden, setHidden] = useState(() => !user || localStorage.getItem(offerKey(user.id)) !== null);
+  const eligible = !!user && platform && !hidden && pathname === '/app' && ['otp', 'trusted_device'].includes(sessionMethod());
+  const passkeys = useQuery({ queryKey: ['passkeys'], queryFn: () => api<Passkey[]>('/api/auth/passkeys'), enabled: eligible });
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [done, setDone] = useState(false);
+
+  if (!user || !eligible || !passkeys.data || (passkeys.data.length && !done)) return null;
+
+  function dismiss() {
+    localStorage.setItem(offerKey(user!.id), 'later');
+    setHidden(true);
+  }
+
+  async function add() {
+    setBusy(true);
+    setError('');
+    try {
+      const { challengeId, options } = await api<{ challengeId: string; options: PublicKeyCredentialCreationOptionsJSON }>('/api/auth/passkey/register/options', { method: 'POST' });
+      const response = await startRegistration({ optionsJSON: options });
+      client.setQueryData(['passkeys'], await api<Passkey[]>('/api/auth/passkey/register/verify', { method: 'POST', body: JSON.stringify({ challengeId, response }) }));
+      localStorage.setItem(offerKey(user!.id), 'done');
+      setDone(true);
+    } catch (err) {
+      setError(friendly(err));
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="passkey-offer card" role="dialog" aria-label={`Activar ${platformName()}`}>
+      <span className="setting-ico"><Fingerprint size={20} /></span>
+      <div className="stack" style={{ gap: 8, minWidth: 0 }}>
+        {done ? (
+          <>
+            <b>{platformName().replace(/^./, (c) => c.toUpperCase())} activado</b>
+            <span className="muted" style={{ fontSize: 13 }}>La próxima vez toca «Entrar con {platformName()}» en el inicio de sesión: sin contraseña ni código.</span>
+            <button className="btn ghost sm" style={{ width: 'fit-content' }} onClick={() => setHidden(true)}>Entendido</button>
+          </>
+        ) : (
+          <>
+            <b>¿Entrar con {platformName()} la próxima vez?</b>
+            <span className="muted" style={{ fontSize: 13 }}>Guardamos una llave de acceso en este equipo. Entrarás con tu rostro, huella o PIN, sin contraseña ni código del correo. Puedes quitarla en Ajustes.</span>
+            {error && <span className="form-error" style={{ fontSize: 13 }}>{error}</span>}
+            <div className="row g-8" style={{ flexWrap: 'wrap' }}>
+              <button className="btn sm" onClick={add} disabled={busy}>{busy ? 'Esperando tu dispositivo…' : `Activar ${platformName()}`}</button>
+              <button className="btn ghost sm" onClick={dismiss} disabled={busy}>Ahora no</button>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
 
 const when = (value: string | null) => (value ? new Date(value).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' }) : 'sin usar');
 

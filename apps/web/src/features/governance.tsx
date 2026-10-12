@@ -1,5 +1,5 @@
 import { FormEvent, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import {
@@ -33,6 +33,7 @@ import {
   XCircle,
   type LucideIcon,
 } from 'lucide-react';
+import { ROLE_LABELS } from '@eduquest/contracts';
 import { api, download } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
 import { Avatar, Bar, Empty, PageHeader, Reveal, Sheet, Stat, Tile, type Tone } from '@/ui';
@@ -125,8 +126,18 @@ interface AlertDetail {
   meetings: Meeting[];
 }
 
+const COORD_TABS = { alerts: '/app/coordinacion', attendance: '/app/coordinacion/asistencia', meetings: '/app/coordinacion/citaciones' } as const;
+const COORD_HEAD = {
+  alerts: ['Mesa de seguimiento', 'Alertas académicas y de convivencia de todos los grupos, con su bitácora.'],
+  attendance: ['Asistencia consolidada', 'Faltas y llegadas tarde por grupo, y quiénes superan el umbral institucional.'],
+  meetings: ['Citaciones con acudientes', 'Agenda, confirmaciones y actas de las reuniones con las familias.'],
+} as const;
+
 export function CoordinationPage() {
-  const [tab, setTab] = useState<'alerts' | 'attendance' | 'meetings'>('alerts');
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const tab = (Object.entries(COORD_TABS).find(([, to]) => to === pathname.replace(/\/$/, ''))?.[0] ?? 'alerts') as keyof typeof COORD_TABS;
+  const setTab = (next: keyof typeof COORD_TABS) => navigate(COORD_TABS[next]);
   const [meetingFor, setMeetingFor] = useState<{ studentId: string; studentName: string; alertId?: string } | null>(null);
   const summary = useQuery({ queryKey: ['coord-alerts', 'active'], queryFn: () => api<{ summary: Record<string, number>; alerts: AlertRow[] }>('/api/coordination/alerts') });
   const s = summary.data?.summary;
@@ -134,8 +145,8 @@ export function CoordinationPage() {
     <div>
       <PageHeader
         eyebrow="Coordinación"
-        title="Mesa de seguimiento"
-        subtitle="Alertas de todos los grupos, asistencia consolidada y citaciones a acudientes."
+        title={COORD_HEAD[tab][0]}
+        subtitle={COORD_HEAD[tab][1]}
         actions={<button className="btn" onClick={() => setMeetingFor({ studentId: '', studentName: '' })}><CalendarClock size={16} /> Nueva citación</button>}
       />
       <div className="grid cols-4" style={{ marginBottom: 18 }}>
@@ -419,14 +430,14 @@ function AttendanceBoard({ onMeet }: { onMeet: (preset: { studentId: string; stu
       <div className="grid cols-3" style={{ alignItems: 'start' }}>
         <Panel icon={Users} tone="sky" title="Asistencia por grupo" subtitle="Presentes más medio punto por llegada tarde; las excusas no cuentan." className="span-2">
           <div className="table-scroll"><table className="table">
-            <thead><tr><th>Grupo</th><th>Clases</th><th>Faltas</th><th>Tardes</th><th style={{ width: '34%' }}>Asistencia</th></tr></thead>
+            <thead><tr><th>Grupo</th><th className="num">Clases</th><th className="num">Faltas</th><th className="num">Tardes</th><th style={{ width: '34%' }}>Asistencia</th></tr></thead>
             <tbody>
               {(a?.groups ?? []).map((g) => (
                 <tr key={g.id}>
                   <td><b>{g.name}</b><div className="muted" style={{ fontSize: 12 }}>{g.students} estudiantes</div></td>
-                  <td>{g.sessions}</td>
-                  <td>{g.absent}</td>
-                  <td>{g.late}</td>
+                  <td className="num">{g.sessions}</td>
+                  <td className="num">{g.absent}</td>
+                  <td className="num">{g.late}</td>
                   <td><div className="row g-8"><div style={{ flex: 1 }}><Bar value={g.rate ?? 0} tone={(g.rate ?? 0) >= 90 ? 'mint' : 'gold'} thin /></div><b>{g.rate != null ? `${g.rate}%` : '—'}</b></div></td>
                 </tr>
               ))}
@@ -447,16 +458,16 @@ function AttendanceBoard({ onMeet }: { onMeet: (preset: { studentId: string; stu
       </div>
       <Panel icon={AlertTriangle} tone="coral" title="Estudiantes sobre el umbral" subtitle="Candidatos a citación con el acudiente.">
         <div className="table-scroll"><table className="table">
-          <thead><tr><th>Estudiante</th><th>Grupo</th><th>Faltas</th><th>%</th><th>Última</th><th /></tr></thead>
+          <thead><tr><th>Estudiante</th><th>Grupo</th><th className="num">Faltas</th><th className="num">% de faltas</th><th className="num">Última falta</th><th className="act" /></tr></thead>
           <tbody>
             {(a?.students ?? []).map((s) => (
               <tr key={s.id}>
                 <td><div className="row g-8"><Avatar name={s.fullName} /><b>{s.fullName}</b></div></td>
                 <td className="muted">{s.group}</td>
-                <td><span className="chip coral">{s.absent} de {s.total}</span></td>
-                <td>{s.absentRate}%</td>
-                <td className="muted">{s.lastAbsent ?? '—'}</td>
-                <td style={{ textAlign: 'right' }}><button className="btn sm ghost" onClick={() => onMeet({ studentId: s.id, studentName: s.fullName })}><CalendarClock size={14} /> Citar</button></td>
+                <td className="num"><span className="chip coral">{s.absent} de {s.total}</span></td>
+                <td className="num">{s.absentRate}%</td>
+                <td className="num muted">{s.lastAbsent ?? '—'}</td>
+                <td className="act"><button className="btn sm ghost" onClick={() => onMeet({ studentId: s.id, studentName: s.fullName })}><CalendarClock size={14} /> Citar</button></td>
               </tr>
             ))}
           </tbody>
@@ -555,9 +566,15 @@ function Delta({ value, unit = '', invert }: { value: number | null; unit?: stri
   return <span className={`delta ${good ? 'up' : 'down'}`}><Icon size={13} /> {value > 0 ? '+' : ''}{value}{unit}</span>;
 }
 
+const RECTOR_TABS = { board: '/app/rectoria', sign: '/app/rectoria/firmas', news: '/app/rectoria/comunicados', reports: '/app/rectoria/reportes' } as const;
+const RECTOR_TITLE = { board: 'Tablero estratégico', sign: 'Sala de firmas', news: 'Comunicados oficiales', reports: 'Archivo de reportes' } as const;
+
 export function RectoriaPage() {
   const { user } = useAuth();
-  const [tab, setTab] = useState<'board' | 'sign' | 'news' | 'reports'>('board');
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const tab = (Object.entries(RECTOR_TABS).find(([, to]) => to === pathname.replace(/\/$/, ''))?.[0] ?? 'board') as keyof typeof RECTOR_TABS;
+  const setTab = (next: keyof typeof RECTOR_TABS) => navigate(RECTOR_TABS[next]);
   const [period, setPeriod] = useState<string>('');
   const dash = useQuery({ queryKey: ['rectoria', period], queryFn: () => api<Dashboard>(`/api/rectoria/dashboard${period ? `?period=${period}` : ''}`) });
   const sigs = useQuery({ queryKey: ['rectoria-signatures'], queryFn: () => api<Signatures>('/api/rectoria/signatures') });
@@ -566,11 +583,11 @@ export function RectoriaPage() {
   return (
     <div className="stack" style={{ gap: 22 }}>
       <Reveal>
-        <section className="hero rector-hero">
+        <section className="hero rector-hero" data-at={RECTOR_TABS[tab]}>
           <div className="orb" style={{ width: 380, height: 380, right: -120, top: -160, background: 'radial-gradient(circle, rgba(255,214,107,.4), transparent 70%)' }} />
           <div style={{ position: 'relative' }}>
             <div className="eyebrow" style={{ color: '#ffd66b' }}><Crown size={14} /> Rectoría</div>
-            <h1 style={{ marginTop: 8 }}>Tablero estratégico</h1>
+            <h1 style={{ marginTop: 8 }}>{RECTOR_TITLE[tab]}</h1>
             <p style={{ marginTop: 8, fontSize: 16, maxWidth: 620 }}>
               {d ? `${d.selected.name} · ${d.selected.from} a ${d.selected.to}${d.previous ? ` · comparado con ${d.previous.name}` : ''}` : 'Indicadores por periodo para decidir con datos.'}
             </p>
@@ -660,17 +677,17 @@ function RectorBoard({ d }: { d: Dashboard }) {
       </div>
       <Panel icon={Users} tone="sky" title="Comparación entre grupos" subtitle={d.previous ? `Las flechas comparan con ${d.previous.name}.` : 'Elige un periodo para comparar con el anterior.'}>
         <div className="table-scroll"><table className="table">
-          <thead><tr><th>Grupo</th><th>Estudiantes</th><th>Promedio</th><th>Aprobación</th><th>Asistencia</th><th>Alertas</th><th>IA</th></tr></thead>
+          <thead><tr><th>Grupo</th><th className="num">Estudiantes</th><th className="num">Promedio</th><th className="num">Aprobación</th><th className="num">Asistencia</th><th className="num">Alertas</th><th className="num">Usos de IA</th></tr></thead>
           <tbody>
             {d.groups.map((g) => (
               <tr key={g.id}>
                 <td><b>{g.name}</b></td>
-                <td>{g.students}</td>
-                <td>{g.average != null ? g.average.toFixed(1) : '—'} <Delta value={g.deltaAverage} /></td>
-                <td>{g.passRate != null ? `${g.passRate}%` : '—'} <Delta value={g.deltaPassRate} unit=" pts" /></td>
-                <td>{g.attendance != null ? `${g.attendance}%` : '—'} <Delta value={g.deltaAttendance} unit=" pts" /></td>
-                <td>{g.alerts ? <span className={`chip ${g.highAlerts ? 'coral' : 'gold'}`}>{g.alerts}</span> : '0'}</td>
-                <td>{g.aiUses}</td>
+                <td className="num">{g.students}</td>
+                <td className="num">{g.average != null ? g.average.toFixed(1) : '—'}<Delta value={g.deltaAverage} /></td>
+                <td className="num">{g.passRate != null ? `${g.passRate}%` : '—'}<Delta value={g.deltaPassRate} unit=" pts" /></td>
+                <td className="num">{g.attendance != null ? `${g.attendance}%` : '—'}<Delta value={g.deltaAttendance} unit=" pts" /></td>
+                <td className="num">{g.alerts ? <span className={`chip ${g.highAlerts ? 'coral' : 'gold'}`}>{g.alerts}</span> : '0'}</td>
+                <td className="num">{g.aiUses}</td>
               </tr>
             ))}
           </tbody>
@@ -792,15 +809,26 @@ function OfficialNews() {
 interface ThreadRow { student: { id: string; fullName: string }; counterpart: { id: string; fullName: string }; lastAt: string; lastBody: string; unread: number; total: number }
 interface Contact { student: { id: string; fullName: string; group: string | null }; people: { id: string; fullName: string; detail: string }[] }
 interface Message { id: string; body: string; author: string; mine: boolean; readAt: string | null; createdAt: string }
+interface Colleague { id: string; fullName: string; role: string; roleLabel: string; detail: string | null }
+interface StaffThread { counterpart: { id: string; fullName: string; role: string; roleLabel: string }; lastAt: string; lastBody: string; unread: number }
 
-export function MessageThread({ studentId, counterpartId, title }: { studentId: string; counterpartId: string; title?: string }) {
+/** One conversation: polls for new messages, marks them read on open and posts with the given payload. */
+function ChatThread({ queryKey, url, postUrl, payload, title, threadsKey }: {
+  queryKey: unknown[];
+  url: string;
+  postUrl: string;
+  payload: Record<string, string>;
+  title?: ReactNode;
+  threadsKey: string;
+}) {
   const client = useQueryClient();
   const data = useQuery({
-    queryKey: ['messages', studentId, counterpartId],
+    queryKey,
     queryFn: async () => {
-      const rows = await api<Message[]>(`/api/messages/${studentId}/${counterpartId}`);
-      void client.invalidateQueries({ queryKey: ['message-threads'] });
+      const rows = await api<Message[]>(url);
+      void client.invalidateQueries({ queryKey: [threadsKey] });
       void client.invalidateQueries({ queryKey: ['messages-unread'] });
+      void client.invalidateQueries({ queryKey: ['campus'] });
       return rows;
     },
     refetchInterval: 20_000,
@@ -816,9 +844,9 @@ export function MessageThread({ studentId, counterpartId, title }: { studentId: 
     e.preventDefault();
     setError('');
     try {
-      const rows = await api<Message[]>('/api/messages', { method: 'POST', body: JSON.stringify({ studentId, counterpartId, body }) });
-      client.setQueryData(['messages', studentId, counterpartId], rows);
-      void client.invalidateQueries({ queryKey: ['message-threads'] });
+      const rows = await api<Message[]>(postUrl, { method: 'POST', body: JSON.stringify({ ...payload, body }) });
+      client.setQueryData(queryKey, rows);
+      void client.invalidateQueries({ queryKey: [threadsKey] });
       setBody('');
     } catch (err) {
       setError((err as Error).message);
@@ -848,14 +876,33 @@ export function MessageThread({ studentId, counterpartId, title }: { studentId: 
   );
 }
 
-export function MessagesPage() {
+export function MessageThread({ studentId, counterpartId, title }: { studentId: string; counterpartId: string; title?: string }) {
+  return (
+    <ChatThread
+      queryKey={['messages', studentId, counterpartId]}
+      url={`/api/messages/${studentId}/${counterpartId}`}
+      postUrl="/api/messages"
+      payload={{ studentId, counterpartId }}
+      title={title}
+      threadsKey="message-threads"
+    />
+  );
+}
+
+const ROLE_TONE: Record<string, Tone> = { teacher: 'violet', coordinator: 'mint', rector: 'gold', admin: 'sky' };
+
+function RoleChip({ role, label }: { role: string; label: string }) {
+  return <span className={`chip ${ROLE_TONE[role] ?? 'soft'}`} style={{ fontSize: 11.5 }}>{label}</span>;
+}
+
+/** Conversations with families: guardians talk to their children's teachers and vice versa. */
+function FamilyInbox({ composing, setComposing }: { composing: boolean; setComposing: (v: boolean) => void }) {
   const { user } = useAuth();
   const [params, setParams] = useSearchParams();
   const threads = useQuery({ queryKey: ['message-threads'], queryFn: () => api<ThreadRow[]>('/api/messages/threads') });
   const contacts = useQuery({ queryKey: ['message-contacts'], queryFn: () => api<Contact[]>('/api/messages/contacts') });
   const studentId = params.get('estudiante') ?? '';
   const counterpartId = params.get('con') ?? '';
-  const [composing, setComposing] = useState(false);
   const guardian = user?.role === 'guardian';
 
   const people = useMemo(() => {
@@ -878,13 +925,7 @@ export function MessagesPage() {
   };
 
   return (
-    <div>
-      <PageHeader
-        eyebrow={guardian ? 'Familia' : 'Docente'}
-        title="Mensajes"
-        subtitle={guardian ? 'Conversa con los docentes de tus hijos. Cada mensaje queda registrado.' : 'Conversaciones con los acudientes de tus estudiantes.'}
-        actions={<button className="btn" onClick={() => setComposing(true)}><MessageCircle size={16} /> Nuevo mensaje</button>}
-      />
+    <>
       <div className="inbox">
         <div className="card inbox-list">
           {(threads.data ?? []).map((t) => {
@@ -894,7 +935,7 @@ export function MessagesPage() {
                 <Avatar name={t.counterpart.fullName} />
                 <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
                   <div className="row between"><b className="ellipsis">{t.counterpart.fullName}</b>{t.unread > 0 && <span className="seg-badge">{t.unread}</span>}</div>
-                  <div className="muted ellipsis" style={{ fontSize: 12.5 }}>Sobre {t.student.fullName}</div>
+                  <div className="muted ellipsis" style={{ fontSize: 12.5 }}>{guardian ? 'Docente' : 'Acudiente'} · sobre {t.student.fullName}</div>
                   <div className="muted ellipsis" style={{ fontSize: 12.5 }}>{t.lastBody}</div>
                 </div>
               </button>
@@ -910,7 +951,7 @@ export function MessagesPage() {
           )}
         </div>
       </div>
-      <Sheet open={composing} onClose={() => setComposing(false)} title="Nuevo mensaje">
+      <Sheet open={composing} onClose={() => setComposing(false)} title={guardian ? 'Escribir a un docente' : 'Escribir a un acudiente'}>
         <div className="stack" style={{ gap: 14 }}>
           {(contacts.data ?? []).map((c) => (
             <div key={c.student.id}>
@@ -919,7 +960,10 @@ export function MessagesPage() {
                 {c.people.map((p) => (
                   <button key={p.id} className="thread-row" style={{ padding: 10 }} onClick={() => open(c.student.id, p.id)}>
                     <Avatar name={p.fullName} />
-                    <div style={{ flex: 1, textAlign: 'left' }}><b>{p.fullName}</b><div className="muted" style={{ fontSize: 12.5, textTransform: guardian ? undefined : 'capitalize' }}>{p.detail}</div></div>
+                    <div style={{ flex: 1, textAlign: 'left' }}>
+                      <div className="row g-8 wrap"><b>{p.fullName}</b><RoleChip role={guardian ? 'teacher' : 'guardian'} label={guardian ? 'Docente' : 'Acudiente'} /></div>
+                      <div className="muted" style={{ fontSize: 12.5, textTransform: guardian ? undefined : 'capitalize' }}>{p.detail}</div>
+                    </div>
                   </button>
                 ))}
               </div>
@@ -928,6 +972,131 @@ export function MessagesPage() {
           {!contacts.isLoading && !contacts.data?.length && <Empty icon={Users} title="Sin contactos" body={guardian ? 'Tus hijos aún no tienen cursos con docente asignado.' : 'Tus estudiantes aún no tienen acudientes vinculados.'} />}
         </div>
       </Sheet>
+    </>
+  );
+}
+
+/** Conversations between staff: teachers, coordination, rector and admin. */
+function StaffInbox({ composing, setComposing }: { composing: boolean; setComposing: (v: boolean) => void }) {
+  const [params, setParams] = useSearchParams();
+  const threads = useQuery({ queryKey: ['staff-threads'], queryFn: () => api<StaffThread[]>('/api/staff-messages/threads') });
+  const contacts = useQuery({ queryKey: ['staff-contacts'], queryFn: () => api<Colleague[]>('/api/staff-messages/contacts'), staleTime: 5 * 60_000 });
+  const otherId = params.get('colega') ?? '';
+  const [query, setQuery] = useState('');
+  const other = contacts.data?.find((c) => c.id === otherId) ?? threads.data?.find((t) => t.counterpart.id === otherId)?.counterpart;
+
+  const groups = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const list = (contacts.data ?? []).filter((c) => !q || `${c.fullName} ${c.roleLabel} ${c.detail ?? ''}`.toLowerCase().includes(q));
+    const map = new Map<string, Colleague[]>();
+    for (const c of list) map.set(c.roleLabel, [...(map.get(c.roleLabel) ?? []), c]);
+    return [...map.entries()];
+  }, [contacts.data, query]);
+
+  const open = (id: string) => {
+    setComposing(false);
+    setQuery('');
+    setParams({ vista: 'colegas', colega: id });
+  };
+
+  return (
+    <>
+      <div className="inbox">
+        <div className="card inbox-list">
+          {(threads.data ?? []).map((t) => (
+            <button key={t.counterpart.id} className={`inbox-row ${t.counterpart.id === otherId ? 'on' : ''}`} onClick={() => open(t.counterpart.id)}>
+              <Avatar name={t.counterpart.fullName} />
+              <div style={{ flex: 1, minWidth: 0, textAlign: 'left' }}>
+                <div className="row between"><b className="ellipsis">{t.counterpart.fullName}</b>{t.unread > 0 && <span className="seg-badge">{t.unread}</span>}</div>
+                <div style={{ margin: '2px 0' }}><RoleChip role={t.counterpart.role} label={t.counterpart.roleLabel} /></div>
+                <div className="muted ellipsis" style={{ fontSize: 12.5 }}>{t.lastBody}</div>
+              </div>
+            </button>
+          ))}
+          {!threads.isLoading && !threads.data?.length && <Empty icon={Mail} title="Sin conversaciones" body="Escribe a un colega con «Nuevo mensaje»." />}
+        </div>
+        <div className="card">
+          {otherId ? (
+            <ChatThread
+              key={otherId}
+              queryKey={['staff-messages', otherId]}
+              url={`/api/staff-messages/${otherId}`}
+              postUrl="/api/staff-messages"
+              payload={{ recipientId: otherId }}
+              threadsKey="staff-threads"
+              title={other ? <span className="row g-8 wrap">{other.fullName} <RoleChip role={other.role} label={other.roleLabel} /></span> : undefined}
+            />
+          ) : (
+            <Empty icon={MessageCircle} title="Elige una conversación" body="O escribe a un docente o directivo con «Nuevo mensaje»." />
+          )}
+        </div>
+      </div>
+      <Sheet open={composing} onClose={() => setComposing(false)} title="Escribir a un colega">
+        <div className="stack" style={{ gap: 14 }}>
+          <label className="lib-search">
+            <Search size={16} aria-hidden />
+            <input autoFocus value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Busca por nombre, rol o asignatura" aria-label="Buscar colega" />
+          </label>
+          {groups.map(([label, people]) => (
+            <div key={label}>
+              <div className="block-label">{label}</div>
+              <div className="stack" style={{ gap: 6 }}>
+                {people.map((p) => (
+                  <button key={p.id} className="thread-row" style={{ padding: 10 }} onClick={() => open(p.id)}>
+                    <Avatar name={p.fullName} />
+                    <div style={{ flex: 1, textAlign: 'left', minWidth: 0 }}>
+                      <div className="row g-8 wrap"><b>{p.fullName}</b><RoleChip role={p.role} label={p.roleLabel} /></div>
+                      {p.detail && <div className="muted ellipsis" style={{ fontSize: 12.5 }}>{p.detail}</div>}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+          {!contacts.isLoading && !groups.length && <Empty icon={Users} title="Nadie con ese nombre" body="Prueba con otra búsqueda." />}
+        </div>
+      </Sheet>
+    </>
+  );
+}
+
+export function MessagesPage() {
+  const { user } = useAuth();
+  const [params, setParams] = useSearchParams();
+  const [composing, setComposing] = useState(false);
+  const role = user?.role;
+  const families = role === 'guardian' || role === 'teacher';
+  const staff = role !== 'guardian' && role !== 'student';
+  const view = !families || (staff && (params.get('vista') === 'colegas' || params.has('colega'))) ? 'colegas' : 'familias';
+  const unread = useQuery({ queryKey: ['staff-threads'], queryFn: () => api<StaffThread[]>('/api/staff-messages/threads'), enabled: staff });
+  const staffUnread = (unread.data ?? []).reduce((n, t) => n + t.unread, 0);
+
+  const subtitle = role === 'guardian'
+    ? 'Conversa con los docentes de tus hijos. Cada mensaje queda registrado.'
+    : role === 'teacher'
+      ? 'Familias de tus estudiantes y colegas del colegio, cada uno con su nombre y rol.'
+      : 'Escribe a docentes y directivos del colegio; verás el nombre, el rol y lo que enseña cada uno.';
+
+  return (
+    <div>
+      <PageHeader
+        eyebrow={role === 'guardian' ? 'Familia' : role ? ROLE_LABELS[role] : undefined}
+        title="Mensajes"
+        subtitle={subtitle}
+        actions={<button className="btn" onClick={() => setComposing(true)}><MessageCircle size={16} /> Nuevo mensaje</button>}
+      />
+      {families && staff && (
+        <div style={{ marginBottom: 16 }}>
+          <Tabs
+            value={view}
+            onChange={(v) => setParams(v === 'colegas' ? { vista: 'colegas' } : {})}
+            items={[['familias', 'Familias', Users], ['colegas', 'Colegas', Mail, staffUnread || undefined]]}
+          />
+        </div>
+      )}
+      {view === 'colegas'
+        ? <StaffInbox composing={composing} setComposing={setComposing} />
+        : <FamilyInbox composing={composing} setComposing={setComposing} />}
     </div>
   );
 }

@@ -228,7 +228,7 @@ export function BuildingShape({ b, paint, seed }: { b: Building; paint: Paint; s
         <g>
           <Box x={x} y={y} w={w} d={d} h={h} color={color} paint={paint} />
           <Windows x={x} y={y} w={w} d={d} h={h} paint={paint} seed={seed} />
-          <GableRoof x={x} y={y} w={w} d={d} z={h} rh={0.85} color="#0f8f72" paint={paint} />
+          <GableRoof x={x} y={y} w={w} d={d} z={h} rh={0.85} color={shade(color, -0.4)} paint={paint} />
         </g>
       );
     case 'tower':
@@ -238,10 +238,102 @@ export function BuildingShape({ b, paint, seed }: { b: Building; paint: Paint; s
           <Box x={x} y={y} w={w} d={d} z={h * 0.55} h={0.16} color="#ffffff" paint={paint} />
           <Windows x={x} y={y} w={w} d={d} h={h} paint={paint} seed={seed} />
           <Box x={x - 0.12} y={y - 0.12} w={w + 0.24} d={d + 0.24} z={h} h={0.14} color="#e9e6ff" paint={paint} />
-          <PyramidRoof x={x} y={y} w={w} d={d} z={h + 0.14} rh={0.9} color="#1d6fd6" paint={paint} />
+          <PyramidRoof x={x} y={y} w={w} d={d} z={h + 0.14} rh={0.9} color={shade(color, -0.35)} paint={paint} />
           <Flag at={iso(x + w / 2, y + d / 2, h + 1.04)} color="#19c39c" />
         </g>
       );
+    case 'post': {
+      const [sx, sy] = iso(x + w / 2, y + d, h - 0.3);
+      return (
+        <g>
+          <Box x={x} y={y} w={w} d={d} h={h} color={color} paint={paint} />
+          <Windows x={x} y={y} w={w} d={d} h={h} paint={paint} seed={seed} />
+          <GableRoof x={x} y={y} w={w} d={d} z={h} rh={0.8} color={shade(color, -0.4)} paint={paint} />
+          <rect x={sx - 13} y={sy - 9} width={26} height={17} rx={2} fill="#fff" stroke={paint.tone('#3d3a5c')} strokeWidth={1.5} />
+          <path d={`M${sx - 13},${sy - 9} L${sx},${sy + 1} L${sx + 13},${sy - 9}`} fill="none" stroke={paint.tone('#3d3a5c')} strokeWidth={1.5} />
+          <Box x={x + w + 0.2} y={y + d - 0.5} w={0.3} d={0.3} h={0.55} color="#e2464f" paint={paint} />
+        </g>
+      );
+    }
+    case 'capitol': {
+      const cols = [0.25, 0.75, 1.25, 1.75, 2.25];
+      return (
+        <g>
+          <Box x={x - 0.15} y={y - 0.15} w={w + 0.3} d={d + 0.45} h={0.15} color="#e9e6ff" paint={paint} />
+          <Box x={x} y={y} z={0.15} w={w} d={d} h={h} color={color} paint={paint} />
+          <Windows x={x} y={y} z={0.15} w={w} d={d} h={h} paint={paint} seed={seed} door={false} />
+          {cols.map((u) => <Box key={u} x={x + u} y={y + d + 0.1} z={0.15} w={0.14} d={0.14} h={h - 0.05} color="#ffffff" paint={paint} />)}
+          <Box x={x - 0.08} y={y - 0.08} z={h + 0.15} w={w + 0.16} d={d + 0.32} h={0.16} color="#fff6d8" paint={paint} />
+          <Dome cx={x + w / 2} cy={y + d / 2} z={h + 0.31} r={0.8} color={shade(color, 0.15)} paint={paint} />
+        </g>
+      );
+    }
+    case 'arcade': {
+      const stripes = 6;
+      const face = (u0: number, u1: number, v0: number, v1: number) => pts([iso(x + u0, y + d + 0.25, v0), iso(x + u1, y + d + 0.25, v0), iso(x + u1, y + d, v1), iso(x + u0, y + d, v1)]);
+      const [nx, ny] = iso(x + w / 2, y + d / 2, h + 0.5);
+      return (
+        <g>
+          <Box x={x} y={y} w={w} d={d} h={h} color={color} paint={paint} />
+          <Windows x={x} y={y} w={w} d={d} h={h * 0.7} paint={paint} seed={seed} />
+          {Array.from({ length: stripes }, (_, i) => (
+            <polygon key={i} points={face((w / stripes) * i, (w / stripes) * (i + 1), h - 0.35, h - 0.1)} fill={paint.tone(i % 2 ? '#ffffff' : '#ff5d73')} />
+          ))}
+          <Box x={x + 0.1} y={y + 0.1} z={h} w={w - 0.2} d={d - 0.2} h={0.1} color="#3d3a5c" paint={paint} />
+          <rect x={nx - 26} y={ny - 12} width={52} height={20} rx={6} fill={paint.tone('#2a1f5c')} stroke={paint.night ? '#ffd66b' : '#ffb02e'} strokeWidth={2.5} />
+          <Star x={nx} y={ny - 2} r={7} fill={paint.night ? '#ffe27a' : '#ffc83d'} />
+        </g>
+      );
+    }
+    case 'studio': {
+      const screen = (u0: number, u1: number, v0: number, v1: number) => pts([iso(x + u0, y + d, v0), iso(x + u1, y + d, v0), iso(x + u1, y + d, v1), iso(x + u0, y + d, v1)]);
+      const [ax, ay] = iso(x + w * 0.75, y + d * 0.3, h);
+      const [cx, cy] = iso(x + w / 2, y + d, h * 0.62);
+      return (
+        <g>
+          <Box x={x} y={y} w={w} d={d} h={h} color={color} paint={paint} />
+          <Windows x={x} y={y} w={w} d={d} h={h} paint={paint} seed={seed} door={false} />
+          <polygon points={screen(0.25, w - 0.25, 0.3, h - 0.25)} fill={paint.tone('#1b1640')} />
+          <polygon points={pts([[cx - 6, cy - 9], [cx - 6, cy + 9], [cx + 9, cy]])} fill="#fff" opacity={0.9} />
+          <Box x={x + 0.1} y={y + 0.1} z={h} w={w - 0.2} d={d - 0.2} h={0.1} color="#e9e6ff" paint={paint} />
+          <line x1={ax} y1={ay} x2={ax} y2={ay - 40} stroke={paint.tone('#3d3a5c')} strokeWidth={2.5} />
+          <circle cx={ax} cy={ay - 42} r={4.5} fill="#ff5d73" />
+          <path d={`M${ax - 12},${ay - 50} q12,-10 24,0 M${ax - 7},${ay - 46} q7,-6 14,0`} stroke="#ff5d73" strokeWidth={2} fill="none" strokeLinecap="round" />
+        </g>
+      );
+    }
+    case 'observatory': {
+      const [tx, ty] = iso(x + w / 2, y + d / 2, h + 0.85);
+      return (
+        <g>
+          <Box x={x} y={y} w={w} d={d} h={h} color={color} paint={paint} />
+          <Windows x={x} y={y} w={w} d={d} h={h} paint={paint} seed={seed} />
+          <Box x={x + 0.1} y={y + 0.1} z={h} w={w - 0.2} d={d - 0.2} h={0.1} color="#e9e6ff" paint={paint} />
+          <Dome cx={x + w / 2} cy={y + d / 2} z={h + 0.1} r={0.62} color="#dfe6ff" paint={paint} />
+          <line x1={tx - 4} y1={ty + 8} x2={tx + 20} y2={ty - 14} stroke={paint.tone('#3d3a5c')} strokeWidth={5} strokeLinecap="round" />
+        </g>
+      );
+    }
+    case 'office':
+      return (
+        <g>
+          <Box x={x} y={y} w={w} d={d} h={h} color={color} paint={paint} />
+          <Windows x={x} y={y} w={w} d={d} h={h} paint={paint} seed={seed} />
+          <Box x={x - 0.08} y={y - 0.08} z={h} w={w + 0.16} d={d + 0.16} h={0.16} color="#e9e6ff" paint={paint} />
+          <Box x={x + w * 0.25} y={y + d * 0.25} z={h + 0.16} w={w * 0.4} d={d * 0.4} h={0.4} color={shade(color, -0.2)} paint={paint} />
+        </g>
+      );
+    case 'pavilion': {
+      const posts: [number, number][] = [[0.1, 0.1], [w - 0.26, 0.1], [0.1, d - 0.26], [w - 0.26, d - 0.26]];
+      return (
+        <g>
+          <Box x={x} y={y} w={w} d={d} h={0.14} color="#efe6d2" paint={paint} />
+          <Box x={x + 0.5} y={y + 0.5} z={0.14} w={w - 1} d={d - 1} h={0.35} color={shade(color, 0.3)} paint={paint} />
+          {posts.map(([u, v]) => <Box key={`${u}-${v}`} x={x + u} y={y + v} z={0.14} w={0.16} d={0.16} h={h - 0.14} color="#ffffff" paint={paint} />)}
+          <PyramidRoof x={x} y={y} w={w} d={d} z={h} rh={0.85} color={color} paint={paint} />
+        </g>
+      );
+    }
     case 'hall': {
       const [sx, sy] = iso(x + w / 2, y + d / 2, h + 0.9);
       return (

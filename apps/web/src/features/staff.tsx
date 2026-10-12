@@ -346,20 +346,20 @@ export function ReportsPage() {
       <Panel icon={GraduationCap} tone="violet" title="Estudiantes" subtitle="Boletín individual y certificado del curso. Rectoría firma ambos antes de que sean oficiales.">
         {notice && <p className="form-error">{notice}</p>}
         <div className="table-scroll"><table className="table">
-          <thead><tr><th>Estudiante</th><th>Boletín oficial</th><th style={{ textAlign: 'right' }}>Acciones</th></tr></thead>
+          <thead><tr><th>Estudiante</th><th className="num">Boletín oficial</th><th className="act">Acciones</th></tr></thead>
           <tbody>
             {(students.data ?? []).map((student) => {
               const bulletin = bulletins.data?.[student.user_id];
               return (
                 <tr key={student.user_id}>
                   <td><div className="row g-12"><Avatar name={student.full_name} /><b>{student.full_name}</b></div></td>
-                  <td>
+                  <td className="num">
                     {bulletin?.status === 'signed' ? <span className="chip mint"><BadgeCheck size={13} /> Firmado</span>
                       : bulletin?.status === 'pending_signature' ? <span className="chip gold">Esperando firma</span>
                       : bulletin?.status === 'rejected' ? <span className="chip coral">Devuelto</span>
                       : <span className="chip">Sin solicitar</span>}
                   </td>
-                  <td style={{ textAlign: 'right' }}>
+                  <td className="act">
                     <div className="row g-8" style={{ justifyContent: 'flex-end' }}>
                       <button className="btn sm ghost" onClick={() => fetchDoc(`/api/reports/bulletin/${student.user_id}/pdf`, 'boletin.pdf')}><FileText size={14} /> Boletín</button>
                       {canRequest && bulletin?.status !== 'pending_signature' && (
@@ -404,15 +404,15 @@ export function ReportHistory() {
   return (
     <Panel icon={ClipboardCheck} tone="gold" title="Historial de reportes" subtitle="Cada documento lleva un consecutivo LK verificable con su código QR.">
       <div className="table-scroll"><table className="table">
-        <thead><tr><th>N.º</th><th>Documento</th><th>Formato</th><th>Filas</th><th>Generado</th><th>Por</th></tr></thead>
+        <thead><tr><th>N.º</th><th>Documento</th><th className="num">Formato</th><th className="num">Filas</th><th className="num">Generado</th><th>Por</th></tr></thead>
         <tbody>
           {(log.data ?? []).map((row) => (
             <tr key={row.id}>
               <td><Link to={`/verificar-reporte/${row.code}`} style={{ fontFamily: 'var(--font-mono, monospace)', fontWeight: 800, color: 'var(--violet)' }}>{row.code}</Link></td>
               <td>{row.title}</td>
-              <td><span className={`chip ${row.format === 'pdf' ? 'coral' : 'mint'}`}>{row.format.toUpperCase()}</span></td>
-              <td>{row.row_count}</td>
-              <td className="muted">{new Date(row.created_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}</td>
+              <td className="num"><span className={`chip ${row.format === 'pdf' ? 'coral' : 'mint'}`}>{row.format.toUpperCase()}</span></td>
+              <td className="num">{row.row_count}</td>
+              <td className="num muted">{new Date(row.created_at).toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' })}</td>
               <td>{row.full_name ?? 'Sistema'}</td>
             </tr>
           ))}
@@ -653,15 +653,15 @@ function GuardianLinks({ users }: { users: { id: string; fullName: string; email
     <div className="grid cols-3" style={{ alignItems: 'start' }}>
       <Panel icon={HeartHandshake} tone="mint" title="Vínculos acudiente-estudiante" subtitle="El acudiente autoriza el acceso facial y el tutor IA de los menores (Ley 1581)" className="span-2">
         <div className="table-scroll"><table className="table">
-          <thead><tr><th>Acudiente</th><th>Estudiante</th><th>Parentesco</th><th>Estado</th><th /></tr></thead>
+          <thead><tr><th>Acudiente</th><th>Estudiante</th><th className="num">Parentesco</th><th className="num">Estado</th><th className="act" /></tr></thead>
           <tbody>
             {(links.data ?? []).map((link) => (
               <tr key={link.id}>
                 <td><b>{link.guardian_name}</b><div className="muted" style={{ fontSize: 12 }}>{link.guardian_email}</div></td>
                 <td><b>{link.student_name}</b> {link.is_minor && <span className="chip gold" style={{ marginLeft: 6 }}>Menor</span>}<div className="muted" style={{ fontSize: 12 }}>{link.student_email}</div></td>
-                <td style={{ textTransform: 'capitalize' }}>{link.relationship}</td>
-                <td><span className={`chip ${link.status === 'active' ? 'mint' : 'soft'}`}>{link.status === 'active' ? 'Activo' : link.status === 'revoked' ? 'Revocado' : 'Pendiente'}</span></td>
-                <td>{link.status === 'active' && <button className="btn sm ghost" onClick={() => revoke(link.id)}>Revocar</button>}</td>
+                <td className="num" style={{ textTransform: 'capitalize' }}>{link.relationship}</td>
+                <td className="num"><span className={`chip ${link.status === 'active' ? 'mint' : 'soft'}`}>{link.status === 'active' ? 'Activo' : link.status === 'revoked' ? 'Revocado' : 'Pendiente'}</span></td>
+                <td className="act">{link.status === 'active' && <button className="btn sm ghost" onClick={() => revoke(link.id)}>Revocar</button>}</td>
               </tr>
             ))}
           </tbody>

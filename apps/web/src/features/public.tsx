@@ -1,7 +1,8 @@
-import { FormEvent, useEffect, useState, type ReactNode } from 'react';
+import { FormEvent, useEffect, useMemo, useState, type CSSProperties, type ReactNode } from 'react';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import type { Role } from '@eduquest/contracts';
 import {
   ArrowRight,
   BadgeCheck,
@@ -33,7 +34,8 @@ import { useAuth, type OtpChallenge, type SessionUser } from '@/shared/auth';
 import { Sheet, ThemeButton, Tile } from '@/ui';
 import { PasskeyLogin } from '@/shared/passkey';
 import { useTheme } from '@/shared/theme';
-import { buildingsFor, IsoCampus, Luka, phaseOf } from './campus';
+import { districtsOf } from '@/shared/buildings';
+import { campusFor, IsoCampus, Luka, phaseOf } from './campus';
 
 function Brand({ light = true }: { light?: boolean }) {
   return (
@@ -47,46 +49,54 @@ function Brand({ light = true }: { light?: boolean }) {
   );
 }
 
+const SHOWCASE: { role: Role; label: string; color: string; pitch: string }[] = [
+  { role: 'student', label: 'Estudiante', color: '#ff8a5c', pitch: 'Estudia, practica a su ritmo y juega con su grupo.' },
+  { role: 'teacher', label: 'Docente', color: '#7c5cff', pitch: 'Prepara clases, califica y conduce salas en vivo.' },
+  { role: 'coordinator', label: 'Coordinación', color: '#19c39c', pitch: 'Alertas, asistencia y citaciones de todo el colegio.' },
+  { role: 'rector', label: 'Rectoría', color: '#c9a227', pitch: 'Indicadores, firmas y comunicados oficiales.' },
+  { role: 'guardian', label: 'Familia', color: '#ff5d73', pitch: 'El avance de cada hijo y la conversación con sus docentes.' },
+  { role: 'admin', label: 'Administración', color: '#3ab8ff', pitch: 'Cuentas, roles y estructura del colegio.' },
+];
+
+const MODULES = new Set(SHOWCASE.flatMap(({ role }) => campusFor(role).buildings.map((b) => b.key))).size;
+
 function HeroCampus() {
   const phase = phaseOf(Number(new Intl.DateTimeFormat('en-US', { hour: 'numeric', hour12: false, timeZone: 'America/Bogota' }).format(new Date())) % 24);
-  const buildings = buildingsFor('student');
   const { dark } = useTheme();
   const shown = !dark ? 'day' : phase === 'day' || phase === 'dawn' ? 'dusk' : phase;
+  const [index, setIndex] = useState(0);
+  const [pinned, setPinned] = useState(false);
+  useEffect(() => {
+    if (pinned || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    const id = window.setInterval(() => setIndex((i) => (i + 1) % SHOWCASE.length), 6000);
+    return () => window.clearInterval(id);
+  }, [pinned]);
+  const current = SHOWCASE[index]!;
+  const layout = useMemo(() => campusFor(current.role), [current.role]);
   return (
     <div className="hero-campus">
-      <motion.div initial={{ opacity: 0, y: 40, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} transition={{ duration: 0.9, ease: [0.2, 0.8, 0.2, 1] }}>
-        <IsoCampus buildings={buildings} phase={shown} interactive={false} />
-      </motion.div>
+      <div className="hero-roles" role="tablist" aria-label="Campus por rol">
+        {SHOWCASE.map((item, i) => (
+          <button key={item.role} role="tab" aria-selected={i === index} className={i === index ? 'on' : ''} style={{ '--c': item.color } as CSSProperties} onClick={() => { setPinned(true); setIndex(i); }}>
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <AnimatePresence mode="wait">
+        <motion.div key={current.role} initial={{ opacity: 0, y: 16, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.45, ease: [0.2, 0.8, 0.2, 1] }}>
+          <IsoCampus layout={layout} phase={shown} interactive={false} />
+        </motion.div>
+      </AnimatePresence>
       <motion.div className="hero-luka" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.7 }}>
-        <Luka mood="talking" size={92} />
-        <div className="luka-bubble" style={{ marginBottom: 34 }}>
-          <div className="luka-name"><Sparkles size={13} /> Luka</div>
-          <p>¡Hola! Soy tu compañero IA. Te acompaño por el campus, te explico paso a paso y te escucho por voz.</p>
-        </div>
-      </motion.div>
-      <motion.div className="float-card hero-float" style={{ right: 0, top: 10 }} initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 1 }}>
-        <div className="row g-12">
-          <Tile icon={ScanFace} tone="mint" />
-          <div>
-            <div style={{ fontWeight: 800 }}>Ingreso con tu rostro</div>
-            <div style={{ fontSize: 13, color: 'var(--muted)' }}>Con prueba de vida y cifrado</div>
-          </div>
+        <Luka mood="talking" size={84} />
+        <div className="luka-bubble">
+          <div className="luka-name"><Sparkles size={13} /> Campus de {current.label.toLowerCase()}</div>
+          <p>{current.pitch} {layout.buildings.length} edificios, solo los suyos.</p>
         </div>
       </motion.div>
     </div>
   );
 }
-
-const features = [
-  { icon: School, color: '#ff8a5c', title: 'Aula', body: 'Cursos, lecciones, tareas y evaluaciones con integridad en tiempo real.' },
-  { icon: Library, color: '#4f86f7', title: 'Biblioteca', body: 'Guías y lecturas en la nube con etiquetas, marcadores y glosario. Luka responde citando el documento.' },
-  { icon: BrainCircuit, color: '#8b6cff', title: 'Laboratorio IA', body: 'Tutor socrático que da pistas, no respuestas, y se apaga solo durante los exámenes.' },
-  { icon: Swords, color: '#ff5d73', title: 'Arena', body: 'Competencias por equipos con código QR, capitán rotativo y podio en el proyector.' },
-  { icon: NotebookPen, color: '#19c39c', title: 'Cuaderno', body: 'Apuntes con resumen automático y tarjetas de repaso espaciado para no olvidar.' },
-  { icon: Compass, color: '#3ab8ff', title: 'Mi ruta', body: 'Retos que se ajustan a tu dominio de cada tema, verificados por el servidor.' },
-  { icon: Megaphone, color: '#ff5d73', title: 'Cartelera', body: 'Novedades por audiencia, foros del curso y confirmación de lectura para acudientes.' },
-  { icon: Trophy, color: '#ffc83d', title: 'Sala de trofeos', body: 'XP, rachas, insignias y certificados con código QR verificable.' },
-];
 
 export function LegalLinks({ className = '' }: { className?: string }) {
   return (
@@ -130,26 +140,26 @@ export function Landing() {
           <div className="grid cols-2" style={{ alignItems: 'center', gap: 40, padding: '56px 0 96px' }}>
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
               <span className="chip landing-chip">
-                <Zap size={14} /> Aula virtual gamificada · 2026
+                <Zap size={14} /> Campus virtual · Colegio Francisco Arango
               </span>
-              <h1 className="display" style={{ fontSize: 'clamp(46px, 6.2vw, 84px)', margin: '22px 0 20px' }}>
-                Aprender se siente como <span className="text-grad">una aventura.</span>
+              <h1 className="display" style={{ fontSize: 'clamp(44px, 6vw, 80px)', margin: '22px 0 20px' }}>
+                Un campus distinto <span className="text-grad">para cada rol.</span>
               </h1>
-              <p className="landing-lead" style={{ fontSize: 19, lineHeight: 1.6, maxWidth: 540 }}>
-                Ludoteka Campus es el campus virtual del Colegio Francisco Arango: un mundo explorable donde cada edificio
-                es una forma de aprender, con biblioteca, arena por equipos, tutor IA y acceso facial.
+              <p className="landing-lead" style={{ fontSize: 19, lineHeight: 1.6, maxWidth: 560 }}>
+                Estudiantes, docentes, coordinación, rectoría, familias y administración entran a su propio mapa:
+                solo los edificios que necesitan, con Luka como guía en cada paso.
               </p>
               <div className="row g-12 wrap" style={{ marginTop: 32 }}>
-                <Link to="/ingresar" className="btn lg">Entrar al aula <ArrowRight size={18} /></Link>
-                <a href="#acceso" className="btn lg glass">Cómo obtener mi cuenta</a>
+                <Link to="/ingresar" className="btn lg">Ingresar <ArrowRight size={18} /></Link>
+                <a href="#roles" className="btn lg glass">Ver los campus</a>
               </div>
               <div className="row g-24 wrap" style={{ marginTop: 44 }}>
                 {[
-                  ['8', 'edificios para aprender'],
-                  ['6', 'roles: estudiante, docente, coordinación, rectoría, acudiente y administración'],
+                  [String(MODULES), 'módulos repartidos por rol'],
+                  ['6', 'campus independientes'],
                   ['QR', 'en cada reporte y certificado'],
                 ].map(([value, label]) => (
-                  <div key={label} style={{ maxWidth: value === '6' ? 240 : 170 }}>
+                  <div key={label} style={{ maxWidth: 170 }}>
                     <div className="display" style={{ fontSize: 36 }}>{value}</div>
                     <div className="landing-stat">{label}</div>
                   </div>
@@ -161,28 +171,47 @@ export function Landing() {
         </div>
       </section>
 
-      <section className="section">
+      <section className="section" id="roles">
         <div className="container">
-          <div style={{ textAlign: 'center', maxWidth: 700, margin: '0 auto 52px' }}>
-            <div className="eyebrow">Un edificio para cada forma de aprender</div>
-            <h2 className="display" style={{ fontSize: 'clamp(34px, 4vw, 52px)', marginTop: 12 }}>Recorre el campus, no un menú.</h2>
-            <p className="muted" style={{ marginTop: 12, fontSize: 17, lineHeight: 1.6 }}>Cada edificio muestra en vivo lo que te espera: lecciones pendientes, salas abiertas, avisos sin leer y tarjetas para repasar.</p>
+          <div style={{ textAlign: 'center', maxWidth: 720, margin: '0 auto 52px' }}>
+            <div className="eyebrow">Cada rol, su campus</div>
+            <h2 className="display" style={{ fontSize: 'clamp(34px, 4vw, 52px)', marginTop: 12 }}>Recorre tu campus, no un menú.</h2>
+            <p className="muted" style={{ marginTop: 12, fontSize: 17, lineHeight: 1.6 }}>Nadie ve módulos que no le corresponden. Cada edificio muestra en vivo lo que te espera: entregas por calificar, alertas abiertas, documentos por firmar o tarjetas para repasar.</p>
           </div>
-          <div className="grid cols-4">
-            {features.map((feature, i) => (
-              <motion.article
-                key={feature.title}
-                className="card hover feature building-card"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
-              >
-                <span className="building-ico" style={{ background: feature.color }}><feature.icon size={24} strokeWidth={2.4} /></span>
-                <h3 style={{ fontSize: 20, margin: '16px 0 8px' }}>{feature.title}</h3>
-                <p className="muted" style={{ lineHeight: 1.6, fontSize: 14.5 }}>{feature.body}</p>
-              </motion.article>
-            ))}
+          <div className="grid cols-3 role-cards">
+            {SHOWCASE.map((item, i) => {
+              const districts = districtsOf(campusFor(item.role).buildings);
+              return (
+                <motion.article
+                  key={item.role}
+                  className="card role-card"
+                  style={{ '--c': item.color } as CSSProperties}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                >
+                  <div className="role-card-head">
+                    <span className="role-dot" />
+                    <h3>{item.label}</h3>
+                  </div>
+                  <p className="muted">{item.pitch}</p>
+                  {districts.map(({ label, items }) => (
+                    <div key={label} className="role-district">
+                      <small>{label}</small>
+                      <div className="role-buildings">
+                        {items.map((b) => (
+                          <span key={b.key} className="role-building" title={b.about}>
+                            <span className="role-building-ico" style={{ background: b.color }}><b.icon size={13} strokeWidth={2.6} /></span>
+                            {b.name}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </motion.article>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -230,7 +259,7 @@ export function Landing() {
               { icon: School, title: 'El colegio te crea', body: 'Secretaría o administración registran tu cuenta con tu correo, rol y grupo.' },
               { icon: Mail, title: 'Recibes un correo', body: 'Llega una clave temporal a tu correo. Acudientes y estudiantes reciben cada uno la suya.' },
               { icon: KeyRound, title: 'Primer ingreso seguro', body: 'Escribes un código de 6 dígitos que te enviamos y eliges tu propia contraseña.' },
-              { icon: Fingerprint, title: 'Entra más rápido', body: 'Si quieres, activa Face ID, huella, Windows Hello o tu rostro desde Ajustes.' },
+              { icon: Fingerprint, title: 'Entra más rápido', body: 'Al terminar tu primer ingreso te ofrecemos activar Windows Hello, Face ID o huella en ese equipo. También desde Ajustes.' },
             ].map((step, i) => (
               <div key={step.title} className="card access-step">
                 <span className="access-num">{i + 1}</span>
@@ -273,6 +302,25 @@ export function Landing() {
   );
 }
 
+const ROLE_SHOWCASE = [
+  { label: 'Estudiantes', color: '#ff8a5c' },
+  { label: 'Docentes', color: '#7c5cff' },
+  { label: 'Coordinación', color: '#19c39c' },
+  { label: 'Rectoría', color: '#ffc83d' },
+  { label: 'Familias', color: '#ff5d73' },
+  { label: 'Administración', color: '#3ab8ff' },
+];
+
+function AuthCampus() {
+  const { dark } = useTheme();
+  const layout = useMemo(() => campusFor('student'), []);
+  return (
+    <div className="auth-campus" aria-hidden>
+      <IsoCampus layout={layout} phase={dark ? 'night' : 'day'} interactive={false} />
+    </div>
+  );
+}
+
 export function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
   return (
     <main className="auth">
@@ -281,21 +329,14 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
         <div className="orb" style={{ position: 'absolute', width: 380, height: 380, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,93,115,.4), transparent 70%)', bottom: -140, left: -100 }} />
         <Brand />
         <div style={{ position: 'relative' }}>
-          <h2 className="display" style={{ fontSize: 'clamp(36px, 3.8vw, 56px)' }}>Cada lección suma. <span className="text-grad">Cada logro cuenta.</span></h2>
-          <div className="stack g-12" style={{ marginTop: 32, maxWidth: 420 }}>
-            {[
-              { icon: Zap, tone: 'gold' as const, text: 'Gana XP y sube de nivel' },
-              { icon: Flame, tone: 'coral' as const, text: 'Mantén tu racha diaria' },
-              { icon: Trophy, tone: 'violet' as const, text: 'Compite en la liga del grupo' },
-            ].map((item) => (
-              <div key={item.text} className="glass row g-12" style={{ padding: 12 }}>
-                <Tile icon={item.icon} tone={item.tone} />
-                <b>{item.text}</b>
-              </div>
-            ))}
+          <h2 className="display" style={{ fontSize: 'clamp(34px, 3.4vw, 50px)' }}>Un campus <span className="text-grad">para cada rol.</span></h2>
+          <p className="auth-lead">Al entrar llegas a tu propio campus: los edificios, el menú y las herramientas cambian según quién eres en el colegio.</p>
+          <div className="auth-roles">
+            {ROLE_SHOWCASE.map((r) => <span key={r.label}><i style={{ background: r.color }} />{r.label}</span>)}
           </div>
         </div>
-        <p style={{ color: '#a79fe0', fontSize: 13, position: 'relative' }}>Aula virtual oficial · Colegio Francisco Arango</p>
+        <AuthCampus />
+        <p className="auth-foot">Aula virtual oficial · Colegio Francisco Arango</p>
       </section>
       <section className="auth-form">
         <ThemeButton className="icon-btn auth-theme" />

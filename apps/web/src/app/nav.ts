@@ -1,76 +1,45 @@
-import {
-  Bell,
-  BookOpen,
-  Building2,
-  ClipboardList,
-  Compass,
-  Crown,
-  Database,
-  Gamepad2,
-  GraduationCap,
-  HeartHandshake,
-  LayoutDashboard,
-  Library,
-  Lightbulb,
-  Mail,
-  Megaphone,
-  NotebookPen,
-  Radio,
-  Settings,
-  ShieldCheck,
-  Sparkles,
-  Swords,
-  Trophy,
-  Users,
-  type LucideIcon,
-} from 'lucide-react';
-import { ROLE_LABELS, type Role } from '@eduquest/contracts';
+import { Bell, LayoutDashboard, Settings, type LucideIcon } from 'lucide-react';
+import { ROLE_LABELS, ROLES, type Role } from '@eduquest/contracts';
+import { buildingsFor, districtsOf, type BuildingKey } from '@/shared/buildings';
 
 export interface NavItem { to: string; label: string; icon: LucideIcon; end?: boolean }
 export interface NavSection { label: string; items: NavItem[] }
 
 export const roleLabel: Record<Role, string> = ROLE_LABELS;
 
-const ALL: readonly Role[] = ['admin', 'coordinator', 'rector', 'teacher', 'student', 'guardian'];
-const SCHOOL: readonly Role[] = ['admin', 'coordinator', 'rector', 'teacher', 'student'];
-const STAFF_READ: readonly Role[] = ['admin', 'coordinator', 'rector', 'teacher'];
+const ALL: readonly Role[] = ROLES;
 
-/**
- * Quién puede abrir cada sección. El router la usa para mostrar «no es para tu rol» y el menú para
- * no ofrecer lo que no se puede abrir. La API valida lo mismo por su cuenta.
- */
-export const ROUTE_ROLES: Record<string, readonly Role[]> = {
-  cursos: SCHOOL,
-  'cursos/:id': SCHOOL,
-  'cursos/:id/aula': STAFF_READ,
-  'lecciones/:id': SCHOOL,
-  logros: ['student'],
-  jugar: ['student'],
-  ruta: ['student'],
-  aprender: ['student'],
-  cuaderno: ['student'],
-  tutor: ALL,
-  rostro: ALL,
-  'en-vivo': ['student', 'teacher', 'admin'],
-  arena: SCHOOL,
-  'arena/:id': SCHOOL,
-  banco: ['teacher', 'admin'],
-  'integridad/:id': STAFF_READ,
-  'reportes/:id': STAFF_READ,
-  coordinacion: ['coordinator', 'admin'],
-  rectoria: ['rector', 'admin'],
-  mensajes: ['teacher', 'guardian'],
-  admin: ['admin'],
-  'admin/usuarios': ['admin'],
-  novedades: ALL,
-  acudiente: ['guardian'],
-  biblioteca: ALL,
+/** Pages reached from inside a building (a course, a lesson, a room…); the building doors come from each role's campus. */
+const INNER: Record<string, readonly Role[]> = {
+  'cursos/:id': ['student', 'teacher', 'coordinator', 'rector'],
+  'cursos/:id/aula': ['teacher', 'coordinator', 'rector'],
+  'lecciones/:id': ['student', 'teacher', 'coordinator'],
+  'arena/:id': ['student', 'teacher'],
   'biblioteca/:id': ALL,
-  consultas: STAFF_READ,
-  calificaciones: STAFF_READ,
+  'integridad/:id': ['teacher', 'coordinator'],
+  'reportes/:id': ['teacher', 'coordinator', 'rector'],
+  'rectoria/comunicados': ['rector'],
+  rostro: ALL,
   ajustes: ALL,
   notificaciones: ALL,
 };
+
+function routeRoles() {
+  const table: Record<string, Role[]> = {};
+  for (const role of ROLES) {
+    for (const b of buildingsFor(role)) {
+      const path = b.to.replace(/^\/app\//, '');
+      (table[path] ??= []).push(role);
+    }
+  }
+  return { ...table, ...INNER } as Record<string, readonly Role[]>;
+}
+
+/**
+ * Who can open each page. A module belongs to the roles whose campus has its building; the router shows
+ * «no es para tu rol» to everyone else and the API validates the same on its side.
+ */
+export const ROUTE_ROLES: Record<string, readonly Role[]> = routeRoles();
 
 export function canOpen(role: Role, to: string) {
   const path = to.replace(/^\/app\/?/, '').split('?')[0]!;
@@ -80,80 +49,30 @@ export function canOpen(role: Role, to: string) {
 }
 
 const home: NavItem = { to: '/app', label: 'Inicio', icon: LayoutDashboard, end: true };
-
-/** Every destination a role can reach, grouped as in the desktop sidebar. */
-export function navSections(role: Role, companionName: string): NavSection[] {
-  const student = role === 'student';
-  const guardian = role === 'guardian';
-  const oversight = role === 'coordinator' || role === 'rector';
-
-  const learn: NavItem[] = guardian
-    ? [
-        home,
-        { to: '/app/acudiente', label: 'Familia', icon: HeartHandshake },
-        { to: '/app/mensajes', label: 'Mensajes', icon: Mail },
-        { to: '/app/novedades', label: 'Cartelera', icon: Megaphone },
-        { to: '/app/biblioteca', label: 'Biblioteca', icon: Library },
-      ]
-    : [
-        home,
-        { to: '/app/cursos', label: oversight ? 'Cursos' : 'Mis cursos', icon: BookOpen },
-        { to: '/app/biblioteca', label: 'Biblioteca', icon: Library },
-        { to: '/app/novedades', label: 'Cartelera', icon: Megaphone },
-        { to: '/app/arena', label: 'Arena', icon: Swords },
-        { to: '/app/en-vivo', label: 'Sala en vivo', icon: Radio },
-      ];
-  const play: NavItem[] = student
-    ? [
-        { to: '/app/aprender', label: 'Mi espacio', icon: Lightbulb },
-        { to: '/app/ruta', label: 'Mi ruta', icon: Compass },
-        { to: '/app/cuaderno', label: 'Cuaderno', icon: NotebookPen },
-        { to: '/app/logros', label: 'Logros', icon: Trophy },
-        { to: '/app/jugar', label: 'Arcade', icon: Gamepad2 },
-        { to: '/app/tutor', label: companionName, icon: Sparkles },
-      ]
-    : [];
-  const manage: NavItem[] = [
-    { to: '/app/coordinacion', label: 'Coordinación', icon: ShieldCheck },
-    { to: '/app/rectoria', label: 'Rectoría', icon: Crown },
-    { to: '/app/calificaciones', label: 'Calificaciones', icon: ClipboardList },
-    { to: '/app/mensajes', label: 'Mensajes', icon: Mail },
-    { to: '/app/banco', label: 'Banco de preguntas', icon: GraduationCap },
-    { to: '/app/consultas', label: 'Observatorio', icon: Database },
-    { to: '/app/admin/usuarios', label: 'Usuarios', icon: Users },
-    { to: '/app/admin', label: 'Institución', icon: Building2, end: true },
-    ...(!student ? [{ to: '/app/tutor', label: companionName, icon: Sparkles }] : []),
-  ].filter((item) => !guardian || item.to === '/app/tutor');
-  const account: NavItem[] = [
+const account: NavSection = {
+  label: 'Cuenta',
+  items: [
     { to: '/app/notificaciones', label: 'Notificaciones', icon: Bell },
     { to: '/app/ajustes', label: 'Ajustes', icon: Settings },
-  ];
+  ],
+};
 
-  return [
-    { label: guardian ? 'Familia' : 'Aprender', items: learn },
-    { label: 'Jugar', items: play },
-    { label: 'Gestión', items: manage },
-    { label: 'Cuenta', items: account },
-  ]
-    .map((section) => ({ ...section, items: section.items.filter((item) => canOpen(role, item.to)) }))
-    .filter((section) => section.items.length > 0);
+/** The sidebar mirrors the role's campus: one entry per building, grouped by district, never repeated. */
+export function navSections(role: Role, companionName: string): NavSection[] {
+  const districts = districtsOf(buildingsFor(role, companionName)).map(({ label, items }) => ({
+    label,
+    items: items.map((b): NavItem => ({ to: b.to, label: b.name, icon: b.icon, end: true })),
+  }));
+  if (districts[0]) districts[0].items.unshift(home);
+  return [...districts, account];
 }
 
-/** Bottom tabs on phones (the last slot is always «Más»). */
+const TAB_LABEL: Partial<Record<BuildingKey, string>> = {
+  aula: 'Cursos', ruta: 'Ruta', planilla: 'Notas', banco: 'Banco', firmas: 'Firmas', reportes: 'Reportes', grupos: 'Grupos', familia: 'Hijos',
+};
+
+/** Bottom tabs on phones: home plus the role's three main buildings (the last slot is always «Más»). */
 export function mobileTabs(role: Role, companionName: string): NavItem[] {
-  const tutor: NavItem = { to: '/app/tutor', label: companionName, icon: Sparkles };
-  switch (role) {
-    case 'student':
-      return [home, { to: '/app/cursos', label: 'Cursos', icon: BookOpen }, tutor, { to: '/app/arena', label: 'Arena', icon: Swords }];
-    case 'teacher':
-      return [home, { to: '/app/cursos', label: 'Cursos', icon: BookOpen }, { to: '/app/calificaciones', label: 'Notas', icon: ClipboardList }, { to: '/app/mensajes', label: 'Mensajes', icon: Mail }];
-    case 'coordinator':
-      return [home, { to: '/app/coordinacion', label: 'Seguimiento', icon: ShieldCheck }, { to: '/app/calificaciones', label: 'Notas', icon: ClipboardList }, { to: '/app/novedades', label: 'Cartelera', icon: Megaphone }];
-    case 'rector':
-      return [home, { to: '/app/rectoria', label: 'Rectoría', icon: Crown }, { to: '/app/consultas', label: 'Observatorio', icon: Database }, { to: '/app/novedades', label: 'Cartelera', icon: Megaphone }];
-    case 'guardian':
-      return [home, { to: '/app/acudiente', label: 'Familia', icon: HeartHandshake }, { to: '/app/mensajes', label: 'Mensajes', icon: Mail }, { to: '/app/novedades', label: 'Cartelera', icon: Megaphone }];
-    case 'admin':
-      return [home, { to: '/app/admin/usuarios', label: 'Usuarios', icon: Users }, { to: '/app/admin', label: 'Institución', icon: Building2, end: true }];
-  }
+  const main = buildingsFor(role, companionName).slice(0, 3).map((b): NavItem => ({ to: b.to, label: TAB_LABEL[b.key] ?? b.name, icon: b.icon }));
+  return [home, ...main];
 }

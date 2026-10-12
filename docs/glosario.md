@@ -41,6 +41,10 @@
 | Material | Textura de cada edificio: ficha bibliográfica (Biblioteca), pizarra (Aula), papel milimetrado (Laboratorio IA), neón (Arena y Arcade), corcho (Cartelera), hoja rayada (Cuaderno, Coordinación, Rectoría, Taller), curvas de nivel (Mi ruta, Observatorio) y terciopelo con latón (Sala de trofeos). Cada material ajusta tinta, líneas y superficies para mantener el contraste en ambos temas |
 | Mini mapa | Campus en miniatura de la barra lateral (y del menú «Más» en el teléfono), con los mismos edificios del inicio. El marcador «Estás aquí» se posa sobre el edificio de la página actual, o sobre la plaza en el inicio |
 | Entrar al edificio | Única transición orquestada de la app: el dibujo del edificio tocado crece hasta la fachada de la página (View Transitions API). Sin la API o con «reducir movimiento», navega sin animar |
+| Campus por rol | Mapa propio de cada rol con solo sus módulos, agrupados en distritos y sin edificios repetidos. Define el menú y los permisos de las páginas (`ROUTE_ROLES`). Tabla en `diseno-campus.md` |
+| Sala en vivo | Quiz en tiempo real: el docente abre una evaluación de su curso con un código de 6 caracteres, los estudiantes entran con el código y responden a la vez; al cerrar, cada uno queda calificado |
+| Mensajes entre el personal | Conversaciones entre docentes, coordinación, rectoría y administración (`staff_messages`), con nombre, rol y asignaturas a la vista |
+| Guía de Luka | Botón flotante siempre visible: la primera vez recorre el campus del rol y en cada edificio explica cómo se usa |
 | `schema_migrations` | Tabla que registra qué migraciones SQL se aplicaron |
 | `/api/health` | Healthcheck público. Hace ping a la base |
 | `SEED_PASSWORD` | Variable con la clave de las cuentas demo. En Render debe ser fuerte; nunca se escribe su valor en docs |
@@ -51,8 +55,8 @@
 |---------|-------------|
 | argon2id | Algoritmo de hash de contraseñas |
 | OTP / código de ingreso | Código de 6 dígitos por correo tras la contraseña. Vence en 10 min, admite 5 intentos (`login_challenges`) |
-| Dispositivo de confianza | Cookie `HttpOnly` de 30 días que salta el código (`trusted_devices`) |
-| Passkey | Credencial WebAuthn (Touch ID, Windows Hello…) en `webauthn_credentials` |
+| Dispositivo de confianza | Cookie `HttpOnly` de 30 días que salta el código (`trusted_devices`). Guarda hasta 8 cuentas por navegador, así un computador compartido recuerda a cada persona que marcó «Recordar este dispositivo» |
+| Passkey | Credencial WebAuthn (Touch ID, Windows Hello…) en `webauthn_credentials`. Tras entrar con el código, el inicio ofrece activarla en ese equipo; también se gestiona en Ajustes |
 | Refresh rotativo | Token opaco en cookie que se renueva en cada uso. Si se reutiliza uno viejo, se cierra toda la familia de sesiones |
 | `ACCOUNT_LOCKED` | Bloqueo progresivo por cuenta tras 5 contraseñas fallidas |
 | Throttler | Límite de peticiones por ventana (`@nestjs/throttler`) en las rutas de autenticación: 300 por IP cada 15 min y 10 por IP más cuenta cada 5 min. Responde `429 TOO_MANY_REQUESTS` (ADR-009) |

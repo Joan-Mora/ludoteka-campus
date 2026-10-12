@@ -79,6 +79,20 @@ export class LearningService {
         'grades.level as grade_level',
       ]);
     if (user.role === 'teacher') query = query.where('courses.teacher_id', '=', user.id);
+    if (user.role === 'guardian') {
+      query = query.where('courses.published', '=', true).where(({ exists, selectFrom }) =>
+        exists(
+          selectFrom('enrollments')
+            .innerJoin('guardian_links', 'guardian_links.student_id', 'enrollments.user_id')
+            .select('enrollments.id')
+            .whereRef('enrollments.group_id', '=', 'courses.group_id')
+            .whereRef('enrollments.academic_year_id', '=', 'courses.academic_year_id')
+            .where('guardian_links.guardian_id', '=', user.id)
+            .where('guardian_links.status', '=', 'active')
+            .where('enrollments.status', '=', 'active'),
+        ),
+      );
+    }
     if (user.role === 'student') {
       query = query
         .where('courses.published', '=', true)

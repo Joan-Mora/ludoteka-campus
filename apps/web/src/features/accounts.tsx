@@ -188,7 +188,7 @@ export function UsuariosPage() {
         ) : (
           <div className="table-wrap">
             <table className="table">
-              <thead><tr><th>Persona</th><th>Rol</th><th>Grupo</th><th>Estado</th><th>Último ingreso</th><th /></tr></thead>
+              <thead><tr><th>Persona</th><th className="num">Rol</th><th className="num">Grupo</th><th className="num">Estado</th><th className="num">Último ingreso</th><th className="act" /></tr></thead>
               <tbody>
                 {(accounts.data ?? []).map((a) => (
                   <tr key={a.id}>
@@ -201,11 +201,11 @@ export function UsuariosPage() {
                         </div>
                       </div>
                     </td>
-                    <td><span className={`chip ${ROLE_TONE[a.role]}`}>{ROLE_NAME[a.role]}</span></td>
-                    <td>{a.group ?? <span className="muted">—</span>}</td>
-                    <td><StatusChip account={a} /></td>
-                    <td className="muted">{when(a.lastLoginAt)}</td>
-                    <td><button className="btn sm ghost" onClick={() => setSelected(a)}>Gestionar</button></td>
+                    <td className="num"><span className={`chip ${ROLE_TONE[a.role]}`}>{ROLE_NAME[a.role]}</span></td>
+                    <td className="num">{a.group ?? <span className="muted">—</span>}</td>
+                    <td className="num"><StatusChip account={a} /></td>
+                    <td className="num muted">{when(a.lastLoginAt)}</td>
+                    <td className="act"><button className="btn sm ghost" onClick={() => setSelected(a)}>Gestionar</button></td>
                   </tr>
                 ))}
               </tbody>
@@ -220,15 +220,15 @@ export function UsuariosPage() {
         <div className="card" style={{ marginTop: 18 }}>
           <div className="card-title" style={{ marginBottom: 12 }}>Importaciones recientes</div>
           <div className="table-scroll"><table className="table">
-            <thead><tr><th>Archivo</th><th>Tipo</th><th>Creadas</th><th>Omitidas</th><th>Fecha</th><th>Por</th></tr></thead>
+            <thead><tr><th>Archivo</th><th className="num">Tipo</th><th className="num">Creadas</th><th className="num">Omitidas</th><th className="num">Fecha</th><th>Por</th></tr></thead>
             <tbody>
               {imports.data.map((log) => (
                 <tr key={log.id}>
                   <td><b>{log.file_name}</b></td>
-                  <td>{log.kind === 'users' ? 'Usuarios' : 'Estructura'}</td>
-                  <td>{log.created_count}</td>
-                  <td>{log.skipped_count}</td>
-                  <td className="muted">{when(log.created_at)}</td>
+                  <td className="num">{log.kind === 'users' ? 'Usuarios' : 'Estructura'}</td>
+                  <td className="num">{log.created_count}</td>
+                  <td className="num">{log.skipped_count}</td>
+                  <td className="num muted">{when(log.created_at)}</td>
                   <td className="muted">{log.actor_name ?? '—'}</td>
                 </tr>
               ))}
@@ -286,15 +286,15 @@ function DataRequests() {
       {error && <p className="err" style={{ marginBottom: 12 }}>{error}</p>}
       <div className="table-wrap">
         <table className="table">
-          <thead><tr><th>Persona</th><th>Motivo</th><th>Fecha</th><th>Estado</th><th /></tr></thead>
+          <thead><tr><th>Persona</th><th>Motivo</th><th className="num">Fecha</th><th className="num">Estado</th><th className="act" /></tr></thead>
           <tbody>
             {requests.data.map((r) => (
               <tr key={r.id}>
                 <td><b>{r.full_name}</b><br /><span className="muted" style={{ fontSize: 13 }}>{r.email}</span></td>
                 <td style={{ maxWidth: 280 }}>{r.reason ?? <span className="muted">—</span>}</td>
-                <td className="muted">{when(r.created_at)}</td>
-                <td><span className={`chip ${r.status === 'done' ? 'mint' : r.status === 'rejected' ? 'coral' : 'gold'}`}>{r.status === 'done' ? 'Atendida' : r.status === 'rejected' ? 'Rechazada' : 'Pendiente'}</span></td>
-                <td>
+                <td className="num muted">{when(r.created_at)}</td>
+                <td className="num"><span className={`chip ${r.status === 'done' ? 'mint' : r.status === 'rejected' ? 'coral' : 'gold'}`}>{r.status === 'done' ? 'Atendida' : r.status === 'rejected' ? 'Rechazada' : 'Pendiente'}</span></td>
+                <td className="act">
                   {r.status === 'pending' && (
                     <div className="row g-8">
                       <button className="btn sm" disabled={busy === r.id} onClick={() => resolve(r.id, 'done')}>Atendida</button>

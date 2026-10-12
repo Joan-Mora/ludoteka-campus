@@ -18,6 +18,7 @@ import {
   Globe2,
   Languages,
   Lock,
+  Mail,
   Megaphone,
   PenLine,
   Play,
@@ -29,13 +30,17 @@ import {
   Star,
   Target,
   Trophy,
+  Users,
   Zap,
   type LucideIcon,
 } from 'lucide-react';
 import { api, ApiException, download } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
+import { useCompanion } from '@/shared/companion';
+import { enterBuilding } from '@/shared/enter';
 import { Avatar, Bar, DateTile, Empty, PageHeader, pickGradient, Reveal, Ring, Stat, Tile } from '@/ui';
-import { CampusHome, MobileHub } from './campus';
+import { CampusHome, campusFor, MobileHub, statusOf, useCampusData } from './campus';
+import { useFamily } from './governance';
 import { useLayout } from '@/app/layout';
 import { MicButton, SpeakButton } from '@/shared/voice-ui';
 import { appendToField } from '@/shared/voice';
@@ -97,12 +102,132 @@ function CourseTile({ course, index }: { course: CourseCard; index: number }) {
   );
 }
 
+interface Feed { announcements: { id: string; title: string; body: string; course_title: string }[]; events: { id: string; title: string; starts_at: string; course_title: string }[] }
+
+function useFeed() {
+  return useQuery({ queryKey: ['feed'], queryFn: () => api<Feed>('/api/home/feed') });
+}
+
+function HomeRail({ feed }: { feed: Feed | undefined }) {
+  return (
+    <>
+      <Reveal className="card" delay={0.1}>
+        <div className="card-head"><div className="row g-12"><Tile icon={Megaphone} tone="coral" /><div className="card-title">Tablón</div></div></div>
+        <div className="list">
+          {(feed?.announcements ?? []).map((item) => (
+            <div key={item.id} className="list-row" style={{ alignItems: 'flex-start' }}>
+              <div style={{ minWidth: 0 }}>
+                <div className="chip violet" style={{ marginBottom: 6 }}>{item.course_title}</div>
+                <div style={{ fontWeight: 800 }}>{item.title}</div>
+                <p className="muted" style={{ fontSize: 14, marginTop: 4, lineHeight: 1.5 }}>{item.body}</p>
+              </div>
+            </div>
+          ))}
+          {!feed?.announcements.length && <Empty icon={Megaphone} title="Sin anuncios" />}
+        </div>
+      </Reveal>
+      <Reveal className="card" delay={0.15}>
+        <div className="card-head"><div className="row g-12"><Tile icon={CalendarDays} tone="sky" /><div className="card-title">Agenda</div></div></div>
+        <div className="list">
+          {(feed?.events ?? []).map((item) => (
+            <div key={item.id} className="list-row">
+              <DateTile date={item.starts_at} />
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontWeight: 800 }}>{item.title}</div>
+                <div className="muted" style={{ fontSize: 13 }}>{item.course_title} · {new Date(item.starts_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}</div>
+              </div>
+            </div>
+          ))}
+          {!feed?.events.length && <Empty icon={CalendarDays} title="Agenda despejada" />}
+        </div>
+      </Reveal>
+    </>
+  );
+}
+
+/** Each role starts on its own campus. Students and teachers also see their courses; the rest see their buildings. */
 export function HomePage() {
   const { user } = useAuth();
+  return user?.role === 'student' || user?.role === 'teacher' ? <ClassHome /> : <RoleHome />;
+}
+
+function RoleHome() {
+  const { user } = useAuth();
+  const companion = useCompanion();
+  const layout = useLayout();
+  const navigate = useNavigate();
+  const feed = useFeed();
+  const campus = useCampusData();
+  const counts = campus.data?.buildings ?? {};
+  const buildings = campusFor(user?.role, companion.name).buildings;
+  return (
+    <div className="home-grid">
+      <div className="home-main">
+        {layout === 'mobile' ? <MobileHub /> : <CampusHome />}
+        {user?.role === 'guardian' && <ChildrenSummary />}
+        <section className="stack" style={{ gap: 14 }}>
+          <h2 style={{ fontSize: 22 }}>Tus edificios</h2>
+          <div className="role-tiles">
+            {buildings.map((b, i) => (
+              <Reveal key={b.key} delay={i * 0.04}>
+                <button className="card hover role-tile" onClick={() => enterBuilding(navigate, b.to, document.querySelector(`[data-mini="${b.key}"] .mini-art`))}>
+                  <span className="role-tile-ico" style={{ background: b.color }}><b.icon size={20} strokeWidth={2.4} /></span>
+                  <span className="role-tile-text">
+                    <b>{b.name}</b>
+                    <small>{b.about}</small>
+                    <span className={`chip ${(counts[b.key] ?? 0) > 0 ? 'coral' : 'soft'}`}>{statusOf(b, counts[b.key])}</span>
+                  </span>
+                </button>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      </div>
+      <aside className="home-rail"><HomeRail feed={feed.data} /></aside>
+    </div>
+  );
+}
+
+function ChildrenSummary() {
+  const family = useFamily();
+  const children = family.data?.children ?? [];
+  if (family.isLoading) return null;
+  return (
+    <section className="stack" style={{ gap: 14 }}>
+      <h2 style={{ fontSize: 22 }}>Tus hijos</h2>
+      {!children.length && <div className="card"><Empty icon={Users} title="Aún no hay estudiantes vinculados" body="Pide en secretaría que vinculen tu cuenta con la de tu hijo o hija." /></div>}
+      <div className="auto-grid">
+        {children.map((child) => {
+          const open = child.alerts.filter((a) => a.status !== 'resolved').length;
+          const meetings = child.meetings.filter((m) => m.status === 'scheduled' && new Date(m.scheduledAt).getTime() > Date.now()).length;
+          return (
+            <Link key={child.id} to={`/app/acudiente?estudiante=${child.id}`} className="card hover child-card">
+              <div className="row g-12">
+                <Avatar name={child.fullName} />
+                <div style={{ minWidth: 0 }}><b className="ellipsis">{child.fullName}</b><div className="muted" style={{ fontSize: 13 }}>{child.group ?? 'Sin grupo'}</div></div>
+              </div>
+              <div className="child-facts">
+                <span><b>{child.attendance.absent}</b> faltas</span>
+                <span className={open ? 'warn' : ''}><b>{open}</b> {open === 1 ? 'alerta' : 'alertas'}</span>
+                <span className={meetings ? 'warn' : ''}><b>{meetings}</b> {meetings === 1 ? 'citación' : 'citaciones'}</span>
+                <span className={child.unreadMessages ? 'warn' : ''}><b>{child.unreadMessages}</b> mensajes</span>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function ClassHome() {
+  const { user } = useAuth();
   const isStudent = user?.role === 'student';
+  const campus = useCampusData();
+  const counts = campus.data?.buildings ?? {};
   const courses = useQuery({ queryKey: ['courses'], queryFn: () => api<CourseCard[]>('/api/courses') });
   const game = useQuery({ queryKey: ['me-game'], queryFn: () => api<GameMe>('/api/gamification/me'), enabled: isStudent });
-  const feed = useQuery({ queryKey: ['feed'], queryFn: () => api<{ announcements: { id: string; title: string; body: string; course_title: string }[]; events: { id: string; title: string; starts_at: string; course_title: string }[] }>('/api/home/feed') });
+  const feed = useFeed();
   const firstCourse = courses.data?.[0];
   const detail = useQuery({ queryKey: ['course', firstCourse?.id], enabled: Boolean(firstCourse), queryFn: () => api<CourseDetail>(`/api/courses/${firstCourse!.id}`) });
   const nextLesson = detail.data?.units.flatMap((unit) => unit.lessons.map((lesson) => ({ ...lesson, unit: unit.title }))).find((lesson) => !lesson.completed);
@@ -147,10 +272,10 @@ export function HomePage() {
           </>
         ) : (
           <>
-            <Reveal delay={0.05}><Stat icon={BookOpen} tone="violet" value={courses.data?.length ?? 0} label="Cursos activos" /></Reveal>
-            <Reveal delay={0.1}><Stat icon={Megaphone} tone="coral" value={feed.data?.announcements.length ?? 0} label="Anuncios publicados" /></Reveal>
-            <Reveal delay={0.15}><Stat icon={CalendarDays} tone="sky" value={feed.data?.events.length ?? 0} label="Eventos próximos" /></Reveal>
-            <Reveal delay={0.2}><Stat icon={Target} tone="mint" value={totalLessons} label="Lecciones publicadas" /></Reveal>
+            <Reveal delay={0.05}><Stat icon={BookOpen} tone="violet" value={courses.data?.length ?? 0} label="Cursos a cargo" /></Reveal>
+            <Reveal delay={0.1}><Stat icon={PenLine} tone="gold" value={counts.aula ?? 0} label="Entregas por calificar" /></Reveal>
+            <Reveal delay={0.15}><Stat icon={Radio} tone="coral" value={(counts.envivo ?? 0) + (counts.arena ?? 0)} label="Salas abiertas" /></Reveal>
+            <Reveal delay={0.2}><Stat icon={Mail} tone="sky" value={counts.mensajes ?? 0} label="Mensajes sin leer" /></Reveal>
           </>
         )}
       </div>
@@ -165,7 +290,7 @@ export function HomePage() {
             {!courses.isLoading && !courses.data?.length && <div className="card full-row"><Empty icon={BookOpen} title="Aún no tienes cursos" body="Cuando te asignen a un grupo aparecerán aquí." /></div>}
           </div>
 
-          {(user?.role === 'teacher' || user?.role === 'admin') && firstCourse && (
+          {user?.role === 'teacher' && firstCourse && (
             <Reveal className="card">
               <div className="card-head">
                 <div className="row g-12"><Tile icon={ClipboardList} tone="violet" /><div className="card-title">Tu semana docente</div></div>
@@ -174,7 +299,8 @@ export function HomePage() {
               <div className="stack g-12">
                 {[
                   { to: `/app/cursos/${firstCourse.id}/aula`, icon: PenLine, tone: 'gold' as const, title: 'Revisar entregas', body: 'Califica tareas y deja retroalimentación.' },
-                  { to: `/app/cursos/${firstCourse.id}/aula`, icon: Radio, tone: 'sky' as const, title: 'Lanzar un quiz en vivo', body: 'Abre una sala y proyecta el código al grupo.' },
+                  { to: '/app/en-vivo', icon: Radio, tone: 'sky' as const, title: 'Abrir una sala en vivo', body: 'Elige una evaluación, proyecta el código y conduce las preguntas.' },
+                  { to: '/app/mensajes', icon: Mail, tone: 'violet' as const, title: 'Mensajes', body: 'Familias de tus estudiantes y colegas del colegio.' },
                   { to: `/app/integridad/${firstCourse.id}`, icon: ShieldCheck, tone: 'mint' as const, title: 'Monitorear integridad', body: 'Alertas del examen en tiempo real.' },
                   { to: `/app/reportes/${firstCourse.id}`, icon: BarChart3, tone: 'coral' as const, title: 'Boletines y certificados', body: 'Descarga PDF y Excel con fecha e ID.' },
                 ].map((item) => (
@@ -223,36 +349,7 @@ export function HomePage() {
               </div>
             </Reveal>
           )}
-          <Reveal className="card" delay={0.1}>
-            <div className="card-head"><div className="row g-12"><Tile icon={Megaphone} tone="coral" /><div className="card-title">Tablón</div></div></div>
-            <div className="list">
-              {(feed.data?.announcements ?? []).map((item) => (
-                <div key={item.id} className="list-row" style={{ alignItems: 'flex-start' }}>
-                  <div style={{ minWidth: 0 }}>
-                    <div className="chip violet" style={{ marginBottom: 6 }}>{item.course_title}</div>
-                    <div style={{ fontWeight: 800 }}>{item.title}</div>
-                    <p className="muted" style={{ fontSize: 14, marginTop: 4, lineHeight: 1.5 }}>{item.body}</p>
-                  </div>
-                </div>
-              ))}
-              {!feed.data?.announcements.length && <Empty icon={Megaphone} title="Sin anuncios" />}
-            </div>
-          </Reveal>
-          <Reveal className="card" delay={0.15}>
-            <div className="card-head"><div className="row g-12"><Tile icon={CalendarDays} tone="sky" /><div className="card-title">Agenda</div></div></div>
-            <div className="list">
-              {(feed.data?.events ?? []).map((item) => (
-                <div key={item.id} className="list-row">
-                  <DateTile date={item.starts_at} />
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{ fontWeight: 800 }}>{item.title}</div>
-                    <div className="muted" style={{ fontSize: 13 }}>{item.course_title} · {new Date(item.starts_at).toLocaleTimeString('es-CO', { hour: '2-digit', minute: '2-digit' })}</div>
-                  </div>
-                </div>
-              ))}
-              {!feed.data?.events.length && <Empty icon={CalendarDays} title="Agenda despejada" />}
-            </div>
-          </Reveal>
+          <HomeRail feed={feed.data} />
       </aside>
     </div>
   );

@@ -19,12 +19,17 @@ export function clearRefreshCookie(res: Response, env: AppEnv) {
   res.clearCookie(REFRESH_COOKIE, base(env));
 }
 
-export function setDeviceCookie(res: Response, env: AppEnv, token: string, days: number) {
-  res.cookie(DEVICE_COOKIE, token, { ...base(env), maxAge: days * 86400000 });
+/** Several accounts can trust the same browser (a family laptop, a staff room PC), so the cookie keeps one token per account. */
+const MAX_DEVICE_TOKENS = 8;
+
+export function deviceTokens(req: Request): string[] {
+  const raw = req.cookies?.[DEVICE_COOKIE];
+  return typeof raw === 'string' ? raw.split('.').filter(Boolean).slice(0, MAX_DEVICE_TOKENS) : [];
 }
 
-export function clearDeviceCookie(res: Response, env: AppEnv) {
-  res.clearCookie(DEVICE_COOKIE, base(env));
+export function addDeviceToken(req: Request, res: Response, env: AppEnv, token: string, days: number) {
+  const tokens = [token, ...deviceTokens(req).filter((t) => t !== token)].slice(0, MAX_DEVICE_TOKENS);
+  res.cookie(DEVICE_COOKIE, tokens.join('.'), { ...base(env), maxAge: days * 86400000 });
 }
 
 export function clientInfo(req: Request) {

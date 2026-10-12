@@ -3,15 +3,7 @@ import type { Request, Response } from 'express';
 import { changePasswordSchema, forgotSchema, loginSchema, otpResendSchema, otpVerifySchema, resetSchema } from '@eduquest/contracts';
 import { Env } from '../../core/config/config.module';
 import { AllowPendingPassword, CurrentUser, Public, type AuthUser } from '../../core/auth/auth.decorators';
-import {
-  clearDeviceCookie,
-  clearRefreshCookie,
-  clientInfo,
-  DEVICE_COOKIE,
-  REFRESH_COOKIE,
-  setDeviceCookie,
-  setRefreshCookie,
-} from '../../core/auth/session-cookies';
+import { addDeviceToken, clearRefreshCookie, clientInfo, deviceTokens, REFRESH_COOKIE, setRefreshCookie } from '../../core/auth/session-cookies';
 import { ZodPipe } from '../../core/common/zod.pipe';
 import { AuthThrottleGuard } from '../../core/security/throttle';
 import { IdentityService, TRUSTED_DAYS, type Session } from './identity.service';
@@ -33,7 +25,7 @@ export class IdentityController {
   @UseGuards(AuthThrottleGuard)
   @Post('auth/login')
   async login(@Body(new ZodPipe(loginSchema)) body: { email: string; password: string }, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const result = await this.identity.login(body.email, body.password, clientInfo(req), req.cookies?.[DEVICE_COOKIE]);
+    const result = await this.identity.login(body.email, body.password, clientInfo(req), deviceTokens(req));
     if (result.kind === 'otp') return { otp: result.otp };
     return this.sendSession(res, result.session);
   }
@@ -49,7 +41,7 @@ export class IdentityController {
   ) {
     const client = clientInfo(req);
     const { userId, session } = await this.identity.verifyOtp(body.challengeId, body.code, client);
-    if (body.trustDevice) setDeviceCookie(res, this.env.values, await this.identity.trustDevice(userId, client), TRUSTED_DAYS);
+    if (body.trustDevice) addDeviceToken(req, res, this.env.values, await this.identity.trustDevice(userId, client), TRUSTED_DAYS);
     return this.sendSession(res, session);
   }
 
@@ -83,7 +75,6 @@ export class IdentityController {
   async logoutAll(@CurrentUser() user: AuthUser, @Res({ passthrough: true }) res: Response) {
     await this.identity.logoutEverywhere(user);
     clearRefreshCookie(res, this.env.values);
-    clearDeviceCookie(res, this.env.values);
     return { ok: true };
   }
 

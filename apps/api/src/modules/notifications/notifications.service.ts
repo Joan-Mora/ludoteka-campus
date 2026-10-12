@@ -21,6 +21,7 @@ import {
   type RiskAlertRaisedEvent,
   type SignatureDecidedEvent,
   type SignatureRequestedEvent,
+  type StaffMessageEvent,
 } from '../../core/events/domain-events';
 
 const when = (value: Date) => value.toLocaleString('es-CO', { timeZone: 'America/Bogota', dateStyle: 'medium', timeStyle: 'short' });
@@ -249,9 +250,21 @@ export class NotificationsService {
       title: event.attending ? `Citación confirmada: ${event.studentName}` : `Citación declinada: ${event.studentName}`,
       body: `${event.guardianName} ${event.attending ? 'asistirá' : 'no puede asistir'}.${event.note ? ` Nota: ${event.note}` : ''}`,
       kind: 'citacion',
-      link: '/app/coordinacion',
-      building: 'cuaderno',
+      link: '/app/coordinacion/citaciones',
+      building: null,
       entity_id: event.meetingId,
+    }]);
+  }
+
+  @OnEvent(DomainEvents.StaffMessage)
+  async onStaffMessage(event: StaffMessageEvent) {
+    await this.notify([{
+      user_id: event.recipientId,
+      title: `Mensaje de ${event.senderName} (${event.senderRole})`,
+      body: event.body.slice(0, 160),
+      kind: 'mensaje',
+      link: `/app/mensajes?colega=${event.senderId}`,
+      building: null,
     }]);
   }
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, type CSSProperties, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router-dom';
 import { AnimatePresence, motion, useDragControls } from 'framer-motion';
@@ -6,7 +6,7 @@ import { Moon, Sun, X, type LucideIcon } from 'lucide-react';
 import { useTheme } from '@/shared/theme';
 import { useAuth } from '@/shared/auth';
 import { useCompanion } from '@/shared/companion';
-import { buildingForPath, buildingsFor, materialOf } from '@/shared/buildings';
+import { buildingForPath, buildingsFor } from '@/shared/buildings';
 import { BuildingArt } from './campus-mini';
 
 export function ThemeButton({ className = 'icon-btn', label }: { className?: string; label?: boolean }) {
@@ -20,20 +20,32 @@ export function ThemeButton({ className = 'icon-btn', label }: { className?: str
   );
 }
 
+/** Open sheets; the page scrolls again only when the last one closes, whatever the order they close in. */
+let scrollLocks = 0;
+function lockScroll() {
+  scrollLocks += 1;
+  document.body.style.overflow = 'hidden';
+  return () => {
+    scrollLocks = Math.max(0, scrollLocks - 1);
+    if (!scrollLocks) document.body.style.removeProperty('overflow');
+  };
+}
+
 /** Bottom sheet for phones: slides up, closes on backdrop tap, Escape or the close button. */
 export function Sheet({ open, onClose, title, children, full }: { open: boolean; onClose: () => void; title: string; children: ReactNode; full?: boolean }) {
   const drag = useDragControls();
+  const close = useRef(onClose);
+  close.current = onClose;
   useEffect(() => {
     if (!open) return;
-    const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') onClose(); };
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
+    const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') close.current(); };
+    const unlock = lockScroll();
     window.addEventListener('keydown', onKey);
     return () => {
-      document.body.style.overflow = previous;
+      unlock();
       window.removeEventListener('keydown', onKey);
     };
-  }, [open, onClose]);
+  }, [open]);
   return createPortal(
     <AnimatePresence>
       {open && (
@@ -133,7 +145,7 @@ export function PageHeader({ eyebrow, title, subtitle, actions }: { eyebrow?: st
   const Icon = building.icon;
   return (
     <header
-      className={`page-head facade m-${materialOf[building.key]}`}
+      className={`page-head facade m-${building.material}`}
       data-at={pathname}
       data-building={building.key}
       style={{ '--b': building.color } as CSSProperties}

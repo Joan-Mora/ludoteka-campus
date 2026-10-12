@@ -747,6 +747,11 @@ export const guardianMessageSchema = z.object({
   body: z.string().trim().min(1, 'Escribe el mensaje').max(2000),
 });
 
+export const staffMessageSchema = z.object({
+  recipientId: z.string().uuid(),
+  body: z.string().trim().min(1, 'Escribe el mensaje').max(2000),
+});
+
 export const signatureDecisionSchema = z.object({
   approve: z.boolean(),
   note: z.string().trim().max(400).optional(),

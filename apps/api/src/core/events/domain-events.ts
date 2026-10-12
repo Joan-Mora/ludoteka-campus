@@ -18,6 +18,7 @@ export const DomainEvents = {
   MeetingScheduled: 'meeting.scheduled',
   MeetingResponded: 'meeting.responded',
   GuardianMessage: 'guardian.message',
+  StaffMessage: 'staff.message',
   SignatureDecided: 'signature.decided',
   SignatureRequested: 'signature.requested',
   LearningProfileSaved: 'profile.saved',
@@ -90,6 +91,14 @@ export interface GuardianMessageEvent {
   authorName: string;
   studentId: string;
   studentName: string;
+  body: string;
+}
+
+export interface StaffMessageEvent {
+  recipientId: string;
+  senderId: string;
+  senderName: string;
+  senderRole: string;
   body: string;
 }
 

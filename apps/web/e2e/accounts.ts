@@ -23,22 +23,22 @@ export const accounts: Record<E2ERole, string> = {
 export const publicRoutes = ['/', '/ingresar', '/recuperar', '/legal/terminos', '/legal/privacidad', '/legal/cookies'];
 
 export const routesByRole: Record<E2ERole, string[]> = {
-  student: ['/app', '/app/cursos', '/app/biblioteca', '/app/novedades', '/app/arena', '/app/aprender', '/app/ruta', '/app/cuaderno', '/app/logros', '/app/jugar', '/app/tutor', '/app/en-vivo', '/app/ajustes'],
-  teacher: ['/app', '/app/cursos', '/app/calificaciones', '/app/banco', '/app/consultas', '/app/mensajes', '/app/arena', '/app/novedades', '/app/ajustes'],
-  coordinator: ['/app', '/app/coordinacion', '/app/calificaciones', '/app/consultas', '/app/novedades', '/app/ajustes'],
-  rector: ['/app', '/app/rectoria', '/app/calificaciones', '/app/consultas', '/app/novedades', '/app/ajustes'],
+  student: ['/app', '/app/cursos', '/app/ruta', '/app/cuaderno', '/app/aprender', '/app/tutor', '/app/en-vivo', '/app/arena', '/app/jugar', '/app/logros', '/app/biblioteca', '/app/novedades', '/app/ajustes'],
+  teacher: ['/app', '/app/cursos', '/app/calificaciones', '/app/banco', '/app/en-vivo', '/app/arena', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/consultas', '/app/ajustes'],
+  coordinator: ['/app', '/app/coordinacion', '/app/coordinacion/asistencia', '/app/coordinacion/citaciones', '/app/cursos', '/app/calificaciones', '/app/consultas', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
+  rector: ['/app', '/app/rectoria', '/app/rectoria/firmas', '/app/rectoria/reportes', '/app/consultas', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
   guardian: ['/app', '/app/acudiente', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
-  admin: ['/app', '/app/admin/usuarios', '/app/admin', '/app/coordinacion', '/app/rectoria', '/app/consultas', '/app/ajustes'],
+  admin: ['/app', '/app/admin/usuarios', '/app/admin', '/app/consultas', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
 };
 
 /** Routes each role must not open: the router shows «Esta sección no es para tu rol». */
 export const forbiddenByRole: Record<E2ERole, string[]> = {
-  student: ['/app/calificaciones', '/app/banco', '/app/coordinacion', '/app/rectoria', '/app/admin', '/app/acudiente', '/app/mensajes'],
-  teacher: ['/app/coordinacion', '/app/rectoria', '/app/admin', '/app/acudiente', '/app/ruta', '/app/aprender'],
-  coordinator: ['/app/rectoria', '/app/banco', '/app/admin', '/app/en-vivo', '/app/mensajes', '/app/acudiente'],
-  rector: ['/app/coordinacion', '/app/banco', '/app/admin', '/app/en-vivo', '/app/mensajes', '/app/acudiente'],
-  guardian: ['/app/cursos', '/app/calificaciones', '/app/coordinacion', '/app/rectoria', '/app/admin', '/app/arena', '/app/jugar', '/app/aprender'],
-  admin: ['/app/acudiente', '/app/mensajes', '/app/ruta'],
+  student: ['/app/calificaciones', '/app/banco', '/app/coordinacion', '/app/rectoria', '/app/admin', '/app/acudiente', '/app/mensajes', '/app/consultas'],
+  teacher: ['/app/coordinacion', '/app/rectoria', '/app/admin', '/app/acudiente', '/app/ruta', '/app/aprender', '/app/tutor', '/app/jugar', '/app/logros', '/app/cuaderno'],
+  coordinator: ['/app/rectoria', '/app/banco', '/app/admin', '/app/en-vivo', '/app/arena', '/app/tutor', '/app/acudiente', '/app/logros'],
+  rector: ['/app/coordinacion', '/app/cursos', '/app/calificaciones', '/app/banco', '/app/admin', '/app/en-vivo', '/app/tutor', '/app/acudiente'],
+  guardian: ['/app/cursos', '/app/calificaciones', '/app/coordinacion', '/app/rectoria', '/app/admin', '/app/arena', '/app/jugar', '/app/aprender', '/app/tutor', '/app/en-vivo', '/app/consultas'],
+  admin: ['/app/cursos', '/app/coordinacion', '/app/rectoria', '/app/acudiente', '/app/ruta', '/app/tutor', '/app/en-vivo', '/app/arena', '/app/logros'],
 };
 
 export function storageFor(role: E2ERole) {

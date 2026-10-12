@@ -133,7 +133,7 @@ export class IdentityService {
 
   /* ---------- Paso 1: contraseña ---------- */
 
-  async login(email: string, password: string, client: ClientInfo, trustedToken?: string): Promise<LoginResult> {
+  async login(email: string, password: string, client: ClientInfo, trustedTokens: string[] = []): Promise<LoginResult> {
     const user = await this.findByEmail(email);
     if (user?.locked_until && user.locked_until.getTime() > Date.now()) {
       const minutes = Math.ceil((user.locked_until.getTime() - Date.now()) / 60000);
@@ -149,7 +149,7 @@ export class IdentityService {
       await this.database.db.updateTable('users').set({ failed_logins: 0, locked_until: null }).where('id', '=', user.id).execute();
     }
 
-    if (trustedToken && (await this.useTrustedDevice(user.id, trustedToken))) {
+    if (trustedTokens.length && (await this.useTrustedDevice(user.id, trustedTokens))) {
       await this.audit(user.id, 'login', user.id, { method: 'trusted_device' });
       return { kind: 'session', session: await this.issueSession(user.id, 'trusted_device', client) };
     }
@@ -255,14 +255,16 @@ export class IdentityService {
     return token;
   }
 
-  private async useTrustedDevice(userId: string, token: string) {
+  private async useTrustedDevice(userId: string, tokens: string[]) {
     const row = await this.database.db
       .selectFrom('trusted_devices')
       .select(['id', 'expires_at', 'revoked_at'])
-      .where('token_hash', '=', sha256(token))
+      .where('token_hash', 'in', tokens.map(sha256))
       .where('user_id', '=', userId)
+      .where('revoked_at', 'is', null)
+      .where('expires_at', '>', new Date())
       .executeTakeFirst();
-    if (!row || row.revoked_at || row.expires_at.getTime() < Date.now()) return false;
+    if (!row) return false;
     await this.database.db.updateTable('trusted_devices').set({ last_used_at: new Date() }).where('id', '=', row.id).execute();
     return true;
   }

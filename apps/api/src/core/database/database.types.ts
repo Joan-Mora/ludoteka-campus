@@ -982,6 +982,14 @@ export interface Database {
     read_at: NullableDate;
     created_at: Ts;
   };
+  staff_messages: {
+    id: Generated<string>;
+    sender_id: string;
+    recipient_id: string;
+    body: string;
+    read_at: NullableDate;
+    created_at: Ts;
+  };
   bulletin_signatures: {
     id: Generated<string>;
     student_id: string;

@@ -212,6 +212,27 @@ test.describe('aprendizaje del estudiante', () => {
     await signed!.close();
   });
 
+  test('Biblioteca por grado: guías del curso y documentos con fuente y licencia', async ({ browser }, info) => {
+    test.skip(info.project.name !== 'android', 'una vez basta');
+    const signed = await signedContext(browser, info, 'student');
+    test.skip(!signed, 'sin sesión de estudiante');
+    const page = await signed!.newPage();
+    const errors = watchErrors(page);
+    await page.goto('/app/biblioteca');
+    await page.getByRole('group', { name: 'Grado' }).getByRole('button', { name: 'Sexto' }).click();
+    const cards = page.locator('.lib-card');
+    await expect(cards.filter({ hasText: '· 6.°' }).first()).toBeVisible({ timeout: 15_000 });
+    expect(await cards.filter({ hasText: /· (7|8|9|10|11)\.°/ }).count()).toBe(0);
+    await cards.filter({ hasText: 'Derechos Básicos de Aprendizaje de Matemáticas' }).first().click();
+    const origin = page.locator('.lib-origin');
+    await expect(origin).toContainText('Ministerio de Educación Nacional');
+    await expect(origin).toContainText('Licencia');
+    await expect(page.locator('.lib-external')).toBeVisible();
+    await shoot(page, info, 'estudiante-biblioteca-fuente');
+    expect(errors).toEqual([]);
+    await signed!.close();
+  });
+
   test('Mi ruta: sendero con paradas, panel y jefe', async ({ browser }, info) => {
     test.skip(info.project.name !== 'android', 'una vez basta');
     const signed = await signedContext(browser, info, 'student');
@@ -229,6 +250,70 @@ test.describe('aprendizaje del estudiante', () => {
     expect(errors).toEqual([]);
     await signed!.close();
   });
+});
+
+test('Foro: mención, adjunto, reacción, mejor respuesta y resumen de Luka', async ({ browser }, info) => {
+  test.skip(info.project.name !== 'android', 'una vez basta');
+  test.setTimeout(120_000);
+  const teacher = await signedContext(browser, info, 'teacher');
+  const student = await signedContext(browser, info, 'student');
+  test.skip(!teacher || !student, 'sin sesiones de docente y estudiante');
+  const teacherPage = await teacher!.newPage();
+  const studentPage = await student!.newPage();
+  const errors = watchErrors(studentPage);
+  const token = (page: Page) => page.evaluate(() => sessionStorage.getItem('eq_access'));
+  await teacherPage.goto('/app');
+  await studentPage.goto('/app');
+  const auth = async (page: Page) => ({ Authorization: `Bearer ${await token(page)}` });
+
+  const courses = (await (await teacher!.request.get('/api/courses', { headers: await auth(teacherPage) })).json()) as { id: string }[];
+  const created = await teacher!.request.post(`/api/courses/${courses[0]!.id}/forum`, {
+    headers: await auth(teacherPage),
+    data: { title: `Prueba e2e ${Date.now()}`, body: '¿Cómo ordenan los números enteros en la recta?' },
+  });
+  expect(created.ok()).toBeTruthy();
+  const thread = (await created.json()) as { id: string };
+
+  try {
+    await studentPage.goto(`/app/novedades?hilo=${thread.id}`);
+    const box = studentPage.locator('.forum-composer textarea');
+    await box.fill('Gracias @');
+    const option = studentPage.getByRole('listbox', { name: 'Personas del curso' }).getByRole('option').first();
+    await expect(option).toBeVisible({ timeout: 15_000 });
+    const teacherName = (await option.locator('.mention-name').innerText()).trim();
+    await option.getByRole('button').click();
+    await box.press('End');
+    await box.pressSequentially('los negativos van a la izquierda del cero.');
+    await studentPage.getByRole('button', { name: 'Adjuntar de la biblioteca' }).click();
+    await studentPage.getByLabel('Buscar en la biblioteca').fill('Enteros y racionales');
+    await studentPage.locator('.forum-picker button').filter({ hasText: 'Enteros y racionales' }).first().click();
+    await expect(studentPage.locator('.forum-attachments .chip')).toHaveCount(1);
+    await studentPage.getByRole('button', { name: 'Responder' }).click();
+    const post = studentPage.locator('.post').last();
+    await expect(post.locator('.mention')).toHaveText(`@${teacherName}`, { timeout: 15_000 });
+    await expect(post.locator('.forum-attachments a')).toHaveCount(1);
+    await shoot(studentPage, info, 'estudiante-foro-mencion');
+
+    await teacherPage.goto(`/app/novedades?hilo=${thread.id}`);
+    const reply = teacherPage.locator('.post').last();
+    await reply.getByRole('button', { name: 'Me sirvió' }).click();
+    await expect(reply.getByRole('button', { name: 'Me sirvió: 1' })).toHaveAttribute('aria-pressed', 'true');
+    await reply.getByRole('button', { name: 'Marcar respuesta' }).click();
+    await expect(reply.getByText('Respuesta', { exact: true })).toBeVisible();
+    await teacherPage.getByRole('button', { name: /^Pedir resumen a/ }).click();
+    await expect(teacherPage.locator('.forum-digest-body, .forum-digest .muted').first()).toBeVisible({ timeout: 60_000 });
+    await expect(teacherPage.getByRole('button', { name: 'Actualizar' })).toBeVisible({ timeout: 60_000 });
+    await shoot(teacherPage, info, 'docente-foro-resumen');
+
+    const notes = (await (await student!.request.get('/api/notifications', { headers: await auth(studentPage) })).json()) as { items?: { title: string }[] } | { title: string }[];
+    const titles = (Array.isArray(notes) ? notes : notes.items ?? []).map((n) => n.title);
+    expect(titles).toContain('Tu respuesta fue la mejor');
+    expect(errors).toEqual([]);
+  } finally {
+    await teacher!.request.delete(`/api/forum/threads/${thread.id}`, { headers: await auth(teacherPage) });
+    await teacher!.close();
+    await student!.close();
+  }
 });
 
 for (const role of ROLES) {

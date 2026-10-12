@@ -1,0 +1,109 @@
+{
+  "intro": "¡Hola! En esta guía recorreremos tres momentos fascinantes que transformaron el rumbo de la humanidad: la grandeza de Roma, las transformaciones de la Edad Media y el florecimiento del Renacimiento. Descubriremos cómo las leyes e inventos romanos siguen vivos en las calles de Colombia y en nuestra Constitución Política. Además, exploraremos cómo vivían los señores feudales y campesinos mientras en nuestro territorio florecían culturas como la Muisca o la Tairona. Finalmente, veremos cómo el Renacimiento renovó el arte, la ciencia y la curiosidad por el mundo. Prepárate para afinar tu mirada crítica y entender de dónde vienen muchas de las ideas, palabras e instituciones que usamos hoy en nuestro país.",
+  "objectives": [
+    "Identificar los principales aportes del Imperio romano a la vida cotidiana, el derecho y la ingeniería de las sociedades occidentales.",
+    "Comparar la organización social, económica y política del feudalismo medieval con el desarrollo de sociedades precolombinas como los muiscas.",
+    "Explicar el papel de la Iglesia católica y el resurgimiento urbano en la consolidación de la Europa medieval.",
+    "Reconocer el impacto del humanismo y del Renacimiento en la transformación de las ciencias, el arte y el pensamiento moderno."
+  ],
+  "sections": [
+    {
+      "title": "Legado del Imperio romano",
+      "paragraphs": [
+        "Roma no desapareció del todo tras la caída de su imperio; su huella está presente en nuestro entorno cotidiano. En Colombia hablamos español, una lengua romance derivada directamente del latín, idioma de los romanos. Asimismo, el sistema jurídico que regula nuestra convivencia, reflejado en el Código Civil colombiano, tiene raíces profundas en el Derecho Romano. Conceptos como la presunción de inocencia, los contratos formales, los juicios públicos y el principio de igualdad ante la ley fueron desarrollados en los foros de la antigua Roma antes de expandirse por el mundo occidental.",
+        "La ingeniería y la arquitectura romana revolucionaron el diseño de las ciudades mediante el uso del arco de medio punto, las bóvedas y el hormigón. Los romanos construyeron inmensas calzadas que conectaban provincias lejanas, facilitando el comercio y el transporte, de forma semejante a las vías primarias que hoy cruzan nuestra geografía. Sus acueductos transportaban agua limpia desde fuentes lejanas hasta los centros urbanos, inspirando los sistemas de distribución de agua potable que abastecen hoy a ciudades como Bogotá, Medellín o Cali."
+      ],
+      "example": {
+        "statement": "Un grupo de estudiantes de Neiva observa que el acueducto de su ciudad transporta agua desde la cordillera y se pregunta qué relación tiene este diseño con el legado de la antigua Roma.",
+        "solution": "Paso 1: Reconocer el principio de ingeniería. Los romanos diseñaron acueductos usando pendientes calculadas por gravedad y arcadas para salvar desniveles geográficos. Paso 2: Comparar con la infraestructura moderna. Aunque hoy usamos tuberías modernas y bombas, el concepto de captar agua en zonas altas para distribuirla a toda la urbe proviene de Roma. Paso 3: Concluir que la ingeniería sanitaria de nuestras ciudades hereda directamente la planificación urbana romana."
+      }
+    },
+    {
+      "title": "Feudalismo",
+      "paragraphs": [
+        "Hacia el siglo IX, Europa occidental experimentó la fragmentación del poder político, dando origen al feudalismo. Este sistema económico y social se basaba en la tenencia de la tierra y en relaciones de fidelidad entre nobles mediante el vasallaje. En la cima se encontraban los reyes y señores feudales, dueños de extensos feudos amurallados, mientras que la base estaba conformada por siervos y campesinos que cultivaban la tierra a cambio de protección militar y debían pagar pesados tributos en especie o trabajo.",
+        "Mientras en Europa se vivía bajo el orden feudal, en el actual territorio colombiano florecían sociedades precolombinas complejas durante los siglos IX al XV. Comunidades como la Muisca en el altiplano cundiboyacense o la Tairona en la Sierra Nevada de Santa Marta desarrollaron cacicazgos organizados. A diferencia del vasallaje europeo centrado en la guerra de caballeros y castillos, los muiscas basaban su economía en la agricultura comunitaria, el intercambio en mercados tradicionales como los de Zipaquirá y una profunda relación espiritual con la naturaleza."
+      ],
+      "example": {
+        "statement": "Si un campesino medieval entregaba el 25% de su cosecha de trigo al señor feudal y un agricultor muisca aportaba el 10% de su producción de maíz para las ceremonias del cacique, ¿qué similitudes y diferencias económicas existían entre ambos sistemas?",
+        "solution": "Paso 1: Identificar la similitud económica. En ambas sociedades existía una obligación tributaria donde los productores agrícolas sostenían a las jerarquías de poder (señores feudales o caciques). Paso 2: Identificar la diferencia conceptual. El tributo feudal se basaba en la servidumbre y el uso de la tierra del señor; el tributo muisca respondía a la redistribución social, almacenamiento comunal y ofrendas religiosas. Paso 3: Concluir que, aunque ambas sociedades dependían del trabajo agrario, sus cosmovisiones y relaciones comunitarias eran muy distintas."
+      }
+    },
+    {
+      "title": "La Iglesia y las ciudades medievales",
+      "paragraphs": [
+        "Durante la Edad Media, la Iglesia católica se convirtió en la institución más poderosa y unificadora de Europa occidental. No solo guiaba la vida espiritual, sino que controlaba la educación, poseía grandes extensiones de tierra y legitimaba a los monarcas. En los monasterios, los monjes copistas preservaron valiosos manuscritos antiguos de filosofía, ciencia y teología. Con el paso de los siglos, la Iglesia también impulsó la creación de las primeras universidades europeas en ciudades como Bolonia, París y Salamanca, sentando las bases de la educación superior que hoy conocemos.",
+        "A partir del siglo XI, el renacer comercial reactivó las ciudades medievales o burgos, impulsado por nuevas rutas comerciales y ferias periódicas. En estas urbes emergió un nuevo grupo social: la burguesía, compuesta por artesanos, prestamistas y mercaderes que no dependían directamente de los señores feudales. Los artesanos se organizaron en gremios para fijar precios, controlar la calidad y capacitar aprendices. Este florecimiento urbano debilitó gradualmente el aislamiento feudal, convirtiendo a las ciudades en vibrantes centros de intercambio cultural, económico y político."
+      ],
+      "example": {
+        "statement": "Una asociación de artesanos de calzado en Bucaramanga busca organizarse para fijar normas de calidad y capacitar a jóvenes aprendices. ¿Cómo se relaciona esta iniciativa con los gremios medievales?",
+        "solution": "Paso 1: Definir la función de los gremios medievales. Eran corporaciones de artesanos (como herreros, zapateros y tejedores) que regulaban la producción, la calidad y la formación de aprendices. Paso 2: Comparar con la situación actual. La asociación de Bucaramanga busca proteger su oficio, regular estándares y transmitir saberes prácticos. Paso 3: Concluir que la organización laboral y la defensa del oficio artesanal tienen un antecedente directo en los gremios de las ciudades medievales."
+      }
+    },
+    {
+      "title": "Renacimiento",
+      "paragraphs": [
+        "El Renacimiento surgió en ciudades italianas como Florencia y Venecia entre los siglos XIV y XVI, marcando una transición fundamental hacia la Edad Moderna. Este periodo se caracterizó por el humanismo, una corriente intelectual que rescató el legado clásico grecorromano y situó al ser humano en el centro del conocimiento, dejando atrás el teocentrismo medieval. Pensadores y artistas promovieron el uso de la razón, el pensamiento crítico y la observación directa de la naturaleza, transformando radicalmente la visión que la sociedad tenía de sí misma y del universo.",
+        "Este florecimiento impactó la literatura con autores como Petrarca y Maquiavelo, quien fundó la teoría política moderna. En las artes plásticas, genios como Leonardo da Vinci y Miguel Ángel perfeccionaron la perspectiva matemática, el claroscuro y la anatomía humana. Paralelamente, la revolución científica tomó impulso con figuras como Nicolás Copérnico y Galileo Galilei, quienes defendieron el modelo heliocéntrico frente al geocéntrico tradicional. La invención de la imprenta facilitó la rápida difusión de estos saberes por todo el continente europeo."
+      ],
+      "example": {
+        "statement": "Un pintor en Tunja quiere representar la Plaza de Bolívar de forma realista, logrando que los edificios lejanos se vean más pequeños y converjan en un único punto. ¿Qué técnica renacentista está utilizando y cuál es su principio matemático?",
+        "solution": "Paso 1: Identificar la técnica artística. Se trata de la perspectiva lineal o geométrica, desarrollada por arquitectos renacentistas como Filippo Brunelleschi. Paso 2: Explicar el principio. Se basa en proyectar líneas de fuga hacia un punto de fuga en el horizonte, imitando cómo percibe el ojo humano la profundidad tridimensional en un plano bidimensional. Paso 3: Concluir que el artista aplica la fusión renacentista entre matemáticas, geometría y arte pictórico."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Qué lengua romance derivada del latín romano hablamos como idioma oficial en Colombia?",
+      "answer": "El idioma español."
+    },
+    {
+      "question": "¿Cuál era el grupo social no privilegiado que trabajaba la tierra en condiciones de servidumbre en el feudalismo europeo?",
+      "answer": "Los siervos o campesinos feudales."
+    },
+    {
+      "question": "¿Qué instituciones de educación superior nacieron en las ciudades medievales europeas y siguen vigentes hoy?",
+      "answer": "Las universidades."
+    },
+    {
+      "question": "¿Qué diferencia fundamental existía entre el cobro de tributos feudales y el aporte tributario muisca?",
+      "answer": "El feudal respondía a la servidumbre y propiedad privada del señor, mientras que el muisca se orientaba a la redistribución comunal y ofrendas religiosas."
+    },
+    {
+      "question": "¿Por qué el humanismo renacentista significó un quiebre respecto al pensamiento medieval dominante?",
+      "answer": "Porque reemplazó la visión teocéntrica por una antropocéntrica, colocando la razón, la observación y al ser humano en el centro del conocimiento."
+    },
+    {
+      "question": "¿Cómo contribuyeron la imprenta y el modelo heliocéntrico al surgimiento de la ciencia moderna durante el Renacimiento?",
+      "answer": "La imprenta multiplicó la circulación de ideas y el heliocentrismo desafió dogmas previos mediante la observación matemática y astronómica."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Derecho Romano",
+      "definition": "Conjunto de leyes e instituciones jurídicas de la antigua Roma que sentó las bases de la legislación civil contemporánea en gran parte de Occidente."
+    },
+    {
+      "term": "Feudo",
+      "definition": "Territorio administrado por un señor feudal donde los siervos trabajaban la tierra a cambio de protección armada y sustento básico."
+    },
+    {
+      "term": "Gremio",
+      "definition": "Asociación medieval de trabajadores de un mismo oficio que regulaba precios, calidad de mercancías y el aprendizaje del oficio."
+    },
+    {
+      "term": "Humanismo",
+      "definition": "Corriente intelectual renacentista que reivindicó la cultura clásica grecorromana y destacó el valor de la razón, la experiencia y la dignidad humana."
+    },
+    {
+      "term": "Heliocentrismo",
+      "definition": "Teoría astronómica que sostiene que el Sol es el centro del sistema y que la Tierra y demás planetas giran en torno a él."
+    }
+  ],
+  "closing": "Al recorrer el centro de nuestras ciudades colombianas, observar las leyes que nos protegen o apreciar una pintura, estamos viviendo el legado de Roma, el Medioevo y el Renacimiento. Reconocer estas raíces nos permite comprender críticamente nuestro presente y valorar la ciencia, los derechos ciudadanos y la creatividad humana en nuestra vida diaria escolar y familiar.",
+  "dbaStatements": [
+    "DBA 3. Analiza la influencia del imperio romano en la cultura de occidente y los aportes en diversos campos como la literatura, las leyes, la ingeniería y la vida cotidiana.",
+    "DBA 4. Analiza la Edad Media como un periodo histórico que dio origen a instituciones sociales, económicas y políticas en relación con el mismo período de las sociedades precolombinas.",
+    "DBA 5. Analiza el Renacimiento como una época que dio paso en Europa a una nueva configuración cultural en campos como las ciencias, la política, las artes y la literatura."
+  ]
+}

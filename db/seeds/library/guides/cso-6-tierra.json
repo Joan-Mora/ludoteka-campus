@@ -1,0 +1,108 @@
+{
+  "intro": "¿Alguna vez te has detenido a mirar las estrellas en una noche despejada o te has preguntado cómo se formaron las imponentes montañas que cruzan nuestro país? En esta guía de Ciencias Sociales exploraremos el origen del universo, el planeta Tierra y los procesos geológicos que transforman su superficie día tras día. A lo largo de este recorrido, descubriremos desde la gran explosión que dio inicio a la materia cósmica hasta el constante movimiento de las placas tectónicas que moldean el relieve colombiano. Comprender estos fenómenos nos ayuda a reconocer nuestro lugar en el cosmos y a valorar las riquezas geográficas de nuestro territorio.",
+  "objectives": [
+    "Comparar explicaciones míticas y científicas sobre el origen del cosmos y la materia.",
+    "Reconocer las capas internas de la Tierra y la dinámica de las placas tectónicas.",
+    "Identificar las principales formas del relieve continental y su manifestación en Colombia.",
+    "Emplear las coordenadas geográficas para ubicar puntos exactos sobre la superficie terrestre."
+  ],
+  "sections": [
+    {
+      "title": "Teorías sobre el origen del universo",
+      "paragraphs": [
+        "A lo largo de la historia, las diferentes culturas humanas han creado explicaciones para responder a la pregunta sobre el origen de todo lo que existe. En nuestro territorio, pueblos ancestrales como los muiscas narraban que el universo comenzó en la oscuridad absoluta hasta que Chiminigagua, la divinidad creadora, emanó una luz brillante que dio vida a las aves y al mundo visible. Estas narraciones, llamadas cosmogonías, reflejan la profunda relación espiritual y de respeto que las comunidades tenían con su entorno natural, buscando ordenar el mundo conocido y otorgarle un sentido sagrado dentro de su propia cosmovisión comunitaria.",
+        "Por otra parte, la ciencia contemporánea propone la teoría del Big Bang o la Gran Explosión como la explicación más sólida y comprobada. Hace aproximadamente 13.800 millones de años, toda la materia y la energía del universo se encontraban concentradas en un punto infinitamente pequeño, denso y caliente. Este punto experimentó una expansión súbita y violenta que dispersó la materia por el espacio. Con el paso de millones de años, esta materia se enfrió y se agrupó por efecto de la fuerza de gravedad, dando origen a las primeras partículas, a las estrellas y a las inmensas galaxias."
+      ],
+      "example": {
+        "statement": "Un estudiante de sexto grado lee que para los muiscas el universo surgió de la luz de Chiminigagua, mientras que su libro de ciencias dice que nació de una expansión hace 13.800 millones de años. ¿Cómo puede clasificar y diferenciar ambas explicaciones?",
+        "solution": "Paso 1: Reconocer el tipo de relato ancestral. La narración muisca es una cosmogonía mítica, fundamentada en creencias religiosas y tradiciones culturales que buscaban explicar el origen de la vida con sentido comunitario. Paso 2: Analizar la explicación científica. La teoría del Big Bang es un modelo astronómico basado en pruebas empíricas, como la radiación de fondo y la observación de galaxias en expansión. Paso 3: Concluir que ambas respuestas son valiosas en sus propios campos: una expresa identidad cultural e historia de nuestros pueblos indígenas, mientras que la otra proporciona respuestas comprobables mediante el método científico."
+      }
+    },
+    {
+      "title": "Capas de la Tierra y placas tectónicas",
+      "paragraphs": [
+        "La Tierra no es una esfera homogénea ni sólida en su totalidad, sino que está compuesta por capas concéntricas con distintas propiedades físicas. En el centro encontramos el núcleo, dividido en interno y externo, compuesto principalmente de hierro y níquel a temperaturas extremadamente altas. Alrededor del núcleo se ubica el manto, una capa densa de roca semisólida que fluye lentamente debido al calor interno. Finalmente, en la parte más superficial se halla la corteza terrestre, una capa delgada y rígida donde habitamos los seres vivos y sobre la cual se desarrollan todos los ecosistemas y actividades humanas.",
+        "La corteza y la parte superior del manto forman la litosfera, una estructura fragmentada en grandes bloques llamados placas tectónicas. Estas gigantescas placas flotan y se mueven lentamente sobre la astenosfera gracias a las corrientes de calor del manto terrestre. En Colombia, la interacción tectónica es intensa: la placa de Nazca choca y se sumerge bajo la placa Suramericana en un proceso conocido como subducción, mientras que por el norte interactúa la placa del Caribe. Esta continua fricción geológica es la causa directa de los sismos frecuentes en nuestro país y del levantamiento de las cordilleras andinas."
+      ],
+      "example": {
+        "statement": "¿Por qué en regiones colombianas como Santander o Nariño se registran temblores frecuentes y existen volcanes activos como el Galeras?",
+        "solution": "Paso 1: Identificar las placas tectónicas involucradas en el territorio nacional. Colombia se ubica en una zona de contacto entre la placa de Nazca y la placa Suramericana. Paso 2: Explicar el fenómeno de subducción. La placa oceánica de Nazca se hunde lentamente bajo la placa continental Suramericana, acumulando gigantescas fuerzas de fricción. Paso 3: Relacionar la liberación de energía con los fenómenos geológicos. La fractura de rocas genera ondas sísmicas percibidas como temblores, y la fusión de roca en profundidad produce magma que asciende a la superficie, alimentando los volcanes de la cordillera."
+      }
+    },
+    {
+      "title": "Formas del relieve",
+      "paragraphs": [
+        "El relieve comprende todas las irregularidades, formas y desniveles que presenta la corteza terrestre tanto en los continentes como en los fondos oceánicos. Su modelado resulta de la confrontación permanente entre fuerzas internas o endógenas y fuerzas externas o exógenas. Las fuerzas endógenas, como los movimientos tectónicos y las erupciones volcánicas, son constructoras: levantan cordilleras y abren fallas geológicas. Por el contrario, las fuerzas exógenas, impulsadas por el viento, la lluvia, los ríos y los cambios de temperatura, actúan como agentes destructores y modeladores que erosionan, desgastan y transportan sedimentos hacia las zonas bajas.",
+        "En Colombia encontramos una extraordinaria variedad de formas de relieve continental gracias a su evolución geológica. El rasgo más sobresaliente es el sistema andino, ramificado en tres cordilleras: Occidental, Central y Oriental, separadas por los fértiles valles interandinos de los ríos Magdalena y Cauca. Junto a estas elevaciones se destacan relieves periféricos independientes como la majestuosa Sierra Nevada de Santa Marta y la Serranía de la Macarena. Hacia el oriente y norte del país se extienden inmensas llanuras en la Orinoquía, la Amazonía y la llanura del Caribe, ofreciendo paisajes completamente planos y diversos."
+      ],
+      "example": {
+        "statement": "Identifica las formas de relieve presentes en un viaje por carretera desde Bogotá hasta Girardot y explica brevemente qué procesos las originaron.",
+        "solution": "Paso 1: Identificar el relieve de partida. Bogotá se localiza en la Sabana de Bogotá, que es un altiplano o meseta situado sobre la cordillera Oriental, formado por levantamiento andino y antiguos sedimentos de lagos. Paso 2: Analizar el trayecto de descenso. La carretera baja por la vertiente de la cordillera, un relieve montañoso quebrado modelado por la gravedad, la lluvia y los torrentes de agua. Paso 3: Reconocer el relieve de destino. Girardot está en el valle interandino del río Magdalena, una zona plana y cálida formada por la sedimentación aluvial acumulada durante miles de años."
+      }
+    },
+    {
+      "title": "Coordenadas geográficas",
+      "paragraphs": [
+        "Para localizar de manera precisa cualquier punto sobre la superficie esférica de la Tierra, los geógrafos crearon una cuadrícula imaginaria compuesta por paralelos y meridianos. Los paralelos son líneas horizontales trazadas de oriente a occidente; el más importante es la línea del Ecuador, que divide el planeta en hemisferio norte y hemisferio sur. La distancia medida en grados desde el Ecuador hacia cualquier polo se denomina latitud y varía entre 0° y 90°. Por su parte, los meridianos son arcos verticales que van de polo a polo, tomando como referencia el meridiano de Greenwich, que divide la Tierra en hemisferio oriental y occidental.",
+        "La longitud corresponde a la distancia angular medida en grados respecto al meridiano de Greenwich, variando de 0° a 180° hacia el oriente o el occidente. Al cruzar la latitud con la longitud obtenemos una coordenada geográfica única. En el caso de Colombia, nuestra posición astronómica se ubica en la esquina noroccidental de Suramérica, entre aproximadamente 12° de latitud norte en Punta Gallinas y 4° de latitud sur en la desembocadura de la quebrada San Antonio, y entre 67° y 79° de longitud occidental. Esta ubicación intertropical determina que no tengamos estaciones, sino variaciones de temperatura por pisos térmicos."
+      ],
+      "example": {
+        "statement": "La ciudad de Medellín se localiza aproximadamente a 6° de latitud norte y 75° de longitud occidental. Determina en qué hemisferios se encuentra y explica qué representan dichos valores.",
+        "solution": "Paso 1: Interpretar la latitud. Al ser 6° Norte, indica que Medellín se ubica a 6 grados de distancia angular al norte de la línea ecuatorial, es decir, en el hemisferio norte. Paso 2: Interpretar la longitud. Al ser 75° Occidental, señala que la ciudad se sitúa a 75 grados al oeste del meridiano de Greenwich, en el hemisferio occidental. Paso 3: Integrar los resultados. Estas coordenadas ubican a Medellín de forma exacta dentro de la zona intertropical de los Andes colombianos."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es la teoría científica más aceptada para explicar el origen del universo y hace cuántos años ocurrió aproximadamente?",
+      "answer": "La teoría del Big Bang, la cual sostiene que el universo comenzó hace aproximadamente 13.800 millones de años."
+    },
+    {
+      "question": "¿Cuáles son las tres capas principales que conforman la estructura interna de la Tierra?",
+      "answer": "El núcleo, el manto y la corteza terrestre."
+    },
+    {
+      "question": "¿Qué proceso geológico se produce por el choque entre la placa de Nazca y la placa Suramericana?",
+      "answer": "El proceso de subducción, en el cual la placa de Nazca se hunde bajo la Suramericana, generando sismos y cordilleras."
+    },
+    {
+      "question": "¿En qué se diferencia una meseta o altiplano de un valle interandino en el relieve colombiano?",
+      "answer": "La meseta es una superficie plana a gran altitud, mientras que el valle interandino es una zona baja ubicada entre dos cordilleras recorrida por un río."
+    },
+    {
+      "question": "¿Por qué en Colombia no se presentan cuatro estaciones astronómicas a lo largo del año?",
+      "answer": "Porque Colombia está ubicada en la zona intertropical cercana a la línea del Ecuador, donde la radiación solar es constante y el clima varía según la altitud."
+    },
+    {
+      "question": "Si una reserva natural se localiza en las coordenadas 2° de latitud sur y 70° de longitud occidental en el departamento de Amazonas, ¿en cuáles hemisferios respecto al Ecuador y a Greenwich está ubicada?",
+      "answer": "Está ubicada en el hemisferio sur (por su latitud sur) y en el hemisferio occidental (por su longitud occidental)."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Big Bang",
+      "definition": "Teoría científica que explica el origen del cosmos mediante la súbita expansión de un punto con densidad y temperatura extremas."
+    },
+    {
+      "term": "Litosfera",
+      "definition": "Capa externa y rígida de la Tierra constituida por la corteza y la parte superior del manto, fragmentada en placas."
+    },
+    {
+      "term": "Subducción",
+      "definition": "Proceso geológico donde el borde de una placa litosférica densa se hunde bajo el borde de otra placa menos densa."
+    },
+    {
+      "term": "Relieve",
+      "definition": "Conjunto de desigualdades, accidentes y formas diversas que configuran la superficie sólida de la corteza continental u oceánica."
+    },
+    {
+      "term": "Latitud",
+      "definition": "Distancia angular medida en grados desde cualquier punto de la superficie terrestre hasta la línea del Ecuador."
+    }
+  ],
+  "closing": "El relieve y la posición astronómica no son datos abstractos; determinan cómo vivimos a diario en Colombia. La altura de nuestras montañas condiciona los cultivos de papa o café, define las rutas terrestres que transitamos y genera la gran variedad de climas de nuestras regiones. Al comprender la dinámica viva del planeta, aprendemos a convivir de forma responsable y prevenida con nuestro entorno geográfico.",
+  "dbaStatements": [
+    "DBA 1. Comprende que existen diversas explicaciones y teorías sobre el origen del universo en nuestra búsqueda por entender que hacemos parte de un mundo más amplio.",
+    "DBA 2. Comprende que la Tierra es un planeta en constante transformación cuyos cambios influyen en las formas del relieve terrestre y en la vida de las comunidades que la habitan."
+  ]
+}

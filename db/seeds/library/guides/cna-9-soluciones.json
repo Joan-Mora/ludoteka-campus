@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola, estudiantes de noveno grado! En esta guía de Ciencias Naturales exploraremos el fascinante mundo de las soluciones químicas, los ácidos y las bases. A lo largo de nuestro recorrido por los laboratorios escolares y la vida cotidiana en Colombia, aprenderemos por qué el jugo de limón es agrio, cómo funciona el antiácido que tomamos para la acidez estomacal y qué significa realmente medir el pH en el agua de nuestros ríos. Veremos conceptos clave de concentración y aprenderemos a calcular cuánta sustancia disolvemos en nuestros líquidos cotidianos con rigor y sencillez.",
+  "objectives": [
+    "Diferenciar los componentes de una solución identificando el soluto y el solvente en ejemplos cotidianos.",
+    "Calcular la concentración física de soluciones químicas usando fórmulas matemáticas sencillas.",
+    "Comprender la escala de pH para clasificar sustancias ácidas, básicas y neutras según su grado de acidez.",
+    "Analizar la importancia biológica e industrial de los ácidos y las bases en el contexto colombiano."
+  ],
+  "sections": [
+    {
+      "title": "Soluto y solvente",
+      "paragraphs": [
+        "En nuestro entorno diario, pocas sustancias se encuentran puras; la gran mayoría forma mezclas homogéneas llamadas soluciones. Una solución está compuesta fundamentalmente por dos partes: el soluto, que es la sustancia que se disuelve y por lo general se encuentra en menor cantidad, y el solvente, que es el medio dispersante que disuelve al soluto y suele estar en mayor proporción.",
+        "El solvente más universal y conocido en la naturaleza es el agua. Cuando preparamos una aguapanela en casa, el agua cumple el papel de solvente y la panela triturada es el soluto. Factores físicos como la temperatura, la presión y la superficie de contacto influyen directamente en la velocidad con la que un soluto logra disolverse dentro de un solvente determinado."
+      ],
+      "example": {
+        "statement": "Se mezclan 20 gramos de sal de cocina en 180 gramos de agua pura hasta disolverla por completo. Identifica cuál es el soluto, cuál es el solvente y calcula el porcentaje masa a masa de la solución resultante.",
+        "solution": "1. Identificamos las partes: el soluto es la sal (20 g) y el solvente es el agua (180 g). \n2. Calculamos la masa total de la solución sumando soluto + solvente: 20 g + 180 g = 200 g. \n3. Aplicamos la fórmula del porcentaje masa a masa (%m/m = [masa de soluto / masa de solución] × 100). \n4. Reemplazamos los valores: (%m/m = [20 g / 200 g] × 100). \n5. Realizamos la división: 20 ÷ 200 = 0.1. \n6. Multiplicamos por 100 para obtener el porcentaje: 0.1 × 100 = 10%. La concentración es del 10% m/m."
+      }
+    },
+    {
+      "title": "Concentración",
+      "paragraphs": [
+        "La concentración de una solución nos indica la cantidad exacta de soluto que se encuentra presente en una cantidad específica de solvente o de solución total. Conocer este valor es vital tanto en la industria farmacéutica para fabricar medicamentos seguros, como en la química de los laboratorios escolares de nuestros colegios públicos.",
+        "Existen diversas formas para expresar la concentración cuantitativamente. Las más comunes en el grado noveno son el porcentaje masa a masa, el porcentaje masa a volumen y las partes por millón (ppm). Estas expresiones matemáticas nos permiten estandarizar recetas, disoluciones y procesos industriales en todo el territorio nacional."
+      ],
+      "example": {
+        "statement": "Un estudiante de noveno grado prepara un suero casero disolviendo 5 gramos de azúcar en suficiente agua hasta completar un volumen total de 250 mililitros de solución. Calcula la concentración en porcentaje masa a volumen (%m/v).",
+        "solution": "1. Identificamos los datos dados: masa del soluto = 5 g; volumen de la solución = 250 mL. \n2. Recordamos la fórmula del porcentaje masa a volumen: %m/v = ([masa del soluto en g] / [volumen de la solución en mL]) × 100. \n3. Sustituimos los valores en la fórmula: %m/v = (5 / 250) × 100. \n4. Dividimos 5 entre 250, lo cual nos da 0.02. \n5. Multiplicamos 0.02 por 100 para hallar el porcentaje. \n6. El resultado final es 2% m/v."
+      }
+    },
+    {
+      "title": "Escala de pH",
+      "paragraphs": [
+        "El pH, que significa potencial de hidrógeno, es una medida que nos indica qué tan ácida o básica es una solución acuosa. La escala numérica del pH va típicamente desde 0 hasta 14. Las sustancias con un valor de pH inferior a 7 se consideran ácidas, aquellas con un valor exactamente igual a 7 son neutras (como el agua pura), y las que superan el 7 se denominan básicas o alcalinas.",
+        "Para determinar el pH en el laboratorio utilizamos indicadores químicos, sustancias que cambian de color según la acidez del medio, o potenciómetros digitales. Sustancias cotidianas como el vinagre, el jugo de naranja y el café se ubican en el extremo ácido, mientras que el jabón de lavar y los limpiadores caseros se ubican en la zona básica."
+      ],
+      "example": {
+        "statement": "Si una sustancia misteriosa tiene un valor de pH medido de 3.5, clasifica la sustancia según su naturaleza química y explica qué indica este valor sobre su concentración de iones de hidrógeno.",
+        "solution": "1. Observamos el valor numérico del pH proporcionado, que es 3.5. \n2. Recordamos que la escala de pH sitúa los ácidos por debajo de 7. Como 3.5 es menor que 7, la sustancia es un ácido. \n3. Un pH de 3.5 indica que la concentración de iones hidrógeno en esa solución es alta en comparación con el agua pura. \n4. En conclusión, se trata de una solución de carácter ácido moderado."
+      }
+    },
+    {
+      "title": "Ácidos y bases en la vida diaria",
+      "paragraphs": [
+        "Los ácidos y las bases están presentes en nuestra cotidianidad de formas que muchas veces ignoramos. En la cocina colombiana, el ácido cítrico abunda en limones y naranjas que usamos para la limonada, y el ácido acético compone el vinagre de las ensaladas. Estos compuestos se caracterizan por su sabor agrio y su capacidad para reaccionar con ciertos metales.",
+        "Por otro lado, las bases o álcalis se caracterizan por su sabor amargo, tacto jabonoso y capacidad para neutralizar a los ácidos. Productos de aseo como el cloro y el jabón son básicos. En la naturaleza, procesos biológicos como la digestión en nuestro estómago dependen de un medio fuertemente ácido (ácido clorhídrico), mientras que la sangre humana mantiene un pH ligeramente básico y controlado."
+      ],
+      "example": {
+        "statement": "Una persona sufre de acidez estomacal por exceso de ácido clorhídrico y consume un antiácido estomacal compuesto por hidróxido de aluminio. ¿Qué tipo de reacción química ocurre y por qué disminuye el malestar?",
+        "solution": "1. Identificamos el problema: exceso de un ácido (ácido clorhídrico). \n2. Identificamos la solución: ingestión de una base o hidróxido (hidróxido de aluminio). \n3. Al unirse un ácido y una base, ocurre una reacción química de neutralización. \n4. La base neutraliza el exceso de iones ácidos del estómago, elevando el pH hacia un valor seguro y aliviando la sensación de ardor o acidez."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cómo se llama la sustancia que se encuentra en menor proporción dentro de una solución?",
+      "answer": "Soluto"
+    },
+    {
+      "question": "¿Cuál es el solvente universal más abundante en la naturaleza y en nuestro planeta?",
+      "answer": "El agua"
+    },
+    {
+      "question": "Si una sustancia presenta un valor de pH de 7.0, ¿cómo se clasifica dentro de la escala?",
+      "answer": "Neutra"
+    },
+    {
+      "question": "Calcula el porcentaje masa a masa de una solución preparada con 10 g de sal disueltos en 90 g de agua.",
+      "answer": "10% m/m"
+    },
+    {
+      "question": "¿Qué tipo de sabor característico presentan generalmente las sustancias de naturaleza ácida?",
+      "answer": "Sabor agrio"
+    },
+    {
+      "question": "Explica brevemente qué ocurre cuando se mezclan un ácido fuerte y una base fuerte en proporciones adecuadas.",
+      "answer": "Ocurre una reacción de neutralización donde se forma sal y agua, equilibrando el pH."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Soluto",
+      "definition": "Sustancia que se disuelve dentro de un solvente en una solución, encontrándose por lo general en menor cantidad."
+    },
+    {
+      "term": "Solvente",
+      "definition": "Medio dispersante que disuelve al soluto para formar una solución homogénea, encontrándose comúnmente en mayor proporción."
+    },
+    {
+      "term": "Concentración",
+      "definition": "Magnitud que expresa la cantidad de soluto presente en una proporción determinada de solvente o de solución."
+    },
+    {
+      "term": "pH",
+      "definition": "Medida del potencial de hidrógeno que indica el grado de acidez o basicidad de una solución en una escala de 0 a 14."
+    },
+    {
+      "term": "Neutralización",
+      "definition": "Reacción química entre un ácido y una base que produce sal y agua, equilibrando los niveles de pH."
+    }
+  ],
+  "closing": "Comprender los ácidos, las bases y las soluciones nos permite entender los procesos químicos que ocurren en nuestro cuerpo, en la cocina de nuestros hogares y en las industrias colombianas. Al cuidar lo que consumimos y utilizar con responsabilidad los productos de limpieza, aplicamos la ciencia para mejorar nuestra calidad de vida.",
+  "dbaStatements": [
+    "DBA 2. Comprende que la acidez y la basicidad son propiedades químicas de algunas sustancias y las relaciona con su importancia biológica y su uso cotidiano e industrial.",
+    "DBA 3. Analiza las relaciones cuantitativas entre solutos y solventes, así como los factores que afectan la formación de soluciones."
+  ]
+}

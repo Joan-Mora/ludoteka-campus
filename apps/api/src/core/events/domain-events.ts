@@ -8,6 +8,8 @@ export const DomainEvents = {
   TutorMessage: 'tutor.message',
   NewsPublished: 'news.published',
   ForumReply: 'forum.reply',
+  ForumMention: 'forum.mention',
+  ForumBestAnswer: 'forum.best_answer',
   GuardianFacialRevoked: 'guardian.facial_revoked',
   RouteSolved: 'route.solved',
   ArenaFinished: 'arena.finished',
@@ -152,6 +154,21 @@ export interface ForumReplyEvent {
   threadId: string;
   title: string;
   authorName: string;
+}
+
+export interface ForumMentionEvent {
+  userIds: string[];
+  threadId: string;
+  title: string;
+  authorName: string;
+}
+
+/** Fires once per reply the first time it is chosen as the best answer by someone other than its author. */
+export interface ForumBestAnswerEvent {
+  userId: string;
+  postId: string;
+  threadId: string;
+  title: string;
 }
 
 export interface GuardianFacialRevokedEvent {

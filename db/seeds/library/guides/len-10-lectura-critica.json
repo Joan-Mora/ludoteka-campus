@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola, pilos de décimo! Bienvenidos a esta guía de lenguaje pensada para fortalecer su pensamiento crítico en el ámbito escolar y cotidiano. En Colombia estamos rodeados de información constante: redes sociales, noticieros, vallas publicitarias en TransMilenio y debates políticos. Para no tragar entero, necesitamos herramientas que nos permitan separar los hechos comprobables de las opiniones subjetivas y detectar las trampas argumentativas conocidas como falacias. A lo largo de este recorrido, aprenderemos a leer entre líneas, a cuestionar las intenciones de los emisores y a prepararnos con éxito para las pruebas del ICFES Saber 11, afianzando nuestra voz como ciudadanos conscientes y analíticos.",
+  "objectives": [
+    "Analizar la diferencia conceptual y práctica entre hechos, opiniones y valoraciones subjetivas en diversos tipos de texto",
+    "Identificar las intenciones comunicativas y los posibles sesgos ideológicos o comerciales en los medios de comunicación",
+    "Reconocer falacias argumentativas comunes en discursos cotidianos, políticos y publicitarios para evitar manipulación",
+    "Resolver preguntas de lectura crítica bajo el estándar de evaluación del ICFES Saber 11 con rigor metodológico"
+  ],
+  "sections": [
+    {
+      "title": "Niveles de lectura",
+      "paragraphs": [
+        "Para comprender un texto a profundidad, la lectura crítica se divide en tres niveles esenciales que debemos dominar en el bachillerato. El primer nivel es el literal, donde identificamos qué dice el texto explícitamente: personajes, fechas, lugares y datos. Es la base sin la cual no podemos avanzar, pero quedarnos solo aquí es como mirar la carátula de un libro sin abrirlo. En el contexto colombiano, por ejemplo, leer literalmente un artículo de El Espectador implica saber quiénes son los actores mencionados y qué hechos reportan sin añadir interpretaciones personales todavía.",
+        "El segundo nivel es el inferencial, que nos invita a leer entre líneas. Aquí deducimos información implícita, establecemos relaciones de causa y efecto, y comprendemos el sentido figurado o la ironía. Si un texto afirma que el río Magdalena sufre en silencio, el nivel inferencial nos permite entender que se refiere a la contaminación ambiental y a la falta de dolientes institucionales. Finalmente, el tercer nivel es el crítico-intertextual. En esta instancia evaluamos la validez de los argumentos, juzgamos la postura del autor, conectamos el contenido con otros textos leídos y adoptamos una posición propia, fundamentada y respetuosa frente a la problemática expuesta."
+      ],
+      "example": {
+        "statement": "En un editorial sobre la economía de Medellín, se afirma que el desempleo bajó un 2% según el DANE, y el periodista añade que esto demuestra una gestión excelente del alcalde, aunque omite mencionar el aumento de la informalidad laboral.",
+        "solution": "Paso 1: Identificar el nivel literal ubicando el dato del DANE (baja del 2% en desempleo). Paso 2: Aplicar el nivel inferencial reconociendo que la gestión se presenta como excelente obviando la informalidad. Paso 3: En el nivel crítico, concluir que el argumento es parcializado porque oculta datos clave para favorecer una imagen política."
+      }
+    },
+    {
+      "title": "Intención y sesgo",
+      "paragraphs": [
+        "Todo texto que leemos o escuchamos tiene una intención comunicativa específica: informar, persuadir, entretener, conmover o convencer. Ningún discurso es completamente neutro, pues la selección de las palabras, el tono y los datos que se eligen (o se ocultan) revelan la perspectiva de quien escribe. Cuando revisamos portales de noticias, columnas de opinión o publicaciones en TikTok, debemos preguntarnos siempre: ¿quién habla?, ¿a quién le habla?, ¿qué busca lograr con este mensaje y qué intereses económicos o políticos hay detrás de su publicación?",
+        "El sesgo informativo ocurre cuando se presenta la realidad de manera inclinada hacia una postura particular, omitiendo información contraria. En Colombia, es común ver sesgos en debates sobre la reforma a la salud o el fracking, donde cada medio resalta los datos que apoyan su ideología. Reconocer el sesgo no significa rechazar el texto, sino entender desde qué orilla se enuncia para no asumir como verdades absolutas las opiniones sesgadas que circulan en la opinión pública nacional."
+      ],
+      "example": {
+        "statement": "Un titular de prensa dice: \"Nuevos bloqueos viales estrangulan la economía del país\". Otro titular sobre la misma protesta dice: \"Comunidades indígenas exigen sus derechos legítimos en las vías del Cauca\".",
+        "solution": "Paso 1: Analizar la elección lexical. El primer titular usa \"estrangulan\" (connotación negativa y violenta). El segundo usa \"exigen derechos legítimos\" (connotación justa y empática). Paso 2: Determinar la intención. El primer medio busca generar rechazo hacia la protesta; el segundo, comprensión hacia la comunidad. Paso 3: Identificar el sesgo en ambos enfoques para construir una visión equilibrada."
+      }
+    },
+    {
+      "title": "Falacias frecuentes",
+      "paragraphs": [
+        "Una falacia es un argumento que parece válido y convincente, pero que contiene un error lógico en su estructura. No debemos confundir una falacia con una mentira; la falacia es una trampa en el razonamiento que debilita la conclusión. En los debates políticos en el Congreso de la República o en las redes sociales, es muy frecuente encontrar la falacia ad hominem, que consiste en atacar a la persona que emite el argumento en lugar de refutar sus ideas. Por ejemplo, descalificar una propuesta ambiental diciendo que el ponente no usa bicicleta es una falacia.",
+        "Otra falacia muy común es la apelación a la ignorancia (argumentum ad ignorantiam), que afirma que algo es verdad simplemente porque no se ha demostrado lo contrario, o viceversa. También encontramos la falsa generalización, cuando a partir de un caso aislado se concluye una regla general (por ejemplo, decir que todos los cartageneros impuntuales basándose en una sola mala experiencia). Aprender a detectar estas falacias en nuestra vida diaria nos protege de manipulaciones publicitarias y falacias de autoridad mal entendidas."
+      ],
+      "example": {
+        "statement": "Un candidato a la personería estudiantil afirma: \"No podemos votar por la propuesta de Sofía sobre el reciclaje, porque ella reprobó matemáticas el año pasado\".",
+        "solution": "Paso 1: Aislar la conclusión defendida y el argumento de ataque. Paso 2: Notar que el rendimiento académico de Sofía en matemáticas no tiene relación lógica con la viabilidad o utilidad de su propuesta de reciclaje. Paso 3: Identificar la falacia tipo ad hominem (ataque personal), ya que se descalifica al proponente y no a la propuesta en sí."
+      }
+    },
+    {
+      "title": "Preguntas tipo Saber 11",
+      "paragraphs": [
+        "El examen de Lectura Crítica del ICFES evalúa nuestra capacidad para desentrañar textos continuos y discontinuos (caricaturas, infografías, avisos publicitarios). Para responder con éxito, debemos evitar caer en distractores muy comunes: opciones que son verdaderas en el mundo real pero que el texto no menciona, o generalizaciones exageradas que el autor nunca afirmó. La clave está en basarse estrictamente en la información del texto y en la lógica interna de los argumentos presentados.",
+        "En las preguntas donde se nos pide evaluar la función de un fragmento o la intención del autor frente a una caricatura de Matador en El Tiempo, debemos analizar cómo los elementos visuales y textuales dialogan entre sí. Recordar los niveles de lectura (literal, inferencial, crítico) nos guía paso a paso para descartar opciones incorrectas y seleccionar la respuesta que mejor sintetice la postura global del documento evaluado."
+      ],
+      "example": {
+        "statement": "En una caricatura política, un político corrupto aparece cortando una cinta inaugural de un puente invisible mientras sonríe a las cámaras. Pregunta: ¿Cuál es la principal intención del caricaturista?",
+        "solution": "Paso 1: Analizar los elementos discontinuos (puente invisible, político sonriente, corte de cinta). Paso 2: Inferir el significado simbólico: la obra pública nunca se hizo o es una simulación mediática. Paso 3: Relacionar con el distractor típico (criticar la estética de los puentes vs. denunciar la demagogia y la simulación de obras). La respuesta correcta denuncia la corrupción y la propaganda engañosa."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es la diferencia fundamental entre un hecho y una opinión?",
+      "answer": "El hecho es comprobable y objetivo; la opinión expresa un juicio de valor subjetivo."
+    },
+    {
+      "question": "¿A qué nivel de lectura corresponde la habilidad de deducir información implícita en un texto?",
+      "answer": "Al nivel inferencial."
+    },
+    {
+      "question": "¿Cómo se le llama a la falacia que consiste en atacar a la persona que argumenta en lugar de refutar sus ideas?",
+      "answer": "Falacia ad hominem."
+    },
+    {
+      "question": "¿Qué propósito comunicativo tiene un texto que busca influir en la conducta del lector mediante argumentos y llamados a la acción?",
+      "answer": "Persuadir."
+    },
+    {
+      "question": "Si un artículo de opinión afirma que un equipo de fútbol ganará el campeonato porque su uniforme es rojo y la historia demuestra lo contrario, ¿qué tipo de error lógico presenta?",
+      "answer": "Una falacia por falta de relación lógica o premisa irrelevante."
+    },
+    {
+      "question": "En una pregunta del ICFES donde una opción repite un dato real pero ajeno al texto evaluado, ¿debe seleccionarse?",
+      "answer": "No, porque en lectura crítica solo se evalúa la información contenida y derivada del texto dado."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Hecho",
+      "definition": "Suceso o dato real, objetivo y comprobable mediante evidencia empírica, independiente de las creencias de quien lo enuncia."
+    },
+    {
+      "term": "Opinión",
+      "definition": "Juicio, punto de vista o valoración personal que tiene un individuo sobre un asunto determinado, cargado de subjetividad."
+    },
+    {
+      "term": "Falacia",
+      "definition": "Argumento incorrecto o engañoso que parece válido pero que viola las reglas de la lógica formal."
+    },
+    {
+      "term": "Sesgo",
+      "definition": "Inclinación o preferencia ideológica, comercial o personal que distorsiona la objetividad al presentar información."
+    },
+    {
+      "term": "Intertextualidad",
+      "definition": "Relación de un texto con otros textos de la misma época o de diferentes tradiciones culturales."
+    }
+  ],
+  "closing": "Desarrollar un pensamiento crítico no es llevar la contraria a todo el mundo, sino aprender a examinar con lupa lo que consumimos a diario. Cuando leas una noticia en tu celular, escuches una promesa de campaña o veas una publicidad engañosa en la calle, detente un momento a pensar: ¿cuál es el hecho, cuál es la opinión y qué intenta lograr el emisor? Ser estudiantes críticos en Colombia es el primer paso para construir una sociedad más informada, participativa y libre de manipulaciones.",
+  "dbaStatements": [
+    "DBA 1. Asume una posición crítica y propositiva frente a los medios de comunicación masiva para analizar su influencia en la sociedad actual.",
+    "DBA 6. Comprende diversos tipos de texto, asumiendo una actitud crítica y argumentando sus puntos de vista frente a lo leído."
+  ]
+}

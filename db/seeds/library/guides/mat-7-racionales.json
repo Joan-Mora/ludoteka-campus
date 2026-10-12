@@ -1,0 +1,114 @@
+{
+  "intro": "¡Hola, estudiantes de séptimo grado! Bienvenidos a esta guía de estudio diseñada especialmente para ustedes. Hoy nos adentraremos en el fascinante mundo de los números racionales, aquellos que podemos escribir como fracciones o decimales y que usamos todos los días en Colombia, ya sea al repartir una arepa en el recreo, calcular el vuelto en la tienda de la esquina o medir distancias entre ciudades como Bogotá y Medellín. A lo largo de este recorrido, aprenderemos a dominar operaciones avanzadas, potencias, raíces, porcentajes para rebajas y ecuaciones sencillas. ¡Pónganse las pilas y preparen sus cuadernos porque las matemáticas son la llave para entender nuestro entorno con rigor y alegría!",
+  "objectives": [
+    "Resolver operaciones combinadas con números racionales utilizando algoritmos convencionales y no convencionales en contextos reales.",
+    "Aplicar las propiedades de la potenciación y la radicación con fracciones y decimales de forma correcta.",
+    "Calcular porcentajes y descuentos aplicados a situaciones cotidianas del comercio colombiano.",
+    "Plantear y resolver ecuaciones de primer grado con coeficientes racionales para hallar valores desconocidos."
+  ],
+  "sections": [
+    {
+      "title": "Operaciones con racionales",
+      "paragraphs": [
+        "Los números racionales incluyen a las fracciones y a los decimales que tanto conocemos. Para sumar y restar fracciones, el secreto está en igualar los denominadores usando el mínimo común múltiplo. Si sumamos tres cuartos de libra de queso con un medio libra, debemos convertir un medio a dos cuartos para que la suma sea directa: tres cuartos más dos cuartos nos da cinco cuartos de libra.",
+        "En la multiplicación y la división el camino es diferente pero muy sencillo. Al multiplicar, multiplicamos numerador con numerador y denominador con denominador directamente. Al dividir, aplicamos la famosa ley de la oreja o multiplicamos en cruz. Estas herramientas son vitales cuando necesitamos calcular porciones exactas en recetas de cocina típica colombiana, como una bandeja paisa o un sancocho trifásico para toda la familia."
+      ],
+      "example": {
+        "statement": "Doña Carmen compró 3/4 de metro de tela azul y gastó 2/3 de metro en una manualidad. ¿Cuánta tela le sobró?",
+        "solution": "1. Buscamos el denominador común entre 4 y 3, que es 12.\n2. Convertimos las fracciones: 3/4 se vuelve 9/12 y 2/3 se vuelve 8/12.\n3. Restamos las fracciones homogéneas: 9/12 - 8/12 = 1/12.\n4. Respuesta: A doña Carmen le sobró 1/12 de metro de tela."
+      }
+    },
+    {
+      "title": "Potenciación y radicación",
+      "paragraphs": [
+        "La potenciación no es más que una multiplicación abreviada, y cuando trabajamos con números racionales, la regla de oro es elevar tanto el numerador como el denominador al exponente indicado. Por ejemplo, al elevar dos tercios al cuadrado, multiplicamos dos tercios por dos tercios, lo que resulta en cuatro novenos. Las potencias nos ayudan a modelar situaciones de crecimiento acelerado, como la propagación de noticias en redes sociales o la reproducción de bacterias.",
+        "Por otro lado, la radicación es la operación inversa. Hallar la raíz cuadrada o cúbica de un número racional significa encontrar qué número multiplicado por sí mismo tantas veces nos da la cantidad original. Si tenemos la raíz cuadrada de veinticinco dieciseisavos, buscamos un número cuyo cuadrado sea veinticinco en arriba y dieciseis abajo, obteniendo cinco cuartos."
+      ],
+      "example": {
+        "statement": "Calcula el valor de la expresión: (3/5)² + √(9/25)",
+        "solution": "1. Resolvemos la potencia: (3/5)² = 9/25.\n2. Resolvemos la raíz cuadrada: √(9/25) = 3/5.\n3. Igualamos denominadores para sumar: 3/5 se amplifica a 15/25.\n4. Sumamos ambas fracciones: 9/25 + 15/25 = 24/25.\n5. Respuesta: El resultado final es 24/25."
+      }
+    },
+    {
+      "title": "Porcentajes y descuentos",
+      "paragraphs": [
+        "El porcentaje es una forma especial de expresar un número racional cuyo denominador es siempre cien. En nuestro país, los días de gran comercio como el Día sin IVA o las rebajas de mitad de año en los centros comerciales nos bombardean con ofertas del veinte por ciento, cincuenta por ciento o más. Saber calcular esto nos permite tomar decisiones financieras inteligentes y evitar pagar de más.",
+        "Para calcular un descuento, convertimos el porcentaje en una fracción decimal y lo multiplicamos por el precio inicial del producto. Ese resultado será el valor del descuento, el cual debemos restar al precio original para conocer el valor final que pagaremos en la caja registradora."
+      ],
+      "example": {
+        "statement": "Unos tenis en Cali cuestan 200.000 pesos y tienen un descuento del 15% por temporada escolar. ¿Cuánto se debe pagar por ellos?",
+        "solution": "1. Convertimos el 15% a fracción o decimal: 15 / 100 = 0.15.\n2. Multiplicamos por el precio inicial: 200.000 × 0.15 = 30.000 pesos de descuento.\n3. Restamos el descuento al precio original: 200.000 - 30.000 = 170.000 pesos.\n4. Respuesta: Se deben pagar 170.000 pesos por los tenis."
+      }
+    },
+    {
+      "title": "Ecuaciones de primer grado",
+      "paragraphs": [
+        "Una ecuación es una igualdad matemática donde hay al menos un valor desconocido, representado usualmente por una letra llamada incógnita, como la equis. Resolver una ecuación de primer grado con racionales consiste en despejar esa incógnita paso a paso, utilizando operaciones inversas para dejarla sola a un lado del signo igual.",
+        "Estas herramientas algebraicas son muy potentes porque nos permiten resolver problemas de la vida real donde conocemos el resultado final y algunas condiciones, pero nos falta un dato clave. Por ejemplo, calcular cuánto costaba inicialmente un artículo antes de aplicarle impuestos o repartir una herencia en partes proporcionales."
+      ],
+      "example": {
+        "statement": "Resuelve la ecuación: x + 1/2 = 3/4",
+        "solution": "1. Identificamos la operación que acompaña a la x, que es una suma de 1/2.\n2. Aplicamos la operación inversa restando 1/2 a ambos lados: x = 3/4 - 1/2.\n3. Homogeneizamos los denominadores: 1/2 se convierte en 2/4.\n4. Restamos las fracciones: x = 3/4 - 2/4 = 1/4.\n5. Respuesta: x = 1/4."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "Calcula la suma de 1/3 y 2/5.",
+      "answer": "11/15"
+    },
+    {
+      "question": "Realiza la multiplicación: (3/4) × (8/9).",
+      "answer": "2/3"
+    },
+    {
+      "question": "Halla el valor de la potencia (2/3)³.",
+      "answer": "8/27"
+    },
+    {
+      "question": "Calcula la raíz cuadrada de 49/64.",
+      "answer": "7/8"
+    },
+    {
+      "question": "¿Cuánto es el 20% de 350.000 pesos?",
+      "answer": "70.000 pesos"
+    },
+    {
+      "question": "Resuelve la ecuación: 2x - 1/3 = 5/3.",
+      "answer": "x = 1"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Número racional",
+      "definition": "Todo número que se puede representar como el cociente de dos enteros, donde el denominador es diferente de cero."
+    },
+    {
+      "term": "Mínimo común múltiplo",
+      "definition": "El menor múltiplo positivo que es común a dos o más denominadores, usado para sumar y restar fracciones."
+    },
+    {
+      "term": "Potenciación",
+      "definition": "Operación matemática que consiste en multiplicar un número por sí mismo tantas veces como lo indique el exponente."
+    },
+    {
+      "term": "Radicación",
+      "definition": "Operación inversa a la potenciación que busca la base que fue multiplicada para llegar a un valor dado."
+    },
+    {
+      "term": "Porcentaje",
+      "definition": "Símbolo y cantidad que representa una fracción de un total dividido exactamente en cien partes iguales."
+    },
+    {
+      "term": "Ecuación",
+      "definition": "Igualdad matemática entre dos expresiones donde aparece al menos un valor desconocido llamado incógnita."
+    }
+  ],
+  "closing": "Las matemáticas no se quedan solo en el papel o en el aula de clases; viven en cada cuenta que sacamos en el transporte, en las rebajas del centro comercial y en la manera en que organizamos nuestro tiempo. Dominar los racionales, potencias, raíces y ecuaciones te da superpoderes lógicos para desenvolverte con seguridad en Colombia y el mundo. ¡Sigue practicando y verás que ningún reto te quedará grande!",
+  "dbaStatements": [
+    "DBA 1. Comprende y resuelve problemas, que involucran los números racionales con las operaciones (suma, resta, multiplicación, división, potenciación, radicación) en contextos escolares y extraescolares.",
+    "DBA 2. Describe y utiliza diferentes algoritmos, convencionales y no convencionales, al realizar operaciones entre números racionales en sus diferentes representaciones (fracciones y decimales) y los emplea con sentido en la solución de problemas.",
+    "DBA 3. Utiliza diferentes relaciones, operaciones y representaciones en los números racionales para argumentar y solucionar problemas en los que aparecen cantidades desconocidas.",
+    "DBA 7. Plantea y resuelve ecuaciones, las describe verbalmente y representa situaciones de variación de manera numérica, simbólica o gráfica."
+  ]
+}

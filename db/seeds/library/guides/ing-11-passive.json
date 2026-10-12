@@ -1,0 +1,103 @@
+{
+  "intro": "Welcome to your English study guide for grade eleventh. In this module, we will explore advanced grammar structures that help you communicate more formally and effectively. Whether you are discussing global sustainability goals, reporting scientific findings, or reading news reports about local events in Colombia, mastering the passive voice and reported speech is essential. These tools allow you to shift the focus of your sentences or retell what other people said without quoting them directly. Let us dive into these concepts with clear explanations and practical examples designed for your academic growth.",
+  "objectives": [
+    "Identify passive voice structures in present and past tenses within texts.",
+    "Transform direct statements and questions into reported speech accurately.",
+    "Analyze news and media language to recognize objectivity and attribution.",
+    "Apply grammatical rules to write formal sentences about social and scientific topics."
+  ],
+  "sections": [
+    {
+      "title": "Passive voice in present and past",
+      "paragraphs": [
+        "The passive voice is used when the focus is on the action or the receiver of the action, rather than on who performs it. In academic and formal writing, such as scientific reports or historical accounts, we often prefer the passive voice because it sounds more objective.",
+        "To form the passive voice, we use the correct tense of the auxiliary verb to be followed by the past participle of the main verb. In the present simple, we use am, is, or are. In the past simple, we use was or were. If we want to mention the doer, we use the preposition by at the end of the sentence."
+      ],
+      "example": {
+        "statement": "Active: People plant thousands of native trees in the Amazon rainforest every year.",
+        "solution": "Step 1: Identify the object (thousands of native trees) and make it the new subject. Step 2: Determine the tense of the active verb (plant is present simple), so use the present passive form (are planted). Step 3: Add the agent with by if necessary. Solution: Thousands of native trees are planted in the Amazon rainforest every year by people."
+      }
+    },
+    {
+      "title": "Reporting statements",
+      "paragraphs": [
+        "Reported speech, also known as indirect speech, is used to tell someone else what another person said without using their exact words. When we report statements, we usually move the verb tense one step back into the past, a process known as backshift.",
+        "For example, present simple changes to past simple, and present continuous changes to past continuous. Pronouns and time expressions also change to fit the new context. Common reporting verbs include say, tell, explain, and state."
+      ],
+      "example": {
+        "statement": "Direct speech: Camila said, 'We protect water sources in our town.'",
+        "solution": "Step 1: Use the reporting verb (Camila said that). Step 2: Change the pronoun 'we' to 'they'. Step 3: Shift the present simple verb 'protect' to the past simple 'protected'. Solution: Camila said that they protected water sources in their town."
+      }
+    },
+    {
+      "title": "Reporting questions",
+      "paragraphs": [
+        "When we report questions, the grammar structure changes significantly compared to direct questions. We no longer use auxiliary verbs like do, does, or did, and the word order changes back to a standard subject-verb sentence structure.",
+        "For yes or no questions, we use 'if' or 'whether' after the reporting verb. For wh- questions (who, what, where, when, why, how), we keep the original question word, followed immediately by the subject and the backshifted verb."
+      ],
+      "example": {
+        "statement": "Direct speech: The reporter asked, 'Where is the renewable energy project located?'",
+        "solution": "Step 1: Use the reporting verb (The reporter asked). Step 2: Keep the wh- word (where). Step 3: Place the subject (the renewable energy project) before the verb, and shift 'is' to 'was'. Solution: The reporter asked where the renewable energy project was located."
+      }
+    },
+    {
+      "title": "News and media language",
+      "paragraphs": [
+        "Journalists frequently use specific grammatical structures to inform the public while maintaining neutrality or attributing claims to sources. The passive voice is extremely common in headlines and news briefs because it highlights the event rather than the individual.",
+        "Additionally, reporting verbs like claim, allege, report, and announce are utilized to convey information attributed to authorities or witnesses. Understanding these patterns helps you critically evaluate media texts and identify bias or official stances."
+      ],
+      "example": {
+        "statement": "Direct news: Officials announced, 'Local communities built three new schools last month.'",
+        "solution": "Step 1: Use a media reporting verb (Officials announced that). Step 2: Change 'local communities' or keep them as the subject. Step 3: Shift the past simple verb 'built' to the past perfect 'had built'. Solution: Officials announced that local communities had built three new schools the previous month."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "Transform into passive voice: 'Farmers harvest coffee beans in the mountains of Colombia.'",
+      "answer": "Coffee beans are harvested in the mountains of Colombia by farmers."
+    },
+    {
+      "question": "Transform into passive voice: 'The government built a new hospital in 2022.'",
+      "answer": "A new hospital was built by the government in 2022."
+    },
+    {
+      "question": "Change to reported speech: Andres said, 'I study environmental science.'",
+      "answer": "Andres said that he studied environmental science."
+    },
+    {
+      "question": "Change to reported speech: Maria said, 'We are visiting the museum tomorrow.'",
+      "answer": "Maria said that they were visiting the museum the next day."
+    },
+    {
+      "question": "Report the question: The teacher asked, 'Do you understand the passive voice?'",
+      "answer": "The teacher asked if/whether we understood the passive voice."
+    },
+    {
+      "question": "Report the question: Juan asked, 'What time does the scientific conference start?'",
+      "answer": "Juan asked what time the scientific conference started."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Passive voice",
+      "definition": "A grammatical structure where the object of an action becomes the subject of the sentence, emphasizing the action or receiver rather than the doer."
+    },
+    {
+      "term": "Reported speech",
+      "definition": "A way of expressing what someone else said without quoting their exact words, usually involving verb tense backshifts and pronoun changes."
+    },
+    {
+      "term": "Backshift",
+      "definition": "The grammatical process of shifting verb tenses one step further into the past when converting direct speech into reported speech."
+    },
+    {
+      "term": "Attribution",
+      "definition": "The action of ascribing work, statements, or news claims to a particular source or author in media texts."
+    }
+  ],
+  "closing": "Knowing how to use the passive voice and reported speech empowers you to engage critically with global issues and media sources. In your daily life, whether discussing local news, scientific discoveries, or community projects, these structures help you communicate with precision, objectivity, and academic excellence.",
+  "dbaStatements": [
+    "Esquema curricular sugerido de inglés del MEN: nivel B1.3, grado sugerido 11.°."
+  ]
+}

@@ -159,17 +159,18 @@ export class LibraryService implements OnApplicationBootstrap {
     return { subjects, grades, tags: tags.rows, uploads: this.cloudinary.enabled };
   }
 
-  async list(viewer: Viewer, filters: { q?: string; subjectId?: string; kind?: string; tag?: string; saved?: boolean }) {
+  async list(viewer: Viewer, filters: { q?: string; subjectId?: string; gradeId?: string; kind?: string; tag?: string; saved?: boolean }) {
     const q = filters.q?.trim();
     const ts = q ? orQuery(q) : '';
     const rows = await sql<{
       id: string; title: string; description: string; kind: string; url: string; format: string | null; bytes: number; pages: number | null;
-      visibility: string; status: string; subject: string; subject_id: string; grade: string | null; course: string | null; uploaded_by: string | null;
+      visibility: string; status: string; course_id: string | null; subject: string; subject_id: string; grade: string | null; course: string | null; uploaded_by: string | null;
       uploader: string | null; created_at: Date; views: number; saved: boolean; tags: string[] | null; resource_type: string | null; public_id: string | null;
+      source_name: string | null; source_url: string | null; license: string | null;
     }>`
-      SELECT li.id, li.title, li.description, li.kind, li.url, li.format, li.bytes, li.pages, li.visibility, li.status,
+      SELECT li.id, li.title, li.description, li.kind, li.url, li.format, li.bytes, li.pages, li.visibility, li.status, li.course_id,
              s.name AS subject, li.subject_id, g.name AS grade, c.title AS course, li.uploaded_by, u.full_name AS uploader, li.created_at,
-             li.resource_type, li.cloudinary_public_id AS public_id,
+             li.resource_type, li.cloudinary_public_id AS public_id, li.source_name, li.source_url, li.license,
              (SELECT count(*)::INT FROM library_views v WHERE v.item_id = li.id) AS views,
              EXISTS (SELECT 1 FROM bookmarks b WHERE b.item_id = li.id AND b.user_id = ${viewer.id}) AS saved,
              (SELECT array_agg(t.tag ORDER BY t.tag) FROM library_tags t WHERE t.item_id = li.id) AS tags
@@ -180,6 +181,7 @@ export class LibraryService implements OnApplicationBootstrap {
       LEFT JOIN users u ON u.id = li.uploaded_by
       WHERE ${this.visible(viewer)}
         ${filters.subjectId ? sql`AND li.subject_id = ${filters.subjectId}` : sql``}
+        ${filters.gradeId ? sql`AND (li.grade_id = ${filters.gradeId} OR li.grade_id IS NULL)` : sql``}
         ${filters.kind ? sql`AND li.kind = ${filters.kind}` : sql``}
         ${filters.tag ? sql`AND EXISTS (SELECT 1 FROM library_tags t WHERE t.item_id = li.id AND t.tag = ${filters.tag.toLowerCase()})` : sql``}
         ${filters.saved ? sql`AND EXISTS (SELECT 1 FROM bookmarks b WHERE b.item_id = li.id AND b.user_id = ${viewer.id})` : sql``}
@@ -222,17 +224,21 @@ export class LibraryService implements OnApplicationBootstrap {
   async get(viewer: Viewer, id: string) {
     const item = await this.itemFor(viewer, id);
     await this.database.db.insertInto('library_views').values({ item_id: id, user_id: viewer.id }).execute();
-    const [subject, tags, bookmark, chunks, glossary, views] = await Promise.all([
+    const [subject, tags, bookmark, chunks, glossary, views, grade, course] = await Promise.all([
       this.database.db.selectFrom('subjects').select(['id', 'name']).where('id', '=', item.subject_id).executeTakeFirst(),
       this.database.db.selectFrom('library_tags').select('tag').where('item_id', '=', id).orderBy('tag').execute(),
       this.database.db.selectFrom('bookmarks').select(['page', 'note']).where('item_id', '=', id).where('user_id', '=', viewer.id).executeTakeFirst(),
       this.database.db.selectFrom('library_chunks').select(sql<number>`count(*)`.as('n')).where('item_id', '=', id).executeTakeFirstOrThrow(),
       this.database.db.selectFrom('glossary_terms').select(['id', 'term', 'definition', 'example']).where('source_item_id', '=', id).orderBy('term').execute(),
       this.database.db.selectFrom('library_views').select(sql<number>`count(*)`.as('n')).where('item_id', '=', id).executeTakeFirstOrThrow(),
+      item.grade_id ? this.database.db.selectFrom('grades').select('name').where('id', '=', item.grade_id).executeTakeFirst() : undefined,
+      item.course_id ? this.database.db.selectFrom('courses').select('title').where('id', '=', item.course_id).executeTakeFirst() : undefined,
     ]);
     return {
       ...item,
       subject: subject?.name ?? '',
+      grade: grade?.name ?? null,
+      course: course?.title ?? null,
       tags: tags.map((t) => t.tag),
       bookmark: bookmark ?? null,
       chunks: Number(chunks.n),
@@ -306,7 +312,7 @@ export class LibraryService implements OnApplicationBootstrap {
   }
 
   /** Downloads the PDF, extracts text per page, stores chunks with embeddings and proposes glossary terms. */
-  async ingest(itemId: string, userId: string | null) {
+  async ingest(itemId: string, userId: string | null, options: { glossary?: boolean } = {}) {
     const item = await this.database.db.selectFrom('library_items').selectAll().where('id', '=', itemId).executeTakeFirst();
     if (!item) return;
     try {
@@ -336,7 +342,7 @@ export class LibraryService implements OnApplicationBootstrap {
         .set({ status: 'published', pages: result.total ?? pages.length, text_chars: textChars, updated_at: new Date() })
         .where('id', '=', itemId)
         .execute();
-      if (chunks.length) await this.suggestGlossary(item.subject_id, itemId, chunks.slice(0, 6).map((c) => c.content).join('\n'), userId);
+      if (chunks.length && options.glossary !== false) await this.suggestGlossary(item.subject_id, itemId, chunks.slice(0, 6).map((c) => c.content).join('\n'), userId);
       this.logger.log(`«${item.title}»: ${chunks.length} fragmentos, ${embeddings ? 'con' : 'sin'} embeddings`);
     } catch (error) {
       this.logger.warn(`No se pudo indexar ${itemId}: ${error instanceof Error ? error.message : error}`);

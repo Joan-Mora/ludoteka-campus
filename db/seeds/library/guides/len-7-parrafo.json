@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola, colega estudiante! Qué bueno encontrarte en este espacio de aprendizaje. En grado séptimo, tu paso por el colegio se pone más interesante porque ya no solo leemos historias o poemas, sino que nos enfrentamos al reto de escribir nuestros propios textos con propósito. ¿Te ha pasado que te sientas frente a la hoja en blanco y no sabes por dónde arrancar? En esta guía de estudio vamos a descubrir juntos los secretos de la planeación y la escritura. Aprenderás a organizar tus ideas como un mapa de ruta antes de redactar, logrando que tus escritos tengan sentido, orden y enganchen a quien los lea. ¡Manos a la obra!",
+  "objectives": [
+    "Identificar las características formales y no formales de diferentes tipologías textuales según el propósito comunicativo.",
+    "Aplicar un plan de escritura estructurado para organizar las ideas principales y secundarias antes de redactar.",
+    "Emplear mecanismos de coherencia y cohesión para garantizar la unidad temática y la fluidez del texto.",
+    "Utilizar adecuadamente conectores lógicos y signos de puntuación para mejorar la claridad del mensaje."
+  ],
+  "sections": [
+    {
+      "title": "Tipologías textuales",
+      "paragraphs": [
+        "En nuestro idioma usamos diferentes tipos de textos según lo que queremos lograr con nuestro lector. Si narras un paseo familiar al Parque Nacional Natural Tayrona, usas una tipología narrativa con personajes y tiempo. Si explicas por qué el río Magdalena es tan importante para la economía de Colombia, empleas un texto expositivo lleno de datos y conceptos claros. Por otro lado, si buscas convencer a tus compañeros de que cuiden el agua en el colegio, te apoyas en la argumentación.",
+        "Cada tipología tiene características formales y no formales muy propias. Las formales se refieren a la estructura visible, como los párrafos, subtítulos o versos. Las no formales tienen que ver con el tono, el vocabulario y la intención del autor. Por ejemplo, un texto lírico usa un lenguaje figurado y emotivo, mientras que uno informativo prioriza la objetividad y la claridad. Reconocer estas diferencias te permite elegir el formato adecuado para cada tarea escolar."
+      ],
+      "example": {
+        "statement": "Identifica la tipología y el propósito del siguiente fragmento: 'El oso andino, único oso de Suramérica, habita en los bosques de niebla de los Andes colombianos y cumple una función vital dispersando semillas'.",
+        "solution": "1. Analizamos el contenido: presenta información real sobre un animal sin opiniones personales. 2. Determinamos la tipología: es un texto expositivo. 3. Definimos el propósito: informar al lector sobre las características y la importancia ecológica del oso andino."
+      }
+    },
+    {
+      "title": "Plan de escritura",
+      "paragraphs": [
+        "Escribir un buen texto no es cuestión de suerte, sino de planeación. Antes de escribir la primera palabra en tu cuaderno, debes armar un plan de escritura. Este proceso inicia con la selección del tema y la definición de tu objetivo comunicativo: ¿quieres informar, entretener o convencer? Luego, realiza una lluvia de ideas donde anotes todo lo que sabes sobre el asunto sin preocuparte todavía por la ortografía o la redacción perfecta.",
+        "El siguiente paso clave es organizar esas ideas en un esquema o mapa conceptual. Agrupa la información en tres momentos esenciales: la introducción, donde presentas el tema; el desarrollo, donde expones tus argumentos o datos principales; y la conclusión, donde cierras con una reflexión o resumen. Al hacer este esqueleto previo, tu mente trabaja de forma ordenada y evitas perderte a mitad del párrafo."
+      ],
+      "example": {
+        "statement": "Organiza en un esquema básico de introducción, desarrollo y conclusión los siguientes puntos sobre la gastronomía de Cali: 1. El sancocho de gallina como plato típico. 2. Cali es conocida como la capital de la salsa y tiene una gran riqueza culinaria. 3. Probar estos platos es conocer la cultura valluna.",
+        "solution": "1. Introducción: Cali es conocida como la capital de la salsa y tiene una gran riqueza culinaria. 2. Desarrollo: El sancocho de gallina como plato típico preparado en fogón de leña. 3. Conclusión: Probar estos platos es conocer y valorar la cultura valluna."
+      }
+    },
+    {
+      "title": "Coherencia y cohesión",
+      "paragraphs": [
+        "Cuando leemos un texto y sentimos que todo encaja a la perfección, decimos que hay coherencia. La coherencia es el hilo conductor que mantiene todas las ideas conectadas alrededor de un mismo tema central, sin desviarse ni contradecirse. Si estás escribiendo un ensayo sobre el reciclaje en Bogotá y de repente hablas de las fases de la Luna, pierdes la coherencia porque el tema principal se desvía por completo.",
+        "Por su parte, la cohesión es la herramienta gramatical que une las palabras y las oraciones dentro de los párrafos. Para lograr una buena cohesión, utilizamos recursos como los sinónimos para no repetir la misma palabra muchas veces, los pronombres y los signos de puntuación. Gracias a la cohesión, las frases fluyen suavemente y el lector no tropieza al avanzar en la lectura de tu trabajo escolar."
+      ],
+      "example": {
+        "statement": "Mejora la cohesión del siguiente texto evitando la repetición excesiva: 'El café colombiano es famoso en el mundo. El café colombiano se exporta desde puertos como Buenaventura. Los extranjeros prefieren el café colombiano por su aroma'.",
+        "solution": "1. Identificamos la palabra repetida: 'El café colombiano'. 2. Reemplazamos algunas menciones por sinónimos o pronombres. 3. Resultado cohesivo: 'El café colombiano es famoso en el mundo. Este producto se exporta desde puertos como Buenaventura. Los extranjeros lo prefieren por su aroma'."
+      }
+    },
+    {
+      "title": "Conectores y signos de puntuación",
+      "paragraphs": [
+        "Los conectores son palabras o frases puente que le indican al lector cómo debe relacionar una idea con la anterior. Existen conectores de adición (además, también), de contraste (sin embargo, pero), de causa (porque, ya que) y de consecuencia (por lo tanto, en consecuencia). Usarlos correctamente evita que tus oraciones suenen sueltas o desconectadas, dándole elegancia y fluidez a tu redacción en los trabajos de español.",
+        "Asimismo, los signos de puntuación actúan como los semáforos de la lectura. La coma hace una pausa breve, el punto y seguido separa oraciones dentro de un mismo párrafo, y el punto y aparte marca el final de una idea central para pasar a otra. Si olvidas poner comas o puntos, el texto se vuelve confuso y el mensaje se distorsiona por completo, obligando al profesor a leerlo varias veces para entenderlo."
+      ],
+      "example": {
+        "statement": "Elige el conector adecuado para completar la oración: 'Quería viajar a Santa Marta a conocer el mar, ________ no me alcanzó el presupuesto este mes'.",
+        "solution": "1. Analizamos la relación entre las ideas: hay una oposición entre querer viajar y no tener presupuesto. 2. Seleccionamos un conector de contraste. 3. Respuesta correcta: 'sin embargo' o 'pero'."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es la tipología textual cuyo propósito principal es relatar una serie de eventos reales o ficticios en un tiempo y espacio determinados?",
+      "answer": "Tipología narrativa."
+    },
+    {
+      "question": "¿Cómo se denominan las características de un texto que tienen que ver con su estructura visible, como párrafos, títulos o versos?",
+      "answer": "Características formales."
+    },
+    {
+      "question": "En el proceso de planear un texto, ¿cuál es el primer paso fundamental que debes realizar antes de redactar?",
+      "answer": "Definir el tema y el propósito comunicativo."
+    },
+    {
+      "question": "¿Qué propiedad textual garantiza que todas las ideas de un escrito giren en torno a un tema central sin contradecirse?",
+      "answer": "La coherencia."
+    },
+    {
+      "question": "Clasifica el conector 'por lo tanto' según la relación lógica que establece entre las oraciones.",
+      "answer": "Conector de consecuencia."
+    },
+    {
+      "question": "Escribe un párrafo breve (máximo 4 líneas) sobre el río Amazonas aplicando un plan previo de introducción, desarrollo y conclusión con su respectiva puntuación.",
+      "answer": "El río Amazonas es el más caudaloso del planeta. Atraviesa gran parte de Sudamérica albergando una biodiversidad única en su selva tropical. Por esta razón, su conservación es vital para el equilibrio climático mundial."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Tipología textual",
+      "definition": "Clasificación de los textos según su propósito comunicativo y sus características estructurales."
+    },
+    {
+      "term": "Plan de escritura",
+      "definition": "Estrategia previa de organización de ideas y estructura antes de redactar un texto."
+    },
+    {
+      "term": "Coherencia",
+      "definition": "Propiedad que asegura que un texto mantenga un sentido unitario y un tema central claro."
+    },
+    {
+      "term": "Cohesión",
+      "definition": "Propiedad gramatical que conecta palabras y oraciones mediante elementos lingüísticos y signos."
+    },
+    {
+      "term": "Conector lógico",
+      "definition": "Palabra o frase que vincula lógicamente diferentes ideas o párrafos dentro de un texto."
+    }
+  ],
+  "closing": "Escribir bien es como construir un puente sólido: requiere bases firmes, planeación y materiales adecuados. Cada vez que redactes un mensaje, un cuento o un informe escolar, recuerda planear tus ideas y usar los signos correctos. ¡Tu voz escrita tiene poder, úsala para transformar tu entorno en Colombia!",
+  "dbaStatements": [
+    "DBA 6. Interpreta textos informativos, expositivos, narrativos, líricos, argumentativos y descriptivos, y da cuenta de sus características formales y no formales.",
+    "DBA 8. Produce textos verbales y no verbales conforme a las características de una tipología seleccionada, a partir de un proceso de planificación textual."
+  ]
+}

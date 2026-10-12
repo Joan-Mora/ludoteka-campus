@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola, pilos de décimo! Bienvenidos a este recorrido por la trigonometría y los fenómenos periódicos. En Colombia vivimos rodeados de ciclos: las mareas en nuestras costas pacífica y caribe, las fases de la luna que guían las cosechas de café en el eje cafetero y hasta el vaivén de un péndulo. En esta guía exploraremos cómo las matemáticas nos permiten descifrar y predecir estos comportamientos repetitivos mediante triángulos, ángulos en radianes, ondas y leyes muy útiles. Prepárense para conectar la teoría con la realidad de nuestro entorno de una manera sencilla, rigurosa y práctica.",
+  "objectives": [
+    "Comprender las razones trigonométricas en triángulos rectángulos usando medidas precisas.",
+    "Definir los radianes como unidad natural para medir ángulos en matemáticas.",
+    "Modelar fenómenos periódicos cotidianos mediante las funciones seno y coseno.",
+    "Resolver problemas geométricos complejos aplicando las leyes del seno y del coseno."
+  ],
+  "sections": [
+    {
+      "title": "Razones trigonométricas en el triángulo rectángulo",
+      "paragraphs": [
+        "La trigonometría nace del estudio de las relaciones entre los lados y los ángulos de un triángulo. En un triángulo rectángulo, aquel que tiene un ángulo de 90 grados, destacamos la hipotenusa, que es el lado opuesto al ángulo recto y siempre el más largo, junto con los catetos, que son los otros dos lados respecto a un ángulo agudo dado.",
+        "A partir de estos lados definimos las tres razones principales: el seno, que es la división entre el cateto opuesto y la hipotenusa; el coseno, como el cateto adyacente entre la hipotenusa; y la tangente, como el cateto opuesto entre el cateto adyacente. Estas herramientas son fundamentales en la topografía y la construcción en nuestras ciudades."
+      ],
+      "example": {
+        "statement": "Un topógrafo en Medellín se encuentra a 20 metros de la base de un edificio y mide un ángulo de elevación de 45 grados hacia la azotea. ¿Cuál es la altura del edificio?",
+        "solution": "1. Identificamos los datos: cateto adyacente = 20 metros, ángulo = 45 grados.\n2. Usamos la razón trigonométrica tangente, ya que relaciona el cateto opuesto (la altura h) con el cateto adyacente.\n3. Tangente de 45 grados = h / 20.\n4. Como la tangente de 45 grados es igual a 1, tenemos: 1 = h / 20.\n5. Despejamos h multiplicando: h = 20 × 1 = 20 metros."
+      }
+    },
+    {
+      "title": "Ángulos en radianes",
+      "paragraphs": [
+        "Además de los grados sexagesimales a los que estamos acostumbrados, en matemáticas superiores y física se utiliza el radián como la unidad estándar para medir ángulos. Un radián se define como la medida del ángulo central de una circunferencia cuyo arco tiene una longitud exactamente igual a la longitud de su radio.\n",
+        "Para convertir grados a radianes o viceversa, empleamos la equivalencia fundamental de que media vuelta de la circunferencia, es decir, 180 grados, equivale exactamente a π radianes. Esta unidad facilita enormemente el cálculo en el análisis matemático y en el estudio de ondas y movimientos circulares uniformes."
+      ],
+      "example": {
+        "statement": "Convierte un ángulo de 180 grados a radianes y un ángulo de 90 grados a radianes usando la relación con π.",
+        "solution": "1. Sabemos que 180 grados equivalen a π radianes.\n2. Por lo tanto, para 180 grados, la respuesta directa es π radianes.\n3. Para 90 grados, que es la mitad de 180 grados, dividimos π entre 2.\n4. El resultado es π / 2 radianes."
+      }
+    },
+    {
+      "title": "Funciones seno y coseno",
+      "paragraphs": [
+        "Las funciones seno y coseno son las reinas indiscutibles del estudio de los fenómenos periódicos. Cuando un punto gira alrededor de una circunferencia unitaria, sus coordenadas verticales y horizontales generan ondas suaves y repetitivas que se extienden indefinidamente. Estas ondas poseen características propias como la amplitud, que es la altura máxima desde su eje central, y el periodo, que es la distancia horizontal necesaria para que la onda complete un ciclo completo antes de volver a repetirse.\n",
+        "En nuestro país, estas funciones modelan con gran precisión el comportamiento de la corriente alterna que llega a los hogares colombianos, el sonido de un tiple andino o las variaciones del nivel del mar en Cartagena a lo largo del día. Comprender su gráfica nos permite predecir valores futuros con exactitud."
+      ],
+      "example": {
+        "statement": "Determina el valor exacto de la función seno para un ángulo de π / 2 radianes y el coseno para π radianes.",
+        "solution": "1. Recordamos que π / 2 radianes equivalen a 90 grados en la circunferencia unitaria.\n2. En 90 grados, la coordenada vertical (seno) alcanza su valor máximo, que es 1.\n3. Recordamos que π radianes equivalen a 180 grados.\n4. En 180 grados, la coordenada horizontal (coseno) se ubica en el extremo izquierdo, por lo que su valor es -1."
+      }
+    },
+    {
+      "title": "Leyes del seno y del coseno",
+      "paragraphs": [
+        "No todos los triángulos con los que trabajamos tienen un ángulo recto. Cuando nos enfrentamos a triángulos oblicuángulos, es decir, acutángulos u obtusángulos, las razones trigonométricas básicas ya no sirven por sí solas. Para resolverlos aplicamos la ley del seno y la ley del coseno.\n",
+        "La ley del seno establece que la razón entre el seno de un ángulo y su lado opuesto es constante en cualquier triángulo, lo cual es útil cuando conocemos un lado y su ángulo opuesto junto con otro dato. La ley del coseno generaliza el famoso teorema de Pitágoras para cualquier triángulo, relacionando los tres lados con el coseno de uno de sus ángulos."
+      ],
+      "example": {
+        "statement": "En un terreno triangular en los Llanos Orientales, dos lados miden 10 metros y 15 metros, y el ángulo entre ellos es de 60 grados. Halla la longitud del tercer lado.",
+        "solution": "1. Aplicamos la ley del coseno: c² = a² + b² - (2 × a × b × cos(C)).\n2. Reemplazamos los valores: a = 10, b = 15, C = 60 grados.\n3. Calculamos los cuadrados: 10² = 100 y 15² = 225. Su suma es 325.\n4. Sabemos que el coseno de 60 grados es 0,5.\n5. Multiplicamos: 2 × 10 × 15 × 0,5 = 150.\n6. Restamos: c² = 325 - 150 = 175.\n7. Sacamos la raíz cuadrada: c = √175, que es aproximadamente 13,23 metros."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es el valor del seno de un ángulo agudo cuyo cateto opuesto mide 3 y la hipotenusa mide 5?",
+      "answer": "3/5 o 0,6"
+    },
+    {
+      "question": "Convierte un ángulo de 360 grados a radianes usando π.",
+      "answer": "2π radianes"
+    },
+    {
+      "question": "Si un triángulo rectángulo tiene un cateto adyacente de 4 y un cateto opuesto de 3, ¿cuánto mide la hipotenusa?",
+      "answer": "5"
+    },
+    {
+      "question": "¿Cuál es el periodo principal de la función seno estándar en radianes?",
+      "answer": "2π radianes"
+    },
+    {
+      "question": "Calcula el valor del coseno de 0 grados en la circunferencia unitaria.",
+      "answer": "1"
+    },
+    {
+      "question": "En un triángulo, si el lado a = 7, b = 24 y el ángulo entre ellos es de 90 grados, ¿cuánto mide el tercer lado c?",
+      "answer": "25"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Hipotenusa",
+      "definition": "Lado más largo de un triángulo rectángulo, situado siempre frente al ángulo recto."
+    },
+    {
+      "term": "Radián",
+      "definition": "Unidad de ángulo plano que equivale al ángulo central que subtiende un arco de longitud igual al radio."
+    },
+    {
+      "term": "Amplitud",
+      "definition": "Altura máxima de una onda periódica medida desde su eje central de equilibrio."
+    },
+    {
+      "term": "Periodo",
+      "definition": "Longitud o tiempo necesario para que una función periódica complete un ciclo completo de oscilación."
+    },
+    {
+      "term": "Triángulo oblicuángulo",
+      "definition": "Triángulo que no posee ningún ángulo interior recto de 90 grados."
+    }
+  ],
+  "closing": "La trigonometría no es solo un conjunto de fórmulas para aprobar el año escolar en Colombia; es el lenguaje matemático que describe el ritmo del universo. Desde las ondas sonoras de nuestra música folclórica hasta la programación de tecnologías modernas, comprender los fenómenos periódicos nos dota de una mirada crítica y analítica sobre el mundo que habitamos.",
+  "dbaStatements": [
+    "DBA 4. Comprende y utiliza funciones para modelar fenómenos periódicos y justifica las soluciones.",
+    "DBA 7. Resuelve problemas mediante el uso de las propiedades de las funciones y usa representaciones tabulares, gráficas y algebraicas para estudiar la variación, la tendencia numérica y las razones de cambio entre magnitudes."
+  ]
+}

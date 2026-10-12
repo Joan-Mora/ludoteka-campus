@@ -1,0 +1,103 @@
+{
+  "intro": "Welcome to your study guide on writing an argumentative essay in English for grade 11. In this module, you will learn how to express your personal point of view clearly and critically on global and local issues, such as sustainability and social challenges in Colombia. Writing an argumentative essay allows you to defend your ideas using logical arguments, solid evidence, and formal language. By the end of this guide, you will be able to structure a cohesive text that convinces your readers, following the official guidelines of the Ministry of Education for B1.3 proficiency.",
+  "objectives": [
+    "Identify the structural components of an argumentative essay in English.",
+    "Formulate a clear and debatable thesis statement on current issues.",
+    "Integrate counterarguments and formal connectors to improve text cohesion.",
+    "Produce a well-organized argumentative paragraph following academic standards."
+  ],
+  "sections": [
+    {
+      "title": "Essay structure",
+      "paragraphs": [
+        "An argumentative essay follows a standard three-part organization: introduction, body paragraphs, and conclusion. The introduction begins with a hook to grab the reader's attention, provides background information about the topic, and ends with your main thesis statement. This foundational part guides the entire direction of your writing.",
+        "The body paragraphs are where you defend your thesis. Each paragraph must focus on a single supporting argument introduced by a clear topic sentence, followed by explanatory details and concrete examples. Finally, the conclusion restates the thesis in a different way, summarizes the main points, and leaves the reader with a final thought or a call to action."
+      ],
+      "example": {
+        "statement": "Identify the correct order of an argumentative essay structure among these options: A) Conclusion, Body, Introduction. B) Introduction, Body, Conclusion. C) Body, Conclusion, Introduction.",
+        "solution": "Step 1: Understand the purpose of each part. The essay must start by presenting the topic and thesis. Step 2: The middle part develops the arguments. Step 3: The end closes the discussion. Therefore, the correct order is B) Introduction, Body, Conclusion."
+      }
+    },
+    {
+      "title": "Thesis statement",
+      "paragraphs": [
+        "The thesis statement is the most important sentence in your essay. It usually appears at the end of the introductory paragraph and summarizes your central argument or stance on a specific topic. A strong thesis must be debatable, meaning that reasonable people could disagree with it, and specific enough to be proven within the length of your text.",
+        "When writing about sustainability or social issues in Colombia, avoid simple statements of fact like 'Bogota is the capital of Colombia.' Instead, write an arguable claim such as 'Implementing strict recycling policies in Colombian public schools significantly reduces municipal waste and fosters civic responsibility among teenagers.'"
+      ],
+      "example": {
+        "statement": "Evaluate this thesis statement: 'Water is essential for life on Earth.' Is it effective for an argumentative essay?",
+        "solution": "Step 1: Check if the statement is arguable. Everyone agrees that water is essential, so nobody can debate it. Step 2: A good thesis needs two sides. Step 3: Rewrite it to be debatable, such as: 'Governments must penalize private corporations that contaminate water sources more severely than individual citizens.'"
+      }
+    },
+    {
+      "title": "Counterarguments",
+      "paragraphs": [
+        "A counterargument addresses the opposing viewpoint. Including a counterargument shows that you have analyzed the topic from multiple perspectives, which strengthens your credibility as a writer. You present the other side's view only to refute it or demonstrate why your position remains stronger.",
+        "To introduce opposing views in English, you can use phrases like 'Although some people argue that...', 'Critics might suggest that...', or 'It is often claimed that...'. Immediately after presenting this view, you must use transition words such as 'however' or 'nevertheless' to pivot back to your own supporting evidence."
+      ],
+      "example": {
+        "statement": "Integrate a counterargument into this premise: Electric cars are expensive, but they reduce air pollution.",
+        "solution": "Step 1: State the opposing view using a transition phrase. 'Although electric cars are initially expensive for average Colombian families, they ultimately reduce air pollution in crowded cities like Medellin.'"
+      }
+    },
+    {
+      "title": "Formal register and connectors",
+      "paragraphs": [
+        "Writing an argumentative essay requires a formal academic register. This means you must avoid colloquial slang, contractions like 'don't' or 'can't', and overly emotional language. Instead, choose precise vocabulary, maintain an objective yet persuasive tone, and write in full, grammatically correct sentences.",
+        "Connectors are essential to guide the reader through your logical reasoning. Use cause and effect connectors such as 'therefore', 'consequently', or 'because of' to link consequences. For contrast and addition, rely on 'furthermore', 'in addition', 'on the other hand', and 'despite', ensuring smooth transitions between paragraphs."
+      ],
+      "example": {
+        "statement": "Replace the informal connector in this sentence with a formal one: 'The city lacked funds; so, they stopped the park project.'",
+        "solution": "Step 1: Identify the informal word 'so'. Step 2: Choose a formal cause-and-effect connector like 'therefore' or 'consequently'. Step 3: Rewrite the sentence: 'The city lacked funds; consequently, they suspended the park project.'"
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "What is the primary purpose of an argumentative essay?",
+      "answer": "To persuade readers to accept a specific point of view using evidence and logic."
+    },
+    {
+      "question": "Where is the thesis statement typically located?",
+      "answer": "At the end of the introductory paragraph."
+    },
+    {
+      "question": "True or False: A thesis statement should be a universally accepted fact.",
+      "answer": "False. It must be debatable."
+    },
+    {
+      "question": "Complete with a formal contrast connector: '... heavy rain, the outdoor sustainability seminar continued.'",
+      "answer": "Despite / In spite of"
+    },
+    {
+      "question": "What section of the essay is dedicated to acknowledging the opposing viewpoint?",
+      "answer": "The counterargument paragraph."
+    },
+    {
+      "question": "Convert this informal sentence into formal register: 'Kids shouldn't use plastic bags.'",
+      "answer": "Children should not utilize plastic bags."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Thesis statement",
+      "definition": "A clear, debatable sentence that summarizes the main argument or claim of an essay."
+    },
+    {
+      "term": "Counterargument",
+      "definition": "An argument presented by the opposing side that challenges the writer's main position."
+    },
+    {
+      "term": "Formal register",
+      "definition": "The standard academic style of writing that avoids slang, contractions, and overly casual language."
+    },
+    {
+      "term": "Transition connector",
+      "definition": "A word or phrase used to link sentences and paragraphs logically, showing cause, effect, or contrast."
+    }
+  ],
+  "closing": "Mastering the art of writing argumentative essays in English empowers you to voice your opinions on critical global challenges, such as environmental sustainability and social justice. As global citizens in Colombia, your ability to argue logically and respectfully will help you shape better communities and communicate effectively across cultures.",
+  "dbaStatements": [
+    "Esquema curricular sugerido de inglés del MEN: nivel B1.3, grado sugerido 11.°."
+  ]
+}

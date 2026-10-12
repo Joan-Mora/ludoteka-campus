@@ -113,6 +113,7 @@ export interface Database {
     description: Generated<string>;
     published: Generated<boolean>;
     created_at: Ts;
+    is_demo: Generated<boolean>;
   };
   units: {
     id: Generated<string>;
@@ -515,6 +516,9 @@ export interface Database {
     uploaded_by: NullableString;
     created_at: Ts;
     updated_at: Ts;
+    source_name: NullableString;
+    source_url: NullableString;
+    license: NullableString;
   };
   library_tags: {
     item_id: string;
@@ -844,6 +848,9 @@ export interface Database {
     posts_count: Generated<number>;
     last_post_at: Ts;
     created_at: Ts;
+    summary: NullableString;
+    summary_posts: number | null;
+    summary_at: NullableDate;
   };
   forum_posts: {
     id: Generated<string>;
@@ -851,6 +858,23 @@ export interface Database {
     author_id: string;
     body: string;
     is_answer: Generated<boolean>;
+    created_at: Ts;
+  };
+  forum_reactions: {
+    post_id: string;
+    user_id: string;
+    kind: string;
+    created_at: Ts;
+  };
+  forum_mentions: {
+    post_id: string;
+    user_id: string;
+  };
+  forum_attachments: {
+    id: Generated<string>;
+    thread_id: string;
+    post_id: string | null;
+    item_id: string;
     created_at: Ts;
   };
   email_outbox: {

@@ -1,0 +1,108 @@
+{
+  "intro": "Bienvenidos a esta guía de Ciencias Naturales para décimo grado. ¿Alguna vez te has preguntado por qué un bus de TransMilenio frena e impulsa a todos los pasajeros hacia adelante, o cómo se calcula la velocidad de una chiva que baja por las montañas de Antioquia? La física mecánica nos permite entender el movimiento de los objetos, las fuerzas que lo causan y las transformaciones de energía que ocurren en el universo. En este módulo exploraremos desde los conceptos básicos de posición y velocidad hasta las famosas leyes enunciadas por Isaac Newton y el principio fundamental de conservación de la energía mecánica. Con ejemplos sencillos y cotidianos comprenderás los principios que gobiernan desde el juego de canicas hasta el transporte público colombiano.",
+  "objectives": [
+    "Identificar las variables cinemáticas de posición, velocidad y aceleración en situaciones de la vida cotidiana.",
+    "Analizar el movimiento de los cuerpos mediante la aplicación de las tres leyes de Newton y el cálculo de la fuerza resultante.",
+    "Representar diagramas de cuerpo libre para aislar y calcular las fuerzas que actúan sobre un sistema mecánico.",
+    "Explicar el principio de conservación de la energía mecánica en fenómenos como la caída libre y el movimiento pendular."
+  ],
+  "sections": [
+    {
+      "title": "Cinemática: posición, velocidad y aceleración",
+      "paragraphs": [
+        "La cinemática es la rama de la física que describe cómo se mueven los cuerpos sin preocuparse por las causas que originan dicho movimiento. Para estudiar un objeto, lo primero es definir su posición respecto a un marco de referencia, el cual nos indica dónde se encuentra en un instante determinado. Cuando un cuerpo cambia su posición al transcurrir el tiempo, decimos que está en movimiento. La distancia recorrida mide la longitud total del trayecto, mientras que el desplazamiento corresponde al cambio neto de posición expresado en metros.",
+        "La velocidad nos indica qué tan rápido cambia la posición de un objeto y en qué dirección lo hace. Se calcula dividiendo el desplazamiento entre el tiempo transcurrido y su unidad en el Sistema Internacional es m/s. Si la velocidad permanece constante, el cuerpo experimenta un movimiento rectilíneo uniforme. Por otro lado, la aceleración mide la rapidez con la que cambia la velocidad en el tiempo. Si un carro arranca en un semáforo de Cali y pasa de estar detenido a moverse a 15 m/s en 3 segundos, experimenta una aceleración constante de 5 m/s²."
+      ],
+      "example": {
+        "statement": "Un bus viaja en tramo recto de Bogotá a Tunja. Pasa de una velocidad de 10 m/s a 25 m/s en un intervalo de 5 segundos. ¿Cuál es su aceleración media?",
+        "solution": "Usamos la fórmula de aceleración a = (vf - vi) / t. Sustituimos los datos conocidos: aceleración = (25 m/s - 10 m/s) / 5 s = 15 m/s / 5 s = 3 m/s². La aceleración media del bus es 3 m/s²."
+      }
+    },
+    {
+      "title": "Las tres leyes de Newton",
+      "paragraphs": [
+        "Isaac Newton formuló tres principios fundamentales que explican el comportamiento de las fuerzas y el movimiento. La primera ley, conocida como la ley de la inercia, establece que todo cuerpo permanece en reposo o en movimiento rectilíneo uniforme a menos que una fuerza neta externa actúe sobre él. Esto explica por qué sentimos que nos inclinamos hacia adelante cuando un vehículo frena bruscamente: nuestro cuerpo tiende a mantener el estado de movimiento que llevaba previamente por pura inercia.",
+        "La segunda ley indica que la fuerza neta aplicada sobre un objeto es directamente proporcional a su masa y a la aceleración que adquiere, expresada mediante la ecuación F = m × a. La unidad de fuerza es el newton (N), equivalente a 1 kg × m/s². Finalmente, la tercera ley o principio de acción y reacción afirma que cuando un cuerpo ejerce una fuerza sobre otro, este responde con una fuerza de igual magnitud y dirección pero en sentido opuesto. Al empujar una pared pesada, ella ejerce la misma fuerza sobre nuestras manos."
+      ],
+      "example": {
+        "statement": "Una caja de café de 20 kg reposa en un bodega de Armenia. Se le aplica una fuerza horizontal de 60 N. Si no hay fricción, ¿qué aceleración adquiere la caja?",
+        "solution": "Aplicamos la segunda ley de Newton: F = m × a. Despejamos la aceleración dividiendo la fuerza entre la masa: a = F / m. Sustituimos los valores dados: a = 60 N / 20 kg = 3 m/s². La caja acelera a razón de 3 m/s²."
+      }
+    },
+    {
+      "title": "Diagramas de cuerpo libre",
+      "paragraphs": [
+        "Un diagrama de cuerpo libre es una herramienta gráfica indispensable para analizar las fuerzas que actúan sobre un objeto determinado. En este esquema se aísla el cuerpo en estudio y se representa mediante un punto o un bloque simple. Desde el centro del objeto se dibujan vectores en forma de flechas que indican la dirección y el sentido de cada fuerza presente, como el peso, la fuerza normal, la tensión de cuerdas y la fuerza de rozamiento o fricción.",
+        "Construir correctamente un diagrama permite plantear con precisión las ecuaciones del movimiento aplicando las leyes de Newton en los ejes horizontal y vertical. Por ejemplo, sobre una maleta arrastrada por un viajero en el aeropuerto José María Córdova actúan el peso hacia abajo, la fuerza normal perpendicular al piso hacia arriba, la tensión ejercida por la correa en diagonal y la fricción que se opone al movimiento en la superficie. Si la suma de las fuerzas es cero, el sistema está en equilibrio."
+      ],
+      "example": {
+        "statement": "Un bulto de papa de 50 kg cuelga verticalmente de una cuerda en el mercado de Corabastos. Calcule la tensión de la cuerda sabiendo que la gravedad es 9.8 m/s².",
+        "solution": "Dibujamos el diagrama: sobre el bulto actúan la tensión T hacia arriba y el peso W hacia abajo. El peso se calcula como W = m × g = 50 kg × 9.8 m/s² = 490 N. Como el bulto está en reposo, la suma de fuerzas es cero: T - W = 0, por lo tanto T = W = 490 N."
+      }
+    },
+    {
+      "title": "Conservación de la energía mecánica",
+      "paragraphs": [
+        "La energía mecánica de un sistema es la suma de su energía cinética y su energía potencial. La energía cinética depende de la masa y del cuadrado de la velocidad del objeto, calculándose como Ec = (1/2) × m × v². Por su parte, la energía potencial gravitacional depende de la altura y de la gravedad, con la expresión Ep = m × g × h. Ambas energías se miden en julios (J) y se transforman constantemente la una en la otra durante el movimiento de los cuerpos.",
+        "El principio de conservación de la energía mecánica establece que, en ausencia de fuerzas disipativas como el rozamiento con el aire o el suelo, la energía mecánica total de un sistema aislado permanece constante. Esto implica que la energía inicial es igual a la final. Cuando un ciclista desciende desde lo alto del Alto de Letras, su energía potencial gravitacional disminuye paulatinamente mientras se convierte en energía cinética, haciendo que incremente su velocidad a medida que pierde altura."
+      ],
+      "example": {
+        "statement": "Un balón de 0.5 kg se deja caer libremente desde una altura de 20 m. Calcule su velocidad justo antes de tocar el suelo (considere g = 10 m/s² y desprecie el rozamiento).",
+        "solution": "En el punto más alto la energía es potencial: Ep = 0.5 kg × 10 m/s² × 20 m = 100 J. En el suelo, toda la energía se transforma en cinética: Ec = (1/2) × 0.5 kg × v² = 100 J. Despejamos: 0.25 × v² = 100, luego v² = 400. Al sacar la raíz cuadrada, obtenemos v = √400 = 20 m/s."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es la aceleración de un tractocamión que se desplaza a velocidad constante de 60 km/h por una recta plana?",
+      "answer": "La aceleración es 0 m/s² porque la velocidad permanece constante y no sufre cambios."
+    },
+    {
+      "question": "Si un objeto de 10 kg recibe una fuerza neta horizontal de 40 N, ¿cuál es el valor de su aceleración?",
+      "answer": "Su aceleración es 4 m/s², calculada al dividir la fuerza de 40 N entre la masa de 10 kg."
+    },
+    {
+      "question": "¿Qué fuerza neta deben aplicar los frenos a un carro de 1000 kg para desacelerarlo a razón de 3 m/s²?",
+      "answer": "La fuerza neta requerida es de 3000 N, resultado de multiplicar 1000 kg por 3 m/s²."
+    },
+    {
+      "question": "¿Cuál es la energía cinética de una motocicleta de 150 kg que transita a una velocidad de 10 m/s?",
+      "answer": "Su energía cinética es 7500 J, calculada mediante la fórmula (1/2) × 150 kg × (10 m/s)²."
+    },
+    {
+      "question": "Una piedra de 2 kg se suelta desde un puente situado a 5 m sobre el río Magdalena. ¿Cuál es su energía potencial gravitacional inicial respecto al río? (g = 9.8 m/s²)",
+      "answer": "Su energía potencial gravitacional es 98 J, obtenida de multiplicar 2 kg × 9.8 m/s² × 5 m."
+    },
+    {
+      "question": "Un péndulo de 1 kg parte del reposo desde una altura de 0.8 m. ¿Con qué velocidad pasa por el punto más bajo? (g = 10 m/s², desprecie el rozamiento)",
+      "answer": "La velocidad es 4 m/s, igualando Ep (1×10×0.8 = 8 J) con Ec ((1/2)×1×v² = 8 J, despejando v = √16 = 4 m/s)."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Inercia",
+      "definition": "Propiedad de los cuerpos de mantener su estado de reposo o de movimiento rectilíneo uniforme a menos que una fuerza neta externa actúe sobre ellos."
+    },
+    {
+      "term": "Fuerza neta",
+      "definition": "Suma vectorial de todas las fuerzas individuales que actúan simultáneamente sobre un mismo objeto o sistema."
+    },
+    {
+      "term": "Fuerza normal",
+      "definition": "Fuerza de reacción perpendicular que ejerce una superficie cuando un objeto se apoya sobre ella."
+    },
+    {
+      "term": "Energía cinética",
+      "definition": "Energía que posee un cuerpo debido a su movimiento, dependiente de su masa y del cuadrado de su velocidad."
+    },
+    {
+      "term": "Energía potencial",
+      "definition": "Energía almacenada en un objeto debido a su posición vertical dentro de un campo gravitacional."
+    }
+  ],
+  "closing": "Comprender las fuerzas y la energía mecánica nos permite explicar desde el frenado de un carro en las montañas andinas hasta el movimiento de las atracciones mecánicas en los parques colombianos. La física no es solo fórmulas en el cuaderno; es la herramienta científica para interpretar cómo nos movemos, interactuamos y transformamos la energía que nos rodea en la vida cotidiana.",
+  "dbaStatements": [
+    "DBA 1. Comprende, que el reposo o el movimiento rectilíneo uniforme, se presentan cuando las fuerzas aplicadas sobre el sistema se anulan entre ellas, y que en presencia de fuerzas resultantes no nulas se producen cambios de velocidad.",
+    "DBA 2. Comprende la conservación de la energía mecánica como un principio que permite cuantificar y explicar diferentes fenómenos mecánicos: choques entre cuerpos, movimiento pendular, caída libre, deformación de un sistema masa-resorte."
+  ]
+}

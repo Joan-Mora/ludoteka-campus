@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola, pilos de noveno! En nuestra Colombia diversa, desde las imponentes cumbres de los Andes hasta las brisas de nuestras costas, calcular distancias ha sido un reto histórico. Hoy nos adentraremos en el fascinante mundo de la geometría con dos herramientas poderosas: el teorema de Thales y el teorema de Pitágoras. Estos saberes milenarios no son solo fórmulas para memorizar y pasar un examen en el colegio, sino llaves maestras que nos permiten medir lo imposible, como la altura de una palma de cera en el Valle de Cocora o la diagonal de una cancha múltiple en tu barrio. Prepárate para descubrir cómo la matemática se convierte en una regla invisible para entender el espacio que habitamos.",
+  "objectives": [
+    "Aplicar el teorema de Thales en la resolución de problemas de proporcionalidad geométrica.",
+    "Utilizar el teorema de Pitágoras para calcular longitudes desconocidas en triángulos rectángulos.",
+    "Identificar los criterios de semejanza de triángulos para justificar relaciones entre formas bidimensionales.",
+    "Resolver situaciones de medición indirecta de alturas y distancias en contextos cotidianos."
+  ],
+  "sections": [
+    {
+      "title": "Teorema de Thales y proporcionalidad",
+      "paragraphs": [
+        "El teorema de Thales de Mileto es una de las joyas de la geometría clásica. Imagina que tienes tres o más líneas paralelas que son cortadas por dos líneas transversales, llamadas secantes. Thales descubrió que los segmentos que se forman en una transversal son proporcionales a los segmentos correspondientes en la otra transversal. Esto significa que si armamos una razón entre dos partes de una línea, esa misma relación se mantendrá al otro lado, como una balanza perfecta.",
+        "Esta propiedad es sumamente útil cuando queremos repartir longitudes en partes iguales o desconocidas sin necesidad de medir directamente cada centímetro. En nuestra vida diaria, lo aplicamos al dividir un terreno en parcelas equitativas o al diseñar planos a escala en las clases de artística. La clave está en plantear correctamente una regla de tres simple, igualando dos fracciones algebraicas donde conocemos tres datos y debemos hallar el cuarto."
+      ],
+      "example": {
+        "statement": "Tres rectas paralelas L1, L2 y L3 son cortadas por dos transversales. En la primera transversal, los segmentos miden 3 cm y 5 cm. En la segunda transversal, el segmento correspondiente al de 3 cm mide 6 cm. ¿Cuánto mide el otro segmento?",
+        "solution": "Paso 1: Identificamos la proporción según el teorema de Thales. La razón entre los segmentos de la primera transversal es 3 / 5. Paso 2: Igualamos esta razón a la segunda transversal, donde el segmento desconocido lo llamaremos x, quedando la ecuación 3 / 5 = 6 / x. Paso 3: Multiplicamos en cruz para despejar x. Nos queda 3 × x = 5 × 6, lo que es igual a 3x = 30. Paso 4: Dividimos 30 entre 3, obteniendo x = 10 cm."
+      }
+    },
+    {
+      "title": "Teorema de Pitágoras",
+      "paragraphs": [
+        "El teorema de Pitágoras es, sin duda, la relación geométrica más famosa del mundo. Se cumple exclusivamente en los triángulos rectángulos, aquellos que tienen un ángulo recto de noventa grados. Pitágoras estableció que en todo triángulo rectángulo, el cuadrado de la longitud de la hipotenusa, que es el lado más largo opuesto al ángulo recto, es exactamente igual a la suma de los cuadrados de las longitudes de los otros dos lados, llamados catetos. En símbolos: a² + b² = c².",
+        "Para los estudiantes de noveno, este teorema es la puerta de entrada a la trigonometría y a la geometría analítica. Nos permite calcular distancias en línea recta sobre un plano cartesiano, diseñar rampas de acceso inclusivas que cumplan con la norma técnica colombiana, o saber exactamente de qué tamaño debe ser una escalera para llegar a la ventana de un segundo piso sin resbalar."
+      ],
+      "example": {
+        "statement": "Un carpintero en Medellín necesita colocar un tirante diagonal de madera para reforzar una puerta rectangular que mide 3 metros de ancho y 4 metros de alto. ¿Qué longitud debe tener el tirante?",
+        "solution": "Paso 1: Reconocemos que la puerta forma un triángulo rectángulo donde los catetos son la altura (4 m) y el ancho (3 m), y el tirante es la hipotenusa (c). Paso 2: Aplicamos el teorema de Pitágoras: a² + b² = c². Sustituimos los valores: 3² + 4² = c². Paso 3: Calculamos los cuadrados: 9 + 16 = c², por lo tanto 25 = c². Paso 4: Aplicamos raíz cuadrada en ambos lados para despejar c: c = √25, lo que nos da c = 5 metros."
+      }
+    },
+    {
+      "title": "Criterios de semejanza",
+      "paragraphs": [
+        "Dos figuras son semejantes cuando tienen exactamente la misma forma, aunque sus tamaños sean diferentes. Piensa en una fotografía tuya impresa en tamaño carné y otra ampliada en un póster: los ángulos internos son iguales y los lados guardan una proporción constante. En los triángulos, no necesitamos medir todos sus lados y ángulos para saber si son semejantes; para ello existen tres criterios fundamentales.",
+        "El primer criterio es Lado-Lado-Lado (LLL), donde los tres pares de lados correspondientes son proporcionales. El segundo es Lado-Ángulo-Lado (LAL), que ocurre cuando dos lados son proporcionales y el ángulo comprendido entre ellos es congruente. El tercer criterio es Ángulo-Ángulo (AA), el cual indica que si dos triángulos tienen dos pares de ángulos respectivamente iguales, los triángulos son obligatoriamente semejantes. Este último es el más usado en mediciones de campo."
+      ],
+      "example": {
+        "statement": "Tenemos dos triángulos. El triángulo A tiene ángulos de 50 grados y 70 grados. El triángulo B tiene ángulos de 50 grados y 60 grados. ¿Son semejantes por el criterio AA?",
+        "solution": "Paso 1: Recordamos que la suma de los ángulos internos de cualquier triángulo siempre es 180 grados. Paso 2: En el triángulo A, el tercer ángulo mide 180 - (50 + 70) = 60 grados. Sus ángulos son 50, 70 y 60. Paso 3: En el triángulo B, los ángulos dados son 50 y 60, por lo que su tercer ángulo debe ser 70 grados. Paso 4: Como ambos triángulos tienen exactamente los mismos tres ángulos (50, 60 y 70 grados), se cumple el criterio Ángulo-Ángulo (AA) y son semejantes."
+      }
+    },
+    {
+      "title": "Medición indirecta de alturas y distancias",
+      "paragraphs": [
+        "¿Alguna vez te has preguntado cómo calculan los ingenieros la altura de un puente colgante o la profundidad de un abismo sin subirse con una cinta métrica? La respuesta está en la combinación del teorema de Thales y los triángulos semejantes. Aprovechando la luz del sol y la sombra que proyectan los objetos, podemos crear triángulos proporcionales que nos permiten hallar medidas inaccesibles mediante una simple operación aritmética.",
+        "Este método de medición indirecta demuestra el poder práctico de las matemáticas. Al medir nuestra propia altura, la longitud de nuestra sombra en un momento determinado del día y la sombra del objeto gigante que queremos medir, establecemos una proporción directa. Es una técnica económica, rápida y fascinante que usaban los antiguos sabios griegos y que hoy tú puedes aplicar en el patio de tu colegio."
+      ],
+      "example": {
+        "statement": "Un estudiante de 1,5 metros de estatura proyecta una sombra de 2 metros de longitud en el suelo a una hora determinada. En el mismo instante, un poste de energía proyecta una sombra de 8 metros. ¿Cuál es la altura del poste?",
+        "solution": "Paso 1: Planteamos la proporción entre las alturas y las sombras basándonos en la semejanza de triángulos. Altura del estudiante / Sombra del estudiante = Altura del poste / Sombra del poste. Paso 2: Sustituimos los datos conocidos: 1,5 / 2 = h / 8, donde h es la altura del poste. Paso 3: Despejamos h multiplicando en cruz: 2 × h = 1,5 × 8. Paso 4: Resolvemos la multiplicación: 2h = 12. Finalmente, h = 12 ÷ 2, lo que nos da una altura de 6 metros para el poste."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "Si los catetos de un triángulo rectángulo miden 6 cm y 8 cm, ¿cuánto mide la hipotenusa?",
+      "answer": "10 cm"
+    },
+    {
+      "question": "En una proporción de Thales, si 2 / 4 = 5 / x, ¿cuál es el valor de x?",
+      "answer": "10"
+    },
+    {
+      "question": "Un árbol de 12 metros de altura proyecta una sombra de 4 metros. Si a la misma hora una persona proyecta una sombra de 1 metro, ¿cuánto mide la persona?",
+      "answer": "3 metros"
+    },
+    {
+      "question": "Si la hipotenusa de un triángulo rectángulo mide 13 cm y uno de sus catetos mide 5 cm, ¿cuánto mide el otro cateto?",
+      "answer": "12 cm"
+    },
+    {
+      "question": "Dos triángulos rectángulos tienen un ángulo agudo igual de 35 grados. ¿Son semejantes?",
+      "answer": "Sí, por el criterio ángulo-ángulo"
+    },
+    {
+      "question": "Un lote rectangular tiene un frente de 9 metros y una diagonal de 15 metros. ¿Cuál es la longitud del fondo del lote?",
+      "answer": "12 metros"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Teorema de Thales",
+      "definition": "Principio geométrico que establece que al cortar rectas paralelas con secantes, los segmentos determinados son proporcionales."
+    },
+    {
+      "term": "Hipotenusa",
+      "definition": "El lado de mayor longitud en un triángulo rectángulo, situado siempre frente al ángulo recto."
+    },
+    {
+      "term": "Cateto",
+      "definition": "Cada uno de los dos lados más cortos que forman el ángulo recto en un triángulo rectángulo."
+    },
+    {
+      "term": "Semejanza",
+      "definition": "Propiedad de dos figuras que tienen la misma forma y ángulos iguales, aunque sus tamaños sean diferentes."
+    },
+    {
+      "term": "Medición indirecta",
+      "definition": "Técnica para calcular longitudes o alturas inaccesibles usando propiedades geométricas y proporciones matemáticas."
+    }
+  ],
+  "closing": "Como pudiste ver, medir lo que parece inalcanzable deja de ser un misterio cuando dominamos las proporciones y los triángulos. Desde calcular la altura de un árbol en la Amazonía hasta resolver un problema de construcción en tu comunidad, Thales y Pitágoras nos dejan claro que las matemáticas son una herramienta viva y cercana para transformar nuestro entorno.",
+  "dbaStatements": [
+    "DBA 5. Utiliza teoremas, propiedades y relaciones geométricas (teorema de Thales y el teorema de Pitágoras) para proponer y justificar estrategias de medición y cálculo de longitudes.",
+    "DBA 6. Conjetura acerca de las regularidades de las formas bidimensionales y tridimensionales y realiza inferencias a partir de los criterios de semejanza, congruencia y teoremas básicos."
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "intro": "Durante el siglo XX, Colombia experimentó una transformación radical: pasó de ser una nación fundamentalmente campesina a convertirse en un país predominantemente urbano. Este tránsito no ocurrió de manera aislada ni pacífica; estuvo impulsado por el florecimiento de las industrias en las grandes urbes, las tensiones políticas de la violencia bipartidista y la búsqueda constante de mejores oportunidades de vida para millones de familias. Comprender este periodo histórico nos permite descifrar las raíces de nuestras ciudades contemporáneas, los desequilibrios económicos entre departamentos y la rica diversidad cultural que hoy define los barrios de ciudades como Bogotá, Medellín, Cali o Barranquilla. En esta guía exploraremos estos cambios profundos y sus huellas en nuestro presente.",
+  "objectives": [
+    "Explicar la relación entre el auge industrial y la acelerada urbanización de las principales ciudades colombianas durante el siglo XX.",
+    "Analizar las causas y consecuencias de las migraciones del campo a la ciudad, considerando tanto factores económicos como la violencia política.",
+    "Evaluar los cambios socioculturales del país y el impacto del crecimiento económico desigual entre las regiones andina y periféricas."
+  ],
+  "sections": [
+    {
+      "title": "Urbanización e industrialización",
+      "paragraphs": [
+        "A inicios del siglo XX, la economía colombiana dependía fuertemente de la exportación de café. Sin embargo, a partir de la década de 1930, impulsado por políticas de sustitución de importaciones, el país vivió un despegue manufacturero centrado en textiles, alimentos, bebidas y cemento. Ciudades como Medellín, Bogotá, Cali y Barranquilla concentraron las fábricas debido a su acceso a transporte férreo, mano de obra e infraestructura energética. Esta concentración productiva atrajo capitales públicos y privados, transformando el paisaje urbano con la construcción de chimeneas, avenidas, terminales de transporte y redes de acueducto que modificaron para siempre la fisonomía de las antiguas villas coloniales.",
+        "El crecimiento fabril reconfiguró la demografía del país. En el censo de 1938, cerca del 70% de los colombianos vivía en zonas rurales; para finales de la década de 1970, más de la mitad ya habitaba en cabeceras municipales. Este acelerado proceso de urbanización desbordó la capacidad de planeación del Estado. La demanda de vivienda superó la oferta formal, lo que propició la aparición de barrios obreros y asentamientos populares en la periferia de las metrópolis. Así, la industrialización no solo generó empleo asalariado, sino que también consolidó a las ciudades como los nuevos epicentros políticos, culturales y económicos de Colombia."
+      ],
+      "example": {
+        "statement": "Una fábrica textil en Medellín empleaba a 1.200 obreros en 1945 y requería duplicar su producción en una década mediante turnos rotativos. Si cada obrero sostenía a una familia promedio de 5 personas que requería vivienda y servicios en la ciudad, ¿qué impacto demográfico y urbano directo generó esta industria en su entorno barrial?",
+        "solution": "Primero, identificamos la población directamente vinculada: 1.200 obreros × 5 familiares = 6.000 personas dependientes del empleo fabril. Segundo, analizamos el impacto urbano: la necesidad de alojar a estas 6.000 personas impulsó la creación de barrios obreros cercanos a la planta (como ocurrió en Bello o Guayabal), demandando escuelas, puestos de salud, transporte público y redes de agua potable, transformando terrenos rurales en densos núcleos urbanos."
+      }
+    },
+    {
+      "title": "La migración campo-ciudad",
+      "paragraphs": [
+        "La masiva llegada de familias rurales a las ciudades colombianas entre 1940 y 1970 no respondió únicamente a la búsqueda de empleo fabril; estuvo profundamente marcada por la violencia bipartidista. El enfrentamiento sangriento entre liberales y conservadores tras el asesinato de Jorge Eliécer Gaitán en 1948 desató olas de terror en regiones como Tolima, Boyacá, Cundinamarca, Huila y los Santanderes. Miles de campesinos fueron despojados de sus tierras o huyeron bajo amenaza de muerte, dejando atrás sus cultivos para salvar la vida. Las ciudades se convirtieron en el principal refugio frente a la barbarie del conflicto rural.",
+        "Este éxodo transformó radicalmente la geografía urbana. Las familias desplazadas llegaron sin recursos a urbes que no contaban con infraestructura adecuada para recibirlas. Para garantizar un techo, los recién llegados lideraron procesos de autoconstrucción comunitaria e invasión organizada de terrenos comunales o privados en cerros y rondas de ríos. Surgieron así barrios emblemáticos como Ciudad Kennedy o Siloé. Además, la migración alteró la economía urbana, pues ante la falta de empleos formales en fábricas, millones de migrantes crearon redes de trabajo informal, comercio ambulante y servicios domésticos para subsistir dignamente en la ciudad."
+      ],
+      "example": {
+        "statement": "Durante la década de 1950, una familia campesina desplazada del Tolima llegó a Bogotá con pocos ahorros. Sin acceso a créditos bancarios ni a vivienda formal del Instituto de Crédito Territorial, deciden participar en una toma comunitaria de tierras en el sur de la capital. ¿Qué etapas socioeconómicas atravesó esta familia para consolidar su hábitat?",
+        "solution": "Paso 1: Asentamiento y refugio inicial mediante la autoconstrucción con materiales provisionales (madera, latas) en terrenos sin acueducto ni luz. Paso 2: Organización comunitaria con vecinos para abrir trochas, recolectar agua en piletas públicas y defender la tenencia del predio. Paso 3: Consolidación barrial y económica a través del trabajo informal (albañilería, ventas) y la autoconstrucción progresiva con ladrillo y cemento, exigiendo con el tiempo la legalización y servicios públicos al municipio."
+      }
+    },
+    {
+      "title": "Cambios sociales y culturales",
+      "paragraphs": [
+        "La vida urbana en la segunda mitad del siglo XX transformó las estructuras familiares, los valores y las costumbres tradicionales. En el campo predominaba la familia extendida patriarcal, mientras que en la ciudad se afianzó la familia nuclear. Un factor decisivo fue el ingreso de la mujer a la educación secundaria y superior, así como al mercado laboral asalariado. El reconocimiento de sus derechos políticos, materializado en el derecho al voto en el plebiscito de 1957, impulsó transformaciones profundas en la autonomía femenina y redujo notablemente las tasas de natalidad a partir de la década de 1960.",
+        "Al mismo tiempo, los medios masivos de comunicación masificaron nuevas expresiones culturales. La radio transitorizada, el cine y la llegada de la televisión en 1954 conectaron a regiones antes aisladas con narrativas nacionales e influencias internacionales. Las expresiones musicales también reflejaron la mezcla migratoria: ritmos caribeños como el porro y la cumbia conquistaron las barriadas andinas, mientras que géneros como el bolero, la salsa y el rock redefinieron las identidades juveniles urbanas. La educación pública universitaria, por su parte, se convirtió en un catalizador de pensamiento crítico y movilización social estudiantil en todo el territorio nacional."
+      ],
+      "example": {
+        "statement": "En 1965, una joven de Bucaramanga decide no casarse a los 18 años, como era costumbre en su familia rural, sino trasladarse a la sede universitaria pública para estudiar enfermería y trabajar medio tiempo en una droguería. ¿Cómo ilustra este caso los cambios socioculturales de la época?",
+        "solution": "Primero, evidencia el cambio de rol de la mujer, que pasa del ámbito doméstico rural a la formación académica superior y la independencia económica asalariada. Segundo, muestra la ruptura con patrones familiares tradicionales de matrimonio temprano, gracias a una mayor expectativa de vida y proyectos individuales. Tercero, refleja cómo la educación superior pública funcionó como vehículo de ascenso social y modernización en las ciudades intermedias colombianas."
+      }
+    },
+    {
+      "title": "Desigualdad regional",
+      "paragraphs": [
+        "Aunque Colombia experimentó un notable crecimiento económico durante el siglo XX, este se distribuyó de forma asimétrica sobre el mapa nacional. El denominado triángulo de oro, conformado por Bogotá, Medellín y Cali, junto con algunos puertos como Barranquilla y Buenaventura, concentró la mayor parte de las inversiones en infraestructura vial, electrificación, universidades y hospitales. Esta concentración andina dejó en una profunda desventaja histórica a regiones periféricas como el Chocó biogeográfico, la Orinoquía, la Amazonía y extensas zonas del Caribe rural, donde el Estado tuvo una presencia precaria o casi nula.",
+        "Esta brecha espacial generó severas consecuencias sociales que persisten hoy. Mientras las grandes capitales andinas avanzaron en índices de alfabetismo y cobertura de salud, los departamentos periféricos mantuvieron tasas críticas de mortalidad infantil, deficiencias crónicas en agua potable y economías dependientes de la extracción primaria o la subsistencia. La falta de articulación terrestre encareció el comercio y limitó el desarrollo productivo de estas regiones. Así, el modelo económico del siglo XX consolidó un centro próspero e hiperconectado frente a unas periferias marginadas de las decisiones políticas y del bienestar social."
+      ],
+      "example": {
+        "statement": "En 1970, el presupuesto nacional destinaba 70 pesos de cada 100 a infraestructura vial en la región Andina, mientras que a la región Pacífica (excluyendo el puerto de Buenaventura) llegaban apenas 3 pesos de cada 100. Analiza cómo esta disparidad presupuestal afectó el desarrollo social de las poblaciones chocoanas.",
+        "solution": "Paso 1: Se identifica una desproporción de más de 20 a 1 en la asignación de recursos viales (70 / 3 ≈ 23,3 veces más para la zona Andina). Paso 2: Al no contar con carreteras transitables, las comunidades del Chocó pagaban fletes muy altos por alimentos y medicamentos transportados por vía fluvial o aérea. Paso 3: El aislamiento frenó la comercialización de productos locales, perpetuó la desconexión de servicios médicos de alta complejidad y acentuó la pobreza estructural frente al centro del país."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál fue la principal actividad económica que impulsó la urbanización y modernización de Colombia a partir de 1930?",
+      "answer": "La industrialización manufacturera en sectores como textiles, alimentos, bebidas y cemento."
+    },
+    {
+      "question": "¿Qué hecho histórico de 1948 intensificó drásticamente el éxodo de campesinos hacia las ciudades colombianas?",
+      "answer": "El asesinato del líder político Jorge Eliécer Gaitán, que desencadenó la violencia bipartidista."
+    },
+    {
+      "question": "¿De qué manera las familias campesinas recién llegadas a las urbes solucionaron la escasez de vivienda formal entre 1950 y 1970?",
+      "answer": "Mediante la autoconstrucción comunitaria y la toma u ocupación de terrenos en la periferia de las ciudades."
+    },
+    {
+      "question": "Menciona dos factores que transformaron la vida y el rol de las mujeres colombianas a mediados del siglo XX.",
+      "answer": "El ingreso a la educación superior y al trabajo asalariado, y el logro del voto en el plebiscito de 1957."
+    },
+    {
+      "question": "¿Qué diferencias estructurales existían entre el triángulo de oro y las regiones periféricas de Colombia en el siglo XX?",
+      "answer": "El triángulo de oro concentraba industrias, vías y servicios públicos, mientras las periferias padecían aislamiento geográfico y abandono estatal."
+    },
+    {
+      "question": "¿Por qué la migración del campo a la ciudad en Colombia generó altos niveles de informalidad económica en lugar de solo empleo fabril?",
+      "answer": "Porque el número masivo de campesinos desplazados creció mucho más rápido que la capacidad real de las fábricas para contratarlos formalmente."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Sustitución de importaciones",
+      "definition": "Modelo económico que promueve fabricar dentro del país los bienes industriales que antes se importaban, fomentando la industria nacional y protegiendo el mercado local."
+    },
+    {
+      "term": "Bipartidismo",
+      "definition": "Sistema político en el que dos partidos tradicionales, en Colombia el Liberal y el Conservador, concentraron el poder y mantuvieron una fuerte polarización social."
+    },
+    {
+      "term": "Autoconstrucción",
+      "definition": "Edificación de viviendas realizada directamente por las familias y vecinos con recursos propios y trabajo solidario, sin participación de empresas constructoras formales."
+    },
+    {
+      "term": "Triángulo de oro",
+      "definition": "Área geográfica y económica delimitada por Bogotá, Medellín y Cali, donde se concentró la mayor parte de la población, industria e infraestructura nacional."
+    },
+    {
+      "term": "Familia nuclear",
+      "definition": "Unidad familiar compuesta exclusivamente por los progenitores y sus hijos, que se volvió predominante en las ciudades frente a la familia campesina extendida."
+    }
+  ],
+  "closing": "Las casas que hoy habitamos, los barrios populares donde compramos el mercado y la diversidad de acentos que escuchamos en nuestras ciudades son herencia directa de las migraciones del siglo XX. Entender cómo llegaron nuestros abuelos a la urbe y reconocer las deudas de desarrollo que el país aún mantiene con sus regiones nos compromete a construir comunidades más equitativas, solidarias e incluyentes en nuestra vida cotidiana.",
+  "dbaStatements": [
+    "DBA 2. Comprende las consecuencias que han traído los procesos migratorios en la organización social y económica de Colombia en el siglo XX y en la actualidad.",
+    "DBA 4. Analiza los cambios sociales, políticos, económicos y culturales en Colombia en el siglo XX y su impacto en la vida de los habitantes del país.",
+    "DBA 8. Comprende el impacto social del crecimiento económico desigual que se da en las diferentes regiones del país."
+  ]
+}

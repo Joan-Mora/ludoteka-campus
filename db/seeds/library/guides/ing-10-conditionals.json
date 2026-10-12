@@ -1,0 +1,103 @@
+{
+  "intro": "¡Hola, estudiantes de décimo grado! Bienvenidos a esta guía de estudio diseñada para acompañarlos en su camino por el inglés en los colegios públicos de Colombia. En nuestra vida escolar y comunitaria, constantemente analizamos causas y efectos, tomamos decisiones y pensamos en qué pasaría si las cosas fueran diferentes. Para expresar todo esto con precisión en inglés, utilizamos las estructuras condicionales. A lo largo de esta guía, exploraremos cómo funcionan el cero, el primer y el segundo condicional, conectando la gramática con situaciones reales de nuestra cotidianidad, la convivencia pacífica y el cuidado del entorno.",
+  "objectives": [
+    "Identificar la estructura y el uso de los condicionales cero, primero y segundo en textos académicos y cotidianos.",
+    "Explicar causas y efectos de situaciones escolares y ambientales usando el lenguaje condicional adecuado.",
+    "Formular oraciones sobre situaciones hipotéticas relacionadas con la paz y la convivencia en la comunidad.",
+    "Interactuar con compañeros expresando condiciones, acuerdos y desacuerdos en debates sencillos."
+  ],
+  "sections": [
+    {
+      "title": "Zero conditional",
+      "paragraphs": [
+        "El condicional cero se utiliza para hablar de verdades generales, hechos científicos, leyes de la naturaleza o reglas fijas que siempre ocurren si se cumple una condición. Su estructura gramatical combina dos cláusulas en tiempo presente simple: la cláusula condicional (If + presente simple) y la cláusula de resultado (presente simple).",
+        "En nuestro contexto escolar y científico, este condicional es muy útil. Por ejemplo, cuando realizamos experimentos en el laboratorio de química o cuando establecemos los manuales de convivencia del colegio. Si una regla se rompe, hay una consecuencia automática. Recuerda que puedes usar 'when' en lugar de 'if' sin alterar el significado principal de la oración."
+      ],
+      "example": {
+        "statement": "Completa la oración sobre una regla escolar: If students arrive late to class, the teacher (close) the door.",
+        "solution": "Paso 1: Identificamos que es una regla general del colegio, por lo tanto usamos el zero conditional con presente simple en ambas partes. Paso 2: El sujeto de la segunda cláusula es 'the teacher' (tercera persona singular). Paso 3: Agregamos la regla de la tercera persona al verbo 'close'. Solución: closes."
+      }
+    },
+    {
+      "title": "First conditional",
+      "paragraphs": [
+        "El primer condicional se emplea para expresar situaciones reales o muy probables que ocurrirán en el futuro si se cumple una condición específica en el presente. Su estructura consta de 'If + presente simple' en la primera parte, y un verbo modal de futuro, generalmente 'will' seguido del verbo principal en forma base, en la segunda parte.",
+        "Este tiempo es ideal para proponer acciones de sostenibilidad, campañas ecológicas o acuerdos de paz en nuestras instituciones educativas colombianas. Nos permite planificar el futuro basándonos en acciones del presente, mostrando claramente causa y efecto ante un problema ambiental o social."
+      ],
+      "example": {
+        "statement": "Organiza la oración sobre sostenibilidad: If we / recycle plastic / we / reduce pollution.",
+        "solution": "Paso 1: Estructuramos la condición con 'If' y presente simple: 'If we recycle plastic'. Paso 2: Estructuramos el resultado usando 'will' antes del verbo base: 'we will reduce pollution'. Solución: If we recycle plastic, we will reduce pollution."
+      }
+    },
+    {
+      "title": "Second conditional",
+      "paragraphs": [
+        "El segundo condicional se utiliza para hablar de situaciones hipotéticas, imaginarias o poco probables en el presente o en el futuro. Su estructura utiliza 'If + pasado simple' en la cláusula condicional y 'would' seguido del verbo en forma base en la cláusula de resultado. Un detalle importante es que con el verbo 'to be', generalmente usamos 'were' para todas las personas.",
+        "En los debates académicos de décimo grado, este condicional te permite proponer soluciones creativas a problemas complejos, como imaginar qué harías si fueras alcalde de tu ciudad o cómo mejorarías la convivencia escolar si tuvieras superpoderes de mediación."
+      ],
+      "example": {
+        "statement": "Completa la idea hipotética: If I (be) the principal, I (organize) more sports tournaments.",
+        "solution": "Paso 1: Reconocemos que es una situación imaginaria (second conditional). Paso 2: En la cláusula 'if', usamos 'were' para el verbo to be con el pronombre 'I'. Paso 3: En la cláusula principal, usamos 'would' + el verbo base 'organize'. Solución: were, would organize."
+      }
+    },
+    {
+      "title": "Talking about hypothetical situations",
+      "paragraphs": [
+        "Cuando discutimos temas controversiales o participamos en mesas redondas, a menudo necesitamos ir más allá de la realidad y plantear escenarios alternativos. Combinar los condicionales nos otorga la capacidad argumentativa necesaria para sustentar puntos de vista complejos ante nuestros profesores y compañeros.",
+        "Al expresar opiniones sobre la tecnología, la salud o la democracia, plantear hipótesis demuestra un pensamiento crítico desarrollado. Recuerda usar expresiones de cortesía y conectores para enriquecer tus intervenciones orales y escritas en inglés."
+      ],
+      "example": {
+        "statement": "Traduce y analiza: 'Si tuviera más tiempo libre, estudiaría otro idioma.'",
+        "solution": "Paso 1: Identificamos que es una situación hipotética actual (second conditional). Paso 2: Traducimos la condición: 'If I had more free time'. Paso 3: Traducimos el resultado con 'would': 'I would study another language'. Solución: If I had more free time, I would study another language."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "If you heat ice, it (melt). Complete with the correct form.",
+      "answer": "melts"
+    },
+    {
+      "question": "If students study hard for the exam, they (pass) it.",
+      "answer": "will pass"
+    },
+    {
+      "question": "If I (have) a million pesos, I would donate half to a local foundation.",
+      "answer": "had"
+    },
+    {
+      "question": "Complete the first conditional: If we don't protect our rivers, we (lose) our water supply.",
+      "answer": "will lose"
+    },
+    {
+      "question": "Complete the second conditional: If she (be) the class president, she would plan more cultural events.",
+      "answer": "were"
+    },
+    {
+      "question": "Rewrite using zero conditional: Plants die when they (not receive) enough water.",
+      "answer": "do not receive"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Zero conditional",
+      "definition": "Estructura gramatical usada para expresar verdades generales y hechos científicos usando presente simple en ambas cláusulas."
+    },
+    {
+      "term": "First conditional",
+      "definition": "Estructura gramatical que expresa situaciones reales o probables en el futuro usando presente simple y will."
+    },
+    {
+      "term": "Second conditional",
+      "definition": "Estructura gramatical para situaciones hipotéticas o imaginarias usando pasado simple y would."
+    },
+    {
+      "term": "Hypothetical",
+      "definition": "Que está basado en una hipótesis, suposición o situación imaginaria no real en el momento presente."
+    }
+  ],
+  "closing": "Dominar los condicionales en inglés te abre las puertas para expresar tus ideas con mayor profundidad y creatividad. Ya sea que estés proponiendo soluciones para proteger el medio ambiente en tu región o debatiendo sobre normas de convivencia, estas herramientas gramaticales te permiten transformar tus pensamientos en argumentos sólidos para la vida real.",
+  "dbaStatements": [
+    "Esquema curricular sugerido de inglés del MEN: nivel B1.2, grado sugerido 10.°."
+  ]
+}

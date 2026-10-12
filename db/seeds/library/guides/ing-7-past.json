@@ -1,0 +1,107 @@
+{
+  "intro": "¡Hola, estudiantes de séptimo grado! Bienvenidos a esta guía de estudio diseñada especialmente para ustedes en los colegios públicos de Colombia. Hoy vamos a explorar cómo viajar en el tiempo a través de las palabras. Aprenderemos a contar anécdotas, experiencias divertidas y sucesos de nuestro pasado usando el tiempo pasado simple en inglés (simple past). Ya sea que quieran relatar un paseo familiar al río Magdalena, un partido de fútbol inolvidable en el colegio o lo que hicieron el fin de semana pasado, esta herramienta gramatical les permitirá expresar sus vivencias de manera clara, sencilla y muy divertida.",
+  "objectives": [
+    "Identificar las reglas para transformar verbos regulares e irregulares en el tiempo pasado simple.",
+    "Utilizar expresiones de tiempo pasadas para ubicar eventos cronológicamente en relatos cortos.",
+    "Formular preguntas y respuestas usando el auxiliar did sobre experiencias cotidianas.",
+    "Redactar una historia breve y coherente sobre vivencias personales."
+  ],
+  "sections": [
+    {
+      "title": "Regular and irregular verbs",
+      "paragraphs": [
+        "Para hablar de acciones que ya terminaron en el pasado, usamos los verbos en simple past. Los verbos regulares son muy amables porque siguen una regla fija: solo debemos agregar la terminación -ed al final de la palabra. Por ejemplo, el verbo play se convierte en played, y visit se convierte en visited. Si el verbo termina en e, como dance, solo agregamos la letra d para formar danced.",
+        "Por otro lado, existen los verbos irregulares, los cuales no siguen una regla y cambian su forma por completo al pasar al pasado. Debemos aprenderlos de memoria poco a poco. Por ejemplo, el verbo go cambia a went, el verbo eat cambia a ate, y el verbo have cambia a had. Estos verbos son muy comunes cuando narramos historias reales o inventadas sobre nuestro día a día."
+      ],
+      "example": {
+        "statement": "Transforma la siguiente oración al pasado simple usando el verbo correcto: Yesterday, I (visit) my grandparents and I (eat) an arepa.",
+        "solution": "Paso 1: Identificamos el primer verbo, visit, que es regular. Le agregamos -ed para obtener visited. Paso 2: Identificamos el segundo verbo, eat, que es irregular. Su forma en pasado es ate. Oración final: Yesterday, I visited my grandparents and I ate an arepa."
+      }
+    },
+    {
+      "title": "Past time expressions",
+      "paragraphs": [
+        "Cuando contamos una historia, es muy importante decirle a quien nos escucha o nos lee en qué momento ocurrieron los hechos. Para esto utilizamos las expresiones de tiempo pasado. Estas frases o palabras van por lo general al inicio o al final de la oración y nos dan un anclaje temporal exacto.",
+        "Algunas de las expresiones más utilizadas en inglés son yesterday (ayer), last night (anoche), last week (la semana pasada), last year (el año pasado) y a long time ago (hace mucho tiempo). Usar estas expresiones le da sentido y orden cronológico a tus relatos escolares o familiares."
+      ],
+      "example": {
+        "statement": "Completa la frase con la expresión de tiempo adecuada: I played soccer with my friends _________.",
+        "solution": "Paso 1: Analizamos el contexto de la oración que está en pasado (played). Paso 2: Elegimos una expresión que indique pasado, como last weekend. Oración final: I played soccer with my friends last weekend."
+      }
+    },
+    {
+      "title": "Questions with did",
+      "paragraphs": [
+        "Para hacer preguntas sobre eventos que ocurrieron en el pasado, no necesitamos cambiar el verbo principal a su forma pasada. En su lugar, utilizamos el auxiliar did al inicio de la oración interrogativa, seguido por el sujeto y el verbo principal en su forma base (presente).",
+        "Por ejemplo, si queremos preguntar si alguien viajó a Bogotá, decimos: Did you travel to Bogotá? Para responder de forma corta y positiva usamos Yes, I did; y para responder de forma negativa usamos No, I didn't. El auxiliar did hace todo el trabajo pesado del pasado por nosotros."
+      ],
+      "example": {
+        "statement": "Convierte la siguiente afirmación en una pregunta: You watched television last night.",
+        "solution": "Paso 1: Agregamos el auxiliar did al principio de la oración. Paso 2: Ponemos el sujeto you. Paso 3: Dejamos el verbo watched en su forma base (watch). Paso 4: Añadimos el resto. Oración final: Did you watch television last night?"
+      }
+    },
+    {
+      "title": "Writing a short story",
+      "paragraphs": [
+        "Escribir una historia corta en inglés es un proceso creativo que une todo lo que hemos aprendido. Primero, pensamos en un evento sencillo, como un paseo al parque o una tarde lluviosa en casa. Luego, organizamos las ideas usando conectores temporales como First (primero), Then (luego) y Finally (finalmente).",
+        "Es fundamental revisar que los verbos que describen acciones terminadas estén correctamente escritos en pasado simple y que las expresiones temporales sean coherentes. Al leer tu texto, los demás podrán imaginar cada detalle de tu divertida experiencia."
+      ],
+      "example": {
+        "statement": "Ordena los elementos para crear una frase narrativa: / park / We / to / went / the / yesterday / .",
+        "solution": "Paso 1: Identificamos el sujeto, que es We. Paso 2: Buscamos el verbo en pasado, que es went. Paso 3: Agregamos el lugar y la expresión de tiempo al final. Oración final: We went to the park yesterday."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "Write the past form of the regular verb: listen",
+      "answer": "listened"
+    },
+    {
+      "question": "Write the past form of the irregular verb: go",
+      "answer": "went"
+    },
+    {
+      "question": "Complete the sentence with the correct past verb: She _________ (play) basketball on Monday.",
+      "answer": "played"
+    },
+    {
+      "question": "Choose the correct past time expression for 'el año pasado':",
+      "answer": "last year"
+    },
+    {
+      "question": "Make a question with: you / clean / your room / yesterday?",
+      "answer": "Did you clean your room yesterday?"
+    },
+    {
+      "question": "Answer the question in negative short form: Did they visit Cartagena?",
+      "answer": "No, they didn't"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Simple past",
+      "definition": "Tiempo verbal que se utiliza en inglés para describir acciones, eventos o situaciones que ya ocurrieron y finalizaron en el pasado."
+    },
+    {
+      "term": "Regular verb",
+      "definition": "Verbo que forma su tiempo pasado simple añadiendo la partícula -ed o -d al final de su forma base."
+    },
+    {
+      "term": "Irregular verb",
+      "definition": "Verbo cuyo pasado simple no sigue una regla fija y cambia su estructura de escritura de forma única."
+    },
+    {
+      "term": "Did",
+      "definition": "Auxiliar que se emplea en el tiempo pasado simple para construir oraciones interrogativas y negativas."
+    },
+    {
+      "term": "Time expression",
+      "definition": "Palabra o frase que indica el momento específico en que sucedió una acción en el pasado, como yesterday."
+    }
+  ],
+  "closing": "Saber contar historias en inglés te conecta con personas de todo el mundo y te permite compartir tus vivencias cotidianas con orgullo. La próxima vez que salgas a montar bicicleta, juegues un partido con tus amigos o visites a tu familia, intenta pensar en cómo dirías esos momentos en pasado simple. ¡Practica cada día y conviértete en un gran narrador!",
+  "dbaStatements": [
+    "Esquema curricular sugerido de inglés del MEN: nivel A2.1, grado sugerido 7.°."
+  ]
+}

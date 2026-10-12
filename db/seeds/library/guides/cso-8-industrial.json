@@ -1,0 +1,109 @@
+{
+  "intro": "¡Hola, estudiantes de octavo! Bienvenidos a esta guía de Ciencias Sociales. Hoy viajaremos en el tiempo para entender cómo el mundo cambió radicalmente gracias a la Revolución Industrial. Imagina un planeta donde la fuerza del vapor y las máquinas reemplazaron el trabajo manual en los talleres. Este gran salto transformó la economía, dio origen al capitalismo moderno y dividió a la sociedad en nuevas clases sociales. Además, impulsó a las potencias europeas a repartirse territorios en África y Asia, mientras que en nuestra Colombia decimonónica intentábamos adaptarnos a estas nuevas tecnologías con barcos de vapor y ferrocarriles. ¡Prepárate para descubrir cómo el pasado sigue explicando nuestro presente!",
+  "objectives": [
+    "Analizar las causas y consecuencias de la Primera y Segunda Revolución Industrial en Europa.",
+    "Explicar las características principales del sistema capitalista y el surgimiento de la clase obrera.",
+    "Comprender el impacto del imperialismo del siglo XIX en la geopolítica mundial.",
+    "Evaluar la influencia de los avances tecnológicos en la economía y sociedad de la Colombia del siglo XIX."
+  ],
+  "sections": [
+    {
+      "title": "La Revolución Industrial",
+      "paragraphs": [
+        "La Revolución Industrial comenzó en Inglaterra a mediados del siglo XVIII. Antes de este proceso, la mayor parte de la población trabajaba la tierra y fabricaba productos de forma artesanal en sus hogares. Con la invención de la máquina de vapor, impulsada por la abundancia de carbón en la región, la producción se trasladó a las fábricas. Esto permitió fabricar mercancías en grandes cantidades y a menor costo, cambiando para siempre la forma en que los seres humanos se relacionaban con el trabajo y con la naturaleza.",
+        "Durante el siglo XIX, este fenómeno se extendió por Europa occidental y Estados Unidos, dando paso a la Segunda Revolución Industrial. En esta nueva fase, el acero, la electricidad y el petróleo se convirtieron en las fuentes principales de energía y materia prima. Las ciudades crecieron de manera desordenada debido a la llegada de campesinos que buscaban empleo en las nuevas industrias, transformando el paisaje rural en centros urbanos llenos de humo, chimeneas y nuevas dinámicas sociales."
+      ],
+      "example": {
+        "statement": "Compara la producción textil antes y después de la invención del telar mecánico en el siglo XVIII.",
+        "solution": "Paso 1: Antes de la máquina, un artesano tejía una prenda a mano usando un huso y un telar manual, lo cual tomaba varios días. Paso 2: Con el telar mecánico impulsado por energía hidráulica o de vapor, una sola máquina operada por pocos obreros podía producir cientos de metros de tela en el mismo tiempo. Paso 3: Esto redujo drásticamente el costo y aumentó la disponibilidad de ropa para la población urbana."
+      }
+    },
+    {
+      "title": "Capitalismo y clase obrera",
+      "paragraphs": [
+        "El capitalismo es un sistema económico basado en la propiedad privada de los medios de producción, como las fábricas, las máquinas y la tierra, y en la búsqueda de lucro en un mercado libre. En este sistema participan principalmente dos grupos sociales: la burguesía, dueña del capital y de las fábricas, y el proletariado, conformado por los trabajadores que solo cuentan con su fuerza de trabajo para subsistir a cambio de un salario.",
+        "Durante el siglo XIX, las condiciones de vida de la clase obrera fueron muy duras. Los trabajadores laboraban hasta 16 horas diarias en espacios oscuros, sin medidas de seguridad, expuestos a constantes accidentes y recibiendo salarios muy bajos que apenas alcanzaban para comer. Ante esta situación, los obreros comenzaron a organizarse en sindicatos y a realizar protestas para exigir mejores condiciones laborales, jornadas de 8 horas y el derecho al voto."
+      ],
+      "example": {
+        "statement": "Si una fábrica textil en Manchester contrataba a un obrero por 60 horas semanales a cambio de un salario que cubría solo el alimento básico, ¿qué contradicción del capitalismo temprano se evidencia?",
+        "solution": "Paso 1: Identificar las partes: el burgués busca maximizar sus ganancias reduciendo costos laborales, mientras el obrero vende su esfuerzo. Paso 2: Analizar la condición: las 60 horas semanales y el pago mínimo muestran la desigualdad extrema donde la riqueza se concentra en el dueño del capital, mientras el trabajador vive en condiciones de pobreza y vulnerabilidad."
+      }
+    },
+    {
+      "title": "Imperialismo del siglo XIX",
+      "paragraphs": [
+        "A finales del siglo XIX, las potencias europeas como Gran Bretaña, Francia, Alemania y Bélgica iniciaron una carrera feroz por dominar territorios en África y Asia. Este fenómeno, conocido como imperialismo, no buscaba solo la conquista militar, sino el control económico absoluto. Las potencias necesitaban materias primas baratas para sus industrias, como caucho, algodón y minerales, además de nuevos mercados donde vender los productos fabricados en Europa.",
+        "Para justificar esta expansión, las potencias europeas utilizaron ideologías racistas y paternalistas, argumentando que tenían la misión civilizadora de llevar el progreso a los pueblos considerados atrasados. Este reparto del mundo alteró las fronteras tradicionales, destruyó culturas locales y sometió a millones de personas a regímenes de explotación colonial cuyas consecuencias geopolíticas y económicas aún se sienten en la actualidad."
+      ],
+      "example": {
+        "statement": "Explica por qué la Revolución Industrial fue la causa principal del imperialismo europeo en África durante el siglo XIX.",
+        "solution": "Paso 1: La industria europea creció tanto que necesitaba más materias primas de las que su territorio producía. Paso 2: Tras fabricar masivamente, necesitaban nuevos mercados donde vender sus mercancías sobrantes. Paso 3: África y Asia ofrecían recursos naturales y mercados cautivos, lo que impulsó a las potencias a colonizarlos militar y políticamente."
+      }
+    },
+    {
+      "title": "Avances tecnológicos en la Colombia del siglo XIX",
+      "paragraphs": [
+        "En el siglo XIX, la naciente República de Colombia intentó incorporarse a la economía mundial impulsada por la Revolución Industrial. El principal reto era geográfico: nuestras cordilleras dificultaban el transporte interno. Por ello, la llegada de los barcos de vapor al río Magdalena a mediados del siglo XIX revolucionó el comercio, permitiendo conectar el interior del país con la Costa Caribe y el mercado internacional de forma más rápida.",
+        "Asimismo, la construcción de los primeros ferrocarriles, como el del Ferrocarril de Panamá (entonces parte de nuestro territorio) y posteriormente el de Bolívar o el de Antioquia, facilitó la exportación de productos agrícolas como el café y el tabaco. Aunque estos avances modernizaron algunos sectores de la economía, el país continuó dependiendo de la exportación de materias primas y de la importación de productos manufacturados europeos."
+      ],
+      "example": {
+        "statement": "Calcula el impacto del transporte en el siglo XIX si un viaje en boga por el río Magdalena tomaba 60 días antes del vapor, y el vapor redujo ese tiempo en dos terceras partes.",
+        "solution": "Paso 1: Identificar el tiempo inicial: 60 días. Paso 2: Calcular la reducción (dos terceras partes de 60): 60 × 2 / 3 = 40 días de reducción. Paso 3: Restar la reducción al tiempo inicial: 60 - 40 = 20 días. Con el barco de vapor, el viaje pasó a durar solo 20 días."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿En qué país inició la Revolución Industrial a mediados del siglo XVIII?",
+      "answer": "Gran Bretaña."
+    },
+    {
+      "question": "¿Cuál fue la fuente de energía clave que impulsó la primera fase de la Revolución Industrial?",
+      "answer": "El vapor generado por el carbón."
+    },
+    {
+      "question": "¿Cómo se denominan las dos clases sociales fundamentales dentro del sistema capitalista?",
+      "answer": "Burguesía y proletariado."
+    },
+    {
+      "question": "¿Qué nombre recibió el proceso de dominio territorial y económico de Europa sobre África y Asia en el siglo XIX?",
+      "answer": "Imperialismo."
+    },
+    {
+      "question": "¿Qué medio de transporte fluvial revolucionó el comercio interno y de exportación en la Colombia del siglo XIX?",
+      "answer": "El barco de vapor en el río Magdalena."
+    },
+    {
+      "question": "¿Qué relación existió entre la producción industrial europea y la colonización de nuevos territorios en el siglo XIX?",
+      "answer": "Europa necesitaba materias primas para sus fábricas y nuevos mercados para vender sus productos manufacturados."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Revolución Industrial",
+      "definition": "Proceso de transformación económica y tecnológica que sustituyó el trabajo manual por la producción mecanizada en fábricas."
+    },
+    {
+      "term": "Capitalismo",
+      "definition": "Sistema económico basado en la propiedad privada de los medios de producción y en la libertad de mercado."
+    },
+    {
+      "term": "Proletariado",
+      "definition": "Clase social formada por los trabajadores que carecen de medios de producción propios y venden su fuerza de trabajo."
+    },
+    {
+      "term": "Imperialismo",
+      "definition": "Doctrina o acción de expansión territorial y dominación política y económica de una potencia sobre otros países."
+    },
+    {
+      "term": "Ferrocarril",
+      "definition": "Sistema de transporte terrestre guiado sobre rieles que facilitó el comercio y la conectividad en el siglo XIX."
+    }
+  ],
+  "closing": "Los cambios económicos y tecnológicos del siglo XIX, como el capitalismo y la industrialización, construyeron los cimientos del mundo actual. Hoy en día, usamos dispositivos y consumimos productos fabricados en cadenas globales que heredan aquella lógica de producción. Comprender esta historia te permite analizar críticamente tu entorno, valorar el esfuerzo de los trabajadores por sus derechos y reflexionar sobre cómo la tecnología transforma nuestra vida cotidiana en Colombia.",
+  "dbaStatements": [
+    "DBA 3. Analiza los cambios sociales, económicos, políticos y culturales generados por el surgimiento y consolidación del capitalismo en Europa y las razones por las cuales este sigue siendo un sistema económico vigente.",
+    "DBA 4. Analiza los procesos de expansión territorial desarrollados por Europa durante el siglo XIX y las nuevas manifestaciones imperialistas observadas en las sociedades contemporáneas.",
+    "DBA 6. Evalúa el impacto producido por los avances tecnológicos en el desarrollo social y económico de Colombia en el siglo XIX."
+  ]
+}

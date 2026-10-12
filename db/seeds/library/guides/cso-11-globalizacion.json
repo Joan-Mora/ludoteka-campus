@@ -1,0 +1,109 @@
+{
+  "intro": "¡Hola, estudiantes de undécimo! Bienvenidos a esta guía de Ciencias Sociales. En este recorrido por la Colombia contemporánea y el mundo, analizaremos cómo la globalización transforma nuestra vida cotidiana, desde los productos que compramos en la tienda del barrio hasta las decisiones económicas globales. También exploraremos la urgencia de proteger nuestros ecosistemas frente a la crisis climática y comprenderemos por qué el diálogo y la negociación son las herramientas más poderosas para construir una paz duradera en nuestro país, superando décadas de conflicto armado. Prepárense para pensar críticamente sobre el lugar que ocupamos en el mundo y cómo podemos transformar nuestra realidad local y nacional.",
+  "objectives": [
+    "Analizar el impacto de la globalización en los territorios y las identidades culturales de Colombia.",
+    "Examinar la relación entre los modelos de desarrollo económico y la crisis ambiental global y nacional.",
+    "Evaluar los mecanismos de negociación política y su papel fundamental en la construcción de paz en Colombia."
+  ],
+  "sections": [
+    {
+      "title": "¿Qué es la globalización?",
+      "paragraphs": [
+        "La globalización es un proceso histórico de integración mundial que intensifica las relaciones económicas, políticas, sociales y culturales a escala planetaria. No surge de la nada, sino que se acelera a finales del siglo XX con la caída de la bloquización ideológica, la revolución de las tecnologías de la información y la expansión del capitalismo financiero. Gracias a esto, hoy podemos conectarnos en segundos con cualquier lugar del mundo, pero también enfrentamos dependencias económicas profundas respecto a mercados internacionales que escapan al control de los Estados nacionales tradicionales.",
+        "En Colombia, este fenómeno ha transformado profundamente la economía y la sociedad. Por un lado, abrió las puertas a la inversión extranjera, la importación de tecnología y la diversificación de ciertos mercados; por otro, profundizó desafíos históricos como la desigualdad social y la vulnerabilidad frente a las fluctuaciones del precio de materias primas como el petróleo y el café. Comprender la globalización implica reconocer que las decisiones tomadas en Wall Street o en Bruselas repercuten directamente en el costo de vida de una familia en Bogotá, Medellín o Quibdó."
+      ],
+      "example": {
+        "statement": "Si una multinacional decide retirar su planta de producción de una zona franca en Colombia para llevarla a otro país donde la mano de obra es más barata, ¿qué característica principal de la globalización económica se evidencia?",
+        "solution": "Paso 1: Identificar que la empresa busca maximizar sus ganancias reduciendo costos laborales. Paso 2: Reconocer que la movilidad del capital y de las inversiones es una de las dinámicas centrales de la globalización. Paso 3: Concluir que este traslado demuestra la deslocalización industrial, donde las empresas operan a escala global sin arraigo estricto en un solo territorio nacional."
+      }
+    },
+    {
+      "title": "Mercados, territorio e identidades",
+      "companion": [],
+      "paragraphs": [
+        "El territorio ya no se entiende únicamente como un espacio físico delimitado por fronteras nacionales, sino como un escenario multidimensional donde convergen flujos globales de dinero, información, mercancías y personas. Las dinámicas de los mercados globales imponen lógicas de consumo masivo que a menudo estandarizan los estilos de vida, generando tensiones con las tradiciones locales. En nuestro país, regiones enteras se han transformado para atender demandas externas, adaptando sus suelos a monocultivos de exportación o a la extracción minera a gran escala, lo cual redefine el uso del suelo y las relaciones económicas regionales.",
+        "Frente a la homogenización cultural que promueve la cultura de masas global, las comunidades locales y los pueblos indígenas y afrodescendientes en Colombia despliegan estrategias de resistencia y revalorización identitaria. Defienden sus saberes ancestrales, sus lenguas y sus formas comunitarias de habitar el territorio. La identidad cultural en el siglo XXI no es estática ni pura; se hibrida, se transforma y dialoga permanentemente con lo global, demostrando que es posible ser ciudadano del mundo sin renunciar a las raíces locales ni a la memoria colectiva de nuestras regiones."
+      ],
+      "example": {
+        "statement": "Un grupo de jóvenes en el Cauca utiliza redes sociales globales para visibilizar y comercializar café orgánico cultivado por su comunidad indígena. ¿Cómo se relacionan mercado, territorio e identidad en este caso?",
+        "solution": "Paso 1: Observar que se usa una plataforma global para un producto local. Paso 2: Entender que el territorio no se pierde, sino que se revaloriza mediante denominaciones de origen y prácticas tradicionales. Paso 3: Concluir que la identidad cultural se fortalece y se adapta al mercado global sin perder su autonomía ni su arraigo ancestral."
+      }
+    },
+    {
+      "title": "Crisis ambiental y desarrollo sostenible",
+      "paragraphs": [
+        "La actual crisis ambiental es una de las consecuencias más graves del modelo de desarrollo hegemónico impulsado por la globalización industrial. El calentamiento global, la pérdida acelerada de biodiversidad, la contaminación de fuentes hídricas y la deforestación amenazan la supervivencia de la humanidad. Este modelo económico prioriza el crecimiento cuantitativo y el consumo ilimitado sobre la capacidad de regeneración de los ecosistemas, afectando de manera desproporcionada al Sur Global, que sufre los impactos ecológicos mientras los beneficios económicos se concentran en pocas manos.",
+        "Colombia, al ser uno de los países más biodiversos del planeta, juega un papel estratégico en esta discusión global. Regiones como la Amazonía, los páramos andinos y los manglares del Pacífico son vitales para la regulación climática mundial. Sin embargo, enfrentan presiones severas por la minería ilegal, la expansión agropecuaria y los cultivos de uso ilícito. Por ello, el desarrollo sostenible y la justicia ambiental no son solo temas de conservación ecológica, sino cuestiones urgentes de derechos humanos y equidad intergeneracional que exigen una transformación profunda de nuestras formas de producción y consumo."
+      ],
+      "example": {
+        "statement": "Un municipio colombiano decide prohibir la minería a gran escala en su páramo para proteger sus fuentes de agua. ¿Qué principio del desarrollo sostenible se está aplicando?",
+        "solution": "Paso 1: Analizar que el agua es un recurso natural no renovable vital para las presentes y futuras generaciones. Paso 2: Recordar que el desarrollo sostenible busca equilibrar la economía con la preservación ambiental. Paso 3: Concluir que se aplica el principio de sostenibilidad ambiental y equidad intergeneracional, anteponiendo la vida y el agua a la ganancia económica inmediata."
+      }
+    },
+    {
+      "title": "Negociación de conflictos y paz",
+      "paragraphs": [
+        "La construcción de paz en Colombia no se reduce al silenciamiento de los fusiles, sino que implica un proceso complejo y continuo de transformación de las estructuras sociales, políticas y económicas que generaron el conflicto armado. Durante décadas, la confrontación armada dejó millones de víctimas, desplazamiento forzado y la destrucción del tejido social en múltiples regiones. La historia nacional demuestra que las salidas exclusivamente militares han demostrado ser insuficientes para resolver disputas profundas arraigadas en la exclusión agraria, la debilidad estatal y la desigualdad socioeconómica.",
+        "La solución negociada de los conflictos, como se evidenció en los Acuerdos de Paz con las FARC y los intentos con otros actores, representa el reconocimiento político del contradictor y la apuesta por la democracia deliberativa. Negociar significa ceder en algunos puntos para ganar convivencia, verdad, justicia y reconciliación nacional. Para los jóvenes bachilleres, esto implica asumir la paz como un derecho y un deber ciudadano, fomentando la resolución pacífica de controversias en el aula, la familia y la comunidad, entendiendo que la diversidad de opiniones es una riqueza y nunca una amenaza para la convivencia."
+      ],
+      "example": {
+        "statement": "En un municipio afectado por el conflicto armado, excombatientes y campesinos víctimas se unen en una cooperativa para cultivar y comercializar cacao. ¿Cómo refleja este proyecto la construcción de paz?",
+        "solution": "Paso 1: Identificar que actores antes enfrentados ahora cooperan en una actividad económica productiva. Paso 2: Reconocer que la reconciliación requiere proyectos comunes que generen confianza y bienestar socioeconómico. Paso 3: Concluir que el proyecto consolida la paz territorial al transformar la enemistad en tejido social y desarrollo comunitario."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Qué proceso histórico aceleró la globalización a finales del siglo XX?",
+      "answer": "La revolución de las tecnologías de la información y la expansión del capitalismo financiero."
+    },
+    {
+      "question": "¿Cómo afecta la globalización económica tradicional a los precios locales en Colombia?",
+      "answer": "Generando vulnerabilidad frente a las fluctuaciones internacionales de materias primas como el petróleo y el café."
+    },
+    {
+      "question": "¿Por qué el territorio ya no se limita solo a las fronteras físicas nacionales?",
+      "answer": "Porque es un escenario cruzado por flujos globales de dinero, información, cultura y mercancías."
+    },
+    {
+      "question": "¿Qué estrategia emplean las comunidades locales frente a la homogenización cultural global?",
+      "answer": "La revalorización de sus saberes ancestrales, lenguas y formas comunitarias de vida."
+    },
+    {
+      "question": "¿Cuál es el principal desequilibrio ético y ecológico de la actual crisis ambiental global?",
+      "answer": "Que el Sur Global sufre los mayores impactos ecológicos, mientras los beneficios se concentran en el Norte."
+    },
+    {
+      "question": "¿Por qué se considera que la negociación política es superior a la salida militar en la paz colombiana?",
+      "answer": "Porque transforma las causas estructurales del conflicto y prioriza la reconciliación y los derechos de las víctimas."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Globalización",
+      "definition": "Proceso de integración mundial que intensifica las relaciones económicas, políticas, sociales y culturales a escala planetaria."
+    },
+    {
+      "term": "Territorio",
+      "definition": "Espacio físico y social dinámico donde interactúan flujos globales, identidades locales y relaciones de poder."
+    },
+    {
+      "term": "Desarrollo sostenible",
+      "definition": "Modelo que satisface las necesidades del presente sin comprometer la capacidad de las futuras generaciones para satisfacer las suyas."
+    },
+    {
+      "term": "Justicia ambiental",
+      "definition": "Principio que busca la equidad en la distribución de las cargas y beneficios ambientales entre diferentes comunidades y países."
+    },
+    {
+      "term": "Negociación del conflicto",
+      "definition": "Mecanismo político y pacífico basado en el diálogo para resolver disputas armadas y transformar las causas de la violencia."
+    }
+  ],
+  "closing": "La globalización y la crisis ambiental nos demuestran que lo que ocurre en nuestro municipio afecta al planeta entero, y viceversa. Construir paz en Colombia no es tarea exclusiva de los gobernantes; comienza en nuestra forma de dialogar, de cuidar el agua, de respetar la diferencia y de valorar nuestros recursos locales. Como jóvenes bachilleres, ustedes tienen en sus manos la capacidad de transformar su entorno con empatía, pensamiento crítico y compromiso social.",
+  "dbaStatements": [
+    "DBA 1. Analiza cómo el bienestar y la supervivencia de la humanidad dependen de la protección que hagan del ambiente los diferentes actores (políticos, económicos y sociales).",
+    "DBA 2. Evalúa la importancia de la solución negociada de los conflictos armados para la búsqueda de la paz.",
+    "DBA 5. Analiza la globalización como un proceso que redefine el concepto de territorio, las dinámicas de los mercados, las gobernanzas nacionales y las identidades locales."
+  ]
+}

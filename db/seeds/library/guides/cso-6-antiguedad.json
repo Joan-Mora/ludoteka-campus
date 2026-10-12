@@ -1,0 +1,109 @@
+{
+  "intro": "¡Hola! Bienvenidos a este viaje fascinante por el tiempo. En esta guía de Ciencias Sociales exploraremos cómo nuestros antepasados más remotos pasaron de caminar en dos pies en las sabanas africanas a levantar imponentes ciudades con templos, canales y leyes escritas. Comprenderemos cómo el dominio del fuego, la invención de la agricultura y la domesticación de animales transformaron para siempre la relación entre la humanidad y la naturaleza. Además, viajaremos a las orillas de ríos legendarios como el Nilo, el Tigris y el Éufrates, y navegaremos hasta nuestro propio continente para reconocer la grandeza de civilizaciones como los mayas, incas y las comunidades que poblaron Colombia, como los muiscas y zenúes.",
+  "objectives": [
+    "Explicar las etapas clave del proceso de hominización y las primeras herramientas tecnológicas desarrolladas durante la prehistoria.",
+    "Analizar el impacto de la revolución neolítica en el surgimiento del sedentarismo, la agricultura y las primeras aldeas.",
+    "Comparar las características geográficas, políticas y económicas de las primeras civilizaciones fluviales de Mesopotamia y Egipto.",
+    "Reconocer los aportes tecnológicos, agrícolas y culturales de las sociedades prehispánicas en América y Colombia."
+  ],
+  "sections": [
+    {
+      "title": "El camino de la hominización",
+      "paragraphs": [
+        "El proceso de hominización comprende las transformaciones biológicas y culturales que permitieron a nuestros ancestros diferenciarse de otros primates. Este recorrido comenzó en África hace millones de años. Uno de los primeros cambios trascendentales fue el bipedismo, es decir, la capacidad de caminar sobre dos extremidades inferiores. Esta postura liberó las manos para manipular objetos, transportar alimentos y fabricar utensilios. Con el tiempo, especies como Homo habilis y Homo erectus desarrollaron cerebros más grandes, lo cual facilitó una mejor comunicación, el uso coordinado de estrategias de cacería y una mayor adaptación a climas y ecosistemas muy diversos.",
+        "La tecnología prehistórica arrancó en el Paleolítico con la talla de piedras como el sílex para fabricar raspadores y hachas de mano. Un salto crucial ocurrió con el control del fuego por parte de Homo erectus. El fuego no solo brindó abrigo y protección frente a depredadores, sino que permitió cocinar los alimentos, facilitando la digestión y el aporte calórico indispensable para el desarrollo cerebral. Más adelante, Homo sapiens perfeccionó el lenguaje simbólico, los entierros rituales y el arte rupestre, dejando huellas de su mundo espiritual en cavernas y abrigos rocosos de todo el planeta."
+      ],
+      "example": {
+        "statement": "Un grupo de arqueólogos halla en un estrato de hace 1,5 millones de años restos de ceniza concentrada, huesos quemados de animales y piedras con filos tallados por ambas caras. ¿Qué avances del proceso de hominización demuestra este hallazgo?",
+        "solution": "Paso 1: Analizar los restos de fuego (ceniza y huesos quemados). Esto evidencia la domesticación o control del fuego para cocinar y protegerse, atribuido a Homo erectus. Paso 2: Analizar las piedras talladas por ambas caras (bifaces). Esto demuestra motricidad fina, planificación previa y transmisión cultural de técnicas de caza y carnicería. Conclusión: El hallazgo confirma avances biológicos (manos libres, cerebro desarrollado) y culturales (tecnología lítica y uso controlado de energía térmica)."
+      }
+    },
+    {
+      "title": "La revolución neolítica y las aldeas",
+      "paragraphs": [
+        "Hace unos 10.000 años, tras el fin de la última glaciación, el clima terrestre se volvió más templado y predecible. Diversas comunidades humanas observaron los ciclos de reproducción de las plantas y el comportamiento de los animales, dando inicio a la agricultura y la ganadería. Este cambio, conocido como la revolución neolítica, transformó el estilo de vida nómada de bandas cazadoras-recolectoras en uno sedentario. Al no tener que desplazarse constantemente en busca de sustento, los grupos humanos levantaron viviendas permanentes cerca de fuentes de agua dulce, formando las primeras aldeas estables en regiones como el Creciente Fértil.",
+        "La producción de alimentos generó excedentes agrícolas, lo que significa que las cosechas alcanzaban para alimentar a más personas de las necesarias en los campos. Esto impulsó la división social del trabajo: mientras unos cultivaban trigo o cebada, otros se especializaban en alfarería para almacenar granos, en tejeduría o en la metalurgia incipiente. Al mismo tiempo, el crecimiento de la población demandó nuevas formas de organización política, normas colectivas para resolver conflictos sobre linderos de tierras y la aparición de un comercio temprano basado en el trueque de bienes esenciales como sal, obsidiana y herramientas."
+      ],
+      "example": {
+        "statement": "Una aldea neolítica de 40 familias produce 600 bultos de trigo al año. Si cada familia consume 10 bultos anuales para alimentarse, calcula el excedente agrícola y explica qué consecuencias sociales genera para la aldea.",
+        "solution": "Paso 1: Calcular el consumo total de la comunidad: 40 familias × 10 bultos = 400 bultos de trigo. Paso 2: Restar el consumo a la producción total para hallar el excedente: 600 - 400 = 200 bultos. Paso 3: Analizar la consecuencia: Ese excedente de 200 bultos permite alimentar a artesanos, líderes religiosos o constructores que no trabajan la tierra, promoviendo la especialización laboral y el intercambio comercial con otras aldeas."
+      }
+    },
+    {
+      "title": "Las civilizaciones fluviales: Mesopotamia y Egipto",
+      "paragraphs": [
+        "El surgimiento de las primeras ciudades ocurrió en valles regados por grandes ríos. En Mesopotamia, entre los ríos Tigris y Éufrates, y en Egipto, a lo largo del río Nilo, las sociedades aprendieron a controlar las crecidas periódicas mediante diques, canales y embalses. Estas obras hidráulicas requirieron un esfuerzo coordinado de miles de personas, lo que fortaleció a gobiernos centralizados liderados por reyes o faraones. En urbes como Ur, Uruk, Menfis y Tebas, el templo y el palacio se convirtieron en centros de administración política, tributación y almacenamiento de granos.",
+        "La complejidad de estas metrópolis motivó el invento de la escritura: la cuneiforme en Mesopotamia sobre tablillas de arcilla y los jeroglíficos en Egipto sobre papiros y muros de piedra. Con la escritura no solo se registraron cosechas e impuestos, sino también códigos de leyes fundamentales, como el Código de Hammurabi. El comercio se expandió velozmente mediante el transporte fluvial y caravanas terrestres, intercambiando granos por maderas finas, metales preciosos y piedras de construcción. Este dinamismo urbano dio origen a estratos sociales diferenciados: sacerdotes, escribas, soldados, campesinos y personas esclavizadas."
+      ],
+      "example": {
+        "statement": "Identifica la función de la escritura cuneiforme en un templo de Mesopotamia y explica por qué no surgió únicamente como una expresión literaria o artística.",
+        "solution": "Paso 1: Examinar las necesidades de los templos mesopotámicos, que recibían tributos en granos, ganado y cerveza de miles de campesinos. Paso 2: Notar que la memoria humana era insuficiente para registrar pagos, deudas y contratos de una urbe con miles de habitantes. Paso 3: Concluir que la escritura nació como una herramienta práctica y contable de administración económica, y solo siglos después se utilizó para poemas épicos como el de Gilgamesh y textos religiosos."
+      }
+    },
+    {
+      "title": "Culturas prehispánicas de América",
+      "paragraphs": [
+        "En el continente americano, el desarrollo agrícola y urbano tomó rumbos propios y asombrosos, independientes de Europa o Asia. Civilizaciones como los mayas y aztecas en Mesoamérica, y los incas en la cordillera de los Andes, crearon ciudades monumentales gracias a sistemas agrícolas altamente productivos. Los aztecas inventaron las chinampas, islas artificiales sobre lagos, mientras que los incas perfeccionaron terrazas de cultivo en pendientes montañosas regadas por canales de piedra. Estas sociedades contaban con avanzados conocimientos astronómicos, calendarios precisos y redes comerciales que conectaban costas, selvas y páramos.",
+        "En el actual territorio de Colombia florecieron sociedades con admirables desarrollos de ingeniería y orfebrería. Los zenúes, en las llanuras de los ríos Sinú y San Jorge, construyeron un sistema hidráulico de canales de drenaje que cubrió más de 500.000 hectáreas para controlar inundaciones y cultivar. En los Andes centrales, los muiscas consolidaron confederaciones agrícolas con mercados activos donde intercambiaban mantas de algodón, esmeraldas y panes de sal producidos en Zipaquirá y Nemocón. Sus legados demuestran un profundo conocimiento ecológico y una integración armónica con la geografía de nuestro país."
+      ],
+      "example": {
+        "statement": "Compara la técnica agrícola de las terrazas de cultivo incas con el sistema de canales hidráulicos de los zenúes en Colombia, indicando el problema ambiental que cada una resolvió.",
+        "solution": "Paso 1: Analizar el entorno inca: pendientes pronunciadas de los Andes con riesgo de erosión y escasez de tierra plana. Solución: Las terrazas nivelaron el terreno en escalones y retuvieron humedad. Paso 2: Analizar el entorno zenú: llanuras inundables del Caribe colombiano afectadas por desbordamientos de ríos. Solución: Los canales drenaron el exceso de agua en invierno y almacenaron nutrientes y peces en verano. Paso 3: Conclusión: Ambas culturas aplicaron ingeniería ambiental para adaptar la agricultura a retos geográficos opuestos (altas montañas vs. ciénagas bajas)."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿En qué continente se originó el proceso de hominización de la especie humana?",
+      "answer": "En África."
+    },
+    {
+      "question": "¿Qué actividad económica permitió el paso definitivo del nomadismo al sedentarismo durante el Neolítico?",
+      "answer": "La agricultura, complementada con la domesticación de animales o ganadería."
+    },
+    {
+      "question": "¿Por qué a civilizaciones como Mesopotamia y Egipto se les denomina civilizaciones fluviales?",
+      "answer": "Porque surgieron y crecieron a orillas de grandes ríos (Tigris, Éufrates y Nilo), cuyas aguas aprovecharon mediante canales para asegurar cosechas abundantes."
+    },
+    {
+      "question": "¿Cuál fue el papel del excedente agrícola en la aparición de nuevos oficios dentro de las primeras ciudades?",
+      "answer": "Permitió alimentar a personas que no trabajaban la tierra, posibilitando que se especializaran como artesanos, comerciantes, escribas, sacerdotes y constructores."
+    },
+    {
+      "question": "¿De qué manera el pueblo zenú en Colombia adaptó su entorno cenagoso para asegurar la alimentación de su población?",
+      "answer": "Diseñó una extensa red de canales artificiales que drenaba las inundaciones, acumulaba sedimentos ricos para sembrar y facilitaba la pesca en épocas secas."
+    },
+    {
+      "question": "¿Por qué las grandes ciudades antiguas necesitaron crear códigos de leyes escritas, a diferencia de las pequeñas aldeas primitivas?",
+      "answer": "Porque en aldeas pequeñas bastaba la costumbre oral y los lazos familiares, mientras que en urbes pobladas y complejas se requerían reglas impersonales, fijas y públicas para regular la propiedad, el comercio y la justicia."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Bipedismo",
+      "definition": "Capacidad biológica de sostenerse y desplazarse erguido sobre dos extremidades inferiores, característica central de la evolución de los homínidos."
+    },
+    {
+      "term": "Sedentarismo",
+      "definition": "Forma de vida en la que una comunidad se establece de manera definitiva en un territorio específico, sustentada en la agricultura y la ganadería."
+    },
+    {
+      "term": "Creciente Fértil",
+      "definition": "Región con forma de medialuna en el Cercano Oriente donde surgieron las primeras prácticas agrícolas, aldeas y civilizaciones urbanas de la historia."
+    },
+    {
+      "term": "Excedente agrícola",
+      "definition": "Cantidad de alimento cosechado que sobrepasa el consumo inmediato de los agricultores, permitiendo el comercio y la división social del trabajo."
+    },
+    {
+      "term": "Chinampa",
+      "definition": "Sistema mesoamericano de cultivo consistente en islas artificiales de ramas y lodo construidas sobre lagos poco profundos para obtener cosechas continuas."
+    }
+  ],
+  "closing": "Cuando hoy compras alimentos en la plaza de mercado, caminas por las calles pavimentadas de tu municipio o utilizas un acueducto, disfrutas legados que comenzaron hace milenios. Desde el dominio del fuego hasta los sofisticados canales zenúes, la humanidad ha transformado su hábitat para convivir y progresar. Cuidar nuestras ciudades y valorar el trabajo campesino es la mejor forma de honrar este largo camino colectivo.",
+  "dbaStatements": [
+    "DBA 3. Analiza los aspectos centrales del proceso de hominización y del desarrollo tecnológico dados durante la prehistoria, para explicar las transformaciones del entorno.",
+    "DBA 4. Analiza cómo en las sociedades antiguas surgieron las primeras ciudades y el papel de la agricultura y el comercio para la expansión de estas.",
+    "DBA 5. Analiza los legados que las sociedades americanas prehispánicas dejaron en diversos campos."
+  ]
+}

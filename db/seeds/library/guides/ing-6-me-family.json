@@ -1,0 +1,107 @@
+{
+  "intro": "¡Hola, estudiantes de sexto grado! Bienvenidos a esta emocionante guía de estudio diseñada especialmente para ustedes en los colegios de Colombia. Aquí aprenderán a presentarse, saludar a sus amigos, hablar sobre el verbo to be y usar adjetivos posesivos para describir a sus seres queridos. Este conocimiento les permitirá interactuar con confianza en el aula, compartir información sobre su entorno y valorar la riqueza de sus familias desde la hermosa diversidad de nuestro país. ¡Comencemos esta aventura en inglés!",
+  "objectives": [
+    "Identificar saludos y expresiones de cortesía para iniciar conversaciones cotidianas",
+    "Utilizar correctamente el verbo to be en oraciones afirmativas, negativas e interrogativas",
+    "Aplicar adjetivos posesivos para indicar pertenencia y describir relaciones familiares",
+    "Describir miembros de la familia y sus características básicas en inglés"
+  ],
+  "sections": [
+    {
+      "title": "greetings and introductions",
+      "paragraphs": [
+        "Los saludos y las presentaciones son la puerta de entrada para conocer a otras personas en el colegio o en el barrio. En inglés, usamos expresiones diferentes según la hora del día o el nivel de confianza. Por ejemplo, para saludar a un compañero de clase en la mañana decimos Good morning, y si nos presentan a alguien nuevo, respondemos Nice to meet you. Estas fórmulas son esenciales para una convivencia armónica en el aula.",
+        "Además de saludar, saber presentarse permite compartir datos básicos como el nombre, la edad y el lugar de origen. En Colombia, es muy común iniciar una conversación con un caluroso Good afternoon o un simple Hello. Practicar estas frases les ayudará a romper el hielo y a participar activamente en las dinámicas grupales propuestas por el Ministerio de Educación Nacional."
+      ],
+      "example": {
+        "statement": "Completa el saludo cuando conoces a un nuevo compañero: - Hello, my name is Carlos. - ...",
+        "solution": "La respuesta correcta es 'Nice to meet you'. Se usa esta fórmula amable cada vez que una persona se presenta por primera vez ante otra."
+      }
+    },
+    {
+      "title": "verb to be",
+      "paragraphs": [
+        "El verbo to be es uno de los pilares fundamentales en inglés y equivale a los verbos ser y estar en español. Su conjugación en presente simple cambia según el pronombre personal: I am, you are, he is, she is, it is, we are, you are, they are. Con este verbo podemos decir quiénes somos, dónde estamos o cómo nos sentimos.",
+        "En el contexto escolar colombiano, usamos el verbo to be para describir nuestra nacionalidad, por ejemplo: I am Colombian. También sirve para hablar de estados de ánimo o características físicas y de personalidad dentro del salón de clases, facilitando la descripción clara y sencilla de nuestro entorno inmediato."
+      ],
+      "example": {
+        "statement": "Escribe la forma correcta del verbo to be para la oración: Maria ... a student in sixth grade.",
+        "solution": "La respuesta es 'is'. Explicación: Maria equivale al pronombre she (ella), y para she siempre corresponde la forma del verbo to be 'is'."
+      }
+    },
+    {
+      "title": "possessive adjectives",
+      "paragraphs": [
+        "Los adjetivos posesivos indican a quién pertenece algo. En inglés, cada pronombre personal tiene su propio adjetivo posesivo: I usa my, you usa your, he usa his, she usa her, it usa its, we usa our, you usa your, y they usa their. Estos adjetivos siempre van antes del objeto o la persona de la que se habla.",
+        "Por ejemplo, si queremos hablar de los útiles escolares en el colegio, decimos my pencil (mi lápiz) o your book (tu libro). Al aplicarlos en nuestra familia, podemos decir her mother (su mamá de ella) o our house (nuestra casa), expresando vínculos y pertenencia de manera clara y respetuosa."
+      ],
+      "example": {
+        "statement": "Completa la frase usando el adjetivo posesivo correcto: Juan loves ... new bicycle.",
+        "solution": "La respuesta es 'his'. Explicación: El sujeto es Juan (él / he), por lo tanto el adjetivo posesivo que le corresponde para indicar su bicicleta es 'his'."
+      }
+    },
+    {
+      "title": "describing family members",
+      "paragraphs": [
+        "Describir a los miembros de la familia nos permite valorar los lazos afectivos que construimos en el hogar. En las clases de inglés de sexto grado, utilizamos vocabulario clave como mother, father, sister, brother, grandmother y grandfather. Combinamos este vocabulario con el verbo to be y los adjetivos posesivos para crear descripciones completas.",
+        "Por ejemplo, podemos decir My mother is tall and kind, o My brother is ten years old. Estas descripciones fortalecen la expresión oral y escrita, permitiéndonos compartir con orgullo historias sobre nuestras familias colombianas en el aula de clase."
+      ],
+      "example": {
+        "statement": "Traduce y completa la siguiente descripción familiar: 'Mi hermana es amigable' -> ... sister ... friendly.",
+        "solution": "La respuesta es 'My / is'. Explicación: 'Mi' se traduce como 'My' (adjetivo posesivo) y el verbo 'es' para la hermana (she) se traduce como 'is' (verbo to be)."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "Complete the greeting: 'Good ___, teacher!' (en la mañana)",
+      "answer": "morning"
+    },
+    {
+      "question": "Choose the correct form of the verb to be: 'We ___ students from Colombia.'",
+      "answer": "are"
+    },
+    {
+      "question": "Select the correct possessive adjective for 'You': 'This is ___ notebook.'",
+      "answer": "your"
+    },
+    {
+      "question": "Translate 'Mi padre' into English using vocabulary from family members.",
+      "answer": "My father"
+    },
+    {
+      "question": "Complete with the verb to be: 'She ___ my older sister.'",
+      "answer": "is"
+    },
+    {
+      "question": "Create a complete sentence using a possessive adjective and the verb to be: '___ mother ___ kind.'",
+      "answer": "My / is"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Greeting",
+      "definition": "Expresión de cortesía que se utiliza para saludar a otras personas al iniciar una conversación."
+    },
+    {
+      "term": "Verb to be",
+      "definition": "Verbo principal en inglés que cumple la función de ser o estar según el contexto."
+    },
+    {
+      "term": "Possessive adjective",
+      "definition": "Palabra que indica a quién pertenece un objeto o con quién se tiene un vínculo familiar."
+    },
+    {
+      "term": "Family member",
+      "definition": "Cada una de las personas que integran un núcleo familiar, como padres, hermanos o abuelos."
+    },
+    {
+      "term": "Classroom",
+      "definition": "Espacio físico o salón donde los estudiantes reciben sus clases y comparten experiencias."
+    }
+  ],
+  "closing": "Practica estos saludos, el verbo to be y los adjetivos posesivos conversando con tus compañeros y familiares todos los días. Al usar el inglés en situaciones reales de tu colegio en Colombia, fortalecerás tu aprendizaje y te conectarás con el mundo de una manera divertida y respetuosa.",
+  "dbaStatements": [
+    "Esquema curricular sugerido de inglés del MEN: nivel A1, grado sugerido 6.°."
+  ]
+}

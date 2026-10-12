@@ -73,6 +73,7 @@ export class LearningService {
         'courses.title',
         'courses.description',
         'courses.published',
+        'courses.is_demo as demo',
         'subjects.name as subject',
         'groups_class.name as group_name',
         'grades.level as grade_level',
@@ -92,7 +93,7 @@ export class LearningService {
           ),
         );
     }
-    const courses = await query.orderBy('grades.level').orderBy('courses.title').execute();
+    const courses = await query.orderBy('courses.is_demo').orderBy('grades.level').orderBy('courses.title').execute();
     const progress = await this.progressMap(
       courses.map((c) => c.id),
       user.role === 'student' ? user.id : null,

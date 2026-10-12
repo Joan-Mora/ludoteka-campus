@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola, pilos de undécimo! Bienvenidos a esta guía de Lenguaje titulada Clásicos y visiones de mundo. En este recorrido por la literatura universal y nacional exploraremos por qué algunas obras resisten el paso de los siglos y continúan conmoviéndonos. Desde los mitos griegos hasta las locuras de Don Quijote, aprenderemos a descifrar cómo cada época ha entendido al ser humano, el amor, el poder y el destino. Leer literatura clásica no es un ejercicio de memoria muerta, sino una oportunidad maravillosa para dialogar con mentes brillantes que, al igual que nosotros hoy en Bogotá, Medellín o cualquier rincón de Colombia, se hicieron las mismas preguntas esenciales sobre la existencia.",
+  "objectives": [
+    "Analizar los elementos estructurales y temáticos que convierten a una obra literaria en un clásico universal.",
+    "Interpretar textos de la tradición clásica y de la tragedia griega identificando sus dilemas morales y humanos.",
+    "Comparar las visiones de mundo presentes en diferentes épocas literarias con la realidad contemporánea.",
+    "Argumentar posturas críticas frente a la lectura de obras canónicas mediante el uso de evidencias textuales."
+  ],
+  "sections": [
+    {
+      "title": "Qué hace clásica una obra",
+      "paragraphs": [
+        "Un clásico literario no es simplemente un libro viejo que acumula polvo en la biblioteca del colegio. Es una creación artística que trasciende su momento histórico y sigue comunicándose con lectores de cualquier siglo. Estas obras abordan temas universales como la ambición, los celos, la muerte, la justicia y el amor, los cuales forman parte de la experiencia humana más íntima, sin importar si vivimos en la antigua Grecia o en la Colombia del siglo XXI.",
+        "Además de su profundidad temática, los clásicos se distinguen por su maestría estética y formal. Escritores como Gabriel García Márquez en nuestra literatura nacional lograron plasmar mitos y realidades que adquieren categoría clásica. Leer estas obras nos exige un esfuerzo interpretativo superior, pero a cambio nos otorga herramientas analíticas poderosas para descifrar no solo los libros, sino también los mensajes ocultos en la publicidad, las redes sociales y los discursos políticos de la actualidad."
+      ],
+      "example": {
+        "statement": "Explica por qué Cien años de soledad de Gabriel García Márquez puede considerarse un clásico contemporáneo de la literatura colombiana.",
+        "solution": "Paso 1: Identificar los temas universales que aborda, como la soledad, el poder, el olvido y la estirpe. Paso 2: Reconocer su innovación estética, al fundir lo cotidiano con lo extraordinario mediante el realismo mágico. Paso 3: Concluir que la novela trasciende el contexto local de Macondo para reflejar las tensiones políticas, históricas y humanas de América Latina y del mundo entero en cualquier época."
+      }
+    },
+    {
+      "title": "Tragedia griega",
+      "paragraphs": [
+        "La tragedia griega nació en Atenas durante el siglo V antes de nuestra era, en el marco de las festividades en honor a Dioniso. Autores como Sófocles, Esquilo y Eurípides elevaron el teatro a una experiencia cívica y religiosa donde los ciudadanos reflexionaban sobre los límites de la condición humana. En estas obras, el héroe trágico se enfrenta a fuerzas descomunales, ya sea la voluntad inexorable de los dioses o el destino, representado por el concepto del hado, cayendo inevitablemente en la desgracia tras cometer una falta por orgullo o ceguera espiritual.",
+        "El conflicto central de la tragedia gira en torno al choque entre la ley divina o moral y las leyes humanas o la soberbia del protagonista, conocida como hybris. Obras como Edipo Rey o Antígona nos confrontan con dilemas éticos que siguen vigentes. Cuando Antígona decide enterrar a su hermano desacautando el decreto del rey Creonte, pone sobre la mesa una discusión sobre la justicia natural y la obediencia civil que resuena con fuerza en los movimientos de protesta social de nuestra Colombia actual."
+      ],
+      "example": {
+        "statement": "En la tragedia Edipo Rey de Sófocles, el protagonista intenta huir de su destino trágico pero termina cumpliéndolo. ¿Qué visión de mundo griega se evidencia en este argumento?",
+        "solution": "Paso 1: Analizar el papel del destino (fatum) en la cultura griega antigua, donde los dioses y el oráculo dictan un futuro inmodificable. Paso 2: Observar que los esfuerzos humanos por cambiar ese destino son infructuosos y a menudo aceleran la tragedia. Paso 3: Concluir que la visión de mundo refleja la subordinación del ser humano ante fuerzas cósmicas superiores que escapan de su control racional."
+      }
+    },
+    {
+      "title": "Don Quijote",
+      "paragraphs": [
+        "Publicada en dos partes en 1605 y 1615 por Miguel de Cervantes Saavedra, Don Quijote de la Mancha es considerada la primera novela moderna y una de las cumbres de la literatura universal. La obra narra las aventuras de un hidalgo enloquecido por leer demasiados libros de caballerías, quien decide salir por los caminos de España convertido en caballero andante para deshacer entuertos y proteger a los desvalidos. A su lado viaja Sancho Panza, un labrador realista y pragmático que representa la voz del sentido común.",
+        "La grandeza del Quijote radica en el juego de perspectivas que propone Cervantes. Ya no existe una única verdad incuestionable; por el contrario, la realidad se transforma según quién la mire. Para el protagonista, unos simples molinos de viento son gigantes amenazantes; para Sancho, son solo molinos. Este contraste entre el idealismo y el pragmatismo configura una profunda reflexión sobre la locura, la cordura, la libertad y el poder de la imaginación para transformar un mundo hostil y prosaico."
+      ],
+      "example": {
+        "statement": "Identifica la tensión entre idealismo y realidad en el episodio de los molinos de viento de Don Quijote.",
+        "solution": "Paso 1: Recordar que Don Quijote ve gigantes porque su mente está habitada por los ideales caballerescos. Paso 2: Recordar que Sancho ve molinos porque percibe el mundo de manera empírica y concreta. Paso 3: Explicar que esta dualidad representa la tensión humana entre cómo son las cosas en la realidad material y cómo desearíamos que fueran según nuestros ideales."
+      }
+    },
+    {
+      "title": "Comparar visiones de mundo entre épocas",
+      "paragraphs": [
+        "Comparar visiones de mundo en la literatura implica examinar cómo distintas sociedades, separadas por siglos o geografías, conciben conceptos fundamentales como Dios, el universo, el individuo, la justicia y el amor. La visión de mundo de la antigua Grecia, centrada en el destino y el panteón politeísta, difiere radicalmente de la cosmovisión teocéntrica de la Edad Media, donde Dios ocupa el centro de toda actividad intelectual y artística, o de la mentalidad antropocéntrica del Renacimiento y la Modernidad.",
+        "Al leer textos de diferentes épocas en el aula, podemos trazar puentes y contrastes enriquecedores. Por ejemplo, la manera en que un poeta grecolatino abordaba el paso inexorable del tiempo difiere de la angustia existencial del romanticismo o de la fragmentación del sujeto en la literatura contemporánea. Realizar este ejercicio crítico nos permite valorar la diversidad del pensamiento humano y comprender que nuestras propias creencias y costumbres son producto de un proceso histórico en constante transformación."
+      ],
+      "example": {
+        "statement": "Compara cómo se concibe la autoridad en la Antigüedad clásica (en obras como Antígona) frente a la época contemporánea.",
+        "solution": "Paso 1: Revisar Antígona, donde la autoridad del rey se enfrenta a mandatos divinos y familiares inquebrantables. Paso 2: Pensar en la época contemporánea, donde la autoridad se fundamenta teóricamente en la democracia, la constitución y los derechos humanos. Paso 3: Concluir que mientras en la Antigüedad el conflicto era religioso y dinástico, hoy se debate sobre la legitimidad legal, la ética ciudadana y la participación social."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Qué característica define principalmente a un texto literario clásico frente a uno de consumo pasajero?",
+      "answer": "Su capacidad para perdurar a través del tiempo y tratar temas universales."
+    },
+    {
+      "question": "¿Cómo se denomina el concepto en la tragedia griega que hace referencia al orgullo excesivo del héroe frente a los dioses?",
+      "answer": "Hybris"
+    },
+    {
+      "question": "¿Qué personaje representa el pragmatismo y el realismo frente a las fantasías caballerescas en la novela de Cervantes?",
+      "answer": "Sancho Panza"
+    },
+    {
+      "question": "Menciona el nombre del autor griego autor de la tragedia Edipo Rey.",
+      "answer": "Sófocles"
+    },
+    {
+      "question": "¿Qué término histórico define la visión de la Edad Media donde Dios es el centro del universo cultural?",
+      "answer": "Teocentrismo"
+    },
+    {
+      "question": "Explica brevemente por qué la obra Don Quijote de la Mancha es considerada la primera novela moderna.",
+      "answer": "Porque introduce la pluralidad de voces, la mezcla de géneros y el perspectivismo sobre la realidad."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Clásico",
+      "definition": "Obra de arte o literatura que destaca por su excelencia estética, valor universal y vigencia a lo largo de las distintas épocas históricas."
+    },
+    {
+      "term": "Tragedia",
+      "definition": "Género dramático de origen griego que representa conflictos fatales entre personajes enfrentados a fuerzas superiores, culminando generalmente en la ruina o muerte."
+    },
+    {
+      "term": "Visión de mundo",
+      "definition": "Conjunto de creencias, valores, conceptos y actitudes con los que una cultura o un individuo interpreta la realidad y su existencia."
+    },
+    {
+      "term": "Hybris",
+      "definition": "Desmedido orgullo, soberbia o insolencia que comete el héroe trágico al desafiar el orden divino o las leyes naturales."
+    },
+    {
+      "term": "Idealismo",
+      "definition": "Actitud filosófica y literaria que prioriza los ideales, los valores morales y los sueños por encima de la realidad material o práctica."
+    }
+  ],
+  "closing": "Estudiar los clásicos y las visiones de mundo no es un requisito escolar aislado; es una llave para ensanchar nuestra mirada sobre la realidad. Cada vez que leemos un texto del pasado, entrenamos nuestra empatía y descubrimos que los dilemas sobre la justicia, el amor y la libertad siguen latiendo con fuerza en nuestras calles y cotidianidad.",
+  "dbaStatements": [
+    "DBA 3. Determina los textos que desea leer y la manera en que abordará su comprensión, con base en sus experiencias de formación e inclinaciones literarias.",
+    "DBA 4. Identifica, en las producciones literarias clásicas, diferentes temas que le permiten establecer comparaciones con las visiones de mundo de otras épocas."
+  ]
+}

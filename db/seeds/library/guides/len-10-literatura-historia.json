@@ -1,0 +1,112 @@
+{
+  "intro": "¡Hola, mi gente de décimo! Bienvenidos a este recorrido por la historia literaria. En esta guía exploraremos cómo las palabras han viajado en el tiempo para contarnos quiénes somos. Desde las apasionadas aventuras del Siglo de Oro español y los claroscuros del Barroco, hasta la razón del Neoclasicismo y la rebeldía del Romanticismo, descubriremos cómo los autores plasmaron sus miedos, amores y anhelos. Además, conectaremos estos movimientos con las artes plásticas para entender que la literatura nunca ha estado sola, sino dialogando siempre con la pintura y la arquitectura. Pónganse cómodos, porque este viaje apenas comienza.",
+  "objectives": [
+    "Reconocer las características políticas y estéticas del Siglo de Oro y el Romanticismo en la literatura hispánica.",
+    "Analizar fragmentos representativos de diferentes épocas literarias identificando sus temáticas y recursos estilísticos.",
+    "Relacionar las obras literarias de cada periodo con manifestaciones de las artes plásticas y visuales.",
+    "Argumentar puntos de encuentro entre los contextos históricos y la producción artística universal."
+  ],
+  "sections": [
+    {
+      "title": "Siglo de Oro español",
+      "paragraphs": [
+        "El Siglo de Oro comprende un periodo de esplendor cultural en España, que abarca aproximadamente desde el Renacimiento hasta finales del siglo XVII. Aunque el nombre sugiere cien años, en realidad duró un poco más. Durante esta época, la monarquía española vivía tensiones políticas, pero el arte floreció de manera impresionante. Autores de la talla de Miguel de Cervantes, Lope de Vega y Francisco de Quevedo transformaron el idioma castellano, creando obras maestras que hoy seguimos leyendo en las aulas de nuestros colegios en Colombia.",
+        "En la poesía y la prosa de este tiempo se exaltan el amor idealizado, la mitología grecolatina y la reflexión sobre el paso del tiempo, temas propios del Renacimiento que luego se transformarían. La novela picaresca y el teatro nacional cobraron un protagonismo enorme, convirtiendo el arte en un producto de consumo masivo para la sociedad de la época, desde el pueblo llano hasta la realeza en los corrales de comedias."
+      ],
+      "example": {
+        "statement": "Identifica el tema central en un fragmento donde se hable de la brevedad de la vida y el engaño de las apariencias en un soneto clásico.",
+        "solution": "Paso 1: Leer con atención el texto buscando palabras clave como tiempo, flor, sombra o engaño. Paso 2: Reconocer que el autor utiliza la metáfora de la fugacidad de la juventud para transmitir angustia o reflexión existencial. Paso 3: Concluir que el tema es el tópico literario del 'Carpe Diem' o la brevedad de la vida, muy propio del pensamiento de la época dorada."
+      }
+    },
+    {
+      "title": "Barroco y Neoclasicismo",
+      "paragraphs": [
+        "Tras la euforia renacentista llegó el Barroco, un periodo marcado por el pesimismo, la desilusión y la complejidad formal. Las obras barrocas están llenas de contrastes: luz y oscuridad, vida y muerte, riqueza y miseria. En España, este movimiento se dividió en dos corrientes poéticas: el culteranismo, representado por Luis de Góngora, que buscaba la belleza formal a través de metáforas complejas y cultismos; y el conceptismo, liderado por Francisco de Quevedo, enfocado en la agudeza de los significados y los juegos de palabras ingeniosos.",
+        "Años más tarde, cansados de tanta exageración barroca, los intelectuales del siglo XVIII adoptaron el Neoclasicismo. Este movimiento, influenciado por la Ilustración francesa, impuso la razón, la mesura y la utilidad didáctica del arte. En Colombia y el resto de Hispanoamérica, las ideas neoclásicas se reflejaron en los escritos de los próceres de la independencia, quienes usaron la literatura y la prensa para educar al pueblo y difundir ideales de libertad y orden republicano."
+      ],
+      "example": {
+        "statement": "Diferencia si un texto busca la belleza ornamental mediante metáforas oscuras (culteranismo) o la agudeza mental mediante ideas contrastantes (conceptismo).",
+        "solution": "Paso 1: Analizar la densidad del vocabulario y la presencia de referencias mitológicas complejas. Paso 2: Si abundan los cultismos y la sintaxis alterada, se trata de culteranismo. Paso 3: Si el texto presenta paradojas breves y juegos de ingenio sobre la muerte o el dinero, se trata de conceptismo."
+      }
+    },
+    {
+      "title": "Romanticismo",
+      "paragraphs": [
+        "El Romanticismo estalló a finales del siglo XVIII y se consolidó en el siglo XIX como una rebelión contra la fría razón neoclásica. Los escritores románticos pusieron el centro de atención en el 'yo', en las emociones desbordadas, la melancolía y la libertad creadora. Ya no importaban tanto las reglas estrictas de la academia, sino expresar el dolor de un amor imposible, la fascinación por la noche y la muerte, y la conexión mística con una naturaleza salvaje y tormentosa, llena de ruinas y paisajes brumosos.",
+        "En Colombia, el Romanticismo tuvo un arraigo muy especial, especialmente en la narrativa costumbrista y sentimental. La obra cumbre de este periodo en nuestro país es 'María' de Jorge Isaacs, una novela que retrata con profunda poesía el amor juvenil, la nostalgia por el terruño vallecaucano y la tragedia frente a la enfermedad. Los paisajes del río Cauca se convirtieron en el reflejo del alma sufrida de sus protagonistas, marcando la identidad literaria nacional de la época."
+      ],
+      "example": {
+        "statement": "Explica por qué la novela 'María' de Jorge Isaacs es considerada una obra cumbre del Romanticismo colombiano.",
+        "solution": "Paso 1: Identificar los elementos centrales de la trama: un amor puro pero imposible entre dos jóvenes. Paso 2: Examinar cómo se describe el paisaje natural (el Valle del Cauca), el cual no es solo un escenario, sino un espejo de los sentimientos de tristeza y pasión de los personajes. Paso 3: Concluir que cumple con los rasgos románticos de exaltación del sentimiento, subjetividad y tragedia amorosa."
+      }
+    },
+    {
+      "title": "Literatura y artes plásticas",
+      "paragraphs": [
+        "La literatura nunca viaja sola; siempre ha tomado de la mano a la pintura, la escultura y la arquitectura. Cada movimiento literario tiene su correlato visual. Por ejemplo, los claroscuros dramáticos de la pintura de Caravaggio en el Barroco encuentran su equivalente exacto en los versos tensos y contrastantes de Quevedo o Góngora. Ambas disciplinas buscaban impresionar los sentidos del espectador y del lector mediante la exageración y el dinamismo.",
+        "Por su parte, el Romanticismo en la pintura se volcó hacia paisajes inmensos donde el ser humano aparece diminuto ante la fuerza de la naturaleza, concepto conocido como lo sublime. Pintores como Caspar David Friedrich plasmaron en sus lienzos la misma soledad y melancolía que los poetas románticos escribían en sus versos. Comprender un momento histórico requiere mirar tanto los libros de la biblioteca como los lienzos de los museos."
+      ],
+      "example": {
+        "statement": "Relaciona un cuadro romántico de un naufragio en medio de una tormenta con una escena literaria de la misma época.",
+        "solution": "Paso 1: Observar en la pintura el caos, las olas gigantescas y la impotencia humana frente al mar. Paso 2: Buscar en la literatura textos que hablen de tormentas interiores, naufragios o la furia de la naturaleza indomable. Paso 3: Establecer el punto de encuentro: ambos exaltan la categoría estética de 'lo sublime', mostrando la pequeñez del hombre frente a la inmensidad incontrolable del universo."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es el nombre del periodo literario español caracterizado por el esplendor cultural entre los siglos XVI y XVII?",
+      "answer": "Siglo de Oro"
+    },
+    {
+      "question": "¿Cómo se le llama a la corriente poética barroca caracterizada por el uso excesivo de cultismos y metáforas complejas, cuyo máximo exponente fue Góngora?",
+      "answer": "Culteranismo"
+    },
+    {
+      "question": "¿Qué movimiento literario e ideológico del siglo XVIII priorizó la razón, la mesura y la función educativa del arte frente al exceso barroco?",
+      "answer": "Neoclasicismo"
+    },
+    {
+      "question": "¿Cuál es la obra cumbre de la narrativa romántica en Colombia, escrita por Jorge Isaacs y ambientada en el Valle del Cauca?",
+      "answer": "María"
+    },
+    {
+      "question": "¿Qué concepto estético del Romanticismo describe la sensación de grandeza y temor que produce contemplar una naturaleza salvaje y desbordada?",
+      "answer": "Lo sublime"
+    },
+    {
+      "question": "Explica brevemente cómo se relaciona el conceptismo de Francisco de Quevedo con la pintura barroca de claroscuros.",
+      "answer": "Ambos buscan el contraste extremo: el conceptismo mediante la oposición de ideas y juegos verbales agudos, y la pintura mediante el choque violento entre luces y sombras."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Siglo de Oro",
+      "definition": "Periodo de apogeo de la literatura y el arte en España, coincidente con el auge político y posterior declive del Imperio español."
+    },
+    {
+      "term": "Culteranismo",
+      "definition": "Estilo literario barroco enfocado en la belleza formal, caracterizado por la abundancia de metáforas oscuras y referencias mitológicas."
+    },
+    {
+      "term": "Conceptismo",
+      "definition": "Estilo barroco basado en la asociación ingeniosa de ideas, la agudeza mental y los juegos de palabras profundos y paradójicos."
+    },
+    {
+      "term": "Neoclasicismo",
+      "definition": "Movimiento artístico y literario del siglo XVIII que imitó los modelos clásicos grecolatinos, privilegiando la razón, el orden y la moral."
+    },
+    {
+      "term": "Romanticismo",
+      "definition": "Movimiento cultural de finales del siglo XVIII y XIX que opuso la subjetividad, la libertad creadora y la pasión a la razón ilustrada."
+    },
+    {
+      "term": "Lo sublime",
+      "definition": "Categoría estética que expresa una grandeza tan inmensa que provoca admiración, asombro y un terror reverencial en el espectador."
+    }
+  ],
+  "closing": "Estudiar el Siglo de Oro, el Barroco y el Romanticismo no es memorizar fechas aburridas, sino entender cómo nuestros antepasados lidiaron con las mismas emociones que hoy sentimos al escuchar una canción o ver una película. Las palabras y las imágenes del pasado siguen vivas en nuestra forma de amar, sufrir y cuestionar el mundo cotidiano. ¡Hasta la próxima aventura literaria!",
+  "dbaStatements": [
+    "DBA 3. Caracteriza la literatura en un momento particular de la historia desde el acercamiento a sus principales exponentes, textos, temáticas y recursos estilísticos.",
+    "DBA 4. Formula puntos de encuentro entre la literatura y las artes plásticas y visuales."
+  ]
+}

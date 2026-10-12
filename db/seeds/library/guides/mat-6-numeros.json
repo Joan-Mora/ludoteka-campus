@@ -1,0 +1,108 @@
+{
+  "intro": "Bienvenidos a esta guía de matemáticas para sexto grado. En nuestra vida diaria usamos los números todo el tiempo: cuando revisamos la temperatura en un municipio templado como Tunja, calculamos las vueltas de una compra en la tienda de la esquina o repartimos una bandeja paisa entre varios amigos. Para representar situaciones donde hay deudas, temperaturas bajo cero o partes de un todo, necesitamos ir más allá de los números naturales. Aquí aprenderemos a utilizar los números enteros y racionales, reconociendo cómo se ubican en la recta numérica, cómo se comparan entre sí y de qué manera sus operaciones nos ayudan a resolver problemas cotidianos en Colombia de forma rápida y exacta.",
+  "objectives": [
+    "Representar y ubicar números enteros y racionales en la recta numérica para analizar situaciones de variación y nivel.",
+    "Establecer relaciones de orden y equivalencia entre diferentes representaciones de números racionales.",
+    "Aplicar las propiedades de las operaciones numéricas para diseñar estrategias de cálculo mental y resolución de problemas."
+  ],
+  "sections": [
+    {
+      "title": "La recta numérica y los enteros",
+      "paragraphs": [
+        "Los números enteros están formados por los enteros positivos, el cero y los enteros negativos. En la vida diaria en Colombia, encontramos los enteros cuando hablamos de altitud sobre o bajo el nivel del mar, ganancias y pérdidas de dinero en pesos colombianos, o variaciones de temperatura. Para representarlos de forma clara usamos la recta numérica, una línea horizontal donde el cero marca el punto de referencia o origen. Hacia la derecha del cero ubicamos los valores positivos, mientras que hacia la izquierda situamos los valores negativos, manteniendo siempre la misma distancia entre cada número consecutivo.",
+        "Ubicar números en la recta nos ayuda a comprender mejor su valor absoluto, que es la distancia real que hay entre un número y el cero, sin importar su signo. Por ejemplo, si una persona en Bogotá tiene una deuda de 15 000 pesos, representamos ese dinero como -15 000, mientras que si tiene 15 000 pesos ahorrados en su cuenta, se escribe como +15 000. Ambos números tienen el mismo valor absoluto, 15 000, porque están a la misma distancia del punto cero, pero representan situaciones económicas opuestas en el contexto real."
+      ],
+      "example": {
+        "statement": "Durante una caminata por el Parque Nacional Natural Chingaza, la temperatura bajó a -2 °C en la madrugada, mientras que a mediodía subió a 11 °C. Representa ambas temperaturas en la recta numérica y halla la diferencia entre ellas.",
+        "solution": "Paso 1: Dibujamos la recta numérica marcando el punto 0.\nPaso 2: Ubicamos -2 dos unidades a la izquierda del cero y 11 once unidades a la derecha del cero.\nPaso 3: Para calcular la diferencia de temperatura, contamos las unidades entre ambos puntos: desde -2 hasta 0 hay 2 unidades, y desde 0 hasta 11 hay 11 unidades.\nPaso 4: Sumamos ambas distancias: 2 + 11 = 13. La diferencia de temperatura fue de 13 °C."
+      }
+    },
+    {
+      "title": "Fracciones y decimales equivalentes",
+      "paragraphs": [
+        "Cuando dividimos una unidad en partes iguales, utilizamos los números racionales. Estos números se pueden expresar como fracciones o como números decimales. Dos expresiones son equivalentes si representan exactamente la misma cantidad del total, aunque estén escritas de forma distinta. Por ejemplo, si compramos tres cuartos de libra de café colombiano, esa cantidad equivale exactamente a 0.75 libras. Comprender la equivalencia nos permite cambiar de una representación a otra según nos convenga para hacer cálculos de manera más sencilla en el mercado o en recetas.",
+        "Para convertir una fracción en un número decimal, simplemente dividimos el numerador entre el denominador. Si el residuo llega a ser cero, obtenemos un decimal exacto; si un grupo de cifras se repite de forma infinita, tenemos un decimal periódico. Para pasar de un decimal exacto a una fracción, escribimos el número sin coma en el numerador y en el denominador colocamos un uno seguido de tantos ceros como cifras decimales tenga el número original. Luego, simplificamos la fracción dividiendo el numerador y el denominador por un mismo número hasta su mínima expresión."
+      ],
+      "example": {
+        "statement": "En una frutería de Cali, una persona compra 2/5 de kilo de lulo y otra persona lleva 0.4 kilos de la misma fruta. ¿Compraron la misma cantidad? Demuéstralo convirtiendo la fracción a decimal.",
+        "solution": "Paso 1: Tomamos la fracción 2/5.\nPaso 2: Dividimos el numerador entre el denominador: 2 ÷ 5.\nPaso 3: Como 2 es menor que 5, colocamos 0 en el cociente, añadimos la coma y agregamos un cero al dividendo, obteniendo 20.\nPaso 4: Dividimos 20 ÷ 5 = 4. Por lo tanto, 2/5 = 0.4.\nPaso 5: Comparamos el resultado con la otra compra (0.4 kilos). Ambas personas compraron exactamente la misma cantidad de lulo."
+      }
+    },
+    {
+      "title": "Comparación y orden de racionales",
+      "paragraphs": [
+        "Comparar números racionales consiste en determinar cuál es mayor, cuál es menor o si son iguales. En la recta numérica, cualquier número que se encuentre ubicado más a la derecha que otro siempre será mayor. Cuando comparamos dos números racionales negativos, debemos recordar una regla muy importante: el número que esté más cerca del cero es el mayor, porque su valor está menos alejado en la dirección negativa. Esta lógica es clave al analizar deudas financieras, donde una deuda menor representa un estado económicamente más favorable.",
+        "Para comparar fracciones con diferente denominador, podemos utilizar dos métodos principales. El primer método consiste en convertir todas las fracciones a números decimales dividiendo el numerador entre el denominador y comparar sus cifras decimales de izquierda a derecha. El segundo método consiste en buscar un denominador común utilizando el mínimo común múltiplo, amplificar las fracciones para que tengan el mismo denominador y luego comparar directamente los numeradores. Ambas estrategias son igual de válidas y nos garantizan llegar al ordenamiento correcto en situaciones reales."
+      ],
+      "example": {
+        "statement": "En una competencia escolar de ciclismo en Antioquia, tres estudiantes recorrieron un tramo de la pista: Mateo hizo 3/4 de la pista, Sofía hizo 5/8 y Camilo completó 0.7 del total. Ordena los recorridos de menor a mayor.",
+        "solution": "Paso 1: Convertimos todas las cantidades a decimales para facilitar la comparación. Mateo: 3/4 = 3 ÷ 4 = 0.75. Sofía: 5/8 = 5 ÷ 8 = 0.625. Camilo: 0.700.\nPaso 2: Comparamos los tres decimales: 0.625, 0.700 y 0.750.\nPaso 3: Identificamos el orden de menor a mayor: 0.625 es menor que 0.700, y 0.700 es menor que 0.750.\nPaso 4: Escribimos el resultado con los valores originales: 5/8 < 0.7 < 3/4. Sofía hizo el menor recorrido y Mateo el mayor."
+      }
+    },
+    {
+      "title": "Propiedades y estrategias de cálculo",
+      "paragraphs": [
+        "Las propiedades de la adición y la multiplicación son herramientas valiosas para simplificar cálculos complejos sin necesidad de usar calculadora. La propiedad conmutativa indica que el orden de los sumandos o factores no altera el resultado final, mientras que la propiedad asociativa nos permite agrupar términos de la forma más conveniente. La propiedad distributiva conecta la multiplicación con la suma o la resta, facilitando la descomposición de números grandes en partes más sencillas. Usar estas propiedades fortalece nuestra capacidad mental de cálculo rápido.",
+        "Al resolver operaciones combinadas con números enteros y racionales, es fundamental respetar la jerarquía de los signos y agrupaciones. Primero se resuelven las operaciones dentro de paréntesis, luego las potencias y raíces, seguidas de multiplicaciones y divisiones, y finalmente sumas y restas de izquierda a derecha. Cuando trabajamos con dinero en pesos colombianos, descomponer cantidades o agrupar valores opuestos nos permite estimar y calcular presupuestos diarios de forma eficiente, evitando errores en cuentas comerciales o presupuestos personales."
+      ],
+      "example": {
+        "statement": "Un comerciante de Corabastos en Bogotá compra 4 cajas de tomate por un valor de 25 000 pesos cada una y luego recibe un descuento de 3 000 pesos por caja. Utiliza la propiedad distributiva para calcular el valor total pagado.",
+        "solution": "Paso 1: Planteamos la expresión del precio por caja como (25 000 - 3 000) y la multiplicamos por las 4 cajas: 4 × (25 000 - 3 000).\nPaso 2: Aplicamos la propiedad distributiva multiplicando el 4 por cada término: (4 × 25 000) - (4 × 3 000).\nPaso 3: Calculamos cada producto por separado: 4 × 25 000 = 100 000, y 4 × 3 000 = 12 000.\nPaso 4: Restamos ambos valores: 100 000 - 12 000 = 88 000. El comerciante pagó en total 88 000 pesos."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es el opuesto del número entero -18?",
+      "answer": "18"
+    },
+    {
+      "question": "Si la temperatura en Tunja es de 5 °C y baja 8 °C durante la noche, ¿cuál es la nueva temperatura?",
+      "answer": "-3 °C"
+    },
+    {
+      "question": "Escribe la fracción 3/5 en su forma decimal correspondiente.",
+      "answer": "0.6"
+    },
+    {
+      "question": "Entre los números racionales -0.8 y -0.35, ¿cuál de los dos es el mayor?",
+      "answer": "-0.35"
+    },
+    {
+      "question": "Ordena de menor a mayor las siguientes fracciones: 1/2, 2/5 y 3/4.",
+      "answer": "2/5 < 1/2 < 3/4"
+    },
+    {
+      "question": "Resuelve la siguiente operación aplicando la jerarquía correcta: -12 + 4 × (6 - 9).",
+      "answer": "-24"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Número entero",
+      "definition": "Conjunto numérico formado por los números naturales positivos, sus opuestos negativos y el cero. No tiene parte decimal."
+    },
+    {
+      "term": "Número racional",
+      "definition": "Número que se puede expresar como el cociente a/b de dos enteros, donde el denominador b es diferente de cero."
+    },
+    {
+      "term": "Fracciones equivalentes",
+      "definition": "Fracciones que representan exactamente la misma cantidad, aunque sus numeradores y denominadores sean diferentes."
+    },
+    {
+      "term": "Valor absoluto",
+      "definition": "Distancia que separa a un número del cero en la recta numérica. Siempre es un valor positivo o cero."
+    },
+    {
+      "term": "Propiedad distributiva",
+      "definition": "Propiedad que establece que multiplicar una suma por un número es igual a multiplicar cada sumando por dicho número y sumar los productos."
+    }
+  ],
+  "closing": "Las matemáticas no son solo reglas en un cuaderno; son una herramienta poderosa para comprender nuestro entorno en Colombia. Saber comparar racionales y operar con enteros te permite administrar bien tus ahorros, entender cambios de clima y repartir recursos con justicia. Aplica estos conocimientos cada día en la tienda, en tus juegos o al planear tus actividades, y verás lo útil que resulta razonar con números.",
+  "dbaStatements": [
+    "DBA 1. Interpreta los números enteros y racionales (en sus representaciones de fracción y de decimal) con sus operaciones, en diferentes contextos, al resolver problemas de variación, repartos, particiones, estimaciones, etc. Reconoce y establece diferentes relaciones (de orden y equivalencia y las utiliza para argumentar procedimientos).",
+    "DBA 2. Utiliza las propiedades de los números enteros y racionales y las propiedades de sus operaciones para proponer estrategias y procedimientos de cálculo en la solución de problemas.",
+    "DBA 3. Reconoce y establece diferentes relaciones (orden y equivalencia) entre elementos de diversos dominios numéricos y los utiliza para argumentar procedimientos sencillos."
+  ]
+}

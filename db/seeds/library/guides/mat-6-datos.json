@@ -1,0 +1,109 @@
+{
+  "intro": "¡Hola, estudiantes de sexto grado! Bienvenidos a esta emocionante guía de estudio sobre datos y azar. En el colegio y en nuestra vida diaria, constantemente nos hacemos preguntas y recopilamos información para responderlas. ¿Cuántos goles marcó Junior de Barranquilla este mes? ¿Cuál es la fruta favorita en la cafetería escolar? Para entender y comunicar estos datos con claridad, la estadística y la probabilidad son nuestras mejores aliadas. A lo largo de esta cartilla aprenderás a organizar información en tablas y gráficas, a calcular el promedio y el rango para comparar situaciones, y a descubrir qué tan probable es que ocurran ciertos eventos al lanzar un dado o una moneda.",
+  "objectives": [
+    "Formular preguntas estadísticas pertinentes y recolectar datos de manera organizada.",
+    "Interpretar tablas de frecuencia y diagramas de barras para analizar poblaciones.",
+    "Calcular e interpretar la media, mediana, moda y el rango en conjuntos de datos reales.",
+    "Comparar la frecuencia esperada y la observada en experimentos aleatorios sencillos."
+  ],
+  "sections": [
+    {
+      "title": "Preguntas estadísticas y recolección",
+      "paragraphs": [
+        "Para iniciar cualquier investigación en nuestro colegio o comunidad, necesitamos formular una pregunta estadística adecuada. A diferencia de una pregunta fija como '¿qué edad tienes?', una pregunta estadística es aquella que anticipa una variedad de respuestas. Por ejemplo: '¿Cuántos hermanos tienen los estudiantes de sexto grado?'. Esta pregunta nos permite recopilar una serie de datos diversos que reflejan una realidad grupal.",
+        "Una vez formulada la pregunta, el siguiente paso es la recolección de datos. Podemos usar encuestas, entrevistas o mediciones directas. En Colombia, entidades como el DANE realizan esta labor a gran escala con los censos poblacionales. En nuestro entorno escolar, recolectar datos de forma ordenada nos ayuda a conocer gustos, tiempos de desplazamiento o estaturas, preparando el terreno para organizarlos y analizarlos con rigor matemático."
+      ],
+      "example": {
+        "statement": "Se quiere saber el deporte favorito de los 30 estudiantes de sexto. Diseña una pregunta estadística adecuada y explica cómo recogerías los datos.",
+        "solution": "La pregunta estadística adecuada es: '¿Cuál es tu deporte favorito entre fútbol, baloncesto, voleibol y ciclismo?'. Para recoger los datos, se entrega un papelito a cada uno de los 30 estudiantes para que marquen su opción preferida, o se realiza una votación a mano alzada en el salón."
+      }
+    },
+    {
+      "title": "Tablas de frecuencia y diagramas de barras",
+      "paragraphs": [
+        "Cuando ya tenemos todos los datos recolectados, es fundamental organizarlos para que no sean un montón de números sin sentido. La tabla de frecuencia es una herramienta fantástica que nos muestra cuántas veces se repite cada respuesta, lo que llamamos frecuencia absoluta. Además, podemos calcular la frecuencia acumulada sumando las frecuencias anteriores paso a paso.",
+        "Para visualizar mejor esta información, utilizamos los diagramas de barras. En el eje horizontal colocamos las categorías (por ejemplo, los deportes) y en el eje vertical levantamos barras cuya altura representa la frecuencia o cantidad de veces que aparece cada dato. Al mirar una barra alta en Bogotá o en cualquier ciudad, sabrás de inmediato cuál es la categoría más popular sin necesidad de leer todas las cifras."
+      ],
+      "example": {
+        "statement": "En una encuesta sobre mascotas en sexto, 12 estudiantes tienen perro, 8 tienen gato y 5 no tienen mascotas. Construye la tabla de frecuencia absoluta.",
+        "solution": "Se ordenan los datos en dos columnas: Mascota (Perro, Gato, Ninguna) y Frecuencia (12, 8, 5). El total de estudiantes encuestados es 12 + 8 + 5 = 25."
+      }
+    },
+    {
+      "title": "Media, mediana, moda y rango",
+      "paragraphs": [
+        "Para analizar un conjunto de datos numéricos, las medidas de tendencia central son herramientas muy útiles. La media o promedio se calcula sumando todos los datos y dividiendo el resultado entre la cantidad total de datos. La mediana es el valor central cuando los datos están ordenados de menor a mayor. Y la moda es el dato que más se repite, es decir, el que tiene mayor frecuencia absoluta en nuestra tabla.",
+        "Por otro lado, el rango nos indica qué tan dispersos o alejados están los datos entre sí. Se calcula restando el valor mínimo del valor máximo en nuestro conjunto de información. Al combinar el promedio y el rango, un estudiante de sexto puede comparar, por ejemplo, las notas de dos cursos diferentes y saber cuál grupo tiene mejores resultados y cuál tiene mayor variedad de notas."
+      ],
+      "example": {
+        "statement": "Halla la media, la moda y el rango de las siguientes notas de matemáticas: 3, 4, 3, 5, 5, 3, 4.",
+        "solution": "Primero ordenamos: 3, 3, 3, 4, 4, 5, 5. La moda es 3 (se repite 3 veces). El rango es el máximo menos el mínimo: 5 - 3 = 2. Para la media, sumamos todo (3+3+3+4+4+5+5 = 27) y dividimos entre 7 datos: 27 / 7 = 3.85."
+      }
+    },
+    {
+      "title": "Frecuencia esperada y observada",
+      "paragraphs": [
+        "En el azar, las matemáticas nos ayudan a anticiparnos a los hechos mediante la probabilidad teórica. La frecuencia esperada es el número de veces que predecimos que ocurrirá un resultado basándonos en las reglas del juego o del experimento. Por ejemplo, al lanzar una moneda equilibrada 10 veces, esperamos que salga cara 5 veces.",
+        "Sin embargo, al hacer el experimento real, obtenemos la frecuencia observada, que puede ser un poco diferente (por ejemplo, sale cara 6 veces y sello 4). Comparar la frecuencia esperada con la observada nos enseña que el azar tiene sorpresas, pero que a medida que repetimos un experimento muchas veces, los resultados reales se acercan cada vez más a lo que esperábamos teóricamente."
+      ],
+      "example": {
+        "statement": "Si lanzamos un dado legal de 6 caras 60 veces, ¿cuál es la frecuencia esperada de que salga el número 4?",
+        "solution": "La probabilidad teórica de que salga el 4 en un dado de 6 caras es 1/6. Multiplicamos esta probabilidad por el número total de lanzamientos: (1 / 6) × 60 = 10. La frecuencia esperada es 10 veces."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "Identifica si la siguiente pregunta es estadística: ¿Cuántos años tienes?",
+      "answer": "No es estadística, porque tiene una sola respuesta fija para cada persona."
+    },
+    {
+      "question": "Calcula el rango del siguiente conjunto de temperaturas registradas en una ciudad: 18, 22, 15, 27, 20.",
+      "answer": "El rango es 12 (27 - 15 = 12)."
+    },
+    {
+      "question": "Halla la moda de las estaturas en centímetros: 130, 135, 130, 140, 135, 130.",
+      "answer": "La moda es 130 cm, ya que se repite 3 veces."
+    },
+    {
+      "question": "Si las notas de tres evaluaciones son 3, 4 y 5, ¿cuál es la media o promedio?",
+      "answer": "El promedio es 4 (la suma es 12, y 12 ÷ 3 = 4)."
+    },
+    {
+      "question": "En una tabla de frecuencias, la categoría 'Arroz con pollo' tiene una frecuencia absoluta de 15 y el total de encuestados es 50. ¿Qué porcentaje representa?",
+      "answer": "Representa el 30 por ciento (15 ÷ 50 = 0.30)."
+    },
+    {
+      "question": "Si giras una ruleta de 4 colores iguales (Rojo, Azul, Verde, Amarillo) 100 veces, ¿cuál es la frecuencia esperada para el color Rojo?",
+      "answer": "La frecuencia esperada es 25 veces (100 ÷ 4 = 25)."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Estadística",
+      "definition": "Rama de las matemáticas que se encarga de recolectar, organizar, analizar e interpretar datos para tomar decisiones informadas."
+    },
+    {
+      "term": "Frecuencia absoluta",
+      "definition": "Número de veces que se repite un determinado valor o respuesta en un conjunto de datos."
+    },
+    {
+      "term": "Media",
+      "definition": "Medida de tendencia central conocida como promedio, que se obtiene sumando todos los datos y dividiendo entre la cantidad de ellos."
+    },
+    {
+      "term": "Rango",
+      "definition": "Diferencia entre el valor máximo y el valor mínimo en un conjunto de datos numéricos."
+    },
+    {
+      "term": "Azar",
+      "definition": "Causa o fuerza que hace que los acontecimientos sucedan sin un plan o causa aparente, estudiado mediante la probabilidad."
+    }
+  ],
+  "closing": "El manejo de datos y la comprensión del azar no son solo temas para aprobar un examen en el colegio; son superpoderes para la vida diaria. Cada vez que decides qué ruta tomar para llegar a tiempo, analizas cuál es el plato más vendido en un negocio familiar o calculas tus notas para saber cuánto necesitas en la próxima evaluación, estás aplicando estadística. ¡Sigue explorando tu entorno con curiosidad matemática y verás que los números te ayudarán a tomar mejores decisiones!",
+  "dbaStatements": [
+    "DBA 10. Interpreta información estadística presentada en diversas fuentes de información, la analiza y la usa para plantear y resolver preguntas que sean de su interés.",
+    "DBA 11. Compara características compartidas por dos o más poblaciones o características diferentes dentro de una misma población para lo cual seleccionan muestras, utiliza representaciones gráficas adecuadas y analiza los resultados obtenidos usando conjuntamente las medidas de tendencia central y el rango.",
+    "DBA 12. A partir de la información previamente obtenida en repeticiones de experimentos aleatorios sencillos, compara las frecuencias esperadas con las frecuencias observadas."
+  ]
+}

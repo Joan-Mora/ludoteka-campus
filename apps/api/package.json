@@ -6,9 +6,10 @@
     "dev": "nest start --watch",
     "build": "nest build",
     "start": "node dist/main.js",
-    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc -p scripts/tsconfig.json",
     "migrate": "tsx src/scripts/cli.ts migrate",
     "seed": "tsx src/scripts/cli.ts seed",
+    "library:seed": "tsx scripts/library-seed.ts",
     "deps:check": "depcruise src --config .dependency-cruiser.cjs"
   },
   "dependencies": {

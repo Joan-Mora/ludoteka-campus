@@ -56,6 +56,9 @@ interface Item {
   tags: string[];
   thumbnail: string | null;
   canManage: boolean;
+  source_name: string | null;
+  source_url: string | null;
+  license: string | null;
 }
 interface Catalog { subjects: { id: string; name: string }[]; grades: { id: string; name: string }[]; tags: { tag: string; n: number }[]; uploads: boolean }
 
@@ -108,10 +111,11 @@ function Catalogue({ staff }: { staff: boolean }) {
   const [q, setQ] = useState(() => search.get('q') ?? '');
   useEffect(() => { const spoken = search.get('q'); if (spoken) setQ(spoken); }, [search]);
   const [subjectId, setSubjectId] = useState('');
+  const [gradeId, setGradeId] = useState('');
   const [kind, setKind] = useState('');
   const [tag, setTag] = useState('');
   const [saved, setSaved] = useState(false);
-  const params = new URLSearchParams({ ...(q ? { q } : {}), ...(subjectId ? { subjectId } : {}), ...(kind ? { kind } : {}), ...(tag ? { tag } : {}), ...(saved ? { saved: '1' } : {}) });
+  const params = new URLSearchParams({ ...(q ? { q } : {}), ...(subjectId ? { subjectId } : {}), ...(gradeId ? { gradeId } : {}), ...(kind ? { kind } : {}), ...(tag ? { tag } : {}), ...(saved ? { saved: '1' } : {}) });
   const items = useQuery({ queryKey: ['library', params.toString()], queryFn: () => api<Item[]>(`/api/library/items?${params}`), refetchInterval: (query) => (query.state.data?.some((i) => i.status === 'processing') ? 4000 : false) });
   const [uploading, setUploading] = useState(false);
 
@@ -129,6 +133,10 @@ function Catalogue({ staff }: { staff: boolean }) {
           <div className="row g-8 wrap" style={{ marginTop: 12 }}>
             <button className={`chip ${!subjectId ? 'violet' : ''}`} onClick={() => setSubjectId('')}>Todas las materias</button>
             {catalog.data?.subjects.map((s) => <button key={s.id} className={`chip ${subjectId === s.id ? 'violet' : ''}`} onClick={() => setSubjectId(subjectId === s.id ? '' : s.id)}>{s.name}</button>)}
+          </div>
+          <div className="row g-8 wrap" style={{ marginTop: 8 }} role="group" aria-label="Grado">
+            <button className={`chip ${!gradeId ? 'sky' : ''}`} onClick={() => setGradeId('')}>Todos los grados</button>
+            {catalog.data?.grades.map((g) => <button key={g.id} className={`chip ${gradeId === g.id ? 'sky' : ''}`} onClick={() => setGradeId(gradeId === g.id ? '' : g.id)}>{g.name}</button>)}
           </div>
           <div className="row g-8 wrap" style={{ marginTop: 8 }}>
             {KINDS.map((k) => <button key={k.key} className={`chip ${kind === k.key ? k.tone : ''}`} onClick={() => setKind(kind === k.key ? '' : k.key)}><k.icon size={12} /> {k.label}</button>)}
@@ -176,7 +184,8 @@ function ItemCard({ item, delay }: { item: Item; delay: number }) {
         </div>
         <div style={{ padding: 14 }}>
           <div className="lib-title">{item.title}</div>
-          <div className="muted" style={{ fontSize: 12.5, marginTop: 4 }}>{item.subject}{item.pages ? ` · ${item.pages} págs.` : ''}{item.bytes ? ` · ${size(item.bytes)}` : ''}</div>
+          <div className="muted" style={{ fontSize: 12.5, marginTop: 4 }}>{item.subject}{item.grade ? ` · ${item.grade}` : ''}{item.pages ? ` · ${item.pages} págs.` : ''}{item.bytes ? ` · ${size(item.bytes)}` : ''}</div>
+          {item.source_name && <div className="lib-source" title={item.license ?? undefined}>{item.source_name}{item.license?.startsWith('CC') ? ` · ${item.license}` : ''}</div>}
           <div className="row g-4 wrap" style={{ marginTop: 8 }}>
             {item.tags.slice(0, 3).map((t) => <span key={t} className="chip" style={{ fontSize: 11, padding: '3px 8px' }}>#{t}</span>)}
             <span className="muted row g-4" style={{ fontSize: 12, marginLeft: 'auto' }}><Eye size={12} /> {item.views}</span>
@@ -484,6 +493,7 @@ export function LibraryItemPage() {
   }
 
   const viewerUrl = data.kind === 'pdf' && data.bookmark?.page ? `${data.url}#page=${data.bookmark.page}` : data.url;
+  const hosted = data.url.includes('res.cloudinary.com');
   return (
     <div>
       <Link to="/app/biblioteca" className="btn sm ghost" style={{ marginBottom: 14 }}><ArrowLeft size={15} /> Biblioteca</Link>
@@ -495,7 +505,15 @@ export function LibraryItemPage() {
       />
       <div className="grid cols-3" style={{ alignItems: 'start' }}>
         <div className="span-2 card" style={{ padding: 0, overflow: 'hidden' }}>
-          {data.kind === 'pdf' && <iframe className="lib-viewer" src={viewerUrl} title={data.title} />}
+          {data.kind === 'pdf' && hosted && <iframe className="lib-viewer" src={viewerUrl} title={data.title} />}
+          {data.kind === 'pdf' && !hosted && (
+            <div className="lib-external">
+              <Tile icon={FileText} tone="coral" large />
+              <b>Documento oficial en su sitio de origen</b>
+              <p className="muted">{data.source_name ?? 'La fuente'} no permite mostrarlo dentro del campus. Ábrelo en una pestaña nueva; {data.chunks > 0 ? 'aquí al lado puedes preguntarle sobre su contenido.' : 'el índice para el tutor se está preparando.'}</p>
+              <a className="btn" href={viewerUrl} target="_blank" rel="noreferrer"><ExternalLink size={16} /> Abrir el PDF</a>
+            </div>
+          )}
           {data.kind === 'image' && <img src={data.url} alt={data.title} style={{ width: '100%', display: 'block' }} />}
           {data.kind === 'video' && <video src={data.url} controls style={{ width: '100%', display: 'block' }} />}
           {yt && <iframe className="lib-viewer video" src={`https://www.youtube-nocookie.com/embed/${yt}`} title={data.title} allowFullScreen />}
@@ -521,6 +539,13 @@ export function LibraryItemPage() {
               )}
             </div>
             <div className="row g-4 wrap" style={{ marginTop: 10 }}>{data.tags.map((t) => <span key={t} className="chip mint">#{t}</span>)}</div>
+            {(data.source_name || data.license) && (
+              <dl className="lib-origin">
+                {data.source_name && (<><dt>Fuente</dt><dd>{data.source_url ? <a href={data.source_url} target="_blank" rel="noreferrer">{data.source_name} <ExternalLink size={12} /></a> : data.source_name}</dd></>)}
+                {data.license && (<><dt>Licencia</dt><dd>{data.license === 'CC BY 4.0' ? <a href="https://creativecommons.org/licenses/by/4.0/deed.es" target="_blank" rel="noreferrer">{data.license} <ExternalLink size={12} /></a> : data.license}</dd></>)}
+                {data.grade && (<><dt>Grado</dt><dd>{data.grade}</dd></>)}
+              </dl>
+            )}
             {data.uploader && <p className="muted" style={{ fontSize: 12.5, marginTop: 10 }}>Publicado por {data.uploader}</p>}
             {data.canManage && (
               <div className="row g-8" style={{ marginTop: 12 }}>

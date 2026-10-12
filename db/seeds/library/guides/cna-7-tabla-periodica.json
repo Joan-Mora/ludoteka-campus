@@ -1,0 +1,112 @@
+{
+  "intro": "¡Hola, estudiante! ¿Alguna vez te has preguntado de qué está hecha la materia que nos rodea, desde el agua del río Magdalena hasta el carbón de El Cerrejón? Toda la materia en el universo está compuesta por diminutos bloques fundamentales llamados elementos químicos, los cuales se organizan de forma ordenada en la tabla periódica. Además, los objetos no solo tienen materia, sino también la capacidad de realizar cambios y moverse gracias a la energía. En esta guía explorarás la estructura del átomo, aprenderás a navegar por la tabla periódica distinguiendo metales de no metales y comprenderás cómo la energía mecánica se transforma y disipa en nuestra vida cotidiana.",
+  "objectives": [
+    "Identificar la estructura del átomo y la función de sus partículas subatómicas en la formación de la materia.",
+    "Explicar el criterio de organización de la tabla periódica en grupos y periodos según el número atómico.",
+    "Clasificar elementos en metales y no metales considerando sus propiedades físicas y químicas principales.",
+    "Analizar las transformaciones de energía mecánica y su disipación en forma de calor y sonido en sistemas reales."
+  ],
+  "sections": [
+    {
+      "title": "Átomo y partículas subatómicas",
+      "paragraphs": [
+        "Toda la materia que vemos en Colombia y el mundo está formada por partículas microscópicamente pequeñas llamadas átomos. Durante mucho tiempo se pensó que el átomo era indivisible, pero la ciencia demostró que posee una estructura interna fascinante. En el centro del átomo encontramos el núcleo, una región extremadamente pequeña y densa donde se concentran los protones, que tienen carga eléctrica positiva, y los neutrones, que no poseen carga. Alrededor de este núcleo giran los electrones, partículas muy livianas con carga eléctrica negativa que se mueven en zonas llamadas orbitales o capas de energía.",
+        "Para identificar a cada elemento químico utilizamos dos datos numéricos fundamentales: el número atómico (Z) y el número de masa (A). El número atómico nos indica la cantidad exacta de protones que tiene un átomo en su núcleo, lo cual define la identidad del elemento. Por ejemplo, si un átomo tiene 6 protones, siempre será carbono. El número de masa corresponde a la suma de protones y neutrones presentes en el núcleo. En un átomo neutro, la cantidad de electrones es exactamente igual a la de protones, manteniendo el equilibrio eléctrico."
+      ],
+      "example": {
+        "statement": "Un átomo neutro de sodio (Na) tiene un número atómico Z = 11 y un número de masa A = 23. Determina el número de protones, electrones y neutrones que posee este átomo.",
+        "solution": "Paso 1: El número atómico Z = 11 nos indica directamente la cantidad de protones, por lo tanto, el sodio tiene 11 protones.\nPaso 2: Como el átomo es neutro, la cantidad de electrones es igual a la de protones, así que tiene 11 electrones.\nPaso 3: Para calcular los neutrones, restamos el número atómico del número de masa (A - Z). Hacemos 23 - 11 = 12 neutrones.\nEn conclusión, el átomo de sodio tiene 11 protones, 11 electrones y 12 neutrones."
+      }
+    },
+    {
+      "title": "Organización de la tabla periódica",
+      "paragraphs": [
+        "La tabla periódica es el mapa fundamental de la química, donde se organizan todos los elementos conocidos según sus propiedades y su estructura atómica. Fue diseñada inicialmente por el científico Dmitri Mendeléyev y posteriormente perfeccionada. Hoy en día, los elementos están ordenados de izquierda a derecha y de arriba a abajo en orden creciente de su número atómico (Z). Esta disposición no es casualidad; permite que los elementos con comportamientos químicos semejantes queden ubicados cerca unos de otros, facilitando su estudio y comprensión.",
+        "En la tabla periódica encontramos filas horizontales llamadas periodos y columnas verticales denominadas grupos o familias. Los periodos indican la cantidad de niveles de energía que tienen los electrones de un átomo; existen 7 periodos en total. Por su parte, los 18 grupos agrupan elementos que poseen el mismo número de electrones en su último nivel de energía, conocidos como electrones de valencia. Por esta razón, los elementos de un mismo grupo comparten propiedades químicas muy parecidas, reaccionando de manera similar ante otras sustancias."
+      ],
+      "example": {
+        "statement": "El potasio (K) se ubica en el periodo 4 y en el grupo 1 (alcalinos) de la tabla periódica. ¿Qué información sobre la estructura de su átomo nos brindan estos dos datos?",
+        "solution": "Paso 1: El periodo 4 indica que los electrones del átomo de potasio se distribuyen en 4 niveles de energía alrededor del núcleo.\nPaso 2: El grupo 1 indica que el potasio tiene 1 electrón en su último nivel de energía (electrón de valencia).\nPaso 3: Al pertenecer al grupo 1, sabemos que es un metal alcalino altamente reactivo que tiende a ceder fácilmente ese único electrón exterior durante una reacción química."
+      }
+    },
+    {
+      "title": "Metales y no metales",
+      "paragraphs": [
+        "Los elementos de la tabla periódica se clasifican en tres grandes categorías: metales, no metales y metaloides. Los metales ocupan la mayor parte de la tabla periódica, ubicándose a la izquierda y al centro. Son sólidos a temperatura ambiente (excepto el mercurio), de aspecto brillante y excelentes conductores de calor y electricidad. Además, son maleables, lo que significa que se pueden deformar en láminas delgadas, y dúctiles, permitiendo formar hilos o cables. En Colombia, metales como el cobre y el oro son de gran importancia económica e industrial.",
+        "Por otro lado, los no metales se encuentran en la parte superior derecha de la tabla periódica. Tienen propiedades opuestas a los metales: son malos conductores de la electricidad y el calor, no son maleables ni dúctiles, y suelen ser quebradizos en estado sólido. Pueden encontrarse en estado gaseoso (como el oxígeno y el nitrógeno del aire de nuestras montañas), líquido (como el bromo) o sólido (como el carbono presente en el carbón mineral de La Guajira). Los no metales son esenciales para la constitución de las moléculas de la vida."
+      ],
+      "example": {
+        "statement": "Se prueban dos materiales desconocidos, A y B. El material A es brillante, conduce la corriente eléctrica en un circuito de prueba y se puede martillar sin romperse. El material B es un polvo opaco que no conduce electricidad. Clasifica cada material.",
+        "solution": "Paso 1: Analizamos las propiedades del material A: brillo metálico, alta conductividad eléctrica y maleabilidad (se deforma al martillar sin fracturarse). Estas son propiedades características de los metales.\nPaso 2: Analizamos las propiedades del material B: aspecto opaco, estado en polvo y baja conductividad eléctrica (aislante). Estas son características típicas de los no metales.\nPaso 3: Concluimos que el material A es un metal y el material B es un no metal."
+      }
+    },
+    {
+      "title": "Transformaciones de la energía mecánica",
+      "paragraphs": [
+        "En la naturaleza nada está quieto; todo involucra transformaciones de energía. La energía mecánica es la capacidad que tiene un cuerpo para realizar un trabajo debido a su movimiento o a su posición. Se divide en energía cinética, que depende de la masa y la velocidad del objeto en movimiento, y energía potencial gravitacional, que depende de la masa, la gravedad y la altura a la que se encuentra un objeto. Por ejemplo, una chiva o bus escalonado subiendo por las montañas de Antioquia acumula energía potencial a medida que gana altura.",
+        "El principio de conservación de la energía afirma que la energía no se crea ni se destruye, solo se transforma. Cuando un objeto cae de una altura, su energía potencial gravitacional se convierte progresivamente en energía cinética. Sin embargo, en sistemas reales existen fuerzas como el rozamiento o la fricción con el aire. Parte de la energía mecánica no se destruye, sino que se disipa al entorno transformándose en calor y sonido, por lo que la energía mecánica total utilizable disminuye con el tiempo."
+      ],
+      "example": {
+        "statement": "Una persona se lanza en una tirolesa desde un punto alto. En la cima tiene una energía potencial de 2000 J y energía cinética de 0 J. Al llegar abajo, su energía cinética es de 1700 J. ¿Cuánta energía se disipó en el trayecto y en qué formas se convirtió?",
+        "solution": "Paso 1: Calculamos la energía mecánica total inicial al principio del recorrido: 2000 J + 0 J = 2000 J.\nPaso 2: Medimos la energía cinética final al terminar el recorrido: 1700 J.\nPaso 3: Restamos la energía final de la inicial para hallar la energía disipada: 2000 J - 1700 J = 300 J.\nPaso 4: Explicamos que estos 300 J de energía se disiparon hacia el aire y la guaya en forma de calor por fricción y rozamiento, además del sonido generado durante el deslizamiento."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuáles son las tres partículas subatómicas principales que componen un átomo?",
+      "answer": "Protones (carga positiva), neutrones (sin carga) y electrones (carga negativa)."
+    },
+    {
+      "question": "¿Cómo se llaman las filas horizontales y las columnas verticales de la tabla periódica?",
+      "answer": "Las filas horizontales se llaman periodos y las columnas verticales se llaman grupos o familias."
+    },
+    {
+      "question": "Si un átomo de carbono neutro tiene número atómico Z = 6 y número de masa A = 12, ¿cuántos protones, electrones y neutrones tiene?",
+      "answer": "Tiene 6 protones, 6 electrones y 6 neutrones (calculados restando 12 - 6)."
+    },
+    {
+      "question": "Menciona dos propiedades físicas que diferencian claramente a los metales de los no metales.",
+      "answer": "Los metales son buenos conductores de electricidad y son maleables, mientras que los no metales son aislantes eléctricos y quebradizos."
+    },
+    {
+      "question": "Un objeto de 10 kg está detenido a 10 metros de altura. Si cae libremente sin fricción, ¿cuál será su energía cinética justo antes de tocar el suelo? (Usa g = 10 m/s²).",
+      "answer": "Su energía potencial inicial es 10 × 10 × 10 = 1000 J. Por conservación de la energía, toda se convierte en 1000 J de energía cinética."
+    },
+    {
+      "question": "Explica por qué cuando frenas una bicicleta bruscamente, las llantas y los frenos se sienten calientes al tocarlos.",
+      "answer": "Porque la energía cinética de la bicicleta en movimiento se transforma y disipa en calor debido a la fuerza de fricción entre las zapatas y la rueda."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Átomo",
+      "definition": "Unidad básica de la materia constituida por un núcleo central con protones y neutrones, rodeado por electrones en movimiento."
+    },
+    {
+      "term": "Número atómico (Z)",
+      "definition": "Cantidad de protones presentes en el núcleo de un átomo; determina la identidad química de un elemento en la tabla periódica."
+    },
+    {
+      "term": "Maleabilidad",
+      "definition": "Propiedad física de los metales que les permite deformarse y extenderse en láminas delgadas sin romperse al recibir impactos."
+    },
+    {
+      "term": "Energía cinética",
+      "definition": "Tipo de energía mecánica que posee un cuerpo debido a su movimiento, dependiente de su masa y su velocidad."
+    },
+    {
+      "term": "Energía potencial gravitacional",
+      "definition": "Energía almacenada en un objeto debido a su posición vertical o altura respecto a un nivel de referencia."
+    },
+    {
+      "term": "Disipación de energía",
+      "definition": "Proceso en el cual la energía mecánica útil se transforma en formas menos aprovechables como calor y sonido por rozamiento."
+    }
+  ],
+  "closing": "Comprender los elementos químicos y la energía te permite entender el mundo que te rodea, desde la sal con la que cocinas hasta el funcionamiento de un autobús en las montañas colombianas. La ciencia está presente en cada detalle cotidiano. ¡Sigue explorando con curiosidad el fascinante universo de las Ciencias Naturales!",
+  "dbaStatements": [
+    "DBA 1. Comprende las formas y las transformaciones de energía en un sistema mecánico y la manera como, en los casos reales, la energía se disipa en el medio (calor, sonido).",
+    "DBA 2. Explica cómo las sustancias se forman a partir de la interacción de los elementos y que estos se encuentran agrupados en un sistema periódico."
+  ]
+}

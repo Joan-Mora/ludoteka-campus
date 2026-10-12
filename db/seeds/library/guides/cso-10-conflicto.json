@@ -1,0 +1,104 @@
+{
+  "intro": "¡Hola, estudiantes de décimo! Bienvenidos a esta guía de Ciencias Sociales. En las próximas páginas exploraremos la historia reciente de nuestro país, desde el periodo conocido simplemente como La Violencia y el Frente Nacional, hasta el surgimiento de los grupos armados y los complejos retos ambientales y de memoria que vivimos hoy. Comprender por qué nos hemos enfrentado como colombianos no es una tarea del pasado lejano, sino una llave fundamental para entender el presente, sanar heridas y construir un país donde quepamos todos con justicia, paz y dignidad. ¡Manos a la obra con rigor y empatía!",
+  "objectives": [
+    "Analizar las causas y consecuencias de La Violencia partidista y del Frente Nacional en la configuración del Estado colombiano.",
+    "Explicar el origen y la evolución de los principales grupos armados ilegales durante la segunda mitad del siglo XX.",
+    "Examinar la relación entre los conflictos territoriales, ambientales y la disputa por la tierra en el contexto nacional.",
+    "Valorar la importancia de la memoria histórica y el reconocimiento de las víctimas como base para la reconciliación."
+  ],
+  "sections": [
+    {
+      "title": "La Violencia y el Frente Nacional",
+      "paragraphs": [
+        "A mediados del siglo XX, Colombia vivió una etapa de polarización extrema entre los partidos Liberal y Conservador, conocida históricamente como La Violencia. Este periodo dejó cientos de miles de muertos, desplazamientos masivos en regiones como los Santanderes, el Tolima y el Valle del Cauca, y una profunda ruptura del tejido social en el campo colombiano. Las disputas locales por el poder político y el control de la tierra se tiñeron de sectarismo, convirtiendo a las comunidades rurales en el escenario principal de una confrontación fratricida que transformó para siempre la geografía humana del país.",
+        "Para detener esta confrontación bipartidista, las élites de ambos partidos acordaron en 1958 un pacto político llamado el Frente Nacional. Este mecanismo consistió en la alternancia en la Presidencia de la República cada cuatro años y la repartición paritaria de los cargos públicos durante dieciséis años. Aunque el acuerdo logró frenar la guerra abierta entre liberales y conservadores, cerró los espacios democráticos para otras expresiones políticas y sociales, generando una profunda exclusión que más adelante abonaría el terreno para nuevas formas de insurrección armada en el territorio nacional."
+      ],
+      "example": {
+        "statement": "Si el Frente Nacional duró 16 años y se alternaron el poder liberales y conservadores por periodos de 4 años cada uno, ¿cuántos gobiernos presidenciales tuvo este pacto en total?",
+        "solution": "Paso 1: Identificamos la duración total del Frente Nacional, que fue de 16 años. Paso 2: Sabemos que cada periodo presidencial duraba 4 años. Paso 3: Dividimos la duración total entre la duración de cada periodo (16 ÷ 4 = 4). Por lo tanto, el Frente Nacional tuvo exactamente 4 gobiernos presidenciales, distribuidos equitativamente entre ambos partidos tradicionales."
+      }
+    },
+    {
+      "title": "Origen de los grupos armados",
+      "paragraphs": [
+        "El cierre democrático del Frente Nacional, sumado a los problemas agrarios no resueltos y a la influencia de la Guerra Fría a nivel global, propició el surgimiento de guerrillas de inspiración comunista y liberal en la década de 1960. Grupos como las FARC, el ELN y el EPL nacieron inicialmente con discursos de autodefensa campesina y reivindicación agraria frente a la concentración de la tierra. Con los años, estas organizaciones transformaron sus métodos, financiándose a través del secuestro, la extorsión y, posteriormente, vinculándose al lucrativo negocio del narcotráfico.",
+        "Paralelamente, como respuesta a la presencia guerrillera y a la falta de protección estatal efectiva, en las décadas de 1980 y 1990 se consolidaron grupos paramilitares con el apoyo de sectores económicos, ganaderos y agentes estatales. Este paramilitarismo desató una ola de violencia sanguinaria contra la población civil señalada de colaborar con la insurgencia, profundizando el sufrimiento humano en departamentos como Antioquia, Córdoba y Urabá, y evidenciando la degradación del conflicto armado colombiano."
+      ],
+      "example": {
+        "statement": "Analiza por qué la falta de acceso a la tierra para los campesinos influyó en el surgimiento de las guerrillas rurales en los años sesenta.",
+        "solution": "Paso 1: Reconocemos que la economía colombiana era predominantemente agraria y había una gran concentración de tierras en pocas manos. Paso 2: Identificamos que el campesinado carecía de títulos de propiedad y de apoyo estatal. Paso 3: Concluimos que al cerrarse las vías pacíficas de protesta política durante el Frente Nacional, muchos campesinos vieron en las armas la única vía para reclamar reformas agrarias y protección frente a los gamonales locales."
+      }
+    },
+    {
+      "title": "conflictos ambientales y territoriales",
+      "paragraphs": [
+        "El conflicto armado en Colombia no ha ocurrido en el vacío; está profundamente ligado al control del territorio y de sus recursos naturales. Zonas ricas en biodiversidad, fuentes hídricas, minerales y cultivos ilícitos se han convertido en botines de guerra para los actores armados. Esto ha generado una intensa degradación ambiental, caracterizada por la deforestación masiva para abrir paso a la coca, la contaminación de ríos por la minería ilegal y el desplazamiento forzado de comunidades indígenas y afrodescendientes que protegen ancestralmente sus territorios.",
+        "La inestabilidad política y la débil presencia del Estado en las regiones periféricas han permitido que economías ilegales operen sin control ecológico ni social. Los megaproyectos económicos inconsultos también han chocado con los derechos de las comunidades locales, demostrando que la crisis ambiental en Colombia es, en esencia, un problema político y territorial donde la tenencia de la tierra y la defensa de la vida van de la mano."
+      ],
+      "example": {
+        "statement": "Explica la relación entre los cultivos de uso ilícito y la deforestación en la región amazónica colombiana.",
+        "solution": "Paso 1: Identificamos que los cultivos ilícitos requieren tierras ocultas, por lo que se establecen en zonas de selva virgen. Paso 2: Los actores armados y narcotraficantes talan y queman grandes extensiones de bosque nativo para sembrar coca y construir vías ilegales. Paso 3: Esto destruye los corredores biológicos y contamina los suelos con químicos, evidenciando el impacto ambiental del conflicto."
+      }
+    },
+    {
+      "title": "memoria y víctimas",
+      "paragraphs": [
+        "Durante décadas, las cifras de homicidios, masacres y desplazamientos se trataron como meras estadísticas oficiales. Sin embargo, el movimiento de víctimas y los informes de organizaciones sociales han puesto en el centro del debate nacional la importancia de la memoria histórica. Recordar no es buscar venganza, sino dignificar a quienes perdieron la vida o sufrieron violaciones a sus derechos humanos, reconociendo su papel fundamental en la construcción de la democracia colombiana.",
+        "La verdad, la justicia, la reparación integral y las garantías de no repetición son pilares indispensables para superar el conflicto. Iniciativas como el Centro Nacional de Memoria Histórica y el informe final de la Comisión de la Verdad demuestran que conocer lo que pasó es un derecho ciudadano y un deber ético para que las nuevas generaciones colombianas comprendan las raíces de la violencia y decidan apostarle siempre al diálogo y la paz."
+      ],
+      "example": {
+        "statement": "¿Por qué se afirma que la memoria histórica es un antídoto contra el olvido y la repetición de la violencia?",
+        "solution": "Paso 1: Entendemos que el olvido permite que los mismos errores y crímenes se vuelvan a repetir en el futuro. Paso 2: La memoria histórica recopila los testimonios y analiza las causas profundas del sufrimiento nacional. Paso 3: Al conocer la verdad, la sociedad adquiere conciencia crítica y herramientas ciudadanas para exigir justicia y rechazar cualquier forma de violencia."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cómo se llamó el acuerdo político que alternó el poder entre liberales y conservadores desde 1958?",
+      "answer": "El Frente Nacional."
+    },
+    {
+      "question": "¿Cuántos años duró exactamente el pacto político del Frente Nacional en Colombia?",
+      "answer": "Dieciséis (16) años."
+    },
+    {
+      "question": "Menciona dos guerrillas colombianas surgidas en la década de 1960 durante el contexto de la Guerra Fría.",
+      "answer": "FARC y ELN."
+    },
+    {
+      "question": "¿Qué sector socioeconómico fue el principal receptor del impacto violento y el desplazamiento en el campo?",
+      "answer": "El campesinado, junto con comunidades indígenas y afrodescendientes."
+    },
+    {
+      "question": "Explica brevemente una consecuencia ambiental de la expansión de economías ilegales en los bosques colombianos.",
+      "answer": "La deforestación masiva y la contaminación hídrica por minería ilegal y cultivos ilícitos."
+    },
+    {
+      "question": "Analiza por qué la verdad y la reparación a las víctimas son indispensables para la reconciliación nacional.",
+      "answer": "Porque restauran la dignidad humana, esclarecen los hechos del conflicto y sientan las bases éticas y políticas para la no repetición."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Frente Nacional",
+      "definition": "Pacto político de 1958 entre liberales y conservadores para alternarse la Presidencia y repartirse los cargos públicos durante 16 años."
+    },
+    {
+      "term": "Paramilitarismo",
+      "definition": "Grupos armados ilegales organizados para combatir a las guerrillas, señalados de cometer graves crímenes contra la población civil."
+    },
+    {
+      "term": "Desplazamiento forzado",
+      "definition": "Movilización obligada de personas que huyen de sus tierras y hogares debido a la violencia, amenazas y violaciones a los derechos humanos."
+    },
+    {
+      "term": "Memoria histórica",
+      "definition": "Reconstrucción colectiva y crítica de los hechos traumáticos del pasado a partir de los relatos y vivencias de las víctimas."
+    }
+  ],
+  "closing": "Estudiar la violencia y el conflicto en Colombia no es solo un requisito escolar; es un ejercicio de ciudadanía consciente. Cada vez que conversas en casa sobre la importancia de la paz, rechazas la discriminación o cuidas los recursos naturales de tu región, estás construyendo un país diferente. ¡El futuro de nuestra democracia depende de nuestra capacidad para aprender del pasado y elegir siempre el camino del diálogo!",
+  "dbaStatements": [
+    "DBA 1. Analiza conflictos que se presentan en el territorio colombiano originados por la degradación ambiental, el escaso desarrollo económico y la inestabilidad política.",
+    "DBA 2. Evalúa las causas y consecuencias de la violencia en la segunda mitad del siglo XX en Colombia y su incidencia en los ámbitos social, político, económico y cultural."
+  ]
+}

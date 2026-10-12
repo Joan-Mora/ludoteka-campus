@@ -1,0 +1,109 @@
+{
+  "intro": "¡Hola, estudiantes de décimo! Bienvenidos a esta guía de estadística y probabilidad, diseñada especialmente para ustedes en los colegios públicos de Colombia. Aquí aprenderemos a tomar decisiones informadas usando datos reales. Imaginen que queremos saber la estatura promedio de todos los jóvenes en Bogotá o el sabor de helado favorito en Cali; como es imposible preguntarle a todo el mundo, recurrimos a las muestras y a la estadística. A lo largo de este recorrido, exploraremos cómo resumir grandes cantidades de información con la media, la mediana y la moda, y cómo medir qué tan dispersos están esos datos con la varianza y la desviación estándar. ¡Manos a la obra!",
+  "objectives": [
+    "Seleccionar muestras aleatorias representativas para inferir características en poblaciones grandes.",
+    "Interpretar medidas de tendencia central y dispersión para realizar análisis críticos de datos.",
+    "Calcular el rango, la varianza y la desviación estándar en conjuntos de datos estadísticos.",
+    "Realizar experimentos aleatorios y predecir la ocurrencia de eventos en contextos reales."
+  ],
+  "sections": [
+    {
+      "title": "Población y muestra aleatoria",
+      "paragraphs": [
+        "En estadística, llamamos población al conjunto total de elementos que estudiamos, por ejemplo, todos los estudiantes de grado décimo de las instituciones educativas públicas de Medellín. Como encuestar a toda la población suele ser costoso y toma mucho tiempo, seleccionamos un subconjunto más pequeño llamado muestra. Para que los resultados sean confiables, esta selección debe ser aleatoria, lo que significa que cada estudiante en Medellín debe tener la misma oportunidad de ser elegido en la encuesta.",
+        "Existen varios tipos de muestreo, siendo el aleatorio simple uno de los más utilizados. Imaginemos que enumeramos a todos los jóvenes y usamos un bolillo o un software para sacar números al azar. Si la muestra está bien tomada, podemos hacer inferencias válidas sobre toda la población sin necesidad de medir a cada persona. Esto es fundamental en estudios socioeconómicos y en sondeos de opinión en nuestro país."
+      ],
+      "example": {
+        "statement": "El DANE quiere estudiar el ingreso mensual de 50.000 hogares en Barranquilla. Si selecciona una muestra aleatoria de 500 hogares mediante sorteo, ¿cuál es la población y cuál es la muestra?",
+        "solution": "Paso 1: Identificar la población, que es el conjunto total de estudio. En este caso, son los 50.000 hogares de Barranquilla. Paso 2: Identificar la muestra, que es el subconjunto seleccionado para el análisis. Aquí la muestra son los 500 hogares elegidos al azar por el DANE."
+      }
+    },
+    {
+      "title": "Medidas de tendencia central",
+      "paragraphs": [
+        "Una vez recolectados los datos, necesitamos herramientas para resumirlos en un solo valor representativo. Las medidas de tendencia central cumplen esta función. La media aritmética o promedio se calcula sumando todos los datos y dividiendo el resultado entre la cantidad total de datos. Es muy sensible a los valores extremos, como cuando un salario muy alto distorsiona el promedio salarial de una empresa.",
+        "Por otro lado, la mediana es el valor central cuando los datos están ordenados de menor a mayor, dividiendo la muestra exactamente en dos mitades. La moda es simplemente el dato que más se repite. En Colombia, al analizar las notas de las pruebas Saber 11, usar estas tres medidas en conjunto nos da una radiografía mucho más completa que quedarnos con una sola de ellas."
+      ],
+      "example": {
+        "statement": "Las notas de matemáticas de cinco estudiantes en Pasto son: 3, 4, 3, 5 y 5. Halla la media, la mediana y la moda.",
+        "solution": "Paso 1: Calcular la media sumando los valores y dividiendo por 5. Suma = 3 + 4 + 3 + 5 + 5 = 20. Media = 20 ÷ 5 = 4. Paso 2: Ordenar los datos para la mediana: 3, 3, 4, 5, 5. El valor central es 4. Paso 3: Hallar la moda, que es el dato más frecuente. En este caso se repiten el 3 y el 5, por lo que es bimodal: 3 y 5."
+      }
+    },
+    {
+      "title": "Rango, varianza y desviación estándar",
+      "paragraphs": [
+        "Las medidas de tendencia central no lo dicen todo. Dos cursos en un colegio de Bucaramanga pueden tener una nota promedio de 3.5 en química, pero en uno todos sacaron notas entre 3.0 y 4.0, mientras que en el otro hubo muchos ceros y muchos cinco. Para medir esa variabilidad usamos las medidas de dispersión. El rango es la diferencia entre el valor máximo y el valor mínimo del conjunto de datos.",
+        "La varianza y la desviación estándar miden qué tan alejados están los datos respecto a la media. La varianza es el promedio de los cuadrados de las desviaciones de cada dato frente a la media. Como sus unidades quedan elevadas al cuadrado, calculamos su raíz cuadrada positiva para obtener la desviación estándar, que nos devuelve a la unidad original y nos indica la dispersión real."
+      ],
+      "example": {
+        "statement": "Calcula el rango y la varianza de los siguientes tiempos en minutos que tardan tres estudiantes en llegar al colegio: 10, 15 y 20.",
+        "solution": "Paso 1: Hallar el rango restando el valor máximo menos el mínimo. Rango = 20 - 10 = 10 minutos. Paso 2: Hallar la media. Media = (10 + 15 + 20) ÷ 3 = 45 ÷ 3 = 15. Paso 3: Calcular las desviaciones al cuadrado respecto a la media: (10 - 15)² = 25, (15 - 15)² = 0, (20 - 15)² = 25. Paso 4: Sumar las desviaciones y dividir por el número de datos para hallar la varianza. Varianza = (25 + 0 + 25) ÷ 3 = 50 ÷ 3 = 16.67."
+      }
+    },
+    {
+      "title": "Experimentos aleatorios y predicción",
+      "paragraphs": [
+        "Un experimento aleatorio es aquel cuyo resultado no se puede predecir con certeza antes de realizarlo, aunque conozcamos todos los posibles resultados agrupados en el espacio muestral. Por ejemplo, lanzar un dado de seis caras o sacar una balota de una bolsa en un juego de suerte y azar. En las ciencias naturales y sociales, realizamos estos experimentos para estimar probabilidades y tomar decisiones bajo incertidumbre.",
+        "Cuando el espacio muestral es muy grande o indeterminado, usamos la probabilidad frecuencial. Esta consiste en repetir el experimento muchas veces y calcular la frecuencia relativa de un evento. A mayor número de repeticiones, más nos acercamos a la probabilidad teórica, una herramienta clave para pronos_ticar el clima, el flujo vehicular en Bogotá o el éxito de una campaña de vacunación."
+      ],
+      "example": {
+        "statement": "En una urna hay 3 bolas rojas y 2 verdes. Si se extrae una bola al azar, ¿cuál es la probabilidad de que sea roja?",
+        "solution": "Paso 1: Calcular el total de elementos en el espacio muestral. Total = 3 rojas + 2 verdes = 5 bolas. Paso 2: Identificar el número de casos favorables para el evento (obtener bola roja), que es 3. Paso 3: Aplicar la regla de Laplace dividiendo los casos favorables entre los posibles. Probabilidad = 3 / 5 = 0.6 o 60 percent."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cómo se le llama al conjunto total de elementos sobre el cual se realiza un estudio estadístico?",
+      "answer": "Población"
+    },
+    {
+      "question": "Calcula la media aritmética del conjunto de datos: 2, 4, 6, 8 y 10.",
+      "answer": "6"
+    },
+    {
+      "question": "Halla la mediana de los siguientes puntajes en una prueba: 12, 15, 18, 20 y 25.",
+      "answer": "18"
+    },
+    {
+      "question": "¿Cuál es el rango del conjunto de datos: 5, 9, 12, 18 y 22?",
+      "answer": "17"
+    },
+    {
+      "question": "Si la varianza de un conjunto de datos es 25, ¿cuál es el valor de la desviación estándar?",
+      "answer": "5"
+    },
+    {
+      "question": "Se lanza un dado legal de 6 caras. ¿Cuál es la probabilidad de obtener un número mayor que 4?",
+      "answer": "1 / 3"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Población",
+      "definition": "Conjunto total de individuos, objetos o medidas que poseen características comunes y sobre el cual se desea realizar una investigación estadística."
+    },
+    {
+      "term": "Muestra",
+      "definition": "Subconjunto representativo seleccionado de una población para realizar un estudio cuando es imposible analizar a todos sus integrantes."
+    },
+    {
+      "term": "Media aritmética",
+      "definition": "Medida de tendencia central que se obtiene al sumar todos los valores del conjunto de datos y dividir el resultado entre el número total de ellos."
+    },
+    {
+      "term": "Desviación estándar",
+      "definition": "Medida de dispersión que indica qué tan alejados están los datos individuales respecto a la media aritmética del conjunto."
+    },
+    {
+      "term": "Experimento aleatorio",
+      "definition": "Procedimiento que se puede repetir bajo las mismas condiciones y cuyo resultado no se puede predecir con total certeza antes de realizarlo."
+    }
+  ],
+  "closing": "Comprender la estadística y la probabilidad no es solo un requisito para aprobar el año escolar en tu colegio, sino una habilidad esencial para la vida diaria. Desde interpretar las noticias económicas hasta entender las encuestas de opinión y tomar precauciones ante el clima, estas herramientas te permiten no tragar entero y pensar con rigor crítico en la sociedad colombiana.",
+  "dbaStatements": [
+    "DBA 8. Selecciona muestras aleatorias en poblaciones grandes para inferir el comportamiento de las variables en estudio. Interpreta, valora y analiza críticamente los resultados y las inferencias presentadas en estudios estadísticos.",
+    "DBA 9. Comprende y explica el carácter relativo de las medidas de tendencias central y de dispersión, junto con algunas de sus propiedades, y la necesidad de complementar una medida con otra para obtener mejores lecturas de los datos.",
+    "DBA 10. Propone y realiza experimentos aleatorios en contextos de las ciencias naturales o sociales y predice la ocurrencia de eventos, en casos para los cuales el espacio muestral es indeterminado."
+  ]
+}

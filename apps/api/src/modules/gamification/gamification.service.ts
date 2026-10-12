@@ -10,6 +10,7 @@ import {
   type AttemptGradedEvent,
   type BadgeEarnedEvent,
   type BadgesSeenEvent,
+  type ForumBestAnswerEvent,
   type LearningProfileSavedEvent,
   type LessonCompletedEvent,
   type RouteSolvedEvent,
@@ -318,6 +319,20 @@ export class GamificationService implements OnApplicationBootstrap {
     await this.award(event.userId, xp, event.kind === 'review' ? 'flashcard_review' : 'focus_session', event.kind === 'review' ? 'flashcard' : 'focus_session', event.refId);
     await this.touchStreak(event.userId);
     if (event.kind !== 'review') await this.safeEvaluate(event.userId);
+  }
+
+  @OnEvent(DomainEvents.ForumBestAnswer)
+  async onBestAnswer(event: ForumBestAnswerEvent) {
+    const paid = await this.database.db
+      .selectFrom('xp_ledger')
+      .select('id')
+      .where('source_type', '=', 'forum_answer')
+      .where('source_id', '=', event.postId)
+      .executeTakeFirst();
+    if (paid) return;
+    await this.award(event.userId, 20, 'best_answer', 'forum_answer', event.postId);
+    await this.touchStreak(event.userId);
+    await this.safeEvaluate(event.userId);
   }
 
   @OnEvent(DomainEvents.TutorMessage)

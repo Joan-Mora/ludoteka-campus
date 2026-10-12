@@ -1,0 +1,107 @@
+{
+  "intro": "¡Hola, estudiantes de octavo grado! En esta guía de estudio aprenderemos a dar consejos, sugerencias y expresar obligaciones usando los verbos modales should, must y have to. En nuestro diario vivir en Colombia, desde cuidar el agua en casa hasta cumplir las normas del colegio, es muy útil saber cómo comunicar lo que es recomendable, obligatorio o necesario. A lo largo de estas cuatro secciones, revisaremos reglas gramaticales claras, ejemplos cotidianos y ejercicios prácticos diseñados para mejorar tu nivel de inglés de forma sencilla y divertida. ¡Manos a la obra!",
+  "objectives": [
+    "Identificar el uso correcto de should, must y have to en textos cortos",
+    "Escribir recomendaciones sobre salud y medio ambiente usando modales",
+    "Explicar obligaciones escolares utilizando estructuras gramaticales adecuadas",
+    "Solicitar información de manera educada empleando frases modales"
+  ],
+  "sections": [
+    {
+      "title": "Modal verbs of advice and obligation",
+      "paragraphs": [
+        "Los verbos modales son herramientas esenciales en inglés para expresar diferentes grados de consejo, necesidad u obligación. El verbo should se usa principalmente para dar un consejo amistoso o una sugerencia; equivale al deberías en español. Por ejemplo, cuando un compañero en Bogotá tiene un examen difícil, podemos decirle que debe estudiar más. Su estructura es muy sencilla porque va seguido de un verbo en su forma base sin la partícula to.",
+        "Por otro lado, cuando hablamos de reglas estrictas o leyes, empleamos must y have to. Must expresa una obligación fuerte que viene de quien habla, como una regla interna. En cambio, have to indica una obligación externa, como una norma del colegio o una ley nacional. En Colombia, todos los estudiantes have to wear a uniform to school. Al hacer negaciones, mustn't indica prohibición, mientras que don't have to significa que algo no es necesario."
+      ],
+      "example": {
+        "statement": "Completa usando should, must o don't have to para una regla escolar: Students ___ wear their ID cards every day.",
+        "solution": "La respuesta correcta es must. Explicación paso a paso: 1. Identificamos que es una norma estricta del colegio en Colombia. 2. Las normas institucionales obligatorias requieren el uso de must. 3. La oración queda: Students must wear their ID cards every day."
+      }
+    },
+    {
+      "title": "Health and safety",
+      "paragraphs": [
+        "Cuidar nuestra salud y mantener la seguridad en la comunidad es una prioridad en cualquier región colombiana. Para hablar de hábitos saludables o prevenir enfermedades como el dengue en zonas cálidas, usamos should para dar recomendaciones preventivas. Decimos que las personas should use mosquito repellent and clean water tanks regularly para evitar criaderos de zancudos.",
+        "Asimismo, en situaciones de emergencia o laboratorios escolares, las normas de seguridad son obligatorias. Aquí es donde utilizamos must. Por ejemplo, en las clases de química en el colegio, los estudiantes must wear safety goggles and lab coats. Combinar should para consejos y must para obligaciones de seguridad nos permite comunicar mensajes claros y responsables para proteger a nuestros amigos y familiares."
+      ],
+      "example": {
+        "statement": "Da un consejo usando should para alguien que tiene gripa en Tunja.",
+        "solution": "La respuesta correcta es: You should drink warm panela water and stay in bed. Explicación paso a paso: 1. Reconocemos que es un consejo de salud (should). 2. Añadimos el verbo en forma base (drink). 3. Completamos con el complemento adecuado para el contexto."
+      }
+    },
+    {
+      "title": "Writing recommendations",
+      "paragraphs": [
+        "Redactar recomendaciones estructuradas es una habilidad clave en el nivel A2.2. Cuando queremos escribir un texto corto para proteger el medio ambiente, por ejemplo, reducir el uso de plástico en el río Magdalena o reciclar papel en el colegio, organizamos nuestras ideas usando conectores lógicos como first, also y finally.",
+        "Para enriquecer nuestro escrito, combinamos should con expresiones de opinión como I think que vimos en el currículo. Podemos redactar: I think we should plant more trees in our neighborhood, and we must avoid throwing garbage in the streets. Un buen párrafo de recomendaciones siempre incluye una introducción clara, sugerencias con should y obligaciones con must, cerrando con una invitación a actuar por la comunidad."
+      ],
+      "example": {
+        "statement": "Escribe una recomendación usando have to sobre el cuidado del agua.",
+        "solution": "La respuesta correcta es: We have to save water during dry seasons. Explicación paso a paso: 1. Identificamos que es una necesidad ambiental real (have to). 2. Usamos el sujeto we. 3. Agregamos el verbo save y el complemento water."
+      }
+    },
+    {
+      "title": "Polite requests",
+      "paragraphs": [
+        "Además de dar órdenes u obligaciones, en inglés es muy importante saber pedir favores o solicitar información de manera educada y formal. Para esto, a menudo utilizamos modales como could, would o expresiones como should I... cuando buscamos orientación en la escuela o la ciudad.",
+        "Por ejemplo, si necesitas pedir prestado un libro en la biblioteca de tu colegio, puedes decir: Could you help me find this book, please? O si estás en Cali y necesitas saber cómo llegar a una dirección, puedes preguntar: Should I take the mio bus? Estas fórmulas hacen que nuestra comunicación sea respetuosa y efectiva al interactuar con profesores, vecinos y compañeros."
+      ],
+      "example": {
+        "statement": "Transforma la orden 'Open the window' en una petición educada usando could.",
+        "solution": "La respuesta correcta es: Could you open the window, please? Explicación paso a paso: 1. Reemplazamos la orden directa por el modal de cortesía Could. 2. Añadimos el pronombre you. 3. Mantenemos el verbo principal (open) y agregamos please al final."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "Choose the correct modal: You ___ brush your teeth three times a day to have a healthy smile.",
+      "answer": "should"
+    },
+    {
+      "question": "Complete with must or should: In a science laboratory, students ___ touch dangerous chemicals without gloves.",
+      "answer": "mustn't"
+    },
+    {
+      "question": "Select the correct option for a school rule: We ___ arrive late to the first class.",
+      "answer": "mustn't"
+    },
+    {
+      "question": "Translate to English using have to: Nosotros tenemos que entregar la tarea de inglés el viernes.",
+      "answer": "We have to hand in the English homework on Friday."
+    },
+    {
+      "question": "Write a polite request using could: Preguntar a un profesor si puedes ir al baño.",
+      "answer": "Could I go to the restroom, please?"
+    },
+    {
+      "question": "Write a short recommendation paragraph (2 sentences) about recycling in Colombia using should and must.",
+      "answer": "We should recycle plastic bottles at school. Also, we must protect our natural parks."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Should",
+      "definition": "Verbo modal que se utiliza en inglés para dar consejos, recomendaciones o sugerencias amistosas sobre lo que es conveniente hacer."
+    },
+    {
+      "term": "Must",
+      "definition": "Verbo modal que expresa una obligación fuerte, una norma estricta o una prohibición dictada por una autoridad."
+    },
+    {
+      "term": "Have to",
+      "definition": "Estructura modal que indica una obligación externa impuesta por leyes, reglamentos o circunstancias ajenas a quien habla."
+    },
+    {
+      "term": "Advice",
+      "definition": "Opinión o recomendación que se le da a alguien sobre qué debe hacer en una situación determinada."
+    },
+    {
+      "term": "Polite request",
+      "definition": "Petición o solicitud realizada de forma educada, amable y formal utilizando modales como could o would."
+    }
+  ],
+  "closing": "Aplicar should, must y have to en tu vida diaria te permite comunicarte con mayor responsabilidad y claridad. Ya sea cuidando el medio ambiente en tu región, cumpliendo las normas de convivencia en tu colegio o pidiendo favores con educación, el inglés es una herramienta poderosa para conectar con los demás. ¡Sigue practicando y verás grandes avances en tu aprendizaje!",
+  "dbaStatements": [
+    "Esquema curricular sugerido de inglés del MEN: nivel A2.2, grado sugerido 8.°."
+  ]
+}

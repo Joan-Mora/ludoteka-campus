@@ -1,0 +1,112 @@
+{
+  "intro": "¡Hola, estudiantes de grado octavo de Colombia! Bienvenidos a esta guía de estudio sobre los medios de comunicación y la intención del autor. Cada vez que leemos un titular en El Espectador, escuchamos una noticia en la radio local o revisamos las redes sociales, nos enfrentamos a mensajes creados por personas con propósitos muy específicos. Comprender estos textos no es solo descifrar palabras, sino descubrir qué hay detrás de cada titular y cómo la información busca informarnos, persuadirnos o entretenernos. A lo largo de este recorrido, aprenderemos a leer con lupa crítica para no tragar entero y formarnos nuestras propias opiniones ciudadanas.",
+  "objectives": [
+    "Caracterizar los diferentes discursos presentes en los medios masivos de comunicación colombianos.",
+    "Diferenciar con claridad entre hechos verificables y opiniones personales en textos periodísticos.",
+    "Analizar la intención comunicativa y el contexto de producción de noticias, crónicas y columnas.",
+    "Evaluar la veracidad de las fuentes informativas para evitar caer en noticias falsas."
+  ],
+  "sections": [
+    {
+      "title": "Noticia, crónica y columna",
+      "paragraphs": [
+        "En el periodismo colombiano encontramos diversos géneros que cumplen funciones distintas. La noticia es un relato breve y objetivo sobre un hecho reciente de interés general, como cuando RCN o Caracol informan sobre la apertura de una vía en la cordillera. Su estructura responde a preguntas básicas: qué pasó, quién, cuándo, dónde y por qué.",
+        "Por otro lado, la crónica narra los acontecimientos de forma detallada y cronológica, incorporando la voz y el estilo del autor. Un ejemplo clásico son las crónicas de Alberto Salcedo Ramos sobre personajes del Caribe. Finalmente, la columna de opinión expresa la postura particular de un autor frente a un tema de actualidad, buscando persuadir al lector mediante argumentos sólidos y un tono muy personal."
+      ],
+      "example": {
+        "statement": "Identifica si el texto 'El río Magdalena aumentó su caudal un metro tras las fuertes lluvias en Honda' corresponde a una noticia o a una columna de opinión.",
+        "solution": "Paso 1: Analizar el contenido del texto. Se centra en informar un dato concreto y medible (aumento del caudal) en un lugar específico (Honda) sin juicios de valor. Paso 2: Comparar con las características de los géneros. Como relata un hecho reciente de interés general de manera objetiva, corresponde a una noticia."
+      }
+    },
+    {
+      "title": "Hechos y opiniones",
+      "paragraphs": [
+        "Para ser lectores críticos, debemos aprender a separar los hechos de las opiniones. Un hecho es un acontecimiento comprobable, un dato exacto que no depende de lo que piense quien lo enuncia. Por ejemplo, decir que Bogotá está a una altitud de dos mil seiscientos metros sobre el nivel del mar es un hecho geográfico innegable.",
+        "En contraste, una opinión refleja juicios de valor, creencias o sentimientos de una persona. Afirmar que Bogotá es la mejor ciudad del país para vivir es una opinión subjetiva. En los medios, a veces se mezclan ambos elementos para inclinar la balanza hacia una postura política o comercial, por lo que debemos estar muy atentos."
+      ],
+      "example": {
+        "statement": "Clasifica como hecho o opinión la siguiente frase: 'El café colombiano es el más suave del mundo'.",
+        "solution": "Paso 1: Examinar si la afirmación puede comprobarse de forma empírica y universal. Paso 2: Notar que la expresión 'el más suave' contiene un juicio valorativo y comercial promovido por la Federación Nacional de Cafeteros, por lo cual, aunque basada en características reales, funciona como una opinión publicitaria o perspectiva institucional."
+      }
+    },
+    {
+      "title": "Intención comunicativa",
+      "paragraphs": [
+        "Todo texto massmediático nace con una intención clara: informar, convencer, entretener, conmover o vender. Cuando un noticiero presenta un informe especial sobre la deforestación en la Amazonía colombiana, su intención principal es informar y generar conciencia ambiental en la ciudadanía.",
+        "Sin embargo, un aviso publicitario en una revista de Cali busca persuadirnos para comprar un producto determinado. Descubrir esta intención nos ayuda a descifrar los múltiples sentidos del texto y a comprender por qué el autor eligió ciertas palabras, imágenes o tonos para transmitir su mensaje."
+      ],
+      "example": {
+        "statement": "Determina la intención comunicativa principal de una caricatura política publicada en el periódico El Tiempo sobre el costo de la canasta familiar.",
+        "solution": "Paso 1: Observar los elementos visuales y el humor gráfico. Paso 2: Identificar que la caricatura exagera una situación económica real. Paso 3: Concluir que su intención es criticar y hacer reflexionar al lector mediante la sátira, combinando el entretenimiento con la persuasión política."
+      }
+    },
+    {
+      "title": "Verificar fuentes",
+      "paragraphs": [
+        "En la era digital, las redes sociales facilitan la propagación rápida de noticias falsas o fake news. Verificar las fuentes es el escudo protector del ciudadano crítico. Esto consiste en comprobar si el medio que publica la información es reconocido, si cita fuentes oficiales y si otros medios serios corroboran el mismo hecho.",
+        "Antes de compartir una cadena de WhatsApp sobre supuestos subsidios del Gobierno Nacional, debemos revisar portales institucionales o consultar buscadores confiables. Un dato sin autoría clara o sin respaldo institucional suele ser una trampa informativa diseñada para manipular a la audiencia."
+      ],
+      "example": {
+        "statement": "Recibes un mensaje que dice: '¡Alerta máxima! Regalarán bonos de un millón de pesos en los almacenes Éxito este fin de semana'. ¿Qué debes hacer para verificar la fuente?",
+        "solution": "Paso 1: Desconfiar de mensajes virales con llamados urgentes a compartir. Paso 2: Ingresar a la página web oficial del almacén o buscar comunicados de prensa reales. Paso 3: Comprobar que ningún canal oficial confirma la promoción, concluyendo que se trata de una fuente falsa."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cómo se le llama al género periodístico que relata un hecho reciente de interés general de manera objetiva?",
+      "answer": "La noticia"
+    },
+    {
+      "question": "Diga si la siguiente afirmación es hecho u opinión: 'Colombia tiene costas sobre el océano Pacífico y el mar Caribe'.",
+      "answer": "Hecho"
+    },
+    {
+      "question": "¿Cuál es la intención comunicativa predominante en una columna de opinión firmada por un experto?",
+      "answer": "Persuadir"
+    },
+    {
+      "question": "¿Qué nombre reciben las informaciones falsas que circulan masivamente en internet para engañar a los lectores?",
+      "answer": "Noticias falsas o fake news"
+    },
+    {
+      "question": "Si un reportaje sobre el Carnaval de Barranquilla utiliza descripciones detalladas y expresiones emotivas del autor, ¿qué género periodístico se emplea principalmente?",
+      "answer": "La crónica"
+    },
+    {
+      "question": "Explique brevemente por qué es fundamental contrastar diferentes medios de comunicación antes de formarse una opinión definitiva sobre un suceso nacional.",
+      "answer": "Para evitar sesgos ideológicos, corroborar datos verídicos y tener una visión global y objetiva del problema."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Noticia",
+      "definition": "Género periodístico que informa de manera breve, clara y objetiva sobre un acontecimiento reciente de interés público."
+    },
+    {
+      "term": "Crónica",
+      "definition": "Relato periodístico que narra un hecho de forma detallada y cronológica, incluyendo la visión y el estilo literario del autor."
+    },
+    {
+      "term": "Columna de opinión",
+      "definition": "Texto periodístico donde un autor expresa su punto de vista particular sobre un tema de actualidad para argumentar y persuadir."
+    },
+    {
+      "term": "Hecho",
+      "definition": "Acontecimiento real, demostrable y objetivo que no depende de las creencias o valoraciones de quien lo enuncia."
+    },
+    {
+      "term": "Opinión",
+      "definition": "Juicio, valoración o punto de vista subjetivo que tiene una persona sobre un asunto determinado."
+    },
+    {
+      "term": "Fuente confiable",
+      "definition": "Persona, institución o documento que ofrece información veraz, verificable y respaldada por expertos o entidades oficiales."
+    }
+  ],
+  "closing": "Desarrollar una mirada crítica frente a los medios de comunicación nos convierte en ciudadanos más conscientes y autónomos en Colombia. La próxima vez que leas una publicación en redes o escuches un noticiero, recuerda preguntarte quién habla, por qué lo hace y qué pruebas respalda su mensaje. ¡Tu capacidad de análisis es tu mejor defensa contra la manipulación!",
+  "dbaStatements": [
+    "DBA 1. Caracteriza los discursos presentes en los medios de comunicación y otras fuentes de información, atendiendo al contenido, la intención comunicativa del autor y al contexto en que se producen.",
+    "DBA 6. Infiere múltiples sentidos en los textos que lee y los relaciona con los conceptos macro del texto y con sus contextos de producción y circulación."
+  ]
+}

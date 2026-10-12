@@ -1,0 +1,112 @@
+{
+  "intro": "¡Hola, caminante de sexto grado! Bienvenidos a esta emocionante aventura por el fascinante mundo de la biología. Imagina que tu cuerpo, y el de todos los seres vivos que habitan nuestra hermosa Colombia, desde los frailejones del páramo de Sumapaz hasta los delfines rosados del río Amazonas, están construidos por millones de diminutas piezas llamadas células. En esta guía de estudio comprenderemos cómo estas unidades microscópicas funcionan como pequeñas ciudades organizadas. Aprenderemos sus partes esenciales, cómo producen su propia energía para jugar y estudiar, y cómo la ciencia las clasifica para entender la gran biodiversidad que nos rodea. ¡Prepárate para descubrir los secretos de la vida!",
+  "objectives": [
+    "Identificar los postulados fundamentales de la teoría celular y su importancia histórica.",
+    "Diferenciar las estructuras de las células procariotas y eucariotas, reconociendo sus semejanzas y diferencias.",
+    "Explicar los procesos de transporte celular y obtención de energía que permiten la vida.",
+    "Clasificar los seres vivos en los diferentes reinos según las características de sus células."
+  ],
+  "sections": [
+    {
+      "title": "Teoría celular",
+      "paragraphs": [
+        "La teoría celular es uno de los pilares fundamentales de la biología moderna. Todo comenzó en el siglo XVII cuando científicos curiosos empezaron a usar lentes de aumento. Robert Hooke, observando una delgada lámina de corcho bajo el microscopio, vio pequeñas cavidades a las que llamó células, recordando los cuartos de los monjes. Años más tarde, investigadores como Matthias Schleiden y Theodor Schwann concluyeron que tanto las plantas como los animales estaban formados por estas unidades. Finalmente, Rudolf Virchow añadió que toda célula proviene de otra célula preexistente.",
+        "En Colombia y en todo el universo, esta teoría se resume en tres principios básicos. Primero, la célula es la unidad estructural de todos los seres vivos, lo que significa que no hay vida conocida sin ellas. Segundo, es la unidad funcional porque dentro de ella ocurren todas las reacciones químicas necesarias para mantenernos con vida, como respirar o digerir laangua. Tercero, es la unidad de origen porque contienen la información hereditaria que se transmite de padres a hijos, asegurando la continuidad de la vida en nuestro planeta."
+      ],
+      "example": {
+        "statement": "Si observas al microscopio una hoja de elodea (una planta acuática común en humedales colombianos) y una muestra de tejido de tu propia piel, ¿qué postulado de la teoría celular estarías comprobando?",
+        "solution": "Estarías comprobando el primer postulado: la célula es la unidad estructural de todos los seres vivos. Al ver las celdas vegetales organizadas en la hoja y las células animales en tu piel, confirmas que plantas y animales están hechos de células."
+      }
+    },
+    {
+      "title": "Célula procariota y eucariota",
+      "paragraphs": [
+        "Las células se dividen en dos grandes grupos según su complejidad y la presencia de un núcleo definido: las procariotas y las eucariotas. Las células procariotas son las más antiguas y sencillas de la Tierra. No poseen un núcleo verdadero; su material genético flota libremente en una región del citoplasma llamada nucleoide. Además, carecen de organelos membranosos internos. Los organismos formados por este tipo de célula son unicelulares, como las bacterias que habitan en el suelo de los cafetales colombianos ayudando a nutrir las plantas.",
+        "Por otro lado, las células eucariotas son más grandes y complejas. Tienen un núcleo bien delimitado envuelto por una membrana, donde se guarda celosamente el ADN. También contienen organelos con funciones específicas, como las mitocondrias y los ribosomas. Este tipo celular forma parte de organismos tanto unicelulares (como las levaduras usadas para hacer pan) como pluricelulares, entre los cuales nos encontramos los seres humanos, los animales de nuestra fauna silvestre y las imponentes palmas de cera."
+      ],
+      "example": {
+        "statement": "Clasifica el organismo causante de una infección estomacal (una bacteria) y una planta de frailejón según el tipo de célula que poseen.",
+        "solution": "La bacteria es un organismo procariota porque su célula no tiene núcleo definido ni organelos membranosos. El frailejón es un organismo eucariota porque sus células poseen un núcleo verdadero que protege su ADN y organelos especializados."
+      }
+    },
+    {
+      "title": "Transporte de membrana y obtención de energía",
+      "paragraphs": [
+        "La membrana celular actúa como una aduana exigente que rodea y protege la célula, controlando qué sustancias entran y salen. El transporte a través de esta membrana puede ser pasivo, cuando las moléculas se mueven sin gastar energía desde una zona de mayor concentración a una menor (como el oxígeno que entra a tus pulmones), o activo, cuando la célula gasta energía para mover sustancias en contra de la corriente. Este control es vital para mantener el equilibrio interno y permitir el intercambio de nutrientes con el entorno.",
+        "Para realizar todas sus actividades, las células necesitan energía. Esto lo logran mediante procesos como la respiración celular y la fotosíntesis. En las células animales y vegetales, las mitocondrias funcionan como pequeñas centrales eléctricas que queman la glucosa con ayuda del oxígeno para producir energía utilizable. En el caso de las plantas y algas, los cloroplastos capturan la luz del sol en un proceso llamado fotosíntesis, fabricando su propio alimento y liberando el oxígeno que respiramos todos los días en Colombia."
+      ],
+      "example": {
+        "statement": "Explica por qué una planta marchita se recupera al echarle agua en la tierra, relacionándolo con el transporte celular.",
+        "solution": "El agua entra a las raíces de la planta por un proceso de transporte pasivo llamado ósmosis. Como hay mayor concentración de agua en la tierra que dentro de las células deshidratadas de la planta, el agua se mueve hacia el interior celular, llenando las vacuolas y devolviendo la firmeza a las hojas."
+      }
+    },
+    {
+      "title": "Reinos y clasificación de los seres vivos",
+      "paragraphs": [
+        "La diversidad de la vida en la Tierra es asombrosa, y para estudiarla los científicos la han organizado en cinco grandes reinos biológicos, basándose principalmente en el tipo de célula y su organización. El reino Monera agrupa a los organismos procariotas, unicelulares como las bacterias. El reino Protista incluye a organismos eucariotas, en su mayoría unicelulares, como las coloridas amebas y algunas algas microscópicas que flotan en nuestros ríos y océanos.",
+        "Los otros tres reinos están formados exclusivamente por eucariotas pluricelulares. El reino Fungi comprende a los hongos, que no hacen fotosíntesis y se alimentan descomponiendo materia orgánica, como los champiñones. El reino Plantae reúne a todas las plantas, capaces de producir su propio alimento por fotosíntesis. Finalmente, el reino Animalia incluye a todos los animales, desde los diminutos insectos hasta el majestuoso cóndor de los Andes, caracterizándose por su capacidad de movimiento y nutrición heterótrofa."
+      ],
+      "example": {
+        "statement": "Un estudiante encuentra un organismo microscópico en una laguna de Bogotá, observa que tiene núcleo celular definido y se desplaza con pequeños cilios. ¿A qué reino podría pertenecer?",
+        "solution": "Podría pertenecer al reino Protista, ya que es un organismo eucariota unicelular (tiene núcleo definido) y presenta características típicas de protozoos acuáticos que habitan en cuerpos de agua dulce."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Quién fue el científico que observó por primera vez celdas en una lámina de corcho y acuñó la palabra célula?",
+      "answer": "Robert Hooke"
+    },
+    {
+      "question": "Menciona los tres postulados principales de la teoría celular.",
+      "answer": "Unidad estructural, unidad funcional y unidad de origen."
+    },
+    {
+      "question": "¿Cuál es la principal diferencia estructural entre una célula procariota y una célula eucariota?",
+      "answer": "La célula procariota no tiene núcleo definido, mientras que la eucariota sí posee un núcleo que encierra su ADN."
+    },
+    {
+      "question": "¿Cómo se llama el organelo celular encargado de producir la energía en las células animales y vegetales?",
+      "answer": "La mitocondria"
+    },
+    {
+      "question": "¿Qué proceso realizan las células vegetales para capturar la luz solar y fabricar su propio alimento?",
+      "answer": "La fotosíntesis"
+    },
+    {
+      "question": "Si un organismo es pluricelular, eucariota, realiza fotosíntesis y sus células tienen pared celular de celulosa, ¿a qué reino pertenece?",
+      "answer": "Al reino Plantae"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Célula",
+      "definition": "Unidad anatómica, funcional y de origen de todos los seres vivos, considerada el ladrillo fundamental de la vida."
+    },
+    {
+      "term": "Membrana celular",
+      "definition": "Estructura semipermeable que rodea la célula y regula la entrada y salida de sustancias."
+    },
+    {
+      "term": "Mitocondria",
+      "definition": "Organelo eucariota encargado de la respiración celular y de la producción de energía para la célula."
+    },
+    {
+      "term": "Procariota",
+      "definition": "Tipo de célula primitiva y sencilla que no posee un núcleo celular diferenciado ni organelos membranosos."
+    },
+    {
+      "term": "Eucariota",
+      "definition": "Célula compleja que posee un núcleo verdadero delimitado por una membrana y diversos organelos internos."
+    },
+    {
+      "term": "Fotosíntesis",
+      "definition": "Proceso mediante el cual las plantas transforman la luz solar, el agua y el dióxido de carbono en alimento y oxígeno."
+    }
+  ],
+  "closing": "Comprender el mundo celular no es solo memorizar partes difíciles, sino descubrir la hermosa maquinaria que late en cada rincón de nuestra biodiversidad colombiana. Cada vez que observes un árbol, respires el aire puro de nuestras montañas o consumas un alimento, recuerda que miles de millones de células trabajan en equipo de forma perfecta. Cuidar nuestra naturaleza es, en realidad, cuidar el hogar de estas increíbles unidades que hacen posible la vida.",
+  "dbaStatements": [
+    "DBA 4. Comprende algunas de las funciones básicas de la célula (transporte de membrana, obtención de energía y división celular) a partir del análisis de su estructura.",
+    "DBA 5. Comprende la clasificación de los organismos en grupos taxonómicos, de acuerdo con el tipo de células que poseen y reconoce la diversidad de especies que constituyen nuestro planeta y las relaciones de parentesco entre ellas."
+  ]
+}

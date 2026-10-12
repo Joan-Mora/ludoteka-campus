@@ -1,0 +1,109 @@
+{
+  "intro": "¡Hola, pilos de undécimo! Bienvenidos a esta guía de estudio diseñada para acompañarlos en su paso final por el colegio en Colombia. En matemáticas, a menudo estudiamos cómo cambian las cosas, como la velocidad a la que viaja un bus intermunicipal entre Bogotá y Girardot, o cómo sube el precio de la papa en la plaza de mercado según la cosecha. Hoy vamos a explorar la derivada, una herramienta poderosa que nos permite medir el cambio instantáneo. No le teman a las fórmulas; con un poco de práctica, verán que las matemáticas son el lenguaje para entender el movimiento y los fenómenos de nuestro entorno cotidiano.",
+  "objectives": [
+    "Comprender la noción de razón de cambio promedio e instantánea usando situaciones de la vida real.",
+    "Interpretar la derivada geométricamente como la pendiente de la recta tangente a una curva.",
+    "Aplicar las reglas básicas de derivación para hallar derivadas de funciones algebraicas.",
+    "Resolver problemas de velocidad y optimización en contextos colombianos."
+  ],
+  "sections": [
+    {
+      "title": "Razón de cambio promedio",
+      "paragraphs": [
+        "En nuestra vida diaria, constantemente calculamos promedios. Por ejemplo, si un motociclista viaja desde Medellín hasta Santafé de Antioquia y recorre 60 kilómetros en una hora, decimos que su velocidad promedio fue de 60 kilómetros por hora. En matemáticas, la razón de cambio promedio mide cuánto cambia una cantidad dependiente en promedio, por cada unidad de cambio en la variable independiente. Si tenemos una función, esta razón se calcula dividiendo la variación en los valores de la función entre la variación de los valores de la variable.",
+        "Imaginemos que estamos analizando el crecimiento de las ventas de mochilas Wayuu en La Guajira durante los primeros meses del año. Si en enero se vendieron 100 unidades y en abril se vendieron 250, la razón de cambio promedio nos indica el incremento mensual de esas ventas. Esta herramienta es fundamental en economía, física y biología porque nos da una visión general del comportamiento de un fenómeno entre dos puntos específicos del tiempo o del espacio, sin detallar lo que pasa en cada instante."
+      ],
+      "example": {
+        "statement": "Un camión reparte café desde Manizales y la distancia recorrida en kilómetros está dada por la función f(t) = 40t², donde t es el tiempo en horas. Halla la razón de cambio promedio entre la hora t = 1 y la hora t = 3.",
+        "solution": "Paso 1: Evaluamos la función en el tiempo inicial t = 1. f(1) = 40(1)² = 40 kilómetros. Paso 2: Evaluamos la función en el tiempo final t = 3. f(3) = 40(3)² = 40 × 9 = 360 kilómetros. Paso 3: Aplicamos la fórmula de la razón de cambio promedio: (f(3) - f(1)) / (3 - 1). Sustituimos los valores: (360 - 40) / 2 = 320 / 2 = 160. La razón de cambio promedio es 160 kilómetros por hora."
+      }
+    },
+    {
+      "title": "Límite y pendiente de la recta tangente",
+      "paragraphs": [
+        "Para pasar de una razón de cambio promedio a una razón de cambio instantánea, necesitamos la ayuda de los límites. Pensemos en la gráfica de una función que describe la trayectoria de una piedra lanzada en el Parque Nacional de Bogotá. Si queremos saber la velocidad exacta en un segundo preciso, la razón de cambio promedio ya no nos sirve porque abarca un intervalo muy ancho. Necesitamos acortar ese intervalo de tiempo casi a cero, y ahí es donde el concepto de límite entra a jugar un papel estelar en el cálculo.",
+        "Geométricamente, si trazamos una línea recta que corta una curva en dos puntos, tenemos una recta secante cuya pendiente es exactamente la razón de cambio promedio. A medida que acercamos el segundo punto al primer punto, la recta secante se transforma en una recta tangente que toca a la curva en un solo punto. La pendiente de esta recta tangente representa la derivada de la función en ese punto exacto, dándonos la clave para entender el cambio instantáneo."
+      ],
+      "example": {
+        "statement": "Dada la función de posición f(x) = x², encuentra la pendiente de la recta secante entre x = 1 y x = 3, y observa cómo se aproxima al hacer el intervalo cada vez más pequeño.",
+        "solution": "Paso 1: Hallamos los puntos en la curva. Para x = 1, f(1) = 1² = 1. Para x = 3, f(3) = 3² = 9. Paso 2: Calculamos la pendiente de la secante m = (f(3) - f(1)) / (3 - 1) = (9 - 1) / (3 - 1) = 8 / 2 = 4. Paso 3: Si acercamos el segundo punto a x = 1, por ejemplo tomando x = 1.1, f(1.1) = 1.21, la pendiente es (1.21 - 1) / (1.1 - 1) = 0.21 / 0.1 = 2.1. Al aplicar el límite cuando el intervalo tiende a cero, la pendiente de la recta tangente en x = 1 es exactamente 2."
+      }
+    },
+    {
+      "title": "Reglas básicas de derivación",
+      "paragraphs": [
+        "Calcular límites cada vez que necesitamos una derivada sería un proceso muy largo y desgastante. Afortunadamente, los matemáticos descubrieron atajos llamados reglas de derivación. Estas reglas son fórmulas algebraicas que nos permiten encontrar la derivada de funciones comunes de forma rápida y segura. Por ejemplo, la regla de la potencia nos enseña que si tenemos una variable elevada a un exponente, podemos bajar el exponente a multiplicar y restarle uno a la potencia original.",
+        "Otras reglas fundamentales son la derivada de una constante, que siempre es cero porque un número fijo no cambia, y la regla de la suma, que nos permite derivar funciones grandes parte por parte. Estas propiedades son los pilares con los que operan los ingenieros, economistas y científicos para modelar sistemas complejos en Colombia, desde el diseño de puentes en la vía al Llano hasta la predicción de la inflación anual."
+      ],
+      "example": {
+        "statement": "Halla la derivada de la función f(x) = 5x³ - 2x + 7.",
+        "solution": "Paso 1: Aplicamos la regla de la suma y resta para derivar término a término. Paso 2: Para el primer término, 5x³, usamos la regla de la potencia: bajamos el 3 a multiplicar con el 5 y restamos 1 al exponente, obteniendo 15x². Paso 3: Para el segundo término, -2x, recordamos que la derivada de x es 1, por lo que queda -2 × 1 = -2. Paso 4: Para el término constante 7, su derivada es 0. Uniendo todo, la derivada es f'(x) = 15x² - 2."
+      }
+    },
+    {
+      "title": "Problemas de velocidad y optimización",
+      "paragraphs": [
+        "Una de las aplicaciones más emocionantes de la derivada es resolver problemas del mundo real donde necesitamos encontrar el valor máximo o mínimo de algo. A esto lo llamamos optimización. Imagina que eres un empresario textil en Gamarra, Cesar, y quieres saber exactamente cuántas camisas debes producir para que tus costos sean mínimos o tus ganancias sean máximas. La derivada se anula en los puntos donde las funciones alcanzan sus valores máximos o mínimos.",
+        "Asimismo, en física, la derivada de la posición con respecto al tiempo nos da la velocidad instantánea, y la derivada de la velocidad nos da la aceleración. Esto nos permite analizar con precisión milimétrica cómo se desplaza un objeto, ya sea una sonda espacial o un atleta colombiano en una competencia de los Juegos Olímpicos. La optimización y el análisis de velocidad demuestran que las matemáticas tienen un impacto directo y práctico en la sociedad."
+      ],
+      "example": {
+        "statement": "Un agricultor en Boyacá tiene 40 metros de malla para cercar un cultivo rectangular contra un muro recto. ¿Qué dimensiones debe tener el rectángulo para maximizar el área cultivada?",
+        "solution": "Paso 1: Planteamos las variables. Sea x el ancho y y el largo. Como hay un muro, el perímetro cercado es 2x + y = 40. Despejamos y: y = 40 - 2x. Paso 2: La función de área es A(x) = x × y = x(40 - 2x) = 40x - 2x². Paso 3: Derivamos el área con respecto a x: A'(x) = 40 - 4x. Paso 4: Igualamos la derivada a cero para hallar el punto crítico: 40 - 4x = 0, de donde x = 10. Paso 5: Calculamos y = 40 - 2(10) = 20. Las dimensiones óptimas son 10 metros de ancho por 20 metros de largo."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "Calcula la razón de cambio promedio de f(x) = 3x entre x = 0 y x = 4.",
+      "answer": "3"
+    },
+    {
+      "question": "Halla la derivada de la función constante f(x) = 25.",
+      "answer": "0"
+    },
+    {
+      "question": "Encuentra la derivada de f(x) = x⁴.",
+      "answer": "4x³"
+    },
+    {
+      "question": "Deriva la función polinómica f(x) = 6x² - 5x + 3.",
+      "answer": "12x - 5"
+    },
+    {
+      "question": "Si la posición de un carro está dada por s(t) = 50t, ¿cuál es su velocidad instantánea en t = 2?",
+      "answer": "50"
+    },
+    {
+      "question": "Halla el valor de x donde la derivada de f(x) = -x² + 6x se hace cero.",
+      "answer": "3"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Derivada",
+      "definition": "Límite de la razón de cambio promedio cuando el intervalo tiende a cero, representando la pendiente de la recta tangente."
+    },
+    {
+      "term": "Razón de cambio",
+      "definition": "Medida de cómo una variable cambia en relación con otra en un intervalo o en un instante determinado."
+    },
+    {
+      "term": "Recta tangente",
+      "definition": "Línea recta que toca a una curva exactamente en un punto y cuya pendiente coincide con la derivada."
+    },
+    {
+      "term": "Optimización",
+      "definition": "Proceso matemático para hallar los valores máximos o mínimos de una función en un contexto dado."
+    },
+    {
+      "term": "Velocidad instantánea",
+      "definition": "Derivada de la función de posición con respecto al tiempo en un momento exacto."
+    }
+  ],
+  "closing": "El estudio de la derivada va mucho más allá de resolver ejercicios en el cuaderno. Nos otorga una nueva perspectiva para leer el mundo, permitiéndonos descifrar la velocidad con la que se desplazan los objetos, anticipar crecimientos económicos y tomar decisiones eficientes. Sigan practicando con entusiasmo, pues las matemáticas son el motor que impulsa la innovación en nuestro país.",
+  "dbaStatements": [
+    "DBA 3. Utiliza instrumentos, unidades de medida, sus relaciones y la noción de derivada como razón de cambio, para resolver problemas, estimar cantidades y juzgar la pertinencia de las soluciones de acuerdo al contexto.",
+    "DBA 5. Interpreta la noción de derivada como razón de cambio y como valor de la pendiente de la tangente a una curva y desarrolla métodos para hallar las derivadas de algunas funciones básicas en contextos matemáticos y no matemáticos.",
+    "DBA 8. Encuentra derivadas de funciones, reconoce sus propiedades y las utiliza para resolver problemas."
+  ]
+}

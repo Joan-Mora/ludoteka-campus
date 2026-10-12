@@ -1,0 +1,106 @@
+{
+  "intro": "¿Alguna vez te has preguntado cómo viaja la música desde los bafles en una fiesta en Cali hasta tus oídos, o cómo llega la señal del alumbrado público a tus ojos en una noche bogotana? En el universo, la energía se transporta constantemente de un punto a otro mediante perturbaciones llamadas ondas. Algunas necesitan un medio material para propagarse, como el sonido de una gaita en las sabanas de Sucre, mientras que otras cruzan el vacío del espacio exterior, como la luz solar que baña los cafetales colombianos. En esta guía exploraremos los principios físicos que rigen el sonido y la luz, analizando cómo se mueven, se transforman e interactúan con nuestro entorno.",
+  "objectives": [
+    "Diferenciar las ondas mecánicas de las electromagnéticas a partir de sus mecanismos de propagación y medios de transporte.",
+    "Calcular la velocidad, frecuencia y longitud de onda en situaciones cotidianas empleando la ecuación fundamental de onda.",
+    "Analizar los fenómenos de reflexión, refracción y efecto Doppler en contextos sonoros y lumínicos del entorno colombiano."
+  ],
+  "sections": [
+    {
+      "title": "Naturaleza de las ondas: mecánicas y electromagnéticas",
+      "paragraphs": [
+        "Las ondas son perturbaciones que transportan energía y cantidad de movimiento sin transportar materia de manera neta. Se dividen fundamentalmente según el medio que requieren para viajar. Por un lado, las ondas mecánicas necesitan forzosamente de un medio material elástico, ya sea sólido, líquido o gaseoso, para que sus partículas oscilen y transmitan la perturbación. El sonido es el ejemplo clásico: cuando golpeas un tambor alegre en el Caribe colombiano, la membrana hace vibrar las moléculas del aire circundante en una serie de compresiones y descompresiones longitudinales sucesivas. Sin aire ni materia, el sonido simplemente no puede existir ni propagarse.",
+        "Por otro lado, las ondas electromagnéticas no dependen de partículas materiales; consisten en campos eléctricos y magnéticos oscilantes y perpendiculares entre sí que se autosostienen y viajan incluso en el vacío absoluto. La luz visible, las ondas de radio de la emisora comunitaria, los rayos X y las microondas pertenecen a este grupo. Mientras que el sonido viaja en el aire a unos 340 metros por segundo, la luz en el vacío alcanza la asombrosa velocidad de 300.000 kilómetros por segundo (3 × 10⁸ m/s), permitiendo que la radiación solar cruce el espacio y caliente nuestros valles andinos."
+      ],
+      "example": {
+        "statement": "Una explosión ocurre en el espacio exterior cerca de un satélite en órbita. Explica si los astronautas dentro de una nave cercana pueden ver el destello luminoso y escuchar el estruendo de la explosión.",
+        "solution": "1. Analizamos la luz: Al ser una onda electromagnética, no necesita un medio material para propagarse. Por lo tanto, el destello viaja a través del vacío espacial y los astronautas sí lo ven. 2. Analizamos el sonido: El estruendo es una onda mecánica y requiere partículas materiales para transmitir las vibraciones. Como en el espacio exterior hay vacío casi absoluto, la onda sonora no se propaga y los astronautas no escuchan nada."
+      }
+    },
+    {
+      "title": "Frecuencia, longitud de onda y velocidad",
+      "paragraphs": [
+        "Cualquier onda periódica puede describirse mediante magnitudes geométricas y temporales bien definidas. El periodo (T), medido en segundos, es el tiempo que tarda una oscilación completa en ocurrir. Su inversa es la frecuencia (f), expresada en hercios (Hz), que indica el número de ciclos completados por unidad de tiempo. Por su parte, la longitud de onda (representada por la letra griega lambda, λ) es la distancia física entre dos crestas, valles o zonas de compresión consecutivas. Estas propiedades definen características perceptibles: en el sonido, una frecuencia alta produce un tono agudo y una baja, uno grave; en la luz, la frecuencia define el color visible.",
+        "La relación matemática fundamental que conecta estas variables es la ecuación de onda: velocidad es igual a longitud de onda por frecuencia (v = λ × f). La velocidad de propagación depende exclusivamente de las propiedades físicas del medio por donde viaja la perturbación, como su densidad, temperatura o rigidez elástica. Cuando una onda pasa de un medio a otro, su frecuencia permanece invariable porque está fijada por la fuente emisora original; en consecuencia, si la velocidad cambia al ingresar a un nuevo entorno material, su longitud de onda debe ajustarse en proporción directa para mantener la igualdad física."
+      ],
+      "example": {
+        "statement": "Una emisora de radio FM en Medellín transmite su señal en una frecuencia de 100 MHz (100 × 10⁶ Hz). Si las ondas de radio viajan a la velocidad de la luz (3 × 10⁸ m/s), calcula la longitud de onda de dicha transmisión.",
+        "solution": "1. Identificamos los datos: velocidad v = 3 × 10⁸ m/s; frecuencia f = 100 × 10⁶ Hz = 1 × 10⁸ Hz. 2. Planteamos la ecuación fundamental: v = λ × f. 3. Despejamos la longitud de onda: λ = v / f. 4. Realizamos el cálculo: λ = (3 × 10⁸ m/s) / (1 × 10⁸ Hz) = 3 m. Por lo tanto, cada ciclo de la señal radial mide exactamente 3 metros."
+      }
+    },
+    {
+      "title": "Comportamiento en fronteras: reflexión y refracción",
+      "paragraphs": [
+        "Cuando una onda incide sobre el límite entre dos medios diferentes, experimenta fenómenos de frontera. La reflexión ocurre cuando la onda choca contra una superficie divisoria y rebota regresando al medio original sin cambiar su rapidez ni longitud de onda. La ley de reflexión establece que el ángulo de incidencia es exactamente igual al ángulo de reflexión respecto a la línea normal imaginaria. En acústica, este fenómeno da origen al eco cuando la distancia permite distinguir el sonido directo del reflejado, algo común al gritar en el cañón del río Chicamocha, así como al funcionamiento de los espejos en óptica.",
+        "Por otro lado, la refracción ocurre cuando la onda atraviesa la frontera y penetra en un segundo medio con propiedades elásticas u ópticas distintas, modificando su velocidad de propagación y desviando su trayectoria. En el caso de la luz, al pasar del aire al agua en una quebrada de Santander, la luz se frena y se desvía según la ley de Snell, haciendo que los peces o las piedras parezcan estar a una profundidad menor de la real. En el sonido, la refracción se evidencia cuando las ondas acústicas se curvan en la atmósfera debido a diferencias de temperatura entre capas de aire."
+      ],
+      "example": {
+        "statement": "Un rayo de luz amarilla viaja en el aire con una velocidad de 3 × 10⁸ m/s e incide sobre el agua de una piscina, donde su velocidad disminuye a 2,25 × 10⁸ m/s. Si la frecuencia de la luz en el aire es de 5 × 10¹⁴ Hz, determina su frecuencia y su longitud de onda dentro del agua.",
+        "solution": "1. Frecuencia en el agua: La frecuencia depende únicamente de la fuente emisora y no cambia al cambiar de medio, por lo que f = 5 × 10¹⁴ Hz. 2. Longitud de onda en el agua: Aplicamos la ecuación λ = v / f con la nueva velocidad. 3. Calculamos: λ = (2,25 × 10⁸ m/s) / (5 × 10¹⁴ Hz) = 4,5 × 10⁻⁷ m (o 450 nm). La longitud de onda se redujo proporcionalmente a la disminución de la velocidad."
+      }
+    },
+    {
+      "title": "Efecto Doppler en sonido y luz",
+      "paragraphs": [
+        "El efecto Doppler es el cambio aparente en la frecuencia percibida de una onda cuando existe movimiento relativo entre la fuente emisora y el observador. Si una ambulancia se desplaza a gran velocidad por la avenida Séptima en Bogotá haciendo sonar su sirena, las ondas sonoras emitidas hacia adelante se comprimen en el espacio, reduciendo la distancia entre crestas sucesivas. Para un peatón estacionario ubicado al frente, los frentes de onda llegan con mayor rapidez temporal, por lo que percibe un tono notablemente más agudo. Cuando el vehículo rebasa al observador y se aleja, las ondas se distancian entre sí, provocando un sonido claramente más grave.",
+        "Este fenómeno no es exclusivo de la acústica; también se manifiesta en las ondas electromagnéticas luminosas. Si una fuente astronómica o galaxia distante se mueve acercándose hacia la Tierra, la frecuencia de la luz observada se desplaza hacia valores mayores (hacia el extremo azul del espectro visible). Por el contrario, si el objeto celeste se aleja de nosotros, la luz recibida experimenta un desplazamiento hacia frecuencias menores (hacia el extremo rojo). Gracias a esta observación sistemática del corrimiento al rojo en las galaxias lejanas, el astrónomo Edwin Hubble pudo demostrar en el siglo XX que el universo se encuentra en constante expansión."
+      ],
+      "example": {
+        "statement": "Una sirena de bomberos emite un sonido constante de 680 Hz. Considera la velocidad del sonido en el aire como 340 m/s. Si la sirena se encuentra fija en una estación y un ciclista se acerca hacia ella a una velocidad constante de 10 m/s, ¿qué frecuencia percibe el ciclista?",
+        "solution": "1. Identificamos los datos: frecuencia emitida f = 680 Hz; velocidad del sonido v = 340 m/s; velocidad del observador v_obs = 10 m/s (acercándose); velocidad de la fuente v_fte = 0 m/s. 2. Usamos la fórmula de Doppler para observador acercándose: f_percibida = f × [(v + v_obs) / v]. 3. Reemplazamos los valores: f_percibida = 680 × [(340 + 10) / 340] = 680 × (350 / 340). 4. Simplificamos: 680 / 340 = 2, luego 2 × 350 = 700 Hz. El ciclista escucha un tono más agudo de 700 Hz."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Por qué el sonido no puede transmitirse a través del espacio exterior vacío?",
+      "answer": "Porque es una onda mecánica que requiere obligatoriamente de un medio material para transferir su energía oscilatoria."
+    },
+    {
+      "question": "Si una onda viaja en una cuerda a 20 m/s con una frecuencia de 5 Hz, ¿cuál es su longitud de onda?",
+      "answer": "Su longitud de onda es de 4 m, calculada dividiendo la velocidad entre la frecuencia (20 m/s ÷ 5 Hz)."
+    },
+    {
+      "question": "Al pasar la luz del aire al vidrio, su velocidad disminuye. ¿Qué ocurre con su frecuencia y con su longitud de onda?",
+      "answer": "La frecuencia permanece inalterada y constante, mientras que la longitud de onda disminuye en la misma proporción que la velocidad."
+    },
+    {
+      "question": "En un examen de ecografía en Villavicencio se usa ultrasonido con frecuencia de 2 × 10⁶ Hz. Si el sonido viaja en el tejido humano a 1.540 m/s, calcula la longitud de onda de dicha señal.",
+      "answer": "La longitud de onda es de 0,00077 m (o 0,77 mm), resultado de dividir 1.540 m/s entre 2 × 10⁶ Hz."
+    },
+    {
+      "question": "Un silbato emite un tono de 1.000 Hz. Una persona parada en el andén escucha 1.050 Hz debido a que un tren se aproxima. Si la velocidad del sonido es 340 m/s, calcula la velocidad del tren.",
+      "answer": "La velocidad del tren es de 16,19 m/s, obtenida al despejar la velocidad de la fuente de la ecuación f_percibida = f × [v / (v - v_tren)]."
+    },
+    {
+      "question": "Si los astrónomos observan que las líneas espectrales del hidrógeno de una galaxia remota están desplazadas hacia el rojo, ¿qué concluyen sobre el movimiento relativo de esa galaxia respecto a la Tierra y por qué?",
+      "answer": "Concluyen que la galaxia se aleja de la Tierra, pues el distanciamiento estira los frentes de onda luminosos, incrementando la longitud de onda y reduciendo la frecuencia percibida."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Onda mecánica",
+      "definition": "Perturbación física que transporta energía a través de la deformación o vibración elástica de un medio material sólido, líquido o gaseoso."
+    },
+    {
+      "term": "Onda electromagnética",
+      "definition": "Onda compuesta por campos eléctricos y magnéticos oscilantes perpendiculares entre sí, capaz de viajar en el vacío a la velocidad de la luz."
+    },
+    {
+      "term": "Longitud de onda",
+      "definition": "Distancia física entre dos puntos equivalentes consecutivos en una onda periódica, como dos crestas contiguas o dos compresiones sucesivas."
+    },
+    {
+      "term": "Refracción",
+      "definition": "Cambio en la dirección y rapidez de propagación de una onda cuando pasa oblicuamente de un medio material a otro diferente."
+    },
+    {
+      "term": "Efecto Doppler",
+      "definition": "Modificación aparente de la frecuencia observada de una onda debido al movimiento relativo existente entre la fuente emisora y el receptor."
+    }
+  ],
+  "closing": "Comprender las ondas nos ayuda a descifrar el mundo técnico y natural que nos rodea. Desde afinar un tiple en Santander o disfrutar de la radio en la vereda, hasta el uso del wifi, el radar de tránsito o los diagnósticos médicos por ecografía, las ondas de sonido y luz moldean nuestras comunicaciones, nuestra salud y nuestra percepción cotidiana de la realidad.",
+  "dbaStatements": [
+    "DBA 1. Comprende la naturaleza de la propagación del sonido y de la luz como fenómenos ondulatorios (ondas mecánicas y electromagnéticas, respectivamente)."
+  ]
+}

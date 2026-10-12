@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola, pilos y pilas de noveno! Bienvenidos a esta guía de estudio diseñada especialmente para ustedes por el Ministerio de Educación Nacional y la profesora de matemáticas. En este recorrido por el fascinante mundo del álgebra, aprenderemos a descifrar cómo se relacionan las variables en nuestra vida cotidiana. Veremos cómo una simple línea recta puede representar el costo de un pasaje en TransMilenio, o cómo una curva perfecta describe el lanzamiento de un balón de fútbol en el parque. Las matemáticas no son solo números en un papel; son la herramienta más poderosa para entender patrones, resolver problemas reales y tomar decisiones informadas en nuestro querido país.",
+  "objectives": [
+    "Identificar la pendiente y el intercepto en funciones lineales para interpretar situaciones de variación constante.",
+    "Resolver sistemas de dos ecuaciones lineales con dos incógnitas usando métodos algebraicos y gráficos.",
+    "Analizar las características de la función cuadrática y su representación gráfica en forma de parábola.",
+    "Modelar situaciones cotidianas de nuestro entorno colombiano utilizando funciones y ecuaciones algebraicas."
+  ],
+  "sections": [
+    {
+      "title": "Pendiente e intercepto",
+      "paragraphs": [
+        "En nuestra vida diaria, muchas situaciones cambian a un ritmo constante. Por ejemplo, si un taxi en Medellín cobra una tarifa fija al subir y luego un valor adicional por cada kilómetro recorrido, estamos frente a una relación lineal. Esta se representa con la famosa ecuación y = mx + b. Aquí, la letra m es la pendiente, es decir, el grado de inclinación de la recta o la razón de cambio. Nos indica qué tan rápido sube o baja la variable y cuando x aumenta una unidad.",
+        "Por otro lado, la letra b representa el intercepto con el eje y. Este valor nos muestra dónde empieza la gráfica cuando la variable x es cero, lo que equivaldría a la tarifa inicial del taxi antes de arrancar el viaje. Si la pendiente es positiva, la recta sube de izquierda a derecha; si es negativa, baja. Dominar estos dos conceptos te permitirá leer cualquier gráfica en los periódicos o noticieros sobre economía y crecimiento poblacional."
+      ],
+      "example": {
+        "statement": "Un servicio de internet en Bogotá cobra una tarifa básica de 30000 pesos mensuales más 5000 pesos por cada giga adicional consumida. Escribe la función lineal que modela el costo total y calcula cuánto se paga por consumir 4 gigas.",
+        "solution": "1. Identificamos la variable independiente x (gigas consumidas) y la dependiente y (costo total).\n2. El costo fijo es el intercepto b = 30000.\n3. El costo por cada giga es la pendiente m = 5000.\n4. La función queda como y = 5000x + 30000.\n5. Evaluamos para x = 4: y = 5000(4) + 30000 = 20000 + 30000 = 50000.\n6. Respuesta: por 4 gigas adicionales se pagan 50000 pesos."
+      }
+    },
+    {
+      "title": "Sistemas de dos ecuaciones lineales",
+      "paragraphs": [
+        "A veces, un solo misterio no se resuelve con una sola pista. En muchas situaciones necesitamos encontrar dos valores desconocidos al mismo tiempo, como el precio individual de una arepa y de un vaso de chocolate en una tienda escolar. Para lograr esto, planteamos un sistema de dos ecuaciones lineales con dos incógnitas. Resolver el sistema significa hallar el punto exacto donde se cruzan ambas condiciones, es decir, los valores que hacen ciertas las dos ecuaciones simultáneamente.",
+        "Existen varios métodos algebraicos para llegar a la solución, como la sustitución, la igualación y la eliminación, además del método gráfico. Por ejemplo, el método de eliminación consiste en sumar o restar las ecuaciones de manera que una de las letras desaparezca, facilitando despejar la otra. Estos sistemas son fundamentales en la administración, la física y la ingeniería para optimizar recursos y resolver problemas de logística y producción en empresas colombianas."
+      ],
+      "example": {
+        "statement": "En una papelería en Cali, 2 cuadernos y 3 lápices cuestan 16000 pesos, mientras que 4 cuadernos y 1 lápiz cuestan 22000 pesos. ¿Cuánto cuesta cada cuaderno y cada lápiz?",
+        "solution": "1. Definimos las variables: c es el precio del cuaderno y l el precio del lápiz.\n2. Planteamos el sistema: 2c + 3l = 16000 y 4c + l = 22000.\n3. Multiplicamos la primera ecuación por -2 para usar eliminación: -4c - 6l = -32000.\n4. Sumamos con la segunda ecuación: (-4c + 4c) + (-6l + l) = -32000 + 22000, lo que da -5l = -10000.\n5. Despejamos l: l = 10000 / 5 = 2000 (el lápiz cuesta 2000 pesos).\n6. Sustituimos l en la segunda ecuación: 4c + 2000 = 22000, entonces 4c = 20000, por lo que c = 5000.\n7. Respuesta: el cuaderno cuesta 5000 pesos y el lápiz 2000 pesos."
+      }
+    },
+    {
+      "title": "Función cuadrática y su parábola",
+      "paragraphs": [
+        "Cuando una relación matemática incluye una variable elevada al cuadrado, es decir, de la forma y = ax² + bx + c, dejamos atrás las líneas rectas y entramos al maravilloso mundo de la función cuadrática. Su representación gráfica es una curva simétrica llamada parábola. Si el número a que acompaña al x² es positivo, la parábola abre hacia arriba como una sonrisa; si es negativo, abre hacia abajo como una, triste. El punto más bajo o más alto se llama vértice.",
+        "Este tipo de función describe con precisión la trayectoria de un objeto lanzado al aire, como cuando un ciclista colombiano salta en una rampa de BMX o cuando se patea un balón en el estadio. El vértice de la parábola nos ayuda a calcular la altura máxima que alcanza el objeto y el tiempo exacto en que lo hace, siendo una herramienta vital en la física y el deporte."
+      ],
+      "example": {
+        "statement": "La altura y en metros de un proyectil en función del tiempo x en segundos está dada por la ecuación y = -5x² + 20x. ¿Cuál es el tiempo en el que el proyectil alcanza su altura máxima?",
+        "solution": "1. Identificamos los coeficientes de la función cuadrática: a = -5, b = 20, c = 0.\n2. La fórmula para encontrar la coordenada x del vértice (el tiempo de altura máxima) es x = -b / (2a).\n3. Reemplazamos los valores: x = -20 / (2 × (-5)) = -20 / (-10).\n4. Realizamos la división: x = 2.\n5. Respuesta: el proyectil alcanza su altura máxima a los 2 segundos del lanzamiento."
+      }
+    },
+    {
+      "title": "Modelar situaciones con funciones",
+      "paragraphs": [
+        "Modelar una situación consiste en traducir un problema del mundo real al lenguaje del álgebra. Este proceso es como construir un puente entre la realidad y las matemáticas. Primero observamos el fenómeno, identificamos qué magnitudes cambian y cuáles permanecen constantes, y luego elegimos la herramienta matemática adecuada, ya sea una función lineal, un sistema de ecuaciones o una función cuadrática.",
+        "Una vez que tenemos el modelo matemático, podemos hacer predicciones sin necesidad de experimentar físicamente. Por ejemplo, los ingenieros ambientales usan modelos matemáticos para predecir el crecimiento de la contaminación en el río Bogotá o para calcular la energía que producirá un parque solar en La Guajira. Aprender a modelar te convierte en un ciudadano crítico capaz de proponer soluciones científicas a los retos de nuestro país."
+      ],
+      "example": {
+        "statement": "Un agricultor en Boyacá tiene 40 metros de malla para cercar un terreno rectangular contra una pared recta. ¿Cuáles deben ser las dimensiones del terreno para obtener la máxima área posible?",
+        "solution": "1. Sea x el ancho del terreno paralelo a la pared. Los dos lados restantes miden y, cumpliendo que x + 2y = 40, de donde y = (40 - x) / 2 = 20 - 0.5x.\n2. El área del rectángulo es A = x × y = x(20 - 0.5x) = -0.5x² + 20x.\n3. Esta es una función cuadrática donde a = -0.5 y b = 20. Buscamos el vértice para hallar el ancho x que maximiza el área.\n4. Usamos x = -b / (2a): x = -20 / (2 × (-0.5)) = -20 / (-1) = 20.\n5. Calculamos y: y = 20 - 0.5(20) = 20 - 10 = 10.\n6. Respuesta: las dimensiones óptimas son 20 metros de frente por 10 metros de profundidad."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es la pendiente de la función lineal y = 3x - 7?",
+      "answer": "La pendiente es 3."
+    },
+    {
+      "question": "Evalúa la función f(x) = -2x + 5 cuando x = 4.",
+      "answer": "El resultado es -3."
+    },
+    {
+      "question": "Resuelve el sistema de ecuaciones: x + y = 10 y x - y = 2.",
+      "answer": "x = 6 y y = 4."
+    },
+    {
+      "question": "¿En qué punto la parábola y = x² - 4 cruza al eje y?",
+      "answer": "Cruza en el punto (0, -4)."
+    },
+    {
+      "question": "Encuentra el vértice (coordenada x) de la parábola y = -x² + 6x - 8.",
+      "answer": "La coordenada x del vértice es 3."
+    },
+    {
+      "question": "Un boleto de bus cuesta 2500 pesos fijos más 800 pesos por kilómetro. Escribe la función del costo total y y halla el costo para 15 kilómetros.",
+      "answer": "y = 800x + 2500; el costo para 15 km es 14500 pesos."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Pendiente",
+      "definition": "Medida de la inclinación de una recta en el plano cartesiano, que indica la razón de cambio entre la variable dependiente y la independiente."
+    },
+    {
+      "term": "Intercepto",
+      "definition": "Punto donde una línea recta o curva cruza uno de los ejes coordenados, generalmente el eje y en las funciones algebraicas."
+    },
+    {
+      "term": "Sistema de ecuaciones",
+      "definition": "Conjunto de dos o más ecuaciones con varias incógnitas cuyas soluciones comunes se buscan de manera simultánea."
+    },
+    {
+      "term": "Función cuadrática",
+      "definition": "Función polinómica de segundo grado cuya representación gráfica es una curva simétrica llamada parábola."
+    },
+    {
+      "term": "Vértice de la parábola",
+      "definition": "Punto máximo o mínimo de una parábola, donde la curva alcanza su valor extremo u óptimo."
+    }
+  ],
+  "closing": "Las matemáticas son mucho más que fórmulas en un tablero escolar; son el lenguaje con el que interpretamos el universo y resolvemos los retos cotidianos de nuestras regiones. Desde calcular el presupuesto para un emprendimiento familiar hasta entender el movimiento de un satélite, las funciones y los sistemas de ecuaciones te dan el superpoder de predecir y transformar tu realidad. ¡Sigue practicando con entusiasmo y verás que no hay problema que no puedas resolver!",
+  "dbaStatements": [
+    "DBA 2. Propone y desarrolla expresiones algebraicas en el conjunto de los números reales y utiliza las propiedades de la igualdad y de orden para determinar el conjunto solución de relaciones entre tales expresiones.",
+    "DBA 8. Utiliza expresiones numéricas, algebraicas o gráficas para hacer descripciones de situaciones concretas y tomar decisiones con base en su interpretación."
+  ]
+}

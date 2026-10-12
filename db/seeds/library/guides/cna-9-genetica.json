@@ -1,0 +1,112 @@
+{
+  "intro": "¡Hola, estudiantes de noveno grado! Bienvenidos a esta guía de estudio sobre Herencia y Evolución. En nuestro recorrido por la biología, descubriremos cómo la información que define nuestros rasgos viaja de generación en generación, permitiendo que se parezcan a sus familias o que surjan características únicas. Desde las plantas de guisante cultivadas por Gregor Mendel hasta la biodiversidad de los hermosos paisajes colombianos, exploraremos los misterios del ADN y las fuerzas naturales que moldean la vida. A lo largo de estas páginas, comprenderán las leyes científicas que explican por qué somos como somos y cómo las especies se transforman para sobrevivir en un planeta en constante cambio. ¡Manos a la obra!",
+  "objectives": [
+    "Comprender la estructura y función del ADN, los genes y los cromosomas como portadores de la información hereditaria.",
+    "Aplicar los principios mendelianos y el cuadro de Punnett para resolver problemas básicos de transmisión genética.",
+    "Analizar la teoría de la selección natural como mecanismo fundamental en el cambio y la adaptación de las especies.",
+    "Reconocer las evidencias científicas que sustentan el concepto de ancestro común en la historia de la vida."
+  ],
+  "sections": [
+    {
+      "title": "ADN, genes y cromosomas",
+      "paragraphs": [
+        "El material hereditario que define a todos los seres vivos se encuentra en el núcleo de las células y se llama ácido desoxirribonucleico, conocido simplemente como ADN. Esta molécula tiene una forma muy particular de doble hélice, similar a una escalera de caracol. Los peldaños de esta escalera están formados por cuatro bases nitrogenadas: adenina, timina, citosina y guanina, las cuales se combinan en secuencias específicas que funcionan como un código de instrucciones para construir y mantener nuestro cuerpo.",
+        "Un gen es un fragmento específico de esa larga cadena de ADN que contiene la información para fabricar una proteína determinada, la cual determinará un rasgo físico, como el color de tus ojos o la textura de tu cabello. A su vez, cuando el ADN se compacta y se empaqueta para organizarse durante la división celular, forma estructuras llamadas cromosomas. En la especie humana, cada célula somática posee 46 cromosomas organizados en 23 parejas, recibiendo la mitad de la madre y la otra mitad del padre."
+      ],
+      "example": {
+        "statement": "Si una célula de la piel humana tiene 46 cromosomas en total, ¿cuántos cromosomas tendrá un espermatozoide producido por esa misma persona?",
+        "solution": "Paso 1: Identificar que las células de la piel son somáticas y diploides (2n), conteniendo el total de cromosomas (46). Paso 2: Reconocer que los gametos (espermatozoides u óvulos) son células sexuales haploides (n), es decir, poseen la mitad de la dotación cromosómica. Paso 3: Dividir el total entre dos: 46 ÷ 2 = 23. Respuesta: El espermatozoide tendrá 23 cromosomas."
+      }
+    },
+    {
+      "title": "Leyes de Mendel y cuadro de Punnett",
+      "paragraphs": [
+        "Gregor Mendel fue un monje y botánico que, mediante sus experimentos con plantas de guisantes en el siglo XIX, sentó las bases de la genética moderna. Mendel descubrió que los caracteres se heredan mediante factores discretos (que hoy llamamos genes) que se transmiten de padres a hijos sin mezclarse. Su primera ley, o principio de la segregación, indica que los dos alelos de un mismo gen se separan durante la formación de las células sexuales. Su segunda ley, o principio de la transmisión independiente, señala que los alelos de distintos genes se heredan de manera independiente unos de otros.",
+        "Para predecir los resultados de los cruces genéticos y calcular las probabilidades de que la descendencia herede ciertos rasgos, utilizamos una herramienta práctica llamada cuadro de Punnett. En esta cuadrícula se colocan los alelos de los parentales en los márgenes superiores y laterales, combinándolos en las casillas internas. Así podemos identificar los genotipos (la combinación de alelos) y los fenotipos (lo que se observa físicamente, como el color de las flores o la forma de una semilla)."
+      ],
+      "example": {
+        "statement": "En una planta de fríjol, el alelo para semilla amarilla (A) es dominante sobre el alelo para semilla verde (a). Si se cruza una planta homocigota dominante (AA) con una homocigota recesiva (aa), ¿cuál será el fenotipo de la primera generación (F1)?",
+        "solution": "Paso 1: Identificar los genotipos de los parentales: AA (amarillo) y aa (verde). Paso 2: Determinar los gametos que produce cada parental: el parental AA solo produce gametos con el alelo A, y el parental aa solo produce gametos con el alelo a. Paso 3: Construir el cuadro de Punnett combinando A con a en cada casilla. El resultado en todas las casillas es el genotipo heterocigoto Aa. Paso 4: Como el alelo A es dominante sobre a, todas las plantas de la descendencia (100 por ciento) tendrán semillas de fenotipo amarillo."
+      }
+    },
+    {
+      "title": "Selección natural",
+      "paragraphs": [
+        "La selección natural es el proceso mediante el cual los organismos mejor adaptados a su ambiente tienen mayor probabilidad de sobrevivir y reproducirse exitosamente. Esta teoría fue propuesta de manera independiente por Charles Darwin y Alfred Russel Wallace tras realizar extensos viajes de exploración. En la naturaleza existe una gran variabilidad genética y nacen más individuos de los que los recursos pueden sostener, lo que genera una lucha por la supervivencia donde los más aptos dejan más descendencia.",
+        "Con el paso de las generaciones, los rasgos favorables que permiten la supervivencia se vuelven más comunes en la población, mientras que los desfavorables disminuyen o desaparecen. Un claro ejemplo lo podemos observar en los insectos que desarrollan resistencia a ciertos insecticidas o en las aves de los páramos colombianos que han desarrollado picos con formas específicas para alimentarse de flores particulares. La selección natural actúa como un filtro ambiental que impulsa la adaptación continua de las poblaciones."
+      ],
+      "example": {
+        "statement": "En una población de escarabajos que viven sobre troncos oscuros, un cambio ambiental oscurece aún más la madera. Si hay escarabajos verdes y escarabajos negros, explica qué pasará con la frecuencia de estos colores debido a la selección natural.",
+        "solution": "Paso 1: Reconocer que el nuevo ambiente (troncos más oscuros) ofrece camuflaje a los escarabajos negros, haciéndolos menos visibles para los depredadores. Paso 2: Los escarabajos verdes son más fáciles de detectar y cazar. Paso 3: Los escarabajos negros sobreviven más tiempo y tienen más probabilidad de reproducirse y dejar descendencia con sus genes. Paso 4: Con el tiempo, la frecuencia de escarabajos negros aumentará en la población, mientras que la de los verdes disminuirá."
+      }
+    },
+    {
+      "title": "Ancestro común",
+      "paragraphs": [
+        "El concepto de ancestro común establece que todas las especies que habitan la Tierra hoy en día descienden, a través de modificaciones graduales a lo largo de millones de años, de un antepasado compartido. Este principio unificador de la biología explica por qué organismos aparentemente muy diferentes comparten similitudes fundamentales en su estructura anatómica, en su desarrollo embrionario y en su código genético universal basado en el ADN.",
+        "Para respaldar esta teoría, la ciencia cuenta con múltiples evidencias. Entre ellas destacan los registros fósiles que muestran formas de transición, la anatomía comparada que revela órganos homólogos con un origen evolutivo común (como las extremidades anteriores de ballenas, murciélagos y humanos), y la biología molecular, que demuestra que cuanto más emparentadas están dos especies, mayor es la similitud en sus secuencias de ADN y proteínas."
+      ],
+      "example": {
+        "statement": "Las extremidades anteriores de un gato, una ballena y un murciélago tienen huesos con una disposición muy similar a pesar de cumplir funciones totalmente distintas (caminar, nadar y volar). ¿Cómo se denominan estas estructuras y qué demuestran?",
+        "solution": "Paso 1: Analizar la estructura anatómica y la función de las extremidades en los tres animales mencionados. Paso 2: Reconocer que, aunque cumplen funciones diferentes, tienen el mismo plan estructural básico. Paso 3: Identificar que estas estructuras se llaman órganos homólogos. Paso 4: Concluir que su similitud estructural demuestra que estas especies comparten un ancestro común evolutivo."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cómo se llama la molécula portadora de la información genética en forma de doble hélice?",
+      "answer": "El ADN (ácido desoxirribonucleico)."
+    },
+    {
+      "question": "¿Cuántos cromosomas tiene en total una célula somática del cuerpo humano?",
+      "answer": "46 cromosomas."
+    },
+    {
+      "question": "Si se cruzan dos plantas heterocigotas (Aa x Aa) para un rasgo con dominancia completa, ¿qué porcentaje de la descendencia tendrá genotipo homocigoto dominante (AA)?",
+      "answer": "El 25 por ciento."
+    },
+    {
+      "question": "¿Quiénes fueron los naturalistas que propusieron de forma independiente la teoría de la evolución por selección natural?",
+      "answer": "Charles Darwin y Alfred Russel Wallace."
+    },
+    {
+      "question": "¿Qué nombre reciben los órganos que tienen un origen anatómico similar pero cumplen funciones diferentes, evidenciando un ancestro común?",
+      "answer": "Órganos homólogos."
+    },
+    {
+      "question": "Explica brevemente por qué la variabilidad genética dentro de una población es indispensable para que actúe la selección natural.",
+      "answer": "Porque si todos los individuos fueran genéticamente idénticos, ante un cambio ambiental no habría unos más aptos que otros para sobrevivir y reproducirse."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "ADN",
+      "definition": "Molécula en forma de doble hélice que almacena y transmite la información genética en los seres vivos."
+    },
+    {
+      "term": "Gen",
+      "definition": "Segmento de ADN que contiene la información necesaria para fabricar una proteína y determinar un carácter."
+    },
+    {
+      "term": "Cromosoma",
+      "definition": "Estructura altamente organizada formada por ADN y proteínas que se encuentra en el núcleo celular."
+    },
+    {
+      "term": "Alelo",
+      "definition": "Cada una de las formas alternativas que puede tener un mismo gen."
+    },
+    {
+      "term": "Fenotipo",
+      "definition": "Conjunto de características observables o físicas de un organismo, resultado de la interacción entre su genotipo y el ambiente."
+    },
+    {
+      "term": "Selección natural",
+      "definition": "Mecanismo evolutivo donde los organismos con adaptaciones favorables sobreviven y se reproducen con mayor éxito."
+    }
+  ],
+  "closing": "Comprender la herencia y la evolución nos permite valorar la riqueza natural de nuestro país y entender nuestro propio cuerpo. Cada ser vivo en la Tierra, desde las coloridas mariposas de nuestra biodiversidad hasta cada uno de nosotros, lleva escrito en su ADN un capítulo de una historia compartida que lleva millones de años escribiéndose.",
+  "dbaStatements": [
+    "DBA 4. Comprende la forma en que los principios genéticos mendelianos y post-mendelianos explican la herencia y el mejoramiento de las especies existentes.",
+    "DBA 6. Analiza teorías científicas sobre el origen de las especies (selección natural y ancestro común) como modelos científicos que sustentan sus explicaciones desde diferentes evidencias y argumentaciones."
+  ]
+}

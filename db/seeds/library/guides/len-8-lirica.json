@@ -1,0 +1,112 @@
+{
+  "intro": "¡Hola, muchachos y muchachas de octavo! Bienvenidos a este recorrido por el género lírico. En la literatura, la poesía no es solo un montón de palabras tristes o difíciles de entender; es una forma maravillosa de jugar con el idioma para expresar lo que sentimos, desde la brisa fresca que baja por los cerros de Bogotá hasta la alegría de un gol en la calle. A través del ritmo, la música y las imágenes que creamos con la imaginación, descubriremos que todos llevamos un poeta por dentro listos para cantar con palabras.",
+  "objectives": [
+    "Identificar la estructura formal del verso, la estrofa y la rima en diferentes poemas",
+    "Calcular la métrica básica de un verso contando sus sílabas poéticas",
+    "Reconocer figuras retóricas como la metáfora, el símil, la personificación y la hipérbole",
+    "Interpretar textos líricos valorando su musicalidad y su conexión con nuestra identidad cultural"
+  ],
+  "sections": [
+    {
+      "title": "Verso, estrofa y rima",
+      "paragraphs": [
+        "El género lírico se distingue de otros textos porque se escribe principalmente en verso. Cada línea de un poema es un verso, y cuando varios versos se agrupan separados por un espacio en blanco, forman una estrofa. Esta organización visual y espacial le da al poema una arquitectura propia, muy diferente a la forma en que escribimos un cuento o una carta común y corriente.",
+        "La musicalidad del poema se apoya fuertemente en la rima, que es la coincidencia de los sonidos finales de los versos a partir de la última vocal acentuada. Si coinciden vocales y consonantes, la rima es consonante; si solo coinciden las vocales, es asonante. Al leer en voz alta, estas repeticiones crean una cadencia que nos recuerda a una canción de nuestra región."
+      ],
+      "example": {
+        "statement": "Identifica los versos y el tipo de rima en los siguientes versos inspirados en el río Magdalena: El río va caminando / cantando por la región, / y le va entregando al mundo / todo su buen corazón.",
+        "solution": "1. El poema tiene una estrofa de 4 versos. 2. Analizamos las terminaciones: caminando (-ando) rima con mundo (-undo) de forma asonante en las vocales u-o; región (-on) rima con corazón (-on) de forma consonante. 3. Los versos pares tienen rima consonante marcada."
+      }
+    },
+    {
+      "title": "Métrica básica",
+      "paragraphs": [
+        "La métrica es la medida de los versos, es decir, el conteo de sus sílabas. A diferencia de las sílabas gramaticales que aprendimos en primaria, en poesía contamos las sílabas teniendo en cuenta la musicalidad y los encuentros entre vocales. Cuando una palabra termina en vocal y la siguiente empieza por vocal o h, se unen formando una sola sílaba llamada sinalefa. Esto hace que la lectura sea fluida y cantarina, sin tropiezos.",
+        "Además, debemos mirar la última palabra del verso. Si es aguda, se suma una sílaba al conteo total; si es esdrújula, se resta una. Si es grave, el número de sílabas se queda tal como salió en el conteo. Este ritmo matemático es el latido secreto que sostiene la estructura del poema."
+      ],
+      "example": {
+        "statement": "Mide el verso: La luna brilla en la tarde (palabra final grave).",
+        "solution": "1. Separamos en sílabas gramaticales: La / lu / na / bri / lla / en / la / tar / de. 2. Identificamos sinalefas (vocal final con vocal inicial): 'lla en' se une formando 'llaen'. 3. Contamos: La-lu-na-bri-llaen-la-tar-de (8 sílabas). Como 'tarde' es grave, el verso tiene 8 sílabas métricas exactas (octosílabo)."
+      }
+    },
+    {
+      "title": "Figuras retóricas",
+      "paragraphs": [
+        "Las figuras retóricas son herramientas del lenguaje que nos permiten salirnos del significado literal para crear imágenes bellas y sorprendentes. El símil o comparación establece una semejanza directa entre dos elementos usando palabras como 'cual' o 'como' (por ejemplo, tus ojos brillan como luceros). La metáfora, en cambio, identifica un elemento con otro sin usar nexos, afirmando que algo es directamente otra cosa (tus ojos son luceros en la noche).",
+        "Otras figuras muy usadas son la personificación, que le da cualidades humanas a objetos o animales (el viento susurra secretos), y la hipérbole, que consiste en exagerar una idea de forma desproporcionada (tengo tanta hambre que me comería una vaca entera). Estas figuras llenan de color y emoción cualquier composición literaria."
+      ],
+      "example": {
+        "statement": "Clasifica la siguiente frase según la figura retórica que presenta: El sol de Cartagena abrazaba con sus brazos de fuego a los turistas.",
+        "solution": "1. Analizamos la frase: el sol no tiene brazos ni abraza literalmente, pero se le atribuyen acciones humanas. 2. Identificamos la personificación ('abrazaba con sus brazos'). 3. También hay una metáfora implícita ('brazos de fuego'). La respuesta principal es la personificación por darle vida y acciones humanas al sol."
+      }
+    },
+    {
+      "title": "Leer y comentar un poema",
+      "paragraphs": [
+        "Leer un poema requiere paciencia y disposición para escuchar con los ojos. No debemos buscar un significado único o científico, sino dejarnos llevar por las emociones, los recuerdos y las imágenes que el autor despierta. Al comentar un texto lírico, es fundamental analizar cómo la música, el ritmo y las figuras retóricas trabajan en equipo para transmitir un sentimiento específico, ya sea la nostalgia por la tierrita o la alegría de vivir.",
+        "En Colombia, autores como José Asunción Silva o Dora Castellanos han demostrado que la poesía puede sonar como un vals o como un susurro nocturno. Cuando comentamos poesía en clase, compartimos lo que sentimos y descubrimos que un mismo verso puede resonar de manera distinta en cada uno de nosotros, enriqueciendo nuestra mirada del mundo y nuestra identidad cultural."
+      ],
+      "example": {
+        "statement": "Lee el fragmento y comenta su sentido: La tarde turquí / de oro y de grana, / la vieja sabana / que vi por allí.",
+        "solution": "1. Observamos la brevedad y la musicalidad de los versos (tetrasílabos y rima consonante). 2. Identificamos que describe un paisaje al atardecer ('tarde turquí / de oro y de grana'). 3. Concluimos que el autor usa colores vivos para transmitir una sensación de quietud y belleza en la sabana colombiana, conectando al lector con la naturaleza."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cómo se le llama a cada una de las líneas que componen un poema?",
+      "answer": "Verso"
+    },
+    {
+      "question": "¿Qué nombre recibe el conjunto de versos agrupados en un poema?",
+      "answer": "Estrofa"
+    },
+    {
+      "question": "¿Cómo se le llama a la unión de la vocal final de una palabra con la vocal inicial de la siguiente al medir un verso?",
+      "answer": "Sinalefa"
+    },
+    {
+      "question": "¿Qué figura retórica compara dos elementos utilizando la palabra 'como'?",
+      "answer": "Símil"
+    },
+    {
+      "question": "Si un verso termina en palabra aguda y se le suma una sílaba al conteo métrico, ¿cómo se le llama a este fenómeno?",
+      "answer": "Ley del acento final"
+    },
+    {
+      "question": "¿Qué diferencia principal existe entre la metáfora y el símil?",
+      "answer": "El símil usa nexos comparativos como 'como' y la metáfora identifica los elementos directamente sin nexos."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Verso",
+      "definition": "Línea o unidad rítmica menor que compone un poema."
+    },
+    {
+      "term": "Estrofa",
+      "definition": "Conjunto de versos ordenados que forman la estructura de un poema."
+    },
+    {
+      "term": "Rima",
+      "definition": "Coincidencia de sonidos al final de dos o más versos a partir de la última vocal acentuada."
+    },
+    {
+      "term": "Métrica",
+      "definition": "Arte de medir los versos contando sus sílabas poéticas."
+    },
+    {
+      "term": "Sinalefa",
+      "definition": "Unión de la vocal final de una palabra con la vocal inicial de la siguiente para formar una sola sílaba métrica."
+    },
+    {
+      "term": "Metáfora",
+      "definition": "Figura retórica que nombra un objeto con el nombre de otro debido a una relación de semejanza."
+    }
+  ],
+  "closing": "La poesía vive en las coplas que cantamos en las fiestas del pueblo, en los amoríos de la cuadra y en las canciones que escuchamos todos los días en la radio. Al conocer el ritmo, la rima y las figuras retóricas, no solo aprendemos para una nota escolar, sino que ganamos herramientas para expresar nuestra voz con belleza y autenticidad en la vida diaria.",
+  "dbaStatements": [
+    "DBA 3. Reconoce en las producciones literarias como cuentos, relatos cortos, fábulas y novelas, aspectos referidos a la estructura formal del género y a la identidad cultural que recrea.",
+    "DBA 4. Comprende que el género lírico es una construcción mediada por la musicalidad, la rima y el uso de figuras retóricas, que permiten recrear una idea, un sentimiento o una situación."
+  ]
+}

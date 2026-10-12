@@ -14,6 +14,9 @@ import {
   Crown,
   FileSpreadsheet,
   Flame,
+  FlaskConical,
+  Globe2,
+  Languages,
   Lock,
   Megaphone,
   PenLine,
@@ -38,7 +41,7 @@ import { MicButton, SpeakButton } from '@/shared/voice-ui';
 import { appendToField } from '@/shared/voice';
 
 interface Progress { completed: number; total: number }
-interface CourseCard { id: string; title: string; description: string; subject: string; group_name: string; grade_level: number; progress: Progress }
+interface CourseCard { id: string; title: string; description: string; subject: string; group_name: string; grade_level: number; demo?: boolean; progress: Progress }
 interface GameMe {
   xp: number;
   level: { level: number; title: string; min_xp: number };
@@ -56,7 +59,11 @@ interface CourseDetail {
 }
 
 function subjectIcon(subject: string): LucideIcon {
-  return /mat/i.test(subject) ? Sigma : BookOpen;
+  if (/mat/i.test(subject)) return Sigma;
+  if (/natural/i.test(subject)) return FlaskConical;
+  if (/social/i.test(subject)) return Globe2;
+  if (/ingl/i.test(subject)) return Languages;
+  return BookOpen;
 }
 
 function pct(progress: Progress) {
@@ -73,6 +80,7 @@ function CourseTile({ course, index }: { course: CourseCard; index: number }) {
           <Icon className="big-ico" size={150} strokeWidth={1.5} />
           <div style={{ position: 'relative' }}>
             <span className="chip" style={{ background: 'rgba(255,255,255,.2)', color: '#fff', border: 0 }}>{course.subject} · {course.grade_level}° {course.group_name}</span>
+            {course.demo && <span className="chip" style={{ background: 'rgba(0,0,0,.22)', color: '#fff', border: 0, marginLeft: 6 }}>Demo</span>}
           </div>
         </div>
         <div className="course-body">

@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola! Bienvenidos a esta guía de aprendizaje sobre las reacciones químicas y el fascinante comportamiento de los gases. ¿Te has preguntado alguna vez qué ocurre cuando se hornea un pandebono en el Valle del Cauca o por qué un paquete de papas se infla al viajar desde Bogotá hacia Melgar? La respuesta está en la química y en la física. En esta guía aprenderás cómo las sustancias se transforman al romper y formar nuevos enlaces, cumpliendo siempre con la ley de conservación de la masa. Además, exploraremos cómo la presión, el volumen y la temperatura cambian el comportamiento del aire que respiramos. Prepárate para descubrir la ciencia que explica los fenómenos cotidianos de nuestro entorno colombiano.",
+  "objectives": [
+    "Identificar reactivos y productos en una reacción química reconociendo la reorganización de sus átomos y enlaces.",
+    "Aplicar la ley de conservación de la masa en la verificación de ecuaciones químicas sencillas.",
+    "Explicar el comportamiento de los gases mediante las leyes de Boyle, Charles y la ecuación del gas ideal.",
+    "Resolver problemas prácticos sobre variables de estado de los gases presentes en situaciones cotidianas."
+  ],
+  "sections": [
+    {
+      "title": "Reactivos y productos",
+      "paragraphs": [
+        "Las reacciones químicas son procesos en los cuales unas sustancias iniciales, llamadas reactivos, se transforman en sustancias totalmente diferentes denominadas productos. Durante este proceso, los átomos no se crean ni se destruyen, sino que se reordenan. Las fuerzas que mantienen unidos a los átomos dentro de una molécula se conocen como enlaces intramoleculares. Para que ocurra una reacción, los enlaces existentes entre los reactivos deben romperse mediante la absorción o liberación de energía, permitiendo que los átomos se agrupen de una forma nueva para formar enlaces iónicos o covalentes en los productos finales.",
+        "Un ejemplo clásico de este fenómeno ocurre cuando encendemos la estufa de gas natural en los hogares de Medellín o Cali. El metano presente en el gas reacciona con el oxígeno del aire ambiente. En este proceso, los enlaces covalentes del metano y del oxígeno se rompen, y los átomos de carbono, hidrógeno y oxígeno se reorganizan por completo. Como resultado de esta transformación química, se forman dos nuevas moléculas: dióxido de carbono y agua en forma de vapor, acompañados por la liberación de calor y luz que usamos para cocinar nuestros alimentos."
+      ],
+      "example": {
+        "statement": "En la formación del cloruro de sodio (sal de cocina) a partir de sodio metálico y cloro gaseoso, identifica los reactivos, los productos y el tipo de enlace intramolecular formado.",
+        "solution": "Paso 1: Los reactivos son las sustancias iniciales, es decir, el sodio (Na) y el cloro (Cl₂). Paso 2: El producto es la sustancia final obtenida, que corresponde al cloruro de sodio (NaCl). Paso 3: El sodio es un metal y el cloro es un no metal; al reaccionar, el sodio cede un electrón al cloro, generando una atracción electrostática entre iones. Por lo tanto, el enlace intramolecular formado en el producto es iónico."
+      }
+    },
+    {
+      "title": "Conservación de la masa",
+      "paragraphs": [
+        "En el siglo XVIII, el químico Antoine Lavoisier formuló la ley de conservación de la masa, la cual establece que en una reacción química la masa total de los reactivos es exactamente igual a la masa total de los productos. Esto significa que la materia no se crea ni se destruye, solo se transforma. En cualquier transformación química, el número total de átomos de cada elemento presente al inicio del proceso debe ser idéntico al número de átomos de ese mismo elemento al finalizar la reacción, sin importar cuán drástico sea el cambio físico observable.",
+        "Para verificar esta ley en los laboratorios escolares colombianos, se acostumbra realizar reacciones en sistemas cerrados donde no se permita el escape de gases. Si quemamos una porción de madera dentro de un recipiente sellado, la suma de la masa de la madera y del oxígeno consumido será exactamente igual a la suma de la masa de las cenizas, el dióxido de carbono y el vapor de agua producidos. Por esta razón, al escribir ecuaciones químicas debemos balancearlas, asegurando que la cantidad de reactivos equivalga conceptual y cuantitativamente a la de los productos."
+      ],
+      "example": {
+        "statement": "Si se hacen reaccionar 10 g de cinta de magnesio con 6,5 g de oxígeno en un recipiente cerrado, ¿cuál será la masa total de óxido de magnesio obtenida al finalizar la reacción?",
+        "solution": "Paso 1: Identificar las masas de los reactivos. Masa de magnesio = 10 g; masa de oxígeno = 6,5 g. Paso 2: Aplicar la ley de conservación de la masa, que afirma que la masa total de los reactivos es igual a la masa total de los productos. Paso 3: Sumar las masas de los reactivos: 10 g + 6,5 g = 16,5 g. Por lo tanto, la masa total de óxido de magnesio obtenida es 16,5 g."
+      }
+    },
+    {
+      "title": "Ley de Boyle y ley de Charles",
+      "paragraphs": [
+        "Los gases poseen propiedades físicas particulares que varían según las condiciones ambientales. La ley de Boyle establece que, a una temperatura constante, el volumen de una masa fija de gas es inversamente proporcional a la presión ejercida sobre él. Esto significa que si la presión aumenta, el volumen del gas disminuye de manera proporcional, según la relación matemática P₁ × V₁ = P₂ × V₂. Una aplicación cotidiana ocurre al presionar una jeringa tapada: al aplicar más fuerza sobre el émbolo, el aire encerrado se reduce a un espacio mucho menor.",
+        "Por otro lado, la ley de Charles plantea que, a una presión constante, el volumen de un gas es directamente proporcional a su temperatura absoluta, medida en Kelvin. La relación matemática se expresa como V₁ / T₁ = V₂ / T₂. Un claro ejemplo se observa cuando viajamos desde Bogotá, a baja temperatura, hacia la cálida ciudad de Girardot. Si llevamos un balón inflado, el aire en su interior absorberá calor, provocando que sus moléculas se muevan más rápido y se alejen entre sí, lo que incrementa el volumen total del balón visiblemente."
+      ],
+      "example": {
+        "statement": "Un gas ocupa un volumen de 2 litros a una presión de 1 atm. Si la temperatura no cambia y la presión aumenta a 2 atm, ¿cuál será el nuevo volumen del gas?",
+        "solution": "Paso 1: Identificar los datos iniciales y finales. P₁ = 1 atm, V₁ = 2 L, P₂ = 2 atm, V₂ = ?. Paso 2: Usar la fórmula de la ley de Boyle: P₁ × V₁ = P₂ × V₂. Paso 3: Despejar V₂: V₂ = (P₁ × V₁) / P₂. Paso 4: Sustituir los valores: V₂ = (1 atm × 2 L) / 2 atm = 1 L. El nuevo volumen es de 1 litro."
+      }
+    },
+    {
+      "title": "Gas ideal",
+      "paragraphs": [
+        "Un gas ideal es un modelo teórico simplificado que ayuda a comprender el comportamiento de los gases en condiciones estándar de presión y temperatura. En este modelo se asume que las partículas del gas no ocupan un volumen propio significativo y que no existen fuerzas de atracción o repulsión entre ellas. Aunque los gases reales como el nitrógeno o el oxígeno presentan desviaciones ligeras, este modelo matemático es una herramienta fundamental en la ciencia, pues predice con gran precisión cómo interactúan la presión, el volumen, la temperatura y la cantidad de sustancia.",
+        "La ecuación de estado del gas ideal unifica las leyes parciales en una sola expresión: P × V = n × R × T. En esta relación, P representa la presión en atmósferas, V el volumen en litros, n la cantidad de gas en moles, T la temperatura en Kelvin y R la constante universal de los gases ideales, cuyo valor aproximado es 0,0821 L × atm / (mol × K). Esta fórmula permite calcular cualquiera de las cuatro variables si conocemos las demás, siendo indispensable en la industria química y ambiental de Colombia para el estudio de la atmósfera."
+      ],
+      "example": {
+        "statement": "Calcula la presión ejercida por 2 moles de un gas ideal contenidos en un recipiente de 10 litros a una temperatura de 300 K. Usa R = 0,0821 L × atm / (mol × K).",
+        "solution": "Paso 1: Identificar las variables. n = 2 mol, V = 10 L, T = 300 K, R = 0,0821 L × atm / (mol × K), P = ?. Paso 2: Utilizar la ecuación P × V = n × R × T. Paso 3: Despejar P: P = (n × R × T) / V. Paso 4: Sustituir datos: P = (2 mol × 0,0821 L × atm / (mol × K) × 300 K) / 10 L = 49,26 / 10 = 4,926 atm. La presión del gas es de 4,926 atm."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cómo se denominan las sustancias iniciales que reaccionan en un cambio químico?",
+      "answer": "Se denominan reactivos."
+    },
+    {
+      "question": "En la molécula de agua (H₂O), ¿qué tipo de enlace intramolecular une los átomos de hidrógeno y oxígeno?",
+      "answer": "Enlace covalente."
+    },
+    {
+      "question": "Según la ley de conservación de la masa, si 4 g de hidrógeno reaccionan completamente con 32 g de oxígeno, ¿cuántos gramos de agua se producen?",
+      "answer": "Se producen 36 g de agua."
+    },
+    {
+      "question": "Si la presión de un gas en un recipiente cerrado se duplica manteniendo la temperatura constante, ¿qué le ocurre a su volumen según la ley de Boyle?",
+      "answer": "El volumen se reduce a la mitad."
+    },
+    {
+      "question": "Un recipiente flexible contiene 3 litros de helio a 300 K. Si se calienta a presión constante hasta alcanzar 400 K, ¿cuál es el nuevo volumen del gas?",
+      "answer": "El nuevo volumen es de 4 litros."
+    },
+    {
+      "question": "¿Cuántas moles de un gas ideal hay en un recipiente de 8,21 litros a 1 atm de presión y 300 K de temperatura? (R = 0,0821 L × atm / (mol × K)).",
+      "answer": "Hay 0,33 moles de gas."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Reactivo",
+      "definition": "Sustancia inicial que se consume durante una reacción química para transformarse en otras sustancias distintas llamadas productos."
+    },
+    {
+      "term": "Enlace covalente",
+      "definition": "Fuerza intramolecular que mantiene unidos a dos átomos mediante la compartición de uno o más pares de electrones."
+    },
+    {
+      "term": "Enlace iónico",
+      "definition": "Atracción electrostática entre iones de carga opuesta producida por la transferencia de electrones de un átomo a otro."
+    },
+    {
+      "term": "Presión",
+      "definition": "Magnitud física que mide la fuerza ejercida de forma perpendicular por unidad de superficie sobre las paredes de un recipiente."
+    },
+    {
+      "term": "Gas ideal",
+      "definition": "Modelo teórico de gas cuyas partículas no ejercen fuerzas intermoleculares entre sí y ocupan un volumen nulo en el espacio."
+    }
+  ],
+  "closing": "Comprender las reacciones químicas y los gases nos permite entender el mundo que nos rodea. Desde la combustión en los motores de los buses de TransMilenio hasta la preparación de alimentos en nuestras cocinas, la ciencia explica estos procesos. Te invitamos a observar con curiosidad los cambios de la materia en tu hogar y comunidad, aplicando siempre el rigor y el pensamiento científico.",
+  "dbaStatements": [
+    "DBA 2. Comprende que en una reacción química se recombinan los átomos de las moléculas de los reactivos para generar productos nuevos, y que dichos productos se forman a partir de fuerzas intramoleculares (enlaces iónicos y covalentes).",
+    "DBA 3. Comprende que el comportamiento de un gas ideal está determinado por las relaciones entre Temperatura (T), Presión (P), Volumen (V) y Cantidad de sustancia (n)."
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "intro": "¡Hola, estudiantes de séptimo grado! Bienvenidos a esta emocionante aventura por el fascinante mundo de la naturaleza colombiana. En nuestro hermoso país, desde la selva amazónica hasta los páramos andinos como el Chingaza, la vida se organiza en complejas redes donde cada ser vivo cumple un papel fundamental. En esta guía de estudio comprenderemos cómo la energía del Sol se transforma y viaja a través de los organismos, y cómo los nutrientes esenciales como el agua, el carbono y el nitrógeno se reciclan constantemente en el planeta sin desperdiciarse jamás. ¡Prepárense para descubrir los secretos que mantienen vivos nuestros ecosistemas!",
+  "objectives": [
+    "Identificar los roles de productores, consumidores y descomponedores en las redes tróficas colombianas",
+    "Analizar el flujo unidireccional de la energía y el ciclo de la materia en los ecosistemas",
+    "Explicar los procesos de fotosíntesis y respiración celular como motores de la vida",
+    "Describir la dinámica de los ciclos biogeoquímicos del agua, el carbono y el nitrógeno"
+  ],
+  "sections": [
+    {
+      "title": "Productores, consumidores y descomponedores",
+      "paragraphs": [
+        "En cualquier ecosistema de Colombia, como un manglar en la costa Caribe o un bosque de niebla, los seres vivos se relacionan según su forma de obtener alimento. En la base encontramos a los productores, principalmente plantas, algas y fitoplancton, capaces de fabricar su propio alimento mediante la fotosíntesis utilizando la luz solar, el agua y el dióxido de carbono. Ellos son autótrofos y sostienen a todo el ecosistema.",
+        "Por encima de los productores se ubican los consumidores, organismos heterótrofos que deben alimentarse de otros seres vivos para sobrevivir. Los herbívoros o consumidores primarios, como el venado de páramo, comen plantas. Los carnívoros, como el jaguar o el puma, son consumidores secundarios o terciarios que cazan herbívoros u otros carnívoros. También están los omnívoros, que comen de todo.",
+        "Finalmente, los descomponedores, como hongos y bacterias del suelo, cumplen una labor de limpieza y reciclaje vital. Desintegran los restos de plantas y animales muertos, transformando la materia orgánica en sales minerales y nutrientes que devuelven a la tierra. Sin ellos, los nutrientes se agotarían rápidamente y la vida en la Tierra colapsaría."
+      ],
+      "example": {
+        "statement": "En el Parque Nacional Natural Chingaza, un oso de anteojos come bromelias, luego un puma caza al oso, y al morir el puma, hongos del suelo descomponen sus restos. Clasifica cada organismo según su rol trófico.",
+        "solution": "Paso 1: Identificar al organismo que produce su alimento. Las bromelias son plantas, por lo tanto son productores. Paso 2: Identificar al animal que come plantas. El oso de anteojos come bromelias, siendo un consumidor primario u omnívoro. Paso 3: Identificar al carnívoro. El puma caza al oso, actuando como consumidor secundario o terciario. Paso 4: Identificar a los organismos que degradan la materia. Los hongos descomponen los restos, por lo tanto son descomponedores."
+      }
+    },
+    {
+      "title": "Flujo de energía en las redes tróficas",
+      "paragraphs": [
+        "La energía que mantiene funcionando la biósfera proviene casi en su totalidad del Sol. Los productores capturan esta energía solar y la convierten en energía química almacenada en sus tejidos. Cuando un herbívoro se alimenta de una planta, transfiere una parte de esa energía a su propio cuerpo, y lo mismo ocurre cuando un carnívoro se alimenta del herbívoro. Este proceso se representa mediante cadenas y redes tróficas interconectadas.",
+        "Es muy importante recordar que la energía fluye en una sola dirección y se disipa. De acuerdo con la regla ecológica, al pasar de un nivel trófico al siguiente, conocido como nivel trófico, se pierde aproximadamente el noventa por ciento de la energía en forma de calor debido a las actividades vitales como la respiración, el movimiento y la digestión. Solo cerca del diez por ciento pasa al siguiente nivel.",
+        "Debido a esta gran pérdida de energía en cada eslabón, las cadenas tróficas no suelen ser muy largas, rara vez superan los cuatro o cinco niveles. Por esta misma razón, los animales carnívoros ubicados en la parte alta de la pirámide trófica, como el águila arpía, son mucho menos numerosos que las plantas y los herbívoros que los sustentan en la naturaleza."
+      ],
+      "example": {
+        "statement": "Si una planta en el Amazonas acumula diez mil unidades de energía solar en su biomasa, ¿cuánta energía aproximadamente llegará teóricamente a un jaguar que se encuentra tres niveles más arriba como consumidor terciario?",
+        "solution": "Paso 1: Aplicar la regla del diez por ciento por cada nivel trófico. Del productor al consumidor primario pasa el 10%. Paso 2: Calcular el primer nivel: el 10% de 10000 es 1000 unidades de energía. Paso 3: Calcular el segundo nivel (consumidor secundario): el 10% de 1000 es 100 unidades. Paso 4: Calcular el tercer nivel (consumidor terciario, el jaguar): el 10% de 100 es 10 unidades de energía que llegan finalmente al jaguar."
+      }
+    },
+    {
+      "title": "Fotosíntesis y respiración celular",
+      "paragraphs": [
+        "La fotosíntesis y la respiración celular son dos procesos metabólicos opuestos y complementarios que permiten que la materia y la energía fluyan continuamente en los seres vivos. La fotosíntesis ocurre en los cloroplastos de las células vegetales y algas. Mediante este proceso, utilizando agua, dióxido de carbono y energía lumínica, se producen glucosa, que sirve de alimento, y oxígeno, que es liberado a la atmósfera para beneficio de casi todos los seres vivos.",
+        "Por su parte, la respiración celular ocurre en las mitocondrias de las células de prácticamente todos los eucariotas, tanto plantas como animales y hongos. En este proceso, la glucosa obtenida de los alimentos se combina con el oxígeno tomado del ambiente para liberar la energía química necesaria para las funciones vitales, produciendo como desecho dióxido de carbono y agua.",
+        "Gracias a esta maravillosa complementariedad, el oxígeno que los animales exhalamos es usado por las plantas en su fotosíntesis, y el oxígeno que las plantas liberan es respirado por nosotros. Es un ciclo perfecto de gases que equilibra la atmósfera terrestre y sostiene la vida en los diversos ecosistemas de nuestro planeta."
+      ],
+      "example": {
+        "statement": "Un estudiante encierra una planta acuática en un frasco con agua y luz solar durante el día, y nota burbujas en las hojas. ¿Qué gas contienen esas burbujas y a qué proceso celular corresponde?",
+        "solution": "Paso 1: Analizar las condiciones del experimento: presencia de planta acuática y luz solar. Paso 2: Recordar que las plantas realizan fotosíntesis cuando reciben luz. Paso 3: Identificar los productos de la fotosíntesis: glucosa y oxígeno gaseoso. Paso 4: Concluir que las burbujas corresponden a oxígeno producido durante la fase lumínica de la fotosíntesis."
+      }
+    },
+    {
+      "title": "Ciclos del agua, del carbono y del nitrógeno",
+      "paragraphs": [
+        "A diferencia de la energía, que fluye y se disipa como calor, la materia en la Tierra es finita y se recicla permanentemente a través de los ciclos biogeoquímicos. El ciclo del agua incluye la evaporación desde los océanos y ríos de Colombia, la transpiración de los bosques, la condensación en nubes y la precipitación en forma de lluvia o nieve, alimentando nuestros nevados y fuentes hídricas.",
+        "El ciclo del carbono se basa en el intercambio de dióxido de carbono entre la atmósfera, los océanos y los seres vivos. Las plantas retiran carbono del aire mediante la fotosíntesis, los animales lo consumen, y todos lo devuelven a la atmósfera mediante la respiración celular y la quema de combustibles fósiles, conectando la vida pasada y presente.",
+        "El ciclo del nitrógeno es igualmente fascinante. Aunque la atmósfera tiene un gran porcentaje de nitrógeno gaseoso, las plantas no pueden absorberlo directamente. Bacterias fijadoras de nitrógeno en el suelo y raíces transforman este gas en compuestos asimilables que nutren a la vegetación y luego a toda la red trófica."
+      ],
+      "example": {
+        "statement": "¿Por qué son indispensables las bacterias fijadoras de nitrógeno en el suelo para que una planta de maíz crezca sana, si el aire contiene un porcentaje elevado de nitrógeno?",
+        "solution": "Paso 1: Reconocer que el nitrógeno atmosférico se encuentra en forma gaseosa triplete (N2), una molécula muy estable que los animales y las plantas no pueden utilizar directamente. Paso 2: Identificar la función de las bacterias fijadoras en los nódulos radicales o suelo. Paso 3: Explicar que estas bacterias rompen los enlaces del nitrógeno atmosférico y lo convierten en amonio y nitratos. Paso 4: Concluir que solo en esa forma química soluble las plantas pueden absorber el nitrógeno para construir sus proteínas."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Qué nombre reciben los organismos que fabrican su propio alimento mediante la fotosíntesis?",
+      "answer": "Productores o autótrofos"
+    },
+    {
+      "question": "En una cadena trófica, si un roedor come semillas y una serpiente come al roedor, ¿qué nivel trófico ocupa la serpiente?",
+      "answer": "Consumidor secundario"
+    },
+    {
+      "question": "Aproximadamente, ¿qué porcentaje de energía útil se pierde al pasar de un nivel trófico a otro superior?",
+      "answer": "El noventa por ciento"
+    },
+    {
+      "question": "¿En qué organelo celular de las plantas ocurre el proceso de la fotosíntesis?",
+      "answer": "En los cloroplastos"
+    },
+    {
+      "question": "¿Cómo se llaman los organismos encargados de reciclar los restos orgánicos convirtiéndolos en nutrientes minerales?",
+      "answer": "Descomponedores"
+    },
+    {
+      "question": "Explica brevemente por qué la materia se recicla en el planeta mientras que la energía fluye en una sola dirección.",
+      "answer": "La materia es finita y sus átomos se reutilizan en ciclos biogeoquímicos, mientras que la energía se degrada y se disipa irreversiblemente en forma de calor."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Autótrofo",
+      "definition": "Organismo capaz de sintetizar su propio alimento a partir de sustancias inorgánicas y energía solar."
+    },
+    {
+      "term": "Heterótrofo",
+      "definition": "Organismo que no puede producir su propio alimento y debe consumir materia orgánica de otros seres vivos."
+    },
+    {
+      "term": "Nivel trófico",
+      "definition": "Cada uno de los conjuntos de especies de un ecosistema que comparten el origen de su alimentación."
+    },
+    {
+      "term": "Fotosíntesis",
+      "definition": "Proceso químico donde plantas y algas transforman luz, agua y dióxido de carbono en glucosa y oxígeno."
+    },
+    {
+      "term": "Ciclo biogeoquímico",
+      "definition": "Movimiento cíclico de elementos químicos entre los seres vivos y el ambiente físico."
+    }
+  ],
+  "closing": "Cuidar las redes tróficas y los ciclos naturales en Colombia es una responsabilidad de todos. Acciones cotidianas como ahorrar agua, reciclar los residuos orgánicos mediante compostaje y proteger nuestros bosques andinos y páramos aseguran que la energía y los nutrientes sigan circulando para mantener la biodiversidad que tanto nos enorgullece.",
+  "dbaStatements": [
+    "DBA 3. Comprende que en las cadenas y redes tróficas existen flujos de materia y energía, y los relaciona con procesos de nutrición, fotosíntesis y respiración celular.",
+    "DBA 4. Comprende la relación entre los ciclos del carbono, el nitrógeno y del agua, explicando su importancia en el mantenimiento de los ecosistemas."
+  ]
+}

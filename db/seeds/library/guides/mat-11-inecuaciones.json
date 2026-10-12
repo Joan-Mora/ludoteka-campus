@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola, pilosos de undécimo! Bienvenidos a esta guía de matemáticas diseñada especialmente para ustedes. En esta etapa final del colegio, afianzar nuestros conocimientos sobre los números reales es fundamental para entender el mundo que nos rodea y prepararnos para las pruebas Saber o la universidad. A lo largo de este recorrido, vamos a repasar cómo se relacionan los números, qué son los intervalos y cómo las inecuaciones nos ayudan a resolver problemas de la vida real, como calcular presupuestos en pesos colombianos o establecer límites de producción. Ponte cómodo, ten a la mano tu cuaderno, lápiz y muchas ganas de aprender.",
+  "objectives": [
+    "Identificar las propiedades y relaciones de los conjuntos numéricos hasta llegar a los números reales.",
+    "Representar subconjuntos de la recta real utilizando notación de intervalos y desigualdades.",
+    "Resolver inecuaciones lineales y cuadráticas aplicando las propiedades de orden de los números reales.",
+    "Analizar expresiones con valor absoluto para modelar situaciones de distancia y error."
+  ],
+  "sections": [
+    {
+      "title": "Conjuntos numéricos",
+      "paragraphs": [
+        "El universo numérico con el que trabajamos en bachillerato se construye por etapas. Iniciamos con los números naturales (N), que usamos para contar objetos, como las 32 departamentos de Colombia. Al incluir los negativos y el cero, obtenemos los números enteros (Z), útiles para medir temperaturas bajo cero en los picos nevados o deudas en pesos. Luego aparecen los números racionales (Q), que se pueden expresar como fracción o decimal finito y periódico, como cuando repartimos una arepa entre varios amigos.",
+        "Sin embargo, existen medidas geométricas, como la diagonal de un cuadrado de lado 1, que no se pueden escribir como fracción. Así nacen los números irracionales (I), como la raíz cuadrada de 2 o el número pi. Al unir los racionales y los irracionales, formamos el conjunto de los números reales (R). Este conjunto llena por completo la recta numérica, sin dejar ningún espacio vacío, permitiendo modelar cualquier magnitud continua de la física o la economía."
+      ],
+      "example": {
+        "statement": "Clasifica los siguientes números en el conjunto numérico más pequeño al que pertenecen: -5, 3/4, √9, √7.",
+        "solution": "1. El número -5 es un entero (Z), ya que incluye negativos sin parte decimal. 2. El número 3/4 es un racional (Q), pues se expresa como división de enteros. 3. El número √9 es igual a 3, por lo tanto pertenece a los naturales (N). 4. El número √7 no tiene raíz exacta ni es fracción, así que es irracional (I)."
+      }
+    },
+    {
+      "title": "Intervalos en la recta real",
+      "paragraphs": [
+        "Un intervalo es un subconjunto de los números reales que se encuentra comprendido entre dos extremos. Imagina que en una vía nacional de Colombia se establece un límite de velocidad que va estrictamente desde los 60 km/h hasta los 80 km/h; todos los valores posibles forman un intervalo. Estos conjuntos se pueden representar de tres formas equivalentes: mediante una desigualdad, usando la notación de conjuntos, o gráficamente sobre una recta numérica.",
+        "Los intervalos se clasifican en acotados y no acotados. Los acotados tienen un límite inferior y uno superior, y pueden ser abiertos (si no incluyen los extremos, usando paréntesis) o cerrados (si los incluyen, usando corchetes). Por su parte, los intervalos no acotados se extienden hacia el infinito positivo o negativo, lo cual es muy útil para expresar situaciones donde una cantidad debe ser mayor o igual a cierto valor mínimo, como la edad legal para votar en nuestro país."
+      ],
+      "example": {
+        "statement": "Escribe en notación de intervalos y representa la desigualdad -3 menor o igual a x menor que 4.",
+        "solution": "1. Observamos los extremos: el -3 tiene el signo menor o igual, lo que indica que se incluye (corchete). El 4 tiene solo menor, indicando que no se incluye (paréntesis). 2. La notación de intervalo es [-3, 4). 3. Gráficamente, se dibuja un círculo relleno en -3, un círculo sin rellenar en 4, y se sombrea toda la línea que los conecta."
+      }
+    },
+    {
+      "title": "Inecuaciones lineales y cuadráticas",
+      "paragraphs": [
+        "Una inecuación es una desigualdad matemática en la que aparece al menos una incógnita. Resolver una inecuación significa encontrar todos los valores reales que hacen que dicha desigualdad sea verdadera. Para las inecuaciones lineales, aplicamos las mismas reglas de las ecuaciones, con una salvedad muy importante: si multiplicamos o dividimos ambos lados de la desigualdad por un número negativo, el sentido de la desigualdad se invierte obligatoriamente.",
+        "Por otro lado, las inecuaciones cuadráticas tienen la forma general ax² + bx + c > 0 (o con cualquier otro símbolo de desigualdad). Para resolverlas, primero hallamos las raíces de la ecuación asociada igualando a cero. Luego, usamos esos puntos críticos para dividir la recta real en intervalos de prueba y evaluamos el signo de la expresión en cada tramo para determinar cuáles intervalos cumplen con la desigualdad original."
+      ],
+      "example": {
+        "statement": "Resuelve la inecuación lineal: 3x - 5 menor o igual a 7 + x.",
+        "solution": "1. Agrupamos las x en el lado izquierdo y los números en el derecho: 3x - x menor o igual a 7 + 5. 2. Reducimos términos semejantes: 2x menor o igual a 12. 3. Despejamos x dividiendo entre 2 (como es positivo, el signo no cambia): x menor o igual a 12 / 2. 4. Obtenemos la solución: x menor o igual a 6, que en intervalos se escribe como (-infinito, 6]."
+      }
+    },
+    {
+      "title": "Valor absoluto",
+      "paragraphs": [
+        "El valor absoluto de un número real representa su distancia geométrica al número cero en la recta numérica, sin importar la dirección (izquierda o derecha). Como mide una distancia, el resultado de aplicar valor absoluto siempre es un número mayor o igual a cero. Por ejemplo, tanto el número 5 como el -5 están a una distancia de 5 unidades del origen, por lo que sus valores absolutos son iguales a 5.",
+        "Las ecuaciones e inecuaciones con valor absoluto son de gran utilidad en ciencias e ingeniería para controlar tolerancias o márgenes de error. Si decimos que una pieza fabricada en una metalmecánica debe medir 10 cm con un margen de error menor a 0.2 cm, esto se modela perfectamente con una inecuación con valor absoluto. Para resolverlas, utilizamos las propiedades que transforman el valor absoluto en desigualdades compuestas con y, o con o."
+      ],
+      "example": {
+        "statement": "Resuelve la inecuación con valor absoluto: |x - 3| menor o igual a 4.",
+        "solution": "1. Aplicamos la propiedad de las desigualdades con menor o igual: -4 menor o igual a x - 3 menor o igual a 4. 2. Sumamos 3 a los tres miembros de la desigualdad para aislar la x: -4 + 3 menor o igual a x menor o igual a 4 + 3. 3. Simplificamos las operaciones: -1 menor o igual a x menor o igual a 7. 4. La solución es el intervalo cerrado [-1, 7]."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿A qué conjunto numérico pertenece el número -8?",
+      "answer": "Enteros (Z) y reales (R)."
+    },
+    {
+      "question": "Convierte la desigualdad 2 menor que x menor o igual a 7 a notación de intervalo.",
+      "answer": "(2, 7]"
+    },
+    {
+      "question": "Resuelve la inecuación lineal: 5x + 3 mayor que 18.",
+      "answer": "x mayor que 3 o (3, infinito)"
+    },
+    {
+      "question": "Calcula el valor absoluto de la operación: | -12 + 5 |.",
+      "answer": "7"
+    },
+    {
+      "question": "Resuelve la inecuación cuadrática: x² - 9 menor o igual a 0.",
+      "answer": "[-3, 3]"
+    },
+    {
+      "question": "Halla el conjunto solución de la inecuación con valor absoluto: |2x - 1| mayor o igual a 5.",
+      "answer": "(-infinito, -2] unido con [3, infinito)"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Números reales",
+      "definition": "Conjunto formado por la unión de todos los números racionales e irracionales, que llenan por completo la recta numérica."
+    },
+    {
+      "term": "Intervalo",
+      "definition": "Subconjunto de números reales comprendidos entre dos extremos determinados, que pueden incluirse o excluirse."
+    },
+    {
+      "term": "Inecuación",
+      "definition": "Desigualdad matemática entre dos expresiones donde al menos una variable está presente y debe ser hallada."
+    },
+    {
+      "term": "Valor absoluto",
+      "definition": "Distancia numérica desde cualquier punto de la recta real hasta el origen cero, expresada siempre como un valor positivo."
+    },
+    {
+      "term": "Puntos críticos",
+      "definition": "Valores que anulan una expresión algebraica y dividen la recta numérica en intervalos para resolver inecuaciones."
+    }
+  ],
+  "closing": "Dominar los números reales y las inecuaciones no es solo un requisito para aprobar el año escolar, sino una herramienta mental para tomar decisiones informadas en la cotidianidad. Desde calcular si tu presupuesto semanal alcanza para pasajes y refrigerios, hasta planear las metas financieras de tu emprendimiento futuro en Colombia, el lenguaje de las desigualdades te da el poder de medir y controlar tus límites. ¡Sigue practicando y verás que las matemáticas son tu mejor aliado!",
+  "dbaStatements": [
+    "DBA 1. Utiliza las propiedades de los números (naturales, enteros, racionales y reales) y sus relaciones y operaciones para construir y comparar los distintos sistemas numéricos.",
+    "DBA 2. Justifica la validez de las propiedades de orden de los números reales y las utiliza para resolver problemas analíticos que se modelen con inecuaciones."
+  ]
+}

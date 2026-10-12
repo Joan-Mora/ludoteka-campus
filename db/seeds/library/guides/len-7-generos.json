@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola, estudiantes de séptimo! Bienvenidos a esta guía de Lenguaje. Hoy exploraremos cómo los textos literarios se clasifican según su forma y contenido en tres grandes grupos: narrativo, lírico y dramático. Además, descubriremos que cada obra no nace por casualidad, sino que refleja la época, los lugares y las costumbres de quienes la escribieron, desde las selvas colombianas hasta las bulliciosas ciudades. A través de este recorrido, aprenderemos a leer entre líneas para entender qué nos dice el autor y por qué su contexto histórico sigue vivo en cada página.",
+  "objectives": [
+    "Clasificar diversas obras literarias en los géneros narrativo, lírico y dramático según su estructura y contenido.",
+    "Relacionar los elementos presentes en una obra literaria con el contexto histórico y cultural en el que fue creada.",
+    "Identificar los componentes básicos de la narración dentro de textos leídos.",
+    "Interpretar relatos breves considerando las pistas que su época de origen nos ofrece."
+  ],
+  "sections": [
+    {
+      "title": "Géneros narrativo, lírico y dramático",
+      "paragraphs": [
+        "Para estudiar la literatura de manera ordenada, la dividimos en tres grandes grupos llamados géneros literarios. El género narrativo reúne todas aquellas historias donde un narrador nos cuenta hechos reales o imaginarios que le suceden a unos personajes en un tiempo y espacio determinados. Aquí encontramos cuentos, novelas, mitos y leyendas que tanto nos atrapan.",
+        "Por otro lado, el género lírico expresa los sentimientos, emociones y pensamientos más íntimos del autor. Casi siempre está escrito en verso, utilizando la musicalidad, la rima y figuras estéticas. Finalmente, el género dramático está diseñado para ser representado por actores frente a un público, estructurándose principalmente a través de diálogos y acotaciones escénicas."
+      ],
+      "example": {
+        "statement": "Clasifica el siguiente fragmento según su género: 'Ay, mi caribeña de brisa y mar, / tu pelo negro me vuelve a enamorar.'",
+        "solution": "Paso 1: Observar la estructura. El texto está compuesto por versos que tienen ritmo y rima. Paso 2: Analizar el contenido. Expresa un sentimiento profundo de afecto hacia una persona. Paso 3: Concluir que pertenece al género lírico porque busca transmitir emoción y musicalidad."
+      }
+    },
+    {
+      "title": "Relación entre obra y época",
+      "paragraphs": [
+        "Ninguna obra literaria surge de la nada. Todo libro, poema o guión teatral es hijo de su tiempo; es decir, guarda una conexión profunda con los hechos históricos, los problemas sociales y las costumbres culturales del momento en que fue escrito. Por ejemplo, un relato escrito en la época de la Independencia de Colombia no tendrá las mismas preocupaciones que uno publicado en el siglo XXI.",
+        "Conocer el contexto histórico nos ayuda a comprender por qué los personajes actúan de cierta manera, qué palabras utilizaban y qué mensaje oculto quería transmitir el autor a sus contemporáneos. La literatura funciona como una máquina del tiempo que nos permite viajar al pasado para entender el presente de nuestra sociedad."
+      ],
+      "example": {
+        "statement": "Si un cuento colombiano escrito en 1899 menciona enfrentamientos políticos entre liberales y conservadores, ¿cómo se relaciona la obra con su época?",
+        "solution": "Paso 1: Identificar el año (1899) y el tema central (guerras políticas en Colombia). Paso 2: Recordar que en esa época el país vivía tensiones políticas reales, como la antesala de la Guerra de los Mil Días. Paso 3: Concluir que la obra refleja la realidad histórica y los conflictos sociales de su momento."
+      }
+    },
+    {
+      "title": "Elementos de la narración",
+      "paragraphs": [
+        "Todo texto narrativo cuenta con una serie de elementos indispensables que le dan forma y sentido a la historia. El primero es el narrador, que puede ser testigo, protagonista o un observador omnisciente que todo lo sabe. Luego tenemos a los personajes, quienes realizan las acciones y pueden ser principales, como el protagonista, o secundarios.",
+        "El espacio corresponde al lugar o lugares donde ocurren los hechos, que pueden ir desde un pueblo ribereño del río Magdalena hasta una futurista Bogotá. El tiempo marca cuándo sucede la historia y cuánto dura. Por último, la trama es el conjunto de eventos ordenados generalmente en inicio, nudo y desenlace."
+      ],
+      "example": {
+        "statement": "En un cuento, un abuelo le cuenta a su nieta en una finca de Boyacá cómo era su juventud en 1950. ¿Cuál es el espacio y cuál es el tiempo?",
+        "solution": "Paso 1: Buscar el lugar físico de la escena. La finca en Boyacá es el espacio. Paso 2: Buscar el momento en que ocurren los hechos relatados por el abuelo. El año 1950 y el presente del diálogo configuran el tiempo de la narración."
+      }
+    },
+    {
+      "title": "Lectura de un relato en su contexto",
+      "paragraphs": [
+        "Leer un relato exigiéndole contexto significa mirar más allá de las palabras impresas. Cuando leemos una leyenda tradicional colombiana, por ejemplo, debemos preguntarnos qué buscaban explicar los antiguos pobladores de esa región: un fenómeno natural, un castigo moral o un misterio de la selva. El contexto nos da las gafas adecuadas para interpretar correctamente la intención del autor.",
+        "Al practicar esta lectura contextualizada, evitamos juzgar el pasado con los ojos del presente y valoramos la riqueza cultural de nuestra diversidad. Cada región de Colombia posee mitos y relatos que dialogan directamente con su geografía, su clima y su historia particular."
+      ],
+      "example": {
+        "statement": "Por qué al leer una leyenda sobre la Madre de Agua es útil conocer las tradiciones de los campesinos andinos colombianos?",
+        "solution": "Paso 1: Reconocer que la leyenda pertenece a la cultura popular andina. Paso 2: Entender que para esos campesinos el agua de los ríos y quebradas era vital para la supervivencia y el cultivo. Paso 3: Concluir que el contexto explica por qué la leyenda previene sobre el cuidado de las fuentes hídricas."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es el género literario que utiliza preferentemente el verso para expresar emociones?",
+      "answer": "Género lírico."
+    },
+    {
+      "question": "Menciona los tres componentes básicos en los que se divide tradicionalmente la estructura de una narración.",
+      "answer": "Inicio, nudo y desenlace."
+    },
+    {
+      "question": "¿Cómo se le llama al tipo de narrador que conoce absolutamente todo lo que sienten, piensan y hacen los personajes?",
+      "answer": "Narrador omnisciente."
+    },
+    {
+      "question": "Si una obra de teatro está escrita para ser interpretada en un escenario mediante diálogos, ¿a qué género pertenece?",
+      "answer": "Género dramático."
+    },
+    {
+      "question": "¿Qué término se usa para describir el conjunto de hechos históricos, culturales y sociales que rodean la creación de una obra?",
+      "answer": "Contexto histórico o cultural."
+    },
+    {
+      "question": "Explica brevemente por qué el contexto de una época influye en los temas que aborda un autor en su novela.",
+      "answer": "Porque el autor se inspira en los problemas, valores y realidades de la sociedad en la que vive."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Género literario",
+      "definition": "Categoría para clasificar las obras literarias según su estructura, contenido y forma de expresión."
+    },
+    {
+      "term": "Contexto",
+      "definition": "Conjunto de circunstancias históricas, sociales y culturales que rodean la creación de una obra."
+    },
+    {
+      "term": "Narrador",
+      "definition": "Voz ficticia creada por el autor para contar la historia dentro de un texto narrativo."
+    },
+    {
+      "term": "Verso",
+      "definition": "Cada una de las líneas que conforman un poema, caracterizada por su ritmo y musicalidad."
+    },
+    {
+      "term": "Acotación",
+      "definition": "Nota del autor en una obra dramática que indica acciones, gestos o actitudes de los actores."
+    }
+  ],
+  "closing": "La literatura es mucho más que tinta sobre papel; es un puente vivo que une nuestras lecturas actuales con las alegrías, luchas y sueños de colombianos de otras épocas. Cuando abres un libro, no solo descifras palabras, sino que conversas con la historia de tu país. ¡Sigue leyendo y descubriendo los mundos que esperan por ti!",
+  "dbaStatements": [
+    "DBA 3. Establece conexiones entre los elementos presentes en la literatura y los hechos históricos, culturales y sociales en los que se han producido.",
+    "DBA 4. Clasifica las producciones literarias a partir del análisis de su contenido y estructura en diferentes géneros literarios."
+  ]
+}

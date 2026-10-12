@@ -1,0 +1,107 @@
+{
+  "intro": "¡Hola, estudiantes de octavo grado! Bienvenidos a esta guía de estudio diseñada especialmente para ustedes en los colegios públicos de Colombia. En nuestro diario vivir, constantemente hablamos sobre lo que haremos mañana, el próximo fin de semana o cómo será el futuro de nuestro planeta. Para expresar estas ideas en inglés de forma correcta, necesitamos dominar dos estructuras fundamentales: \"going to\" y \"will\". A lo largo de este recorrido, aprenderemos a diferenciar planes organizados de predicciones basadas en opiniones o evidencias. ¡Prepárense para mejorar su nivel de inglés y hablar sobre sus metas escolares y ambientales!",
+  "objectives": [
+    "Identificar la diferencia estructural entre \"going to\" y \"will\" en contextos cotidianos.",
+    "Explicar planes personales y comunitarios usando \"going to\" de forma adecuada.",
+    "Formular predicciones sobre el medio ambiente utilizando \"will\" con precisión.",
+    "Aplicar expresiones de tiempo futuro para organizar metas a corto y largo plazo."
+  ],
+  "sections": [
+    {
+      "title": "going to for plans",
+      "paragraphs": [
+        "Usamos \"be going to\" para hablar de planes e intenciones que ya hemos decidido previamente. En nuestras conversaciones escolares, cuando sabemos con certeza qué actividad realizaremos en la tarde o durante el fin de semana, empleamos esta estructura. Por ejemplo, si ya acordaste con tus compañeros limpiar el parque del barrio la próxima semana, utilizas \"going to\".",
+        "Para formar oraciones afirmativas, combinamos el sujeto con el verbo to be adecuado (am, is, are), seguido de \"going to\" y el verbo principal en su forma base. En las formas negativas e interrogativas, simplemente modificamos el verbo to be. Esta estructura demuestra organización y compromiso con nuestras metas personales y comunitarias en Colombia."
+      ],
+      "example": {
+        "statement": "Complete: We _____ (plant) native trees in the school garden next Friday because we planned it yesterday.",
+        "solution": "1. Identificamos que es un plan organizado previamente ('because we planned it yesterday'). 2. El sujeto es 'We', por lo tanto el verbo to be corresponde a 'are'. 3. Añadimos 'going to' y el verbo en forma base 'plant'. Respuesta: are going to plant."
+      }
+    },
+    {
+      "title": "will for predictions",
+      "paragraphs": [
+        "Por otro lado, utilizamos el modal \"will\" cuando hacemos predicciones sobre el futuro, especialmente basadas en opiniones, creencias o suposiciones sin una evidencia inmediata. También lo empleamos para decisiones espontáneas tomadas en el momento de hablar. Si opinas sobre el clima futuro o el impacto de la tecnología en Bogotá, \"will\" es la opción correcta.",
+        "La gran ventaja de \"will\" es su facilidad gramatical: funciona igual para todos los pronombres (I, you, he, she, it, we, they). Su forma afirmativa usa \"will\" más el verbo base, la negativa usa \"will not\" o la contracción \"won't\", y para preguntar invertimos el auxiliar al inicio de la oración."
+      ],
+      "example": {
+        "statement": "Complete: I think recycling programs _____ (reduce) plastic pollution in our city in the future.",
+        "solution": "1. Detectamos la frase 'I think', lo cual indica una opinión y una predicción sobre el futuro. 2. Recordamos que para predicciones usamos 'will' con cualquier sujeto. 3. Añadimos el verbo en forma base 'reduce'. Respuesta: will reduce."
+      }
+    },
+    {
+      "title": "future time expressions",
+      "paragraphs": [
+        "Para darle contexto temporal a nuestras oraciones en futuro, empleamos expresiones de tiempo específicas. Estas palabras o frases ubican la acción en un momento posterior al presente, ayudando a que nuestros compañeros entiendan exactamente cuándo ocurrirá el plan o la predicción en nuestra comunidad escolar.",
+        "Entre las expresiones más comunes en inglés encontramos 'tomorrow' (mañana), 'next week' (la próxima semana), 'next month' (el próximo mes), 'in two years' (en dos años) y 'tonight' (esta noche). Usualmente las ubicamos al final de la oración para mantener una estructura clara y comprensible."
+      ],
+      "example": {
+        "statement": "Order the words to make a sentence: [ class / English / have / will / tomorrow / we ]",
+        "solution": "1. Ubicamos el sujeto al inicio ('We'). 2. Colocamos el auxiliar de predicción ('will'). 3. Añadimos el verbo principal y su complemento ('have English class'). 4. Ponemos la expresión de tiempo al final ('tomorrow'). Respuesta: We will have English class tomorrow."
+      }
+    },
+    {
+      "title": "talking about goals",
+      "paragraphs": [
+        "Hablar de nuestras metas académicas y personales es esencial para crecer como estudiantes en el grado octavo. Al proyectarnos hacia el futuro, combinamos \"going to\" para los pasos firmes que daremos, como estudiar para un examen, y \"will\" para las metas a largo plazo o los sueños que esperamos cumplir.",
+        "Cuando redactamos textos cortos sobre sostenibilidad o democracia escolar en Colombia, expresar nuestras metas nos permite motivar a otros. Decir \"I am going to improve my grades\" muestra una acción decidida, mientras que decir \"Education will change our society\" refleja una convicción profunda sobre el porvenir."
+      ],
+      "example": {
+        "statement": "Choose the correct option for a personal goal: 'Next year, I ( am going to / will ) study harder because I enrolled in a tutoring program.'",
+        "solution": "1. Analizamos la pista: 'I enrolled in a tutoring program' muestra que ya existe un plan o decisión tomada previamente. 2. Seleccionamos 'am going to' porque describe planes e intenciones firmes. Respuesta: am going to."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "Choose the correct word: She ( will / is going to ) travel to Medellín next weekend; she already bought the bus tickets.",
+      "answer": "is going to"
+    },
+    {
+      "question": "Complete with will or going to: Look at those dark clouds! It _____ rain soon.",
+      "answer": "is going to"
+    },
+    {
+      "question": "Form a negative sentence with will: They / not / win / the football match tomorrow.",
+      "answer": "They won't win the football match tomorrow."
+    },
+    {
+      "question": "Complete the question: _____ you study for the science exam tonight?",
+      "answer": "Are"
+    },
+    {
+      "question": "Translate to English using 'will': Pienso que la tecnología mejorará la educación en Colombia.",
+      "answer": "I think technology will improve education in Colombia."
+    },
+    {
+      "question": "Complete the text: María has her ticket ready. She _____ (visit) her grandparents in Cali next month.",
+      "answer": "is going to visit"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Plan",
+      "definition": "An intention or arrangement for what you are going to do in the future."
+    },
+    {
+      "term": "Prediction",
+      "definition": "A statement about what you think will happen in the future based on opinions."
+    },
+    {
+      "term": "Auxiliary verb",
+      "definition": "A verb used with main verbs to show tense, such as will or the verb to be."
+    },
+    {
+      "term": "Sustainability",
+      "definition": "The practice of using natural resources responsibly to protect the environment for future generations."
+    },
+    {
+      "term": "Goal",
+      "definition": "An aim or desired result that you plan to achieve through personal effort."
+    }
+  ],
+  "closing": "El futuro se construye con las decisiones y acciones que tomamos hoy en nuestros colegios y comunidades. Ya sea organizando campañas de reciclaje con \"going to\" o soñando con un país mejor usando \"will\", el inglés es una herramienta poderosa para comunicar tus ideas al mundo. ¡Sigue practicando y alcanza todas tus metas!",
+  "dbaStatements": [
+    "Esquema curricular sugerido de inglés del MEN: nivel A2.2, grado sugerido 8.°."
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola, pilosos de undécimo! Bienvenidos a este recorrido por la electricidad y el magnetismo, dos caras de la misma moneda que mueven nuestro país. Desde el chispeante rayo que cae en las tardes lluviosas sobre la sabana de Bogotá hasta la energía que llega a nuestras casas para encender el televisor y ver partidos de la Selección Colombia, todo está regido por cargas eléctricas y campos magnéticos. En esta guía de estudio comprenderemos cómo interactúan estas fuerzas invisibles pero poderosas, y aprenderemos a calcular la corriente, el voltaje y la resistencia en circuitos sencillos. ¡Pónganse las pilas y empecemos a estudiar con toda la energía!",
+  "objectives": [
+    "Analizar la interacción entre cargas eléctricas en reposo aplicando la ley de Coulomb en diversas situaciones.",
+    "Comprender las relaciones matemáticas entre corriente, voltaje y resistencia usando la ley de Ohm.",
+    "Diferenciar el comportamiento de la corriente y el voltaje en circuitos eléctricos conectados en serie y en paralelo.",
+    "Explicar la relación fundamental entre la electricidad y el magnetismo a partir del movimiento de cargas."
+  ],
+  "sections": [
+    {
+      "title": "Ley de Coulomb",
+      "paragraphs": [
+        "Todo lo que nos rodea, desde la madera de un pupitre hasta el agua del río Magdalena, está formado por átomos que contienen partículas cargadas: los protones con carga positiva y los electrones con carga negativa. Cuando dos cargas se acercan, experimentan una fuerza de atracción si son de signo opuesto, o de repulsión si tienen el mismo signo. Esta fuerza invisible fue estudiada matemáticamente por el físico francés Charles-Augustin de Coulomb.",
+        "La ley de Coulomb establece que la fuerza eléctrica entre dos cargas puntuales es directamente proporcional al producto de sus cargas e inversamente proporcional al cuadrado de la distancia que las separa. Esto significa que si las cargas aumentan, la fuerza crece, pero si nos alejamos el doble, la fuerza disminuye cuatro veces. Esta relación es la base para entender cómo interactúan los átomos y cómo se generan los fenómenos electrostáticos cotidianos."
+      ],
+      "example": {
+        "statement": "Dos cargas puntuales de q1 = 3 × 10-6 C y q2 = 5 × 10-6 C se encuentran en el vacío separadas por una distancia de 0,2 m. Calcula la fuerza electrostática entre ellas sabiendo que la constante de Coulomb es k = 9 × 10⁹ Nm²/C².",
+        "solution": "Paso 1: Identificar los datos dados: q1 = 3 × 10-6 C, q2 = 5 × 10-6 C, r = 0,2 m y k = 9 × 10⁹ Nm²/C². Paso 2: Plantear la fórmula de la ley de Coulomb: F = k × (q1 × q2) / r². Paso 3: Sustituir los valores numéricos: F = (9 × 10⁹) × (3 × 10-6) × (5 × 10-6) / (0,2)². Paso 4: Realizar la multiplicación superior: 9 × 3 × 5 = 135, y con las potencias 10⁹ × 10-6 × 10-6 = 10-³, resultando 0,135 Nm². Paso 5: Elevar al cuadrado la distancia: (0,2)² = 0,04 m². Paso 6: Dividir los valores: F = 0,135 / 0,04 = 3,375 N de fuerza repulsiva."
+      }
+    },
+    {
+      "title": "Corriente, voltaje y resistencia",
+      "paragraphs": [
+        "Para que la energía eléctrica sea útil en la vida diaria, las cargas deben ponerse en movimiento a través de un conductor, como los cables de cobre que transportan la luz en nuestras casas. A este flujo ordenado de electrones lo llamamos corriente eléctrica. Para que los electrones se muevan, necesitan un impulso inicial que es proporcionado por una fuente de energía, a lo cual denominamos voltaje o diferencia de potencial.",
+        "No obstante, los electrones no viajan totalmente libres; los átomos del material conductor ofrecen una oposición natural a su paso, propiedad conocida como resistencia eléctrica. La relación entre estas tres magnitudes es una de las reglas de oro de la física y se conoce como ley de Ohm, la cual indica que el voltaje es igual al producto de la corriente por la resistencia."
+      ],
+      "example": {
+        "statement": "Un bombillo LED conectado a una batería de 12 V en una finca cafetera permite el paso de una corriente de 0,5 A. ¿Cuál es la resistencia eléctrica del bombillo?",
+        "solution": "Paso 1: Extraer los datos del enunciado: Voltaje V = 12 V y Corriente I = 0,5 A. Paso 2: Recordar la ley de Ohm: V = I × R. Paso 3: Despejar la resistencia R: R = V / I. Paso 4: Sustituir los valores numéricos: R = 12 / 0,5. Paso 5: Efectuar la división: 12 ÷ 0,5 = 24 ohmios. La resistencia del bombillo es de 24 ohmios."
+      }
+    },
+    {
+      "title": "Circuitos en serie y en paralelo",
+      "paragraphs": [
+        "Los circuitos eléctricos son caminos cerrados por donde circula la corriente. Cuando conectamos los componentes uno tras otro, formando una sola ruta para los electrones, tenemos un circuito en serie. Su gran desventaja es que si un componente falla o se funde, toda la cadena se apaga, algo que ocurría antiguamente con las luces de Navidad más económicas.",
+        "Por otro lado, el circuito en paralelo se caracteriza por ofrecer múltiples caminos independientes para la corriente. Si un bombillo se apaga o se desconecta, los demás siguen funcionando sin problema. Este es el sistema que se utiliza en las instalaciones eléctricas de los hogares colombianos, garantizando que la nevera funcione aunque la lámpara de la sala esté apagada."
+      ],
+      "example": {
+        "statement": "Tres resistencias de 2 ohmios, 3 ohmios y 5 ohmios se conectan en serie a una fuente de 20 V. Calcula la resistencia total y la corriente del circuito.",
+        "solution": "Paso 1: Recordar que en un circuito en serie la resistencia total es la suma directa: Rt = R1 + R2 + R3. Paso 2: Sumar los valores: Rt = 2 + 3 + 5 = 10 ohmios. Paso 3: Aplicar la ley de Ohm para hallar la corriente total I = V / Rt. Paso 4: Sustituir los valores: I = 20 V / 10 ohmios. Paso 5: Calcular el resultado: I = 2 A. La corriente que circula por el circuito es de 2 amperios."
+      }
+    },
+    {
+      "title": "Campo magnético",
+      "paragraphs": [
+        "El magnetismo y la electricidad están estrechamente emparentados. Cuando las cargas eléctricas están en reposo generan fuerzas eléctricas, pero al ponerse en movimiento y formar una corriente eléctrica, producen a su alrededor un campo magnético. Este principio fue descubierto por Hans Christian Oersted al observar cómo una brújula se desviaba cerca de un cable con corriente.",
+        "Este fenómeno es fundamental para la tecnología moderna. Permite el funcionamiento de los motores eléctricos que impulsan las licuadoras y los ventiladores, y de los generadores que producen electricidad en las grandes hidroeléctricas de nuestro país, como Ituango o El Guavio, transformando el movimiento del agua en energía para los hogares."
+      ],
+      "example": {
+        "statement": "Explica qué sucede con la aguja de una brújula al acercarla a un cable recto por el cual circula una corriente eléctrica continua.",
+        "solution": "Paso 1: Identificar que al circular corriente por el cable se genera un campo magnético circular alrededor de este. Paso 2: Recordar que la aguja de una brújula es un pequeño imán que reacciona ante la presencia de cualquier campo magnético externo. Paso 3: Concluir que al acercar la brújula, el campo magnético creado por la corriente eléctrica interactúa con el campo magnético de la Tierra, provocando que la aguja de la brújula se desvíe y se alinee perpendicularmente al cable."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "Si frotas un globo con tu cabello, este adquiere carga eléctrica debido a la transferencia de qué partículas subatómicas.",
+      "answer": "Electrones"
+    },
+    {
+      "question": "Calcula la fuerza eléctrica entre dos cargas de 1 C separadas 1 m en el vacío, usando k = 9 × 10⁹ Nm²/C².",
+      "answer": "9 × 10⁹ N"
+    },
+    {
+      "question": "¿Cuál es la corriente que pasa por una resistencia de 50 ohmios conectada a una batería de 100 V?",
+      "answer": "2 A"
+    },
+    {
+      "question": "Si en un circuito en serie de tres bombillos idénticos uno se funde, ¿qué ocurre con los otros dos?",
+      "answer": "Se apagan"
+    },
+    {
+      "question": "Calcula la resistencia equivalente de dos resistencias de 6 ohmios conectadas en paralelo.",
+      "answer": "3 ohmios"
+    },
+    {
+      "question": "¿Qué nombre recibe el científico que descubrió que las corrientes eléctricas generan campos magnéticos?",
+      "answer": "Hans Christian Oersted"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Carga eléctrica",
+      "definition": "Propiedad intrínseca de la materia, de tipo positivo o negativo, responsable de experimentar fuerzas electrostáticas."
+    },
+    {
+      "term": "Ley de Coulomb",
+      "definition": "Principio físico que calcula la fuerza de atracción o repulsión entre dos cargas según su magnitud y distancia."
+    },
+    {
+      "term": "Corriente eléctrica",
+      "definition": "Flujo ordenado de cargas eléctricas, generalmente electrones, a través de un material conductor por unidad de tiempo."
+    },
+    {
+      "term": "Resistencia eléctrica",
+      "definition": "Oposición que presenta un material al libre paso de la corriente eléctrica, medida en ohmios."
+    },
+    {
+      "term": "Campo magnético",
+      "definition": "Región del espacio donde se manifiestan las fuerzas magnéticas producidas por cargas en movimiento o imanes."
+    }
+  ],
+  "closing": "La electricidad y el magnetismo no son solo fórmulas difíciles en un tablero de colegio; son la fuerza impulsora de nuestra cotidianidad. Desde cargar el celular antes de ir a clases hasta el funcionamiento de los grandes sistemas de transporte y comunicación en Colombia, estos conceptos explican cómo aprovechamos la energía de la naturaleza de forma segura y sostenible. ¡Sigue explorando y cuidando los recursos energéticos de nuestro país!",
+  "dbaStatements": [
+    "DBA 2. Comprende que la interacción de las cargas en reposo genera fuerzas eléctricas y que cuando las cargas están en movimiento genera fuerzas magnéticas.",
+    "DBA 3. Comprende las relaciones entre corriente y voltaje en circuitos resistivos sencillos en serie, en paralelo y mixtos."
+  ]
+}

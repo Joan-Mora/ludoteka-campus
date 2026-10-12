@@ -1,0 +1,112 @@
+{
+  "intro": "¡Hola, estudiantes de noveno grado! Bienvenidos a esta guía de estudio creada para explorar cómo las historias cobran vida de distintas maneras. A lo largo de este recorrido, vamos a descubrir la magia del lenguaje literario y cómo este se transforma cuando pasa de las páginas de un libro a la pantalla de cine o televisión. Analizaremos herramientas narrativas, puntos de vista y adaptaciones que seguro conoces, como las de nuestra literatura colombiana. Prepárense para leer, ver, comparar y desarrollar una mirada crítica sobre las historias que consumimos todos los días en nuestro país.",
+  "objectives": [
+    "Analizar el lenguaje literario como manifestación artística creadora de ficciones y emociones.",
+    "Comparar los elementos narrativos presentes en obras literarias y producciones audiovisuales.",
+    "Reconocer el papel del narrador y el punto de vista en diferentes formatos expresivos.",
+    "Identificar las características del realismo mágico en la literatura y su adaptación visual."
+  ],
+  "sections": [
+    {
+      "title": "El lenguaje literario",
+      "paragraphs": [
+        "El lenguaje literario es una forma de comunicación artística donde las palabras se usan de manera especial para crear mundos de ficción y despertar emociones profundas en quien lee. A diferencia de un texto informativo, como una noticia del periódico El Tiempo, la literatura busca la belleza estética mediante el uso de recursos estilísticos o figuras retóricas.",
+        "Entre estas figuras encontramos la metáfora, la comparación, la personificación y la hipérbole. Por ejemplo, cuando un autor dice que las calles de Cartagena ardían con el fuego del sol, no busca dar un dato de temperatura, sino transmitir la intensidad del calor y la atmósfera del lugar a través de la imaginación.",
+        "Comprender este lenguaje nos permite ir más allá del significado literal de las palabras. Nos invita a descifrar los sentimientos de los personajes, los contextos sociales y las intenciones del autor, convirtiendo la lectura en una experiencia sensorial y reflexiva única para cada estudiante."
+      ],
+      "example": {
+        "statement": "Identifica la figura literaria en el fragmento: El río Magdalena era una serpiente de plata que atravesaba la selva.",
+        "solution": "1. Analizamos la frase buscando comparaciones directas. 2. Se compara al río Magdalena con una serpiente de plata sin usar la palabra 'como'. 3. Concluimos que es una metáfora, ya que atribuye cualidades de un animal brillante a la corriente del río."
+      }
+    },
+    {
+      "title": "Narrador y punto de vista",
+      "paragraphs": [
+        "Toda historia necesita una voz que la cuente: el narrador. Este no siempre es el autor, sino una entidad creada para guiar al lector dentro del relato. El punto de vista determina qué información conocemos, qué se oculta y cómo percibimos a los personajes y los eventos que ocurren en la trama.",
+        "Existen varios tipos de narradores. El narrador protagonista cuenta su propia historia desde adentro (primera persona). El narrador equiciente o testigo participa en los hechos pero cuenta la historia de otro. Finalmente, el narrador omnisciente lo sabe todo, incluso los pensamientos más íntimos de los personajes, operando desde la tercera persona.",
+        "Cuando una obra literaria se convierte en película, el punto de vista cambia de soporte. Ya no solo escuchamos una voz, sino que vemos a través de la cámara, la cual actúa como un narrador visual que decide qué mostrar y qué dejar fuera de plano."
+      ],
+      "example": {
+        "statement": "Determina el tipo de narrador en: Sentí un frío inmenso cuando el profesor me llamó al tablero para entregar la nota del examen de matemáticas.",
+        "solution": "1. Identificamos el pronombre o la persona gramatical en la acción (Sentí, me llamó). 2. El verbo está en primera persona del singular (yo). 3. Concluimos que es un narrador protagonista, pues cuenta una experiencia propia desde su interior."
+      }
+    },
+    {
+      "title": "Adaptaciones audiovisuales",
+      "paragraphs": [
+        "Llevar un libro al cine es un proceso complejo conocido como adaptación audiovisual. No se trata de copiar la historia página por página, sino de traducir el lenguaje escrito a un lenguaje multimedia compuesto por imágenes, sonidos, música, silencios y actuaciones. Cada medio tiene sus propias reglas y limitaciones técnicas.",
+        "Mientras la literatura estimula la imaginación para que cada lector visualice los escenarios a su manera, el cine ofrece una representación visual fija y concreta que impone un ritmo específico. Elementos como la descripción detallada de un pueblo cafetero en una novela se transforman en planos cinematográficos, iluminación y ambientación sonora en la película.",
+        "Comparar ambos formatos nos ayuda a valorar las decisiones creativas del director y del guionista. Nos permite entender qué se gana al visualizar la historia y qué detalles narrativos, propios de la profundidad psicológica de los libros, a veces deben modificarse o sacrificarse."
+      ],
+      "example": {
+        "statement": "Compara un elemento al pasar de novela a película: En la novela se describen los pensamientos de un personaje durante cinco páginas; en el cine se muestra su rostro en silencio mirando la lluvia. ¿Qué técnica usa el cine?",
+        "solution": "1. Analizamos el cambio de formato. 2. La literatura usa la introspección escrita. 3. El cine reemplaza el texto largo por un plano detalle y un recurso sonoro (la lluvia) para transmitir la misma melancolía visualmente."
+      }
+    },
+    {
+      "title": "Realismo mágico latinoamericano",
+      "paragraphs": [
+        "El realismo mágico es un movimiento literario y artístico donde los elementos fantásticos o extraordinarios se perciben como cotidianos y normales dentro de un entorno realista. En Colombia, este estilo encontró su máxima expresión gracias a obras fundamentales como las de Gabriel García Márquez.",
+        "En estas narraciones, una mujer puede elevarse al cielo mientras tiende sábanas, o llover flores amarillas durante un funeral, y los personajes lo aceptan sin sorpresa. Este estilo refleja la riqueza cultural, la historia y la cosmovisión de nuestros pueblos, donde la realidad supera muchas veces a la propia ficción.",
+        "Al adaptar estas historias al cine o la televisión, los directores enfrentan el reto de recrear lo insólito sin que parezca una película de efectos especiales baratos de ciencia ficción, manteniendo la poesía visual, el folclor y la identidad latinoamericana intactas."
+      ],
+      "example": {
+        "statement": "Clasifica el siguiente evento según el realismo mágico: Un abuelo asegura que su sombra se quedó dormida en la plaza del pueblo y regresa al día siguiente.",
+        "solution": "1. Revisamos el evento: una sombra que se separa y duerme es un hecho imposible en la realidad física. 2. Verificamos el contexto: se presenta con total naturalidad como parte de la vida del pueblo. 3. Concluimos que es un claro ejemplo de realismo mágico."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es la principal diferencia entre el lenguaje literario y el lenguaje cotidiano?",
+      "answer": "El lenguaje literario busca la belleza estética y expresa emociones mediante recursos estéticos, mientras que el cotidiano busca informar o comunicar de forma directa."
+    },
+    {
+      "question": "Menciona los tres tipos principales de narrador según la persona gramatical.",
+      "answer": "Narrador protagonista (primera persona), narrador testigo (primera o tercera persona) y narrador omnisciente (tercera persona)."
+    },
+    {
+      "question": "¿Qué figura literaria se emplea al decir 'tus ojos son dos luceros'?",
+      "answer": "Una metáfora."
+    },
+    {
+      "question": "Al adaptar una novela a la pantalla grande, ¿qué elementos reemplazan a las descripciones escritas del narrador?",
+      "answer": "Las imágenes visuales, los planos de cámara, la iluminación, la música y los efectos sonoros."
+    },
+    {
+      "question": "¿Qué característica define principalmente al realismo mágico en la literatura?",
+      "answer": "La convivencia natural entre eventos cotidianos y sucesos fantásticos o imposibles sin causar extrañeza en los personajes."
+    },
+    {
+      "question": "Si una película omite un capítulo entero de una novela para mejorar el ritmo visual, ¿cómo se le llama a esta acción en una adaptación?",
+      "answer": "Una elipsis o modificación de guion por transposición de lenguaje escrito a audiovisual."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Metáfora",
+      "definition": "Figura literaria que nombra un elemento con el nombre de otro debido a una relación de semejanza entre ambos."
+    },
+    {
+      "term": "Narrador",
+      "definition": "Voz ficticia creada por el autor para contar los hechos de una historia dentro de una obra literaria."
+    },
+    {
+      "term": "Adaptación",
+      "definition": "Proceso de transformar una obra literaria para ser representada en otro formato, como el cine o la televisión."
+    },
+    {
+      "term": "Realismo mágico",
+      "definition": "Corriente estética latinoamericana que integra elementos mágicos y fantásticos en un contexto de absoluta normalidad cotidiana."
+    },
+    {
+      "term": "Plano cinematográfico",
+      "definition": "Porción de espacio que capta la cámara de video y que constituye la unidad visual básica de una producción audiovisual."
+    }
+  ],
+  "closing": "Comparar la literatura con el cine nos demuestra que las historias tienen múltiples caminos para emocionarnos. En nuestra vida diaria consumimos constantemente relatos en redes sociales, series y libros; entender cómo se construyen nos vuelve espectadores y lectores más críticos, capaces de valorar el arte en todas sus formas.",
+  "dbaStatements": [
+    "DBA 3. Analiza el lenguaje literario como una manifestación artística que permite crear ficciones y expresar pensamientos o emociones.",
+    "DBA 4. Compara los formatos de obras literarias y de producciones audiovisuales con el propósito de analizar elementos propios de la narración."
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "intro": "¡Hola, estudiantes de décimo grado! Bienvenidos a esta guía de estudio diseñada para explorar cómo ocurren las transformaciones químicas en nuestro entorno y cómo la ciencia actual interviene en la vida mediante la biotecnología. Desde el óxido que carcome las rejas de una casa en Bogotá hasta los procesos industriales que aprovechan microorganismos para la agricultura o la medicina en Colombia, las reacciones inorgánicas y la manipulación genética moldean el mundo moderno. A lo largo de este recorrido, comprenderemos los principios fundamentales de la química y reflexionaremos críticamente sobre sus aplicaciones éticas, científicas y sociales en nuestro país.",
+  "objectives": [
+    "Analizar los mecanismos de óxido-reducción, neutralización y precipitación en la formación de compuestos inorgánicos.",
+    "Aplicar los cálculos de estequiometría básica para resolver problemas cuantitativos de reacciones químicas.",
+    "Explicar las técnicas biotecnológicas modernas y sus implicaciones bioéticas y ambientales en el contexto colombiano.",
+    "Desarrollar habilidades de pensamiento crítico frente al uso de la ciencia y la tecnología en la sociedad."
+  ],
+  "sections": [
+    {
+      "title": "Óxido-reducción",
+      "paragraphs": [
+        "Las reacciones de óxido-reducción, conocidas como reacciones redox, implican la transferencia de electrones entre las sustancias químicas involucradas. En estos procesos, un elemento se oxida al perder electrones y aumentar su número de oxidación, mientras que otro se reduce al ganar electrones y disminuir dicho número. Estos fenómenos son fundamentales en la naturaleza y en la industria, estando presentes desde la respiración celular hasta la corrosión de los metales expuestos a la humedad en regiones húmedas como la costa colombiana.",
+        "Para estudiar estas reacciones, es indispensable asignar correctamente los números de oxidación según las reglas establecidas por la IUPAC. Por ejemplo, el oxígeno casi siempre actúa con estado menos 2 y el hidrógeno con más 1 en la mayoría de sus compuestos. Identificar quién se oxida (agente reductor) y quién se reduce (agente oxidante) permite balancear ecuaciones químicas complejas mediante el método del ion-electrón o el cambio en el número de oxidación, garantizando la conservación de la masa y de la carga eléctrica."
+      ],
+      "example": {
+        "statement": "Determina los estados de oxidación en la reacción de formación del óxido de magnesio: 2Mg + O₂ -> 2MgO, e identifica quién se oxida y quién se reduce.",
+        "solution": "Paso 1: Asignar estados de oxidación a los reactivos libres. Tanto el magnesio (Mg) como el oxígeno elemental (O₂) tienen estado 0. Paso 2: Asignar estados en el producto (MgO). El oxígeno actúa con -2, por lo tanto el magnesio debe actuar con +2 para que la molécula sea neutra. Paso 3: Analizar el cambio. El magnesio pasa de 0 a +2 (perdió 2 electrones, por lo tanto se oxidó). El oxígeno pasa de 0 a -2 (ganó 2 electrones por átomo, por lo tanto se redujo)."
+      }
+    },
+    {
+      "title": "Neutralización y precipitación",
+      "paragraphs": [
+        "Las reacciones de neutralización ocurren cuando un ácido reacciona con una base para producir una sal y agua. Este tipo de proceso es muy útil en la vida cotidiana y en la agricultura colombiana, por ejemplo, cuando se aplica cal agrícola (una base) a los suelos ácidos de los Llanos Orientales para neutralizar el pH y permitir que los cultivos crezcan adecuadamente. La estequiometría de la neutralización se basa en la equivalencia entre los moles de iones hidronio provenientes del ácido y los moles de iones hidroxilo provenientes de la base.",
+        "Por otro lado, las reacciones de precipitación se caracterizan por la formación de un sólido insoluble, llamado precipitado, cuando se mezclan dos soluciones acuosas que contienen iones solubles. Este fenómeno ocurre en plantas de tratamiento de agua potable para remover impurezas mediante la adición de coagulantes como el sulfato de aluminio. Comprender las reglas de solubilidad permite predecir si un compuesto precipitará o permanecerá disuelto en el medio acuoso."
+      ],
+      "example": {
+        "statement": "Al mezclar una solución acuosa de cloruro de sodio con nitrato de plata, se observa la formación de un sólido blanco. Escribe la reacción química e identifica el precipitado.",
+        "solution": "Paso 1: Plantear los reactivos: NaCl (ac) + AgNO₃ (ac). Paso 2: Intercambiar los iones para formar los posibles productos: NaNO₃ y AgCl. Paso 3: Consultar las reglas de solubilidad. El nitrato de sodio (NaNO₃) es soluble, pero el cloruro de plata (AgCl) es un sólido insoluble que precipita. Ecuación: NaCl (ac) + AgNO₃ (ac) -> NaNO₃ (ac) + AgCl (s). El precipitado es el AgCl."
+      }
+    },
+    {
+      "title": "Estequiometría básica",
+      "paragraphs": [
+        "La estequiometría es la rama de la química que estudia las relaciones cuantitativas entre los reactivos y los productos en una reacción química. Se fundamenta en las leyes ponderales, especialmente en la ley de la conservación de la masa de Lavoisier. Para realizar cálculos estequiométricos, el primer paso obligatorio es verificar que la ecuación química esté correctamente balanceada, asegurando que el número de átomos de cada elemento sea igual en ambos lados de la flecha.",
+        "Una vez balanceada la ecuación, los coeficientes estequiométricos indican la proporción molar en la que reaccionan las sustancias. Utilizando el concepto de mol y las masas molares obtenidas de la tabla periódica, es posible calcular cuántos gramos de un producto se pueden obtener a partir de una cantidad específica de reactivo. Estos cálculos son vitales en la industria química nacional para optimizar costos, evitar desperdicios y controlar la pureza de los productos elaborados."
+      ],
+      "example": {
+        "statement": "¿Cuántos moles de agua se producen a partir de 4 moles de hidrógeno gaseoso (H₂) que reaccionan con oxígeno (O₂) según la ecuación balanceada: 2H₂ + O₂ -> 2H₂O?",
+        "solution": "Paso 1: Verificar que la ecuación esté balanceada (sí lo está, hay 4 hidrógenos y 2 oxígenos en cada lado). Paso 2: Identificar la relación molar entre el hidrógeno y el agua. Según los coeficientes, 2 moles de H₂ producen 2 moles de H₂O (relación 1 a 1). Paso 3: Aplicar una regla de tres o factor de conversión. Si 2 moles de H₂ producen 2 moles de H₂O, entonces 4 moles de H₂ producirán directamente 4 moles de H₂O."
+      }
+    },
+    {
+      "title": "Biotecnología y bioética",
+      "paragraphs": [
+        "La biotecnología emplea organismos vivos, células o sistemas biológicos para fabricar o modificar productos con fines específicos. En la actualidad, incluye técnicas avanzadas como la modificación genética, la clonación terapéutica y las terapias génicas. En Colombia, la biotecnología moderna tiene un impacto profundo en sectores como la agricultura, mediante el desarrollo de cultivos biofortificados o resistentes a plagas, y en la medicina, a través de la producción de medicamentos recombinantes y vacunas.",
+        "Sin embargo, el uso y manipulación de la información genética plantean dilemas bioéticos, sociales y ambientales complejos. Es necesario cuestionar los límites de la intervención humana en la naturaleza, los riesgos de la liberación de organismos genéticamente modificados en ecosistemas frágiles como la Amazonía o los páramos, y garantizar un acceso equitativo a los avances médicos sin vulnerar la dignidad humana ni la biodiversidad del país."
+      ],
+      "example": {
+        "statement": "Analiza la siguiente situación: Un grupo de científicos propone introducir un gen resistente a plagas en una variedad nativa de maíz en Colombia. ¿Qué aspectos bioéticos y ambientales se deben evaluar antes de aplicar esta técnica?",
+        "solution": "Paso 1: Evaluar el impacto ambiental analizando si el polen del maíz modificado podría fertilizar cultivos nativos tradicionales, alterando la biodiversidad local. Paso 2: Considerar el aspecto socioeconómico evaluando si los agricultores locales dependerán de patentes comerciales extranjeras para adquirir las semillas. Paso 3: Determinar la seguridad alimentaria y la bioética del consumo humano a largo plazo mediante rigurosas pruebas de inocuidad."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es el estado de oxidación del azufre en el ácido sulfúrico (H₂SO₄)?",
+      "answer": "+6"
+    },
+    {
+      "question": "En la ecuación balanceada N₂ + 3H₂ -> 2NH₃, ¿cuántos moles de amoníaco (NH₃) se producen con 3 moles de nitrógeno (N₂)?",
+      "answer": "6 moles"
+    },
+    {
+      "question": "¿Qué nombre recibe la reacción química entre un ácido y una base?",
+      "answer": "Neutralización"
+    },
+    {
+      "question": "Si una sustancia pierde electrones durante una reacción química, ¿se oxida o se reduce?",
+      "answer": "Se oxida"
+    },
+    {
+      "question": "¿Cómo se le llama al sólido insoluble que se forma al mezclar dos soluciones acuosas?",
+      "answer": "Precipitado"
+    },
+    {
+      "question": "¿Qué técnica biotecnológica busca corregir defectos genéticos introduciendo genes sanos en las células del paciente?",
+      "answer": "Terapia génica"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Óxido-reducción",
+      "definition": "Reacción química en la que ocurre transferencia de electrones, cambiando los estados de oxidación de los elementos participantes."
+    },
+    {
+      "term": "Neutralización",
+      "definition": "Reacción entre un ácido y una base que da como resultado la formación de una sal y agua."
+    },
+    {
+      "term": "Estequiometría",
+      "definition": "Estudio cuantitativo de las proporciones de masa y moles entre reactivos y productos en una reacción química."
+    },
+    {
+      "term": "Precipitado",
+      "definition": "Sólido insoluble que se separa de una disolución acuosa durante una reacción química."
+    },
+    {
+      "term": "Biotecnología",
+      "definition": "Uso de organismos vivos o sus componentes para crear productos y procesos útiles para la sociedad."
+    },
+    {
+      "term": "Bioética",
+      "definition": "Rama de la ética dedicada a promover los principios para la conducta correcta del ser humano respecto a la vida."
+    }
+  ],
+  "closing": "El estudio de las reacciones inorgánicas y de la biotecnología nos demuestra que la ciencia no está encerrada en un laboratorio lejano, sino que forma parte de nuestra cotidianidad. Desde cocinar y limpiar en casa hasta tomar decisiones informadas sobre salud y ambiente en Colombia, comprender estos conceptos te capacita para ser un ciudadano crítico y participativo.",
+  "dbaStatements": [
+    "DBA 3. Comprende que los diferentes mecanismos de reacción química (oxido-reducción, descomposición, neutralización y precipitación) posibilitan la formación de compuestos inorgánicos.",
+    "DBA 4. Comprende que la biotecnología conlleva el uso y manipulación de la información genética a través de distintas técnicas (fertilización asistida, clonación reproductiva y terapéutica, modificación genética, terapias génicas), y que tiene implicaciones sociales, bioéticas y ambientales."
+  ]
+}

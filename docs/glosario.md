@@ -30,6 +30,13 @@
 | Resend | Proveedor de correo: recuperación de contraseña y código de ingreso. Sin clave, el correo queda en `email_outbox` |
 | `LAB_OTP_INBOX` | Buzón que recibe los códigos de **todas** las cuentas `@eduquest.local`, admin incluido. En Render debe quedar vacía o apuntar a un buzón que solo controle Darwin (R3) |
 | Cloudinary | Almacén de archivos de la biblioteca (ADR-005) |
+| DBA | Derechos Básicos de Aprendizaje del Ministerio de Educación Nacional: lo que se espera que aprenda cada grado. Cada guía de la biblioteca indica cuáles trabaja |
+| Manifiesto de la biblioteca | `db/seeds/library/manifest.json`: materias, docentes demo, las 60 guías (grado, materia, DBA, focos) y los documentos abiertos con su fuente y licencia. Lo lee `npm run library:seed` |
+| Curso demo | Curso por grado y materia creado por la siembra (`courses.is_demo`), a cargo de un docente demo deshabilitado. Reparte las guías por curso y se lista después de los cursos reales |
+| Fuente y licencia | Procedencia de un recurso (`source_name`, `source_url`, `license`). Los DBA del MEN se indexan desde su sitio oficial sin copiarlos; los libros de OpenStax son CC BY 4.0 |
+| Mejor respuesta | Respuesta del foro marcada por el autor del tema o por quien modera. Si es de un estudiante y la marca otra persona, suma 20 XP una sola vez y cuenta para la insignia «Respuesta estrella» |
+| Mención | `@Nombre completo` en una respuesta del foro, elegido en el autocompletado entre las personas del curso. Avisa a la persona nombrada (`forum_mentions`) |
+| Resumen del hilo | Síntesis que Luka o Luna hace de un tema del foro para quien modera: ideas principales, dudas sin resolver y quién podría necesitar apoyo. La IA solo ve seudónimos y el servidor pone los nombres después |
 | `schema_migrations` | Tabla que registra qué migraciones SQL se aplicaron |
 | `/api/health` | Healthcheck público. Hace ping a la base |
 | `SEED_PASSWORD` | Variable con la clave de las cuentas demo. En Render debe ser fuerte; nunca se escribe su valor en docs |

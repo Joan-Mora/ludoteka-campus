@@ -364,14 +364,25 @@ export const newsSchema = z
     path: ['expiresAt'],
   });
 
+/** Library items attached to a thread or reply; the server re-checks that the author can see each one. */
+const forumAttachments = z.array(z.string().uuid()).max(5).default([]);
+
 export const forumThreadSchema = z.object({
   title: z.string().trim().min(3).max(160),
   body: z.string().trim().min(1).max(6000),
+  attachments: forumAttachments,
 });
 
 export const forumPostSchema = z.object({
   body: z.string().trim().min(1).max(6000),
+  /** Course members picked in the @ autocomplete; only those still named in the body are notified. */
+  mentions: z.array(z.string().uuid()).max(10).default([]),
+  attachments: forumAttachments,
 });
+
+export const FORUM_REACTIONS = ['util', 'idea', 'gracias', 'duda'] as const;
+export type ForumReaction = (typeof FORUM_REACTIONS)[number];
+export const forumReactionSchema = z.object({ kind: z.enum(FORUM_REACTIONS) });
 
 export const LIBRARY_VISIBILITY = ['public', 'institution', 'course'] as const;
 const tagList = z.array(z.string().trim().toLowerCase().min(2).max(40)).max(8).default([]);

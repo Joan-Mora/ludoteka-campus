@@ -1,0 +1,114 @@
+{
+  "intro": "¡Hola, estudiantes de octavo! Bienvenidos a esta guía de estudio diseñada especialmente para ustedes por el Ministerio de Educación Nacional y nuestras aulas colombianas. En este recorrido por las matemáticas, exploraremos el espacio que nos rodea y las formas que construyen nuestro mundo. Aprenderemos a calcular cuánto cabe dentro de una pirámide o un prisma, descubriremos cómo medir objetos irregulares sumergiéndolos en agua, y entenderemos por qué algunas figuras son idénticas mientras otras guardan una proporción perfecta entre sí. Preparen su cuaderno, su regla y sus ganas de aprender, porque las matemáticas están en cada rincón de nuestra hermosa Colombia, desde la arquitectura colonial hasta los empaques de nuestras delicias favoritas.",
+  "objectives": [
+    "Calcular el volumen de prismas y pirámides utilizando fórmulas algebraicas adecuadas.",
+    "Aplicar el método de desplazamiento de líquidos para hallar el volumen de cuerpos irregulares.",
+    "Diferenciar y aplicar los criterios de congruencia y semejanza en triángulos.",
+    "Resolver situaciones cotidianas empleando teoremas y regularidades geométricas."
+  ],
+  "sections": [
+    {
+      "title": "Volumen de prismas y pirámides",
+      "paragraphs": [
+        "El volumen es la medida del espacio tridimensional que ocupa un cuerpo. Imagina una caja de cartón para envíos de café colombiano o una carpa de camping; ambas tienen formas geométricas precisas. Para calcular el volumen de cualquier prisma recto, debemos multiplicar el área de su base por su altura total. La fórmula general es V = Abase × h, donde Abase depende de si la base es un rectángulo, un cuadrado o un triángulo.",
+        "Por otro lado, las pirámides, que nos recuerdan a los monumentos antiguos pero también a los techos de algunas construcciones rurales, tienen una relación muy particular con los prismas. Si una pirámide y un prisma comparten la misma base y la misma altura, el volumen de la pirámide es exactamente la tercera parte del volumen del prisma. Su fórmula matemática es V = (Abase × h) ÷ 3. Esto nos ayuda a estimar materiales con gran precisión en la vida real."
+      ],
+      "example": {
+        "statement": "Calcula el volumen de una carpa de camping con forma de pirámide cuya base es un cuadrado de 3 metros de lado y su altura es de 4 metros.",
+        "solution": "Paso 1: Hallar el área de la base cuadrada multiplicando lado por lado. Abase = 3m × 3m = 9 m². Paso 2: Multiplicar el área de la base por la altura de la pirámide. 9 m² × 4m = 36 m³. Paso 3: Dividir el resultado entre 3, ya que es una pirámide. 36 m³ ÷ 3 = 12 m³. El volumen de la carpa es de 12 metros cúbicos."
+      }
+    },
+    {
+      "title": "Volumen por desplazamiento",
+      "paragraphs": [
+        "¿Alguna vez has intentado calcular el volumen de una piedra del río Magdalena o de una papa criolla? Como no tienen caras planas ni fórmulas geométricas sencillas, no podemos usar una regla para medir sus dimensiones y aplicar una ecuación directa. Para resolver este problema, la física y las matemáticas nos ofrecen un método ingenioso y muy práctico conocido como desplazamiento de líquido, inspirado en el famoso principio del sabio Arquímedes.",
+        "El procedimiento consiste en tomar un recipiente graduado, como una probeta o una jarra medidora de cocina, y llenarlo con una cantidad inicial de agua. Luego, sumergimos el objeto irregular completamente dentro del agua. Al hacerlo, el nivel del agua subirá porque el objeto ocupa un espacio que antes le pertenecía al líquido. El volumen exacto del objeto irregular es la diferencia entre el nivel final del agua y el nivel inicial."
+      ],
+      "example": {
+        "statement": "En un vaso metido en la cocina, el agua marca 250 mililitros. Al introducir una piedra decorativa, el nivel sube hasta 380 mililitros. ¿Cuál es el volumen de la piedra en centímetros cúbicos?",
+        "solution": "Paso 1: Identificar el volumen inicial de agua, que es 250 ml. Paso 2: Identificar el volumen final con la piedra sumergida, que es 380 ml. Paso 3: Restar el volumen inicial al volumen final. 380 ml - 250 ml = 130 ml. Paso 4: Recordar que 1 mililitro equivale a 1 centímetro cúbico (cm³). Por lo tanto, el volumen de la piedra es de 130 cm³."
+      }
+    },
+    {
+      "title": "Congruencia y semejanza",
+      "paragraphs": [
+        "En nuestro entorno observamos constantemente figuras geométricas que se repiten. Cuando dos figuras tienen exactamente la misma forma y el mismo tamaño, sin importar si una está girada o trasladada, decimos que son congruentes. En los triángulos, para saber si dos de ellos son congruentes sin medir todos sus lados y ángulos, utilizamos criterios abreviados basados en sus lados (Lado-Lado-Lado) o en combinaciones de lados y ángulos.",
+        "Por otro lado, la semejanza aparece cuando dos figuras tienen exactamente la misma forma pero diferente tamaño, como una fotografía real y su ampliación o un mapa a escala de Colombia. Dos triángulos son semejantes si sus ángulos correspondientes son iguales y sus lados guardan una proporción constante llamada razón de semejanza. Esta propiedad es fundamental para calcular alturas inaccesibles, como la de un árbol o un edificio."
+      ],
+      "example": {
+        "statement": "Dos triángulos son semejantes. El triángulo pequeño tiene lados de 3 cm, 4 cm y 5 cm. Si el lado menor del triángulo grande mide 9 cm, ¿cuánto mide el lado mayor?",
+        "solution": "Paso 1: Hallar la razón de semejanza dividiendo el lado conocido del triángulo grande entre su correspondiente en el pequeño. 9 cm ÷ 3 cm = 3 (la escala es 3 a 1). Paso 2: Identificar el lado mayor del triángulo pequeño, que es 5 cm. Paso 3: Multiplicar este valor por la razón de semejanza. 5 cm × 3 = 15 cm. El lado mayor del triángulo grande mide 15 cm."
+      }
+    },
+    {
+      "title": "Teoremas y regularidades",
+      "paragraphs": [
+        "Las matemáticas están llenas de reglas fijas llamadas teoremas que nos permiten descubrir información oculta en las figuras geométricas. Uno de los más famosos y útiles en octavo grado es el Teorema de Pitágoras, que se cumple exclusivamente en los triángulos rectángulos. Este teorema establece que el cuadrado de la hipotenusa, que es el lado más largo opuesto al ángulo recto, es igual a la suma de los cuadrados de los catetos: a² + b² = c².",
+        "Además del teorema de Pitágoras, las figuras planas guardan regularidades sorprendentes, como la suma de los ángulos internos de cualquier triángulo, que siempre da exactamente 180 grados. Conocer y aplicar estas regularidades nos permite diseñar estructuras seguras, resolver retos de ingeniería civil y comprender patrones visuales presentes en la naturaleza y en el arte precolombino de nuestros antepasados."
+      ],
+      "example": {
+        "statement": "Una escalera de 5 metros de longitud está apoyada contra una pared vertical. Si la base de la escalera está a 3 metros de la pared, ¿a qué altura del suelo llega la parte superior de la escalera?",
+        "solution": "Paso 1: Reconocer que la escalera, la pared y el suelo forman un triángulo rectángulo donde la escalera es la hipotenusa (c = 5m) y la distancia al suelo es un cateto (a = 3m). Paso 2: Aplicar el Teorema de Pitágoras: a² + b² = c². Paso 3: Sustituir los valores conocidos: 3² + b² = 5², lo que es 9 + b² = 25. Paso 4: Despejar b² restando 9 a 25. b² = 16. Paso 5: Sacar la raíz cuadrada. b = √16 = 4 metros. La escalera llega a una altura de 4 metros."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es el volumen de un cubo cuyas aristas miden 4 cm cada una?",
+      "answer": "64 cm³"
+    },
+    {
+      "question": "Si la base de un prisma rectangular mide 12 cm² y su altura es de 5 cm, ¿cuál es su volumen?",
+      "answer": "60 cm³"
+    },
+    {
+      "question": "Al sumergir una bola de acero en una probeta, el nivel de agua pasa de 100 ml a 145 ml. ¿Cuál es el volumen de la bola?",
+      "answer": "45 cm³"
+    },
+    {
+      "question": "Un triángulo rectángulo tiene catetos que miden 6 cm y 8 cm. ¿Cuánto mide su hipotenusa?",
+      "answer": "10 cm"
+    },
+    {
+      "question": "Dos triángulos son semejantes con una razón de 2. Si un lado del triángulo pequeño mide 7 cm, ¿cuánto mide el correspondiente en el grande?",
+      "answer": "14 cm"
+    },
+    {
+      "question": "Calcula el volumen de una pirámide cuya base cuadrada tiene un área de 30 m² y su altura es de 9 metros.",
+      "answer": "90 m³"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Volumen",
+      "definition": "Medida del espacio tridimensional que ocupa un cuerpo geométrico, expresada habitualmente en unidades cúbicas como metros cúbicos o centímetros cúbicos."
+    },
+    {
+      "term": "Prisma",
+      "definition": "Cuerpo geométrico con dos bases paralelas e iguales y caras laterales que son paralelogramos."
+    },
+    {
+      "term": "Pirámide",
+      "definition": "Poliedro que tiene una base poligonal y caras laterales triangulares que se unen en un punto común llamado cúspide."
+    },
+    {
+      "term": "Congruencia",
+      "definition": "Relación entre figuras geométricas que tienen exactamente la misma forma y el mismo tamaño."
+    },
+    {
+      "term": "Semejanza",
+      "definition": "Relación entre figuras que tienen la misma forma pero diferente tamaño, manteniendo una proporción fija entre sus lados."
+    },
+    {
+      "term": "Hipotenusa",
+      "definition": "El lado más largo de un triángulo rectángulo, situado enfrente del ángulo recto."
+    }
+  ],
+  "closing": "El estudio del volumen, la congruencia y la semejanza no es solo un requisito escolar; es una herramienta poderosa para entender y transformar nuestro entorno. Desde calcular la cantidad de pintura necesaria para renovar una fachada hasta diseñar los planos de un mueble o empacar productos para un emprendimiento local, estas matemáticas están presentes en cada paso que damos. ¡Sigue explorando y aplicando el conocimiento en tu vida diaria!",
+  "dbaStatements": [
+    "DBA 4. Describe atributos medibles de diferentes sólidos y explica relaciones entre ellos por medio del lenguaje algebraico.",
+    "DBA 5. Utiliza y explica diferentes estrategias para encontrar el volumen de objetos regulares e irregulares en la solución de problemas en las matemáticas y en otras ciencias.",
+    "DBA 6. Identifica relaciones de congruencia y semejanza entre las formas geométricas que configuran el diseño de un objeto.",
+    "DBA 7. Identifica regularidades y argumenta propiedades de figuras geométricas a partir de teoremas y las aplica en situaciones reales."
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "intro": "¡Hola, estudiantes de noveno grado! En esta guía de estudio exploraremos el presente perfecto en inglés, un tiempo verbal fundamental para conectar nuestras vivencias del pasado con el momento presente. A lo largo de las siguientes secciones, aprenderemos a comunicar nuestras experiencias personales, viajes por Colombia y logros académicos utilizando estructuras gramaticales precisas. Esta herramienta les permitirá desenvolverse con mayor naturalidad al conversar sobre temas cotidianos, tecnología y vivencias significativas, fortaleciendo sus habilidades comunicativas en el nivel B1.1 según los lineamientos del Ministerio de Educación Nacional.",
+  "objectives": [
+    "Identificar la estructura gramatical del presente perfecto en oraciones afirmativas, negativas e interrogativas.",
+    "Diferenciar el uso del presente perfecto y el pasado simple en contextos de la vida diaria.",
+    "Emplear marcadores temporales como ever, never, already y yet de forma adecuada.",
+    "Describir experiencias de vida y logros personales relacionados con el entorno escolar y social."
+  ],
+  "sections": [
+    {
+      "title": "Present perfect form",
+      "paragraphs": [
+        "El presente perfecto se forma combinando el verbo auxiliar have o has con el participio pasado del verbo principal. Usamos have con los pronombres I, you, we y they, y has con he, she y it. Los participios pasados en inglés pueden ser regulares, añadiendo la terminación ed, o irregulares, los cuales tienen formas específicas que debemos memorizar, como eaten, gone o seen.",
+        "Este tiempo verbal es muy útil para hablar de experiencias de vida, acciones que ocurrieron en un tiempo no especificado o situaciones que empezaron en el pasado y continúan en el presente. Por ejemplo, al hablar de nuestras experiencias escolares en Colombia, podemos expresar lo que hemos hecho hasta ahora sin necesidad de mencionar una fecha exacta en el calendario."
+      ],
+      "example": {
+        "statement": "Write a sentence in present perfect using the subject 'She' and the verb 'visit'.",
+        "solution": "1. Identify the subject: 'She'. 2. Choose the correct auxiliary verb for 'She', which is 'has'. 3. Write the past participle of 'visit', which is 'visited' (regular verb). 4. Combine them: 'She has visited Bogotá.' Additional context can be added, such as 'She has visited Bogotá three times.'"
+      }
+    },
+    {
+      "title": "Ever, never, already, yet",
+      "paragraphs": [
+        "Para enriquecer nuestras conversaciones sobre experiencias, utilizamos adverbios clave. Ever se usa en preguntas para indagar si alguien ha realizado una acción en algún momento de su vida, y se ubica antes del participio pasado. Por su parte, never expresa lo contrario en oraciones afirmativas con sentido negativo, indicando que jamás hemos hecho algo.",
+        "Already y yet se emplean para hablar de acciones completadas o esperadas. Already se usa en oraciones afirmativas para indicar que algo ya sucedió, usualmente antes de lo previsto. Yet se utiliza al final de oraciones negativas e interrogativas para señalar algo que todavía no ocurre pero que se espera que pase pronto."
+      ],
+      "example": {
+        "statement": "Complete the sentence: 'I have not finished my English homework ________.'",
+        "solution": "1. Analyze the sentence structure: it is a negative sentence in present perfect ('have not finished'). 2. Look at the position of the missing word at the very end of the sentence. 3. Select the correct adverb for unfinished actions in negative sentences, which is 'yet'. 4. Final sentence: 'I have not finished my English homework yet.'"
+      }
+    },
+    {
+      "title": "Present perfect or simple past",
+      "paragraphs": [
+        "Es muy común confundir el presente perfecto con el pasado simple. La diferencia principal radica en la importancia del tiempo en que ocurrió la acción. El pasado simple se usa para acciones que sucedieron en un momento específico del pasado y ya terminaron, frecuentemente acompañadas de expresiones como yesterday, last year o in 2020.",
+        "En contraste, el presente perfecto se centra en la experiencia acumulada o en un hecho cuyo tiempo exacto no importa o no ha finalizado. Si decimos 'I went to Cartagena last year', usamos pasado simple por la mención del año pasado. Si decimos 'I have been to Cartagena', destacamos la experiencia de haber visitado la ciudad en algún momento de nuestra vida."
+      ],
+      "example": {
+        "statement": "Choose the correct option: 'We (have visited / visited) San Andrés island last summer.'",
+        "solution": "1. Look for time expressions in the sentence: 'last summer' indicates a specific point in the past. 2. Remember that specific past time markers require the simple past tense, not the present perfect. 3. Select the simple past form 'visited'. 4. Final sentence: 'We visited San Andrés island last summer.'"
+      }
+    },
+    {
+      "title": "Talking about achievements",
+      "paragraphs": [
+        "Compartir nuestros logros personales, académicos y deportivos nos permite valorar el esfuerzo diario. Al hablar de metas alcanzadas, el presente perfecto es el aliado perfecto porque conecta el trabajo realizado en el pasado con nuestros éxitos actuales. Expresiones como 'I have won a prize', 'She has learned to code' o 'We have finished our school project' demuestran este vínculo.",
+        "En el contexto escolar colombiano, los estudiantes participan en ferias de la ciencia, torneos deportivos y proyectos comunitarios. Poder narrar estas vivencias en inglés enriquece nuestra capacidad de argumentación y nos abre puertas para interactuar con comunidades globales, reconociendo el impacto positivo de nuestras acciones en la sociedad."
+      ],
+      "example": {
+        "statement": "Translate into English: 'Carlos ha ganado una beca para estudiar tecnología.'",
+        "solution": "1. Identify the subject: 'Carlos' (uses 'has'). 2. Translate the verb 'ganar' in past participle: 'won'. 3. Translate the object: 'a scholarship to study technology'. 4. Combine the parts: 'Carlos has won a scholarship to study technology.'"
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "Choose the correct auxiliary: 'They ________ traveled to Medellín.'",
+      "answer": "have"
+    },
+    {
+      "question": "Write the past participle of the irregular verb 'write'.",
+      "answer": "written"
+    },
+    {
+      "question": "Order the words to make a question: 'you / ever / Have / eaten / changua / ?'",
+      "answer": "Have you ever eaten changua?"
+    },
+    {
+      "question": "Complete with already or yet: 'We have ________ downloaded the new educational app.'",
+      "answer": "already"
+    },
+    {
+      "question": "Select the correct tense: 'I (have lived / lived) in Cali since 2015.'",
+      "answer": "have lived"
+    },
+    {
+      "question": "Translate to English: 'Nunca he viajado fuera de Colombia.'",
+      "answer": "I have never traveled outside of Colombia."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Present perfect",
+      "definition": "Tiempo verbal que conecta el pasado con el presente, formado con el auxiliar have o has y un participio pasado."
+    },
+    {
+      "term": "Past participle",
+      "definition": "Forma verbal que se usa junto con have o has para construir tiempos compuestos en inglés."
+    },
+    {
+      "term": "Ever",
+      "definition": "Adverbio que significa alguna vez en la vida, empleado comúnmente en preguntas."
+    },
+    {
+      "term": "Never",
+      "definition": "Adverbio que significa nunca, utilizado en oraciones afirmativas con sentido negativo."
+    },
+    {
+      "term": "Yet",
+      "definition": "Adverbio que significa todavía o aun, usado al final de oraciones negativas e interrogativas."
+    }
+  ],
+  "closing": "El dominio del presente perfecto nos abre una ventana para compartir nuestras vivencias, aprendizajes y metas con personas de todo el mundo. Al practicar estos temas en clase, no solo mejoramos nuestro nivel de inglés, sino que también valoramos nuestro propio crecimiento personal y el impacto de nuestras acciones cotidianas en la comunidad.",
+  "dbaStatements": [
+    "Esquema curricular sugerido de inglés del MEN: nivel B1.1, grado sugerido 9.°."
+  ]
+}

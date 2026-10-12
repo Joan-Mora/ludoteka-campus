@@ -1,0 +1,109 @@
+{
+  "intro": "¡Hola, pilos de noveno! Bienvenidos a esta guía sobre el arte de argumentar. En nuestra vida diaria, desde discutir con los amigos sobre cuál es el mejor equipo de fútbol en Colombia hasta proponerle cambios al personero del colegio en Bogotá o Medellín, siempre estamos dando razones para defender lo que pensamos. Argumentar no es pelear, es convencer a los demás con ideas claras y pruebas sólidas. Aquí aprenderás a construir textos de opinión poderosos y a participar en debates escolares con respeto y altura, cumpliendo con las metas de nuestros Derechos Básicos de Aprendizaje del Ministerio de Educación Nacional. ¡Manos a la obra!",
+  "objectives": [
+    "Identificar la estructura básica de los textos argumentativos en situaciones cotidianas",
+    "Analizar diferentes tipologías de argumentos para aplicarlas en debates escolares",
+    "Producir textos de opinión siguiendo un plan textual y rigurosas normas de corrección",
+    "Participar en discusiones argumentadas respetando las ideas de los compañeros"
+  ],
+  "sections": [
+    {
+      "title": "Tesis, argumentos y conclusión",
+      "paragraphs": [
+        "Para que un texto o una intervención oral tengan validez, deben sostenerse sobre tres pilares fundamentales. El primero es la tesis: la idea central que vas a defender a lo largo de tu escrito, la cual debe ser debatible y no una simple obviedad. Por ejemplo, decir que el río Magdalena atraviesa Colombia es un hecho, pero afirmar que el río Magdalena debe ser declarado sujeto de derechos es una tesis que requiere defensa.",
+        "El segundo pilar son los argumentos, que funcionan como los cimientos que sostienen esa tesis. Sin buenos argumentos, tu opinión es solo una creencia sin sustento. Finalmente, encontramos la conclusión, que es el cierre donde reafirmas tu tesis inicial pero enriquecida con todo lo que explicaste previamente, dejando claro por qué tu postura es la más acertada frente al tema tratado."
+      ],
+      "example": {
+        "statement": "Analiza la siguiente afirmación: El uso excesivo de los teléfonos celulares en el aula de clase afecta negativamente el rendimiento académico de los estudiantes de bachillerato. Identifica cuál es la tesis y cuál sería una conclusión lógica.",
+        "solution": "Paso 1: La tesis es exactamente la afirmación dada, ya que plantea un punto de vista debatible sobre el impacto de los celulares en el colegio. Paso 2: La conclusión lógica debe reiterar esta idea resumiendo los argumentos previos, por ejemplo: Por lo tanto, regular el uso de dispositivos móviles en las aulas colombianas es una medida urgente para garantizar la concentración y el aprendizaje efectivo de los jóvenes."
+      }
+    },
+    {
+      "title": "Tipos de argumento",
+      "paragraphs": [
+        "No todas las razones que damos tienen la misma fuerza. Dependiendo de a quién queramos convencer, debemos elegir el tipo de argumento adecuado. Un argumento de autoridad se apoya en la voz de un experto o una institución reconocida, como cuando citamos un informe del DANE o de la Organización Mundial de la Salud. Esto le otorga mucha seriedad a lo que decimos en un debate.",
+        "También usamos argumentos basados en ejemplos, trayendo casos de la vida real o de nuestra historia nacional para demostrar que una regla se cumple. Por otro lado, los argumentos de causa y efecto explican por qué ocurre un fenómeno, conectando antecedentes con consecuencias verificables. Saber combinarlos en tus textos de opinión es la clave del éxito comunicativo."
+      ],
+      "example": {
+        "statement": "Identifica qué tipo de argumento se emplea en la frase: Según el Instituto Humboldt, la deforestación en la Amazonía colombiana disminuyó un 25 por ciento el año pasado gracias al control militar.",
+        "solution": "Paso 1: Observamos que la idea se apoya en una entidad científica oficial y especializada. Paso 2: Concluimos que es un argumento de autoridad, ya que valida la afirmación usando el prestigio y los datos de una fuente experta en el tema ambiental."
+      }
+    },
+    {
+      "title": "Reglas del debate",
+      "paragraphs": [
+        "Un debate no es una pelea de barrio ni una competencia para ver quién grita más duro. Es un ejercicio democrático donde dos o más posturas chocan mediante la palabra razonada. La primera regla de oro es la escucha activa: mientras tu compañero habla, debes prestar atención genuina para entender sus puntos débiles y fuertes, en lugar de simplemente pensar en qué vas a responder.",
+        "La segunda regla es el respeto absoluto por el turno y por la persona; atacamos los argumentos del oponente, jamás su integridad física o personal. Asimismo, es vital usar un tono moderado, evitar las falacias o mentiras evidentes, y respaldar cada intervención con datos fiables. En los colegios de nuestro país, aprender a debatir fortalece la convivencia pacífica y la ciudadanía."
+      ],
+      "example": {
+        "statement": "En medio de un debate escolar sobre si las tareas escolares deben prohibirse, un estudiante dice: Usted piensa eso porque usted siempre saca malas notas y no le gusta estudiar. ¿Qué regla del debate se está incumpliendo?",
+        "solution": "Paso 1: Analizamos el comentario del estudiante y vemos que está descalificando al oponente atacando su rendimiento académico y su persona. Paso 2: Identificamos que se incumple la regla del respeto y se incurre en una falacia de ataque personal (ad hominem), desviando la discusión del tema central hacia un insulto."
+      }
+    },
+    {
+      "title": "Escribir y corregir un texto de opinión",
+      "paragraphs": [
+        "Escribir un texto de opinión para el periódico escolar o para una tarea de lenguaje exige un proceso riguroso. No basta con escribir lo primero que se nos venga a la cabeza. Primero elaboramos un plan textual o esquema: organizamos la introducción con la tesis, los párrafos de desarrollo con al menos dos tipos de argumentos, y el párrafo final con la conclusión.",
+        "Una vez redactado el borrador, pasamos a la fase de corrección lingüística. Esto implica revisar la ortografía, la puntuación, la concordancia entre sujeto y predicado, y evitar la repetición constante de palabras usando sinónimos adecuados. Un texto limpio de errores transmite mayor autoridad y respeto hacia el lector colombiano."
+      ],
+      "example": {
+        "statement": "Corrige el siguiente enunciado aplicando normas de concordancia y puntuación: Los estudiantes de noveno grado entregaron su trabajos a tiempo, sin embargo el profesor los felicito.",
+        "solution": "Paso 1: Detectamos que la palabra trabajos debe ir en plural para concordar con los estudiantes, y falta una coma antes del conector de contraste. Paso 2: Añadimos la tilde en felicito por ser agudo terminado en vocal. Paso 3: El texto corregido queda así: Los estudiantes de noveno grado entregaron sus trabajos a tiempo; sin embargo, el profesor los felicitó."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es la función principal de la tesis en un texto argumentativo?",
+      "answer": "Sostener la idea central o postura que se va a defender a lo largo del texto."
+    },
+    {
+      "question": "Menciona una característica fundamental de un debate escolar democrático.",
+      "answer": "El respeto por la palabra del otro y la argumentación basada en evidencias."
+    },
+    {
+      "question": "Si en un texto sobre el agua en Colombia cito un informe de IDEAM, ¿qué tipo de argumento estoy utilizando?",
+      "answer": "Argumento de autoridad."
+    },
+    {
+      "question": "Explica brevemente la diferencia entre un hecho y una opinión.",
+      "answer": "El hecho es comprobable y objetivo; la opinión expresa un punto de vista personal y debatible."
+    },
+    {
+      "question": "¿Por qué es importante elaborar un plan textual antes de redactar un texto de opinión?",
+      "answer": "Para organizar lógicamente la tesis, los argumentos y la conclusión antes de empezar a escribir."
+    },
+    {
+      "question": "Corrige el siguiente error gramatical en un texto argumentativo: La contaminacion ambiental destruyen nuestros recursos naturales.",
+      "answer": "La contaminación ambiental destruye nuestros recursos naturales (corrección de tilde y concordancia en singular)."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Tesis",
+      "definition": "Idea principal y debatible que se defiende mediante argumentos en un texto de opinión o en un debate."
+    },
+    {
+      "term": "Argumento",
+      "definition": "Razonamiento que se emplea para demostrar o probar una tesis, o para convencer a alguien de aquello que se afirma o se niega."
+    },
+    {
+      "term": "Debate",
+      "definition": "Discusión ordenada entre dos o más personas que defienden posturas contrarias sobre un tema específico."
+    },
+    {
+      "term": "Falacia",
+      "definition": "Argumento falso o incorrecto que parece válido pero que busca engañar o desviar la atención en una discusión."
+    },
+    {
+      "term": "Plan textual",
+      "definition": "Esquema o borrador previo que organiza las ideas, la estructura y los datos antes de redactar un texto."
+    }
+  ],
+  "closing": "Argumentar con respeto y escribir con claridad son herramientas poderosas para transformar nuestra realidad en Colombia. Cada vez que defiendes tu punto de vida con datos reales, evitas las ofensas y escuchas a los demás, estás construyendo ciudadanía. ¡Atrévete a alzar tu voz con argumentos sólidos en tu colegio y en tu comunidad!",
+  "dbaStatements": [
+    "DBA 5. Comprende y respeta las opiniones en debates sobre temas de actualidad social.",
+    "DBA 7. Produce textos orales, a partir del empleo de diversas estrategias para exponer sus argumentos.",
+    "DBA 8. Produce textos verbales y no verbales, a partir de los planes textuales que elabora, y siguiendo procedimientos sistemáticos de corrección lingüística."
+  ]
+}

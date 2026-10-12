@@ -1,0 +1,109 @@
+{
+  "intro": "¡Hola, estudiantes de sexto grado! Bienvenidos a este recorrido por la memoria de nuestro país. En esta guía de estudio nos adentraremos en el fascinante mundo de la tradición oral colombiana. A través de relatos que los abuelos han contado junto al fogón, viajaremos por ríos caudalosos, selvas misteriosas y pueblos llenos de encanto. Reconoceremos cómo los mitos, las leyendas, las coplas y los refranes no solo entretienen, sino que guardan saberes ancestrales de nuestras regiones. Preparen su imaginación para descubrir cómo la literatura popular nos conecta con nuestras raíces, nuestra historia y nuestra identidad cultural en cada rincón de Colombia.",
+  "objectives": [
+    "Reconocer las obras de la tradición oral como una posibilidad de circulación del conocimiento y desarrollo de la imaginación.",
+    "Identificar las diferencias conceptuales y narrativas entre el mito y la leyenda.",
+    "Reconocer expresiones y relatos propios de las diferentes regiones de Colombia.",
+    "Interpretar coplas, refranes y otras manifestaciones populares del entorno colombiano."
+  ],
+  "sections": [
+    {
+      "title": "Qué es la tradición oral",
+      "paragraphs": [
+        "La tradición oral es el conjunto de relatos, cantos, coplas, refranes, mitos y leyendas que se transmiten de generación en generación a través de la palabra hablada. Antes de que existieran muchos libros o internet, las comunidades guardaban su historia, sus miedos y sus saberes contándolos de boca en boca, especialmente en las noches de reunión familiar, en las veredas y alrededor de la cocina de leña.",
+        "Este patrimonio inmaterial sobrevive gracias a la memoria de los mayores, quienes se convierten en los guardianes de la cultura. En Colombia, la tradición oral es muy rica y diversa debido a la mezcla de saberes indígenas, africanos y españoles. Cada región tiene una forma particular de hablar, de cantar y de narrar el mundo, lo que demuestra que la literatura también vive en la voz del pueblo."
+      ],
+      "example": {
+        "statement": "Si tu abuelo te cuenta en una tarde en Medellín un cuento de espantos que le enseñó su bisabuelo, ¿qué tipo de manifestación cultural se está presentando?",
+        "solution": "Se presenta la tradición oral. Esto ocurre porque el relato no proviene de un libro impreso, sino que se ha transmitido de manera hablada de una generación a otra."
+      }
+    },
+    {
+      "title": "Mito y leyenda: diferencias",
+      "paragraphs": [
+        "Aunque a veces los confundimos, el mito y la leyenda son relatos populares diferentes. El mito es una narración sagrada que explica el origen del mundo, de los seres humanos, de los astros o de los fenómenos naturales. Sus personajes suelen ser dioses, seres sobrenaturales o héroes con poderes especiales. Por ejemplo, los relatos indígenas sobre cómo se creó el río Amazonas o el fuego pertenecen al mito.",
+        "Por otro lado, la leyenda es un relato que tiene una base en la realidad y se ubica en un tiempo y lugar más cercanos. Cuenta sucesos extraordinarios que le ocurren a personas comunes en lugares reconocidos, como ríos, caminos o pueblos. Busca dejar una enseñanza moral o advertir sobre un peligro, como ocurre con historias colombianas muy conocidas en los llanos o en la región Andina."
+      ],
+      "example": {
+        "statement": "Clasifica el siguiente relato: una historia sobre cómo el dios sol le dio la vida a los primeros hombres muiscas.",
+        "solution": "Es un mito. Se clasifica así porque explica el origen de la humanidad y del mundo a través de seres divinos, característicos de las narraciones sagradas."
+      }
+    },
+    {
+      "title": "Relatos colombianos y expresiones regionales",
+      "paragraphs": [
+        "Colombia es un país megadiverso y esa riqueza se refleja en sus relatos y formas de hablar. En los llanos orientales se escucha con respeto el silbido de El Silbón; en las riberas del río Magdalena y en la costa Caribe, la gente prefiere contar historias sobre la Patasola o el Hombre Caimán. Cada una de estas leyendas usa un vocabulario propio de la región, lleno de expresiones locales, nombres de fauna nativa y geografías reales.",
+        "Identificar estas expresiones en la literatura nos permite entender la cultura de cada zona. Un estudiante de sexto grado en Pasto puede disfrutar y comprender un relato costeño si presta atención a las palabras y al contexto en el que viven sus personajes, reconociendo que nuestra literatura regional es un tesoro plural."
+      ],
+      "example": {
+        "statement": "Lee el fragmento: 'El botalón estaba listo y el llanero soga en mano aguardaba'. ¿A qué región colombiana hace referencia por sus palabras?",
+        "solution": "Hace referencia a la región de la Orinoquía o Llanos Orientales. Términos como botalón y llanero son propios de la cultura ganadera de esa zona del país."
+      }
+    },
+    {
+      "title": "Coplas y refranes",
+      "paragraphs": [
+        "Las coplas son composiciones poéticas populares, generalmente de cuatro versos, que se cantan con alegría y picardía en fiestas, trovas y reuniones familiares. Utilizan la rima y el humor para hablar del amor, del trabajo en el campo, de los paisajes o de la vida diaria en Colombia. Son muy famosas en la región Andina, especialmente en Antioquia, Caldas, Risaralda y Quindío.",
+        "Por su parte, los refranes son dichos breves que contienen una enseñanza, un consejo o una verdad popular. Expresan la sabiduría acumulada de los pueblos. Por ejemplo, el refrán 'Más vale pájaro en mano que ciento volando' nos enseña a valorar lo seguro antes que lo incierto. Tanto las coplas como los refranes enriquecen nuestro idioma y demuestran la creatividad de nuestra gente."
+      ],
+      "example": {
+        "statement": "Analiza la siguiente copla: 'A la entrada del trapiche / me puse a comer banano / para ver si así aprendía / a hablar con acento paisa'. ¿Qué tema principal aborda?",
+        "solution": "Aborda el humor y la identidad regional. Utiliza elementos cotidianos como el trapiche y el banano para generar gracia y conectar con la tradición."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cómo se transmite principalmente la tradición oral?",
+      "answer": "A través de la palabra hablada de generación en generación."
+    },
+    {
+      "question": "¿Cuál es la diferencia principal entre un mito y una leyenda?",
+      "answer": "El mito explica el origen del mundo con dioses; la leyenda narra sucesos extraordinarios en lugares reales con personas comunes."
+    },
+    {
+      "question": "Menciona un personaje tradicional de las leyendas colombianas.",
+      "answer": "La Patasola."
+    },
+    {
+      "question": "¿Cuántos versos tiene tradicionalmente una copla popular?",
+      "answer": "Cuatro versos."
+    },
+    {
+      "question": "Explica con tus palabras qué es un refrán.",
+      "answer": "Es un dicho breve que deja una enseñanza o consejo basado en la sabiduría popular."
+    },
+    {
+      "question": "Si un relato cuenta cómo se formó la sabana de Bogotá mediante la intervención de un dios chibcha, ¿es mito o leyenda y por qué?",
+      "answer": "Es un mito porque narra la creación de un territorio sagrado utilizando seres divinos y explicaciones cosmogónicas."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Tradición oral",
+      "definition": "Conjunto de relatos, cantos y saberes que se transmiten de boca en boca de una generación a otra."
+    },
+    {
+      "term": "Mito",
+      "definition": "Narración sagrada de carácter fantástico que explica el origen del universo, los dioses o los seres humanos."
+    },
+    {
+      "term": "Leyenda",
+      "definition": "Relato popular que mezcla sucesos reales y sobrenaturales, ubicado en un lugar y tiempo específicos."
+    },
+    {
+      "term": "Copla",
+      "definition": "Composición poética corta, usualmente de cuatro versos, que se canta con humor y picardía popular."
+    },
+    {
+      "term": "Refrán",
+      "definition": "Dicho popular de autor anónimo que deja una enseñanza moral o un consejo sobre la vida."
+    }
+  ],
+  "closing": "Conservar los mitos, leyendas, coplas y refranes es una forma de mantener viva nuestra memoria colombiana. Cuando conversas con tus abuelos, escuchas una trova o lees un relato tradicional, estás protegiendo la identidad de nuestras regiones. Te invitamos a compartir estas historias en casa y a valorar la riqueza cultural que habita en cada palabra de nuestra hermosa tierra.",
+  "dbaStatements": [
+    "DBA 3. Reconoce las obras literarias como una posibilidad de circulación del conocimiento y de desarrollo de su imaginación.",
+    "DBA 4. Identifica algunas expresiones de diferentes regiones y contextos en las obras literarias.",
+    "DBA 5. Interpreta obras de la tradición popular propias de su entorno."
+  ]
+}

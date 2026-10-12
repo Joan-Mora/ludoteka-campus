@@ -1,10 +1,12 @@
 # Ludoteka Campus — Modelo entidad-relación
 
-> Última revisión: 2026-10-09 · Responsable: Cronista
+> Última revisión: 2026-10-12 · Responsable: Cronista
 > **Nombre:** Ludoteka Campus (nombre pendiente de confirmar por Darwin; antes EduQuest).
-> **Cobertura:** migraciones 0000 a 0027. Las tablas de 0018 y 0019 se transcribieron del SQL del repo (2Klair, sin commit al 2026-10-09). El resto sale del catálogo de producción, salvo lo de Ludoteka 2 (0020 a 0027), que se transcribió del SQL y lleva el número de su migración en cada tabla o columna nueva. Los indicadores de abajo no incluyen 0020 a 0027.
+> **Cobertura:** migraciones **0000 a 0027** (31 archivos: dos `0011` y tres `0020`). Las tablas de 0018 y 0019 se transcribieron del SQL del repo; el resto sale del catálogo de producción, salvo lo de 0020 a 0027, que se transcribió del SQL y lleva el número de su migración en cada tabla o columna nueva. Los indicadores de abajo no incluyen 0020 a 0027.
+> **Rango definitivo:** el que liste `schema_migrations` en producción (Sentinel lo lee en E7/E9). Si la última aplicada no es la 0027, este documento se ajusta a lo que se lea ahí.
+> **Post-15-oct (fuera de este ER):** 0028 (`library_items`: fuente, URL y licencia, y nuevo CHECK), 0029 (`courses.is_demo`) y 0030 (`forum_reactions`, `forum_mentions`, `forum_attachments` y resumen en `forum_threads`) existen en el repo **sin commit** al 2026-10-12. Su detalle quedó aparte en `er-post-15oct.md` y entra aquí cuando Nexus lo apruebe.
 
-Evidencia de la base de datos del parcial. El SQL ejecutable está en `db/migrations/` (0000 a 0019) y se aplica con `npm run migrate`. La tabla `schema_migrations` registra qué archivo corrió y cuándo.
+Evidencia de la base de datos del parcial. El SQL ejecutable está en `db/migrations/` (documentado: 0000 a 0027) y se aplica con `npm run migrate`. La tabla `schema_migrations` registra qué archivo corrió y cuándo.
 
 Motor: **CockroachDB Cloud** (wire de PostgreSQL, SSL). No hay otra base: Render solo ejecuta la aplicación.
 
@@ -179,7 +181,7 @@ Documentos legales versionados (Ley 1581 de 2012 y Decreto 1377 de 2013) y solic
 | `news_audience` | **news_id** (FK) UUID<br>**kind** STRING<br>**value** STRING | PK (news_id, kind, value)<br>FK news_id → news(id) CASCADE<br>2 CHECK | N:1 news |
 | `news_reads` | **news_id** (FK) UUID<br>**user_id** (FK) UUID<br>read_at TIMESTAMPTZ<br>acknowledged_at TIMESTAMPTZ NULL | PK (news_id, user_id)<br>FK news_id → news(id) CASCADE<br>FK user_id → users(id) CASCADE | N:1 news<br>N:1 users |
 | `forum_threads` | **id** UUID<br>course_id (FK) UUID<br>author_id (FK) UUID<br>title STRING<br>body STRING<br>pinned BOOL<br>locked BOOL<br>posts_count INT8<br>last_post_at TIMESTAMPTZ<br>created_at TIMESTAMPTZ | PK (id)<br>FK course_id → courses(id) CASCADE<br>FK author_id → users(id) CASCADE<br>3 CHECK | N:1 courses<br>N:1 users<br>1:N forum_posts |
-| `forum_posts` | **id** UUID<br>thread_id (FK) UUID<br>author_id (FK) UUID<br>body STRING<br>is_answer BOOL<br>created_at TIMESTAMPTZ | PK (id)<br>FK thread_id → forum_threads(id) CASCADE<br>FK author_id → users(id) CASCADE<br>1 CHECK | N:1 forum_threads<br>N:1 users |
+| `forum_posts` | **id** UUID<br>thread_id (FK) UUID<br>author_id (FK) UUID<br>body STRING<br>is_answer BOOL<br>created_at TIMESTAMPTZ | PK (id)<br>FK thread_id → forum_threads(id) CASCADE<br>FK author_id → users(id) CASCADE<br>1 CHECK | N:1 forum_threads<br>N:1 users<br>1:N forum_reactions<br>1:N forum_mentions |
 
 ### Evaluación (assessment)
 
@@ -245,7 +247,7 @@ Documentos legales versionados (Ley 1581 de 2012 y Decreto 1377 de 2013) y solic
 
 | Entidad | Atributos | PK / FK | Relaciones |
 |---|---|---|---|
-| `library_items` | **id** UUID<br>title STRING<br>description STRING<br>subject_id (FK) UUID<br>grade_id (FK) UUID NULL<br>kind STRING<br>url STRING<br>cloudinary_public_id STRING NULL<br>resource_type STRING NULL<br>format STRING NULL<br>bytes INT8<br>pages INT8 NULL<br>checksum STRING NULL<br>visibility STRING<br>course_id (FK) UUID NULL<br>status STRING<br>text_chars INT8<br>uploaded_by (FK) UUID NULL<br>created_at TIMESTAMPTZ<br>updated_at TIMESTAMPTZ | PK (id)<br>FK subject_id → subjects(id)<br>FK grade_id → grades(id) SET NULL<br>FK course_id → courses(id) CASCADE<br>FK uploaded_by → users(id) SET NULL<br>UNIQUE (cloudinary_public_id)<br>8 CHECK | N:1 subjects<br>N:1 grades<br>N:1 courses<br>N:1 users<br>1:N bookmarks<br>1:N glossary_terms<br>1:N library_chunks<br>1:N library_tags<br>1:N library_views |
+| `library_items` | **id** UUID<br>title STRING<br>description STRING<br>subject_id (FK) UUID<br>grade_id (FK) UUID NULL<br>kind STRING<br>url STRING<br>cloudinary_public_id STRING NULL<br>resource_type STRING NULL<br>format STRING NULL<br>bytes INT8<br>pages INT8 NULL<br>checksum STRING NULL<br>visibility STRING<br>course_id (FK) UUID NULL<br>status STRING<br>text_chars INT8<br>uploaded_by (FK) UUID NULL<br>created_at TIMESTAMPTZ<br>updated_at TIMESTAMPTZ | PK (id)<br>FK subject_id → subjects(id)<br>FK grade_id → grades(id) SET NULL<br>FK course_id → courses(id) CASCADE<br>FK uploaded_by → users(id) SET NULL<br>UNIQUE (cloudinary_public_id)<br>8 CHECK (0028 lo cambia: ver nota post-15-oct)| N:1 subjects<br>N:1 grades<br>N:1 courses<br>N:1 users<br>1:N bookmarks<br>1:N glossary_terms<br>1:N library_chunks<br>1:N library_tags<br>1:N library_views |
 | `library_tags` | **item_id** (FK) UUID<br>**tag** STRING | PK (item_id, tag)<br>FK item_id → library_items(id) CASCADE<br>1 CHECK | N:1 library_items |
 | `bookmarks` | **user_id** (FK) UUID<br>**item_id** (FK) UUID<br>page INT8 NULL<br>note STRING<br>created_at TIMESTAMPTZ | PK (user_id, item_id)<br>FK user_id → users(id) CASCADE<br>FK item_id → library_items(id) CASCADE<br>1 CHECK | N:1 users<br>N:1 library_items |
 | `library_views` | **id** UUID<br>item_id (FK) UUID<br>user_id (FK) UUID NULL<br>viewed_at TIMESTAMPTZ | PK (id)<br>FK item_id → library_items(id) CASCADE<br>FK user_id → users(id) SET NULL | N:1 library_items<br>N:1 users |

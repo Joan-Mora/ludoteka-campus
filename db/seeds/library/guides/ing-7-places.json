@@ -1,0 +1,107 @@
+{
+  "intro": "¡Hola, estudiantes de séptimo grado! Bienvenidos a esta guía de estudio diseñada especialmente para ustedes en los colegios públicos de Colombia. En este recorrido aprenderemos a describir nuestro pueblo o ciudad, comparar diferentes lugares usando adjetivos y hablar sobre la existencia de elementos en nuestro entorno. Además, reflexionaremos sobre la importancia de cuidar el medio ambiente en nuestro país, desde el ahorro de agua hasta la protección de nuestros hermosos recursos naturales. ¡Prepárense para mejorar su inglés mientras descubren cómo pequeñas acciones pueden transformar positivamente su comunidad escolar y local!",
+  "objectives": [
+    "Identificar vocabulario sobre lugares en la ciudad y la naturaleza.",
+    "Comparar diferentes lugares usando adjetivos cortos y largos en inglés.",
+    "Describir la existencia de elementos en un espacio con there is y there are.",
+    "Proponer acciones sencillas para cuidar el medio ambiente en la comunidad."
+  ],
+  "sections": [
+    {
+      "title": "places in town",
+      "paragraphs": [
+        "Para hablar de nuestro entorno, es fundamental conocer los lugares que conforman una ciudad o un pueblo colombiano. En nuestra localidad encontramos espacios cotidianos como el parque (park), la biblioteca (library), el hospital (hospital), el supermercado (supermarket) y la escuela (school). Cada uno cumple una función importante en nuestra vida diaria y en la de nuestras familias.",
+        "También es común encontrar elementos naturales cerca de nuestras zonas urbanas, como ríos (rivers), montañas (mountains) y árboles (trees). Conocer estos términos en inglés nos permite describir con mayor precisión el lugar donde vivimos y cómo interactuamos con el espacio público y la naturaleza que nos rodea."
+      ],
+      "example": {
+        "statement": "How do you say 'la biblioteca del pueblo y el parque principal' in English?",
+        "solution": "1. Identificamos las palabras clave: 'biblioteca' es library y 'parque' es park.\n2. Añadimos el artículo o posesivo según el contexto: the town library and the main park.\n3. Resultado final: The town library and the main park."
+      }
+    },
+    {
+      "title": "comparatives and superlatives",
+      "paragraphs": [
+        "Los comparativos nos permiten establecer diferencias entre dos lugares, animales u objetos. Cuando el adjetivo es corto, como big (grande) o tall (alto), agregamos la terminación -er seguida de la palabra than. Por ejemplo, Bogotá is bigger than Tunja. Si el adjetivo es largo, como beautiful (hermoso) o important (importante), utilizamos la expresión more antes del adjetivo.",
+        "Por otro lado, los superlativos se usan para destacar a un elemento por encima de todos los demás en un grupo. Para adjetivos cortos usamos the y la terminación -est (the tallest), y para adjetivos largos usamos the most antes del adjetivo (the most important). Esto es muy útil para hablar sobre las maravillas naturales de Colombia."
+      ],
+      "example": {
+        "statement": "Compare the Magdalena River and the Cauca River using the adjective 'long' (long / longer than).",
+        "solution": "1. Identificamos el adjetivo: long (es un adjetivo corto).\n2. Aplicamos la regla del comparativo agregando -er y than: longer than.\n3. Construimos la oración: The Magdalena River is longer than the Cauca River."
+      }
+    },
+    {
+      "title": "there is and there are",
+      "paragraphs": [
+        "Para expresar la existencia de elementos en un pueblo o ciudad, utilizamos las expresiones there is y there are. Usamos there is cuando hablamos de un solo elemento en singular, por ejemplo: There is a park in my neighborhood. Su forma negativa es there isn't.",
+        "Por el contrario, empleamos there are cuando nos referimos a dos o más elementos en plural, como por ejemplo: There are many trees in the school. Su forma negativa es there aren't. Estas estructuras son ideales para describir los paisajes urbanos y rurales de Colombia."
+      ],
+      "example": {
+        "statement": "Complete the sentence: '___ three parks in my town.' (There is / There are)",
+        "solution": "1. Analizamos el sujeto de la oración: 'three parks' está en plural.\n2. Seleccionamos la estructura correcta para plural: There are.\n3. Resultado final: There are three parks in my town."
+      }
+    },
+    {
+      "title": "caring for the environment",
+      "paragraphs": [
+        "Cuidar el medio ambiente es una responsabilidad de todos los ciudadanos en Colombia. Acciones sencillas como reciclar la basura (recycle garbage), ahorrar agua (save water) y plantar árboles (plant trees) ayudan a proteger nuestros ecosistemas locales y la biodiversidad del país.",
+        "En nuestra escuela y hogar podemos implementar prácticas sostenibles para reducir la contaminación. Al usar menos plástico y cuidar las fuentes hídricas, garantizamos un futuro más limpio y saludable para las próximas generaciones."
+      ],
+      "example": {
+        "statement": "Translate into English: 'Nosotros debemos reciclar el plástico para cuidar el río.'",
+        "solution": "1. Traducimos 'nosotros debemos': We must.\n2. Traducimos 'reciclar el plástico': recycle plastic.\n3. Traducimos 'para cuidar el río': to protect the river.\n4. Unimos las partes: We must recycle plastic to protect the river."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "What is the English word for 'parque'?",
+      "answer": "Park"
+    },
+    {
+      "question": "Complete with There is or There are: ___ a big hospital in my city.",
+      "answer": "There is"
+    },
+    {
+      "question": "Write the comparative form of 'small': smaller ___",
+      "answer": "than"
+    },
+    {
+      "question": "Translate to English: 'El río Amazonas es más largo que el río Magdalena.'",
+      "answer": "The Amazon River is longer than the Magdalena River."
+    },
+    {
+      "question": "Complete the environmental action in English: 'To save ___ is important for life.'",
+      "answer": "water"
+    },
+    {
+      "question": "Create a superlative sentence using 'tall' and 'mountain' in Colombia.",
+      "answer": "The Sierra Nevada de Santa Marta has the tallest snowy peaks in the Colombian Caribbean."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Park",
+      "definition": "Public green space with trees and grass where people walk, play, and rest."
+    },
+    {
+      "term": "Comparative",
+      "definition": "Grammatical form used to compare differences between two objects, people, or places."
+    },
+    {
+      "term": "There is",
+      "definition": "Expression used in English to indicate the existence of a singular noun."
+    },
+    {
+      "term": "Environment",
+      "definition": "The natural world, including air, water, and land, in which people, animals, and plants live."
+    },
+    {
+      "term": "Recycle",
+      "definition": "Process of converting waste materials into new reusable objects and substances."
+    }
+  ],
+  "closing": "El cuidado de nuestro entorno y el conocimiento del inglés van de la mano para convertirnos en mejores ciudadanos. Al describir nuestros pueblos y ciudades en otro idioma, valoramos más lo nuestro y podemos compartir la riqueza ambiental y cultural de Colombia con el mundo. ¡Sigan practicando todos los días desde su colegio y hogar!",
+  "dbaStatements": [
+    "Esquema curricular sugerido de inglés del MEN: nivel A2.1, grado sugerido 7.°."
+  ]
+}

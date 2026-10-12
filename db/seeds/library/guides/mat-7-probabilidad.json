@@ -1,0 +1,108 @@
+{
+  "intro": "¡Te damos la bienvenida a esta guía de matemáticas para grado séptimo! En la vida diaria tomamos decisiones basadas en datos e incertidumbre: desde saber qué meses llueve más en el campo colombiano hasta calcular cuántas opciones tenemos para vestirnos o armar un menú escolar. Aquí aprenderás a organizar información continua mediante histogramas y polígonos de frecuencia para descubrir tendencias ocultas. También dominarás el principio multiplicativo y los diagramas de árbol, herramientas que te permitirán contar posibilidades sin enredarte y hallar la probabilidad de que ocurran varios sucesos a la vez. ¡Alístate para explorar el poder de la estadística y el azar!",
+  "objectives": [
+    "Construir e interpretar histogramas y polígonos de frecuencia a partir de datos agrupados en intervalos.",
+    "Aplicar el principio multiplicativo para determinar el número total de arreglos o resultados posibles en situaciones cotidianas.",
+    "Elaborar diagramas de árbol para representar visualmente el espacio muestral de experimentos aleatorios.",
+    "Calcular la probabilidad de eventos compuestos sencillos empleando la razón entre casos favorables y casos posibles."
+  ],
+  "sections": [
+    {
+      "title": "Histogramas y polígonos de frecuencia",
+      "paragraphs": [
+        "Cuando recolectamos variables cuantitativas continuas, como la estatura de los estudiantes o el peso de bultos de café, resulta poco práctico analizar cada valor por separado. Por eso agrupamos los datos en intervalos de clase de igual longitud. Un histograma es un gráfico compuesto por barras verticales unidas entre sí, donde la base de cada barra representa los límites del intervalo y su altura indica la frecuencia absoluta o relativa. A diferencia del diagrama de barras tradicional, en el histograma no dejamos espacios entre columnas porque la variable fluye de manera continua.",
+        "Para observar el comportamiento general del conjunto de datos usamos el polígono de frecuencias. Este gráfico lineal se construye ubicando un punto en la parte superior de cada barra del histograma, exactamente sobre la marca de clase, que es el promedio entre el límite inferior y el límite superior de cada intervalo. Al unir estos puntos con segmentos rectos, obtenemos una figura que muestra picos, valles y tendencias de crecimiento o disminución, facilitando comparar rápidamente distintos grupos de datos observados."
+      ],
+      "example": {
+        "statement": "Una cooperativa cafetera en Manizales registró el peso de 40 sacos de café en cuatro intervalos: [48, 50) con 6 sacos; [50, 52) con 14 sacos; [52, 54) con 12 sacos; y [54, 56) con 8 sacos. Encuentra la marca de clase de cada intervalo para trazar el polígono de frecuencias e identifica en qué rango se concentran más sacos.",
+        "solution": "Paso 1: Calculamos la marca de clase sumando los extremos de cada intervalo y dividiendo entre 2. Para [48, 50) es (48 + 50) ÷ 2 = 49 kg. Para [50, 52) es (50 + 52) ÷ 2 = 51 kg. Para [52, 54) es (52 + 54) ÷ 2 = 53 kg. Para [54, 56) es (54 + 56) ÷ 2 = 55 kg. Paso 2: Asociamos cada marca con su frecuencia para los puntos del polígono: (49, 6), (51, 14), (53, 12) y (55, 8). Paso 3: Observamos que la mayor frecuencia es 14, por lo que la mayor concentración de sacos está en el intervalo de [50, 52) kg."
+      }
+    },
+    {
+      "title": "Principio multiplicativo",
+      "paragraphs": [
+        "El principio multiplicativo es una técnica de conteo fundamental que nos ahorra tiempo cuando un procedimiento se realiza en varias etapas sucesivas. La regla establece que si una primera actividad puede ocurrir de m maneras distintas y una segunda actividad puede ocurrir de n maneras independientes, entonces ambas actividades pueden realizarse juntas o en secuencia de m × n formas diferentes. Si agregamos más etapas, simplemente multiplicamos el número de posibilidades de cada una por las siguientes.",
+        "Imagina que estás planeando una ruta de viaje entre departamentos de Colombia o escogiendo una clave numérica para proteger tu cuenta de correo. En lugar de escribir una lista interminable con cada una de las combinaciones posibles, el principio multiplicativo te permite multiplicar las opciones disponibles en cada decisión. Esta herramienta es el cimiento de la combinatoria y nos ayuda a dimensionar el tamaño total de cualquier espacio muestral con rapidez y exactitud matemática."
+      ],
+      "example": {
+        "statement": "En un restaurante tradicional de Neiva ofrecen un almuerzo ejecutivo con 3 opciones de sopa (sancocho, ajiaco, mondongo), 4 opciones de plato fuerte (carne asada, pollo campesino, cerdo, pescado) y 2 opciones de jugo (lulo, mora). ¿Cuántos almuerzos diferentes puede armar un comensal?",
+        "solution": "Paso 1: Identificamos las etapas de la elección y la cantidad de opciones en cada una. Sopa: 3 opciones. Plato fuerte: 4 opciones. Jugo: 2 opciones. Paso 2: Aplicamos el principio multiplicativo multiplicando las cantidades entre sí: 3 × 4 × 2. Paso 3: Resolvemos la operación: 3 × 4 = 12, y luego 12 × 2 = 24. Conclusión: El comensal tiene 24 almuerzos diferentes para elegir."
+      }
+    },
+    {
+      "title": "Diagramas de árbol",
+      "paragraphs": [
+        "Un diagrama de árbol es una representación gráfica que despliega de forma ordenada todos los resultados posibles de un experimento que ocurre por etapas. Recibe su nombre porque inicia en un punto central llamado raíz o nodo inicial, del cual brotan ramas que representan las alternativas de la primera fase. De la punta de cada una de esas ramas nacen nuevas ramificaciones que corresponden a las opciones de la segunda fase, y así sucesivamente hasta culminar el proceso.",
+        "La gran ventaja de este diagrama es que no solo te dice cuántos resultados existen, sino que te permite ver con claridad cuáles son cada uno de ellos. Para identificar un resultado completo del espacio muestral, solo debes recorrer un camino continuo desde el tronco inicial hasta la punta final de una rama. Esta visión panorámica evita que olvides combinaciones y es el paso previo ideal para asignar probabilidades a situaciones que involucran varias decisiones consecutivas."
+      ],
+      "example": {
+        "statement": "Para definir los turnos de juego en una partida de tejo en Boyacá, se lanza una moneda al aire dos veces consecutivas. Construye la lista de resultados posibles utilizando la estructura de un diagrama de árbol.",
+        "solution": "Paso 1: En el primer lanzamiento (primera etapa), la moneda puede caer en Cara (C) o Sello (S). Dibujamos 2 ramas principales desde el inicio. Paso 2: Desde la punta de Cara, dibujamos 2 ramas para el segundo lanzamiento: Cara (C) y Sello (S). Hacemos lo mismo desde la punta de Sello: Cara (C) y Sello (S). Paso 3: Seguimos cada trayectoria desde la raíz hasta las puntas finales para listar el espacio muestral completo: (C, C), (C, S), (S, C) y (S, S). En total hay 4 resultados posibles."
+      }
+    },
+    {
+      "title": "Probabilidad de eventos compuestos",
+      "paragraphs": [
+        "Un evento simple consta de un único resultado, mientras que un evento compuesto combina dos o más eventos simples al realizar un experimento aleatorio. Por ejemplo, lanzar un dado y sacar un número par es un evento simple respecto al dado, pero lanzar un dado y una moneda al mismo tiempo y obtener un número par junto con 'Cara' constituye un evento compuesto. Para evaluar qué tan factible es que ocurra, debemos analizar el espacio muestral global generado por ambas acciones combinadas.",
+        "Cuando todos los resultados del experimento tienen la misma posibilidad de ocurrir, utilizamos la regla clásica de probabilidad formulada por Pierre-Simon Laplace. Esta regla señala que la probabilidad P de un evento E es igual al número de casos favorables dividido entre el número total de casos posibles: P(E) = Casos favorables / Casos posibles. El resultado es un valor entre 0 y 1, que también podemos expresar como fracción irreductible, número decimal o porcentaje para facilitar su comprensión."
+      ],
+      "example": {
+        "statement": "Se lanza un dado común de 6 caras y se saca una balota de una bolsa que contiene 3 balotas marcadas con las letras A, B y C. ¿Cuál es la probabilidad de obtener un número mayor que 4 en el dado y la letra A en la balota?",
+        "solution": "Paso 1: Calculamos el total de casos posibles con el principio multiplicativo. El dado tiene 6 caras y la bolsa tiene 3 letras: 6 × 3 = 18 resultados posibles. Paso 2: Identificamos los casos favorables. Los números mayores que 4 en el dado son 5 y 6. Combinados con la letra A, los resultados favorables son (5, A) y (6, A), es decir, 2 casos. Paso 3: Aplicamos la fórmula de Laplace: P = 2 / 18. Simplificamos dividiendo numerador y denominador entre 2: P = 1 / 9. Al dividir, 1 ÷ 9 ≈ 0,111, lo que equivale aproximadamente al 11,1% de probabilidad."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "En una tienda deportiva de Cali hay 5 camisetas y 4 pantalonetas diferentes. ¿Cuántas mudas deportivas distintas se pueden formar usando una camiseta y una pantaloneta?",
+      "answer": "Se pueden formar 20 mudas distintas (5 × 4 = 20)."
+    },
+    {
+      "question": "En un estudio sobre el consumo de agua en Bucaramanga se definió el intervalo de consumo [15, 25) metros cúbicos. ¿Cuál es la marca de clase de este intervalo?",
+      "answer": "La marca de clase es 20 metros cúbicos, pues (15 + 25) ÷ 2 = 20."
+    },
+    {
+      "question": "Si se lanza una moneda dos veces al aire, ¿cuál es la probabilidad de obtener al menos un resultado 'Sello'?",
+      "answer": "La probabilidad es 3/4 o 75%, ya que los casos favorables son (C, S), (S, C) y (S, S) de 4 posibles."
+    },
+    {
+      "question": "Un histograma de las edades de 50 bailarines de joropo muestra 8 bailarines en [10, 14), 22 en [14, 18) y 20 en [18, 22). ¿Qué porcentaje del grupo tiene entre 14 y menos de 18 años?",
+      "answer": "Representa el 44%, calculado como (22 ÷ 50) × 100 = 44%."
+    },
+    {
+      "question": "Un candado de seguridad para bicicleta se desbloquea con una clave de 3 dígitos diferentes elegidos del conjunto de números {1, 2, 3, 4, 5}. ¿Cuántas claves posibles existen sin repetir ningún dígito?",
+      "answer": "Existen 60 claves posibles, calculadas mediante 5 × 4 × 3 = 60."
+    },
+    {
+      "question": "Una caja contiene 2 canicas rojas y 3 verdes. Otra caja contiene 1 moneda de 500 pesos y 3 monedas de 1000 pesos. Si se saca una canica y una moneda al azar, ¿cuál es la probabilidad de sacar una canica verde y una moneda de 500 pesos?",
+      "answer": "La probabilidad es 3/20 (o 15%), ya que hay 3 casos favorables de 20 posibles (5 × 4 = 20 total; 3 verdes × 1 moneda de 500 = 3 casos)."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Histograma",
+      "definition": "Gráfico estadístico de barras contiguas usado para representar variables continuas agrupadas en intervalos, donde la altura de cada barra refleja su frecuencia."
+    },
+    {
+      "term": "Marca de clase",
+      "definition": "Punto medio de un intervalo en una tabla de frecuencias; se calcula sumando los límites inferior y superior y dividiendo entre dos."
+    },
+    {
+      "term": "Principio multiplicativo",
+      "definition": "Regla de conteo que establece que el número total de arreglos de varios eventos sucesivos es el producto de las posibilidades de cada etapa."
+    },
+    {
+      "term": "Diagrama de árbol",
+      "definition": "Representación gráfica ramificada que enumera de forma ordenada todos los caminos y resultados posibles que componen un espacio muestral."
+    },
+    {
+      "term": "Evento compuesto",
+      "definition": "Suceso aleatorio formado por la combinación de dos o más eventos simples dentro de un mismo experimento."
+    }
+  ],
+  "closing": "Entender la estadística y la probabilidad transforma tu manera de ver el entorno. Te permite interpretar las cifras de las noticias, tomar decisiones financieras acertadas y calcular posibilidades frente a situaciones inciertas. Continúa practicando estos conceptos con situaciones de tu colegio y de tu barrio en Colombia, pues los datos bien analizados siempre te darán argumentos claros y seguros.",
+  "dbaStatements": [
+    "DBA 8. Plantea preguntas para realizar estudios estadísticos en los que representa información mediante histogramas, polígonos de frecuencia, gráficos de línea entre otros; identifica variaciones, relaciones o tendencias para dar respuesta a las preguntas planteadas.",
+    "DBA 9. Usa el principio multiplicativo en situaciones aleatorias sencillas y lo representa con tablas o diagramas de árbol. Asigna probabilidades a eventos compuestos y los interpreta a partir de propiedades básicas de la probabilidad."
+  ]
+}

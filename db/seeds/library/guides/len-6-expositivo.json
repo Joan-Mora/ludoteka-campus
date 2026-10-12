@@ -1,0 +1,109 @@
+{
+  "intro": "¡Hola, estudiantes de sexto grado! Bienvenidos a esta guía de lenguaje pensada para ustedes. Hoy vamos a explorar el fascinante mundo de los textos expositivos, esos escritos que nos explican cómo funciona el mundo, desde por qué llueve en el río Magdalena hasta cómo se inventó la panela. Además, aprenderemos a usar organizadores gráficos como mapas conceptuales y cuadros sinópticos para ordenar nuestras ideas de forma clara y creativa. Vamos a leer, analizar, dibujar esquemas y redactar como todos unos profesionales. ¡Prepárense para descubrir el superpoder de informar y aprender con autonomía en su colegio!",
+  "objectives": [
+    "Identificar la idea principal y las ideas secundarias en diferentes tipos de textos expositivos.",
+    "Reconocer la estructura formal de los textos expositivos según su intención comunicativa.",
+    "Diseñar organizadores gráficos que integren información verbal y no verbal con precisión.",
+    "Planear, escribir y revisar textos expositivos breves adaptados a un público escolar."
+  ],
+  "sections": [
+    {
+      "title": "Idea principal e ideas secundarias",
+      "paragraphs": [
+        "Cuando leemos un texto expositivo, como los artículos de ciencias o historia que usamos en clase, nos encontramos con un océano de información. Para no perdernos, debemos buscar el timón: la idea principal. Esta es la columna vertebral del texto, es decir, lo más importante que el autor nos quiere decir sobre el tema central. Si quitamos la idea principal, el párrafo pierde totalmente su sentido y no sabríamos de qué nos están hablando exactamente.",
+        "Por otro lado, las ideas secundarias son como los detalles que adornan y sostienen esa columna principal. Se encargan de explicar, ampliar, dar ejemplos o justificar lo que afirma la idea principal. Por ejemplo, si en una lectura sobre el café en Colombia la idea principal es que nuestra geografía favorece un grano de excelente calidad, las ideas secundarias nos hablarán del clima de la región Andina, de la altitud de las montañas y del trabajo detallado de los caficultores en departamentos como Antioquia o Huila."
+      ],
+      "example": {
+        "statement": "Lee el siguiente fragmento: El oso de anteojos, único oso nativo de Sudamérica, habita en los bosques de niebla de la cordillera de los Andes. Se alimenta principalmente de bromelias, frutos y cortezas, cumpliendo un rol clave en la dispersión de semillas para mantener sanos nuestros ecosistemas montañosos.",
+        "solution": "Paso 1: Identificamos el tema general, que es el oso de anteojos. Paso 2: Buscamos qué se dice principalmente de él. La idea principal es que el oso de anteojos habita en los Andes y cumple un rol ecológico clave en la dispersión de semillas. Paso 3: Las ideas secundarias son los detalles que apoyan esto, como que es el único oso sudamericano, vive en bosques de niebla y se alimenta de bromelias y frutos."
+      }
+    },
+    {
+      "title": "Estructura del texto expositivo",
+      "paragraphs": [
+        "Un buen texto expositivo no se escribe al zar; tiene una arquitectura muy organizada que ayuda a que el lector comprenda la información con facilidad. Por lo general, se compone de tres partes fundamentales: la introducción, el desarrollo y la conclusión. Cada una cumple una función específica dentro del propósito de informar de manera objetiva, clara y veraz sobre un tema de interés académico o general.",
+        "En la introducción se presenta el tema que se va a tratar y se despierta el interés del lector, explicando por qué es importante. El desarrollo es el cuerpo del texto, donde se exponen los datos, explicaciones, causas, consecuencias y ejemplos de forma ordenada. Finalmente, la conclusión resume brevemente las ideas clave o deja una reflexión final sobre el conocimiento adquirido, cerrando el texto de manera armónica y contundente."
+      ],
+      "example": {
+        "statement": "Relaciona las partes de un texto expositivo con su función: 1. Introducción, 2. Desarrollo, 3. Conclusión.",
+        "solution": "Paso 1: La Introducción presenta el tema central y capta la atención. Paso 2: El Desarrollo explica detalladamente los conceptos, datos y ejemplos. Paso 3: La Conclusión sintetiza lo más importante o aporta un cierre reflexivo al lector."
+      }
+    },
+    {
+      "title": "Mapas conceptuales y cuadros sinópticos",
+      "paragraphs": [
+        "Los organizadores gráficos son herramientas visuales poderosas que nos permiten organizar y jerarquizar la información. En lugar de leer párrafos largos y densos, podemos usar mapas conceptuales para conectar conceptos mediante líneas y palabras de enlace, formando redes de conocimiento que van de lo general a lo particular. Son ideales para mostrar relaciones de causa y efecto o clasificación de elementos.",
+        "Otra herramienta excelente es el cuadro sinóptico, que utiliza llaves o corchetes para ordenar la información de izquierda a derecha. Nos ayuda a descomponer un tema principal en sus partes secundarias y detalles de forma muy esquemática. Al combinar signos verbales con elementos visuales, nuestro cerebro procesa, comprende y recuerda mucho mejor los datos estudiados para cualquier evaluación o exposición."
+      ],
+      "example": {
+        "statement": "Organiza en un esquema mental las siguientes categorías de los recursos naturales de Colombia: Renovables (agua, bosques) y No renovables (petróleo, carbón).",
+        "solution": "Paso 1: Definimos el concepto principal en la parte superior o izquierda: Recursos naturales en Colombia. Paso 2: Creamos dos ramificaciones principales llamadas Renovables y No renovables. Paso 3: Bajo renovables ubicamos agua y bosques. Paso 4: Bajo no renovables ubicamos petróleo y carbón."
+      }
+    },
+    {
+      "title": "Planear, escribir y revisar",
+      "paragraphs": [
+        "Escribir un texto expositivo requiere de un proceso consciente de tres pasos. El primero es la planeación: aquí decidimos sobre qué vamos a escribir, quién será nuestro lector (por ejemplo, nuestros compañeros de sexto) y consultamos fuentes confiables para recopilar datos reales. También elaboramos un esquema previo con las ideas principales y secundarias que planeamos desarrollar en nuestro escrito.",
+        "El segundo paso es la escritura, donde redactamos los párrafos cuidando la coherencia, usando conectores lógicos como por lo tanto, además o en consecuencia, y manteniendo un tono formal y objetivo. El tercer paso, y el más importante para mejorar, es la revisión. Leemos nuestro texto buscando errores de ortografía, repeticiones de palabras o ideas confusas, y pedimos a un compañero que lo lea para asegurarnos de que la información sea clara para todos."
+      ],
+      "example": {
+        "statement": "Tienes que escribir un texto corto sobre el río Magdalena. ¿Cuál es el primer paso correcto antes de redactar?",
+        "solution": "Paso 1: Planear el texto. Definimos que el lector serán los estudiantes del salón, consultamos datos ciertos sobre el río Magdalena (su nacimiento en el páramo de Las Cruces y desembocadura en Bocas de Ceniza) y armamos un bosquejo con las ideas principales."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Qué es la idea principal en un texto expositivo?",
+      "answer": "Es el concepto central y más importante que el autor comunica sobre el tema."
+    },
+    {
+      "question": "¿Cuál es la función del desarrollo en la estructura expositiva?",
+      "answer": "Explicar detalladamente el tema mediante datos, causas, consecuencias y ejemplos."
+    },
+    {
+      "question": "¿Qué organizador gráfico utiliza llaves para ordenar la información de izquierda a derecha?",
+      "answer": "El cuadro sinóptico."
+    },
+    {
+      "question": "Menciona los tres momentos del proceso de producción escrita trabajados en la guía.",
+      "answer": "Planear, escribir y revisar."
+    },
+    {
+      "question": "¿Qué elementos conectan los conceptos en un mapa conceptual además de las figuras?",
+      "answer": "Líneas y palabras de enlace."
+    },
+    {
+      "question": "Explica la diferencia fundamental entre la idea principal y una idea secundaria.",
+      "answer": "La idea principal sostiene todo el tema central, mientras que las ideas secundarias aportan detalles, ejemplos o explicaciones para apoyarla."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Texto expositivo",
+      "definition": "Tipo de texto que tiene como objetivo informar, explicar o hacer comprender un tema de forma clara y objetiva."
+    },
+    {
+      "term": "Idea principal",
+      "definition": "Enunciado fundamental que resume la información más relevante de un texto o párrafo."
+    },
+    {
+      "term": "Organizador gráfico",
+      "definition": "Representación visual que jerarquiza y conecta información usando recursos verbales y espaciales."
+    },
+    {
+      "term": "Cuadro sinóptico",
+      "definition": "Organizador gráfico que sintetiza la información de izquierda a derecha utilizando llaves o corchetes."
+    },
+    {
+      "term": "Mapa conceptual",
+      "definition": "Esquema que representa relaciones entre conceptos unidos por líneas y palabras de enlace."
+    }
+  ],
+  "closing": "Dominar los textos expositivos y los organizadores gráficos no es solo un requisito para las clases de lenguaje en el colegio, sino una herramienta para la vida. Cada vez que consultas una noticia, investigas para una tarea o le explicas un tema difícil a un amigo, pones en práctica estas habilidades. Sigue organizando tus ideas con creatividad y verás que comprender el mundo a tu alrededor será mucho más fácil.",
+  "dbaStatements": [
+    "DBA 2. Crea organizadores gráficos en los que integra signos verbales y no verbales para dar cuenta de sus conocimientos.",
+    "DBA 6. Comprende diversos tipos de texto, a partir del análisis de sus contenidos, características formales e intenciones comunicativas.",
+    "DBA 8. Produce diversos tipos de texto atendiendo a los destinatarios, al medio en que se escribirá y a los propósitos comunicativos."
+  ]
+}

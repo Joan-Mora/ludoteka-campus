@@ -8,6 +8,8 @@ import {
   DomainEvents,
   type BadgeEarnedEvent,
   type BadgesSeenEvent,
+  type ForumBestAnswerEvent,
+  type ForumMentionEvent,
   type ForumReplyEvent,
   type GuardianMessageEvent,
   type IntegrityViolationEvent,
@@ -123,6 +125,32 @@ export class NotificationsService {
       link: `/app/novedades?hilo=${event.threadId}`,
       building: 'cartelera',
       entity_id: event.threadId,
+    }]);
+  }
+
+  @OnEvent(DomainEvents.ForumMention)
+  async onForumMention(event: ForumMentionEvent) {
+    await this.notify(event.userIds.map((user_id) => ({
+      user_id,
+      title: 'Te mencionaron en el foro',
+      body: `${event.authorName} te nombró en «${event.title}».`,
+      kind: 'foro' as const,
+      link: `/app/novedades?hilo=${event.threadId}`,
+      building: 'cartelera',
+      entity_id: event.threadId,
+    })));
+  }
+
+  @OnEvent(DomainEvents.ForumBestAnswer)
+  async onBestAnswer(event: ForumBestAnswerEvent) {
+    await this.notify([{
+      user_id: event.userId,
+      title: 'Tu respuesta fue la mejor',
+      body: `La eligieron como respuesta en «${event.title}». Ganaste 20 XP.`,
+      kind: 'logro',
+      link: `/app/novedades?hilo=${event.threadId}`,
+      building: 'cartelera',
+      entity_id: event.postId,
     }]);
   }
 

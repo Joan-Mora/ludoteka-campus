@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola, estudiantes de undécimo! Llegó el momento clave de su paso por el colegio: escribir ensayos académicos que demuestren su pensamiento crítico y su voz propia. En la universidad y en la vida ciudadana, argumentar con rigor no es solo opinar, sino sostener ideas claras respaldadas por voces expertas y datos confiables. Esta guía les enseñará los secretos para estructurar una tesis sólida, usar correctamente las normas APA sin caer en el plagio y revisar sus borradores como profesionales. Prepárense para transformar sus reflexiones sobre la realidad colombiana en textos memorables.",
+  "objectives": [
+    "Diferenciar la tesis de una simple opinión mediante la formulación de posturas argumentativas complejas.",
+    "Aplicar las normas APA para citar y parafrasear fuentes bibliográficas de manera ética.",
+    "Garantizar la progresión temática coherente a través de conectores lógicos adecuados.",
+    "Revisar borradores textuales aplicando criterios sistemáticos de corrección lingüística."
+  ],
+  "sections": [
+    {
+      "title": "Estructura del ensayo",
+      "paragraphs": [
+        "El ensayo académico es un texto argumentativo donde defiendes una postura frente a un tema polémico. Todo parte de la tesis, que no es un resumen ni un hecho indiscutible, sino una oración afirmativa y debatible que guiará todo tu escrito. Por ejemplo, en lugar de decir que la deforestación en la Amazonía es grave, tu tesis puede proponer que las estrategias estatales de sustitución de cultivos en el Guaviare han fracasado por falta de inversión social sostenible.",
+        "La estructura clásica se divide en introducción, desarrollo y conclusión. En la introducción presentas el contexto nacional, el problema y tu tesis. En el desarrollo despliegas los argumentos que apoyan tu postura, respaldados por evidencias. Finalmente, en la conclusión no repites mecánicamente lo anterior, sino que sintetizas las ideas clave y dejas abierta una reflexión sobre las implicaciones futuras para nuestro país."
+      ],
+      "example": {
+        "statement": "Identifica si la siguiente afirmación funciona como una tesis argumentativa adecuada para un ensayo escolar: 'Gabriel García Márquez escribió Cien años de soledad en 1967'.",
+        "solution": "No es una tesis. Es un dato biográfico e histórico comprobable que no genera debate. Una tesis válida sería: 'El real maravilloso en Cien años de soledad funciona como un mecanismo de resistencia política frente a la violencia bipartidista en Colombia'."
+      }
+    },
+    {
+      "title": "Citar y parafrasear con normas APA",
+      "paragraphs": [
+        "Escribir un ensayo académico implica dialogar con otros autores. Cuando utilizas ideas de investigadoras, historiadores o científicas, debes darles el crédito correspondiente utilizando las normas de la Asociación Americana de Psicología, conocidas como APA en su séptima edición. Esto le otorga validez científica a tu texto y evita el plagio, que es una falta grave en cualquier ámbito educativo y profesional.",
+        "Existen dos formas principales de incluir fuentes: la cita textual y el parafraseo. La cita textual reproduce palabra por palabra un fragmento, y si tiene menos de 40 palabras, se integra en el párrafo entre comillas, indicando autor, año y número de página. El parafraseo, en cambio, consiste en explicar con tus propias palabras la idea de otro autor, lo cual demuestra que comprendiste el texto. Aun así, el parafraseo también exige incluir el crédito con el apellido y el año."
+      ],
+      "example": {
+        "statement": "Parafrasea la siguiente idea del investigador Orlando Fals Borda sobre la investigación acción participativa: 'El conocimiento popular es fundamental para transformar las realidades de las comunidades rurales en Colombia'.",
+        "solution": "Según Fals Borda (1981), los saberes comunitarios resultan indispensables para lograr transformaciones efectivas en el sector rural colombiano (nota: recuerda adaptar el apellido y año según la fuente real utilizada)."
+      }
+    },
+    {
+      "title": "Progresión temática",
+      "paragraphs": [
+        "La progresión temática se refiere al hilo conductor que permite que tu ensayo avance sin perderse en rodeos. Un buen texto equilibra la información ya conocida por el lector, llamada tema, con la información nueva que vas aportando, llamada rema. Si repites mucho lo sabido, el texto se vuelve aburrido; si saltas de un tema a otro sin conectar, el lector se desorienta y pierde el sentido de la argumentación.",
+        "Para lograr una progresión fluida en tus párrafos, debes usar conectores de causa, contraste, consecuencia y adición. En lugar de abusar de palabras como entonces o y, emplea conectores precisos como por el contrario, en consecuencia, a pesar de que o de igual modo. Esto conecta las ideas de manera lógica, permitiendo que tu postura sobre problemáticas colombianas, como la movilidad urbana o la educación pública, se entienda con total nitidez."
+      ],
+      "example": {
+        "statement": "Elige el conector adecuado para unir estas dos ideas: 'Bogotá implementó el sistema de pico y placa ambiental durante la sequía. La calidad del aire mejoró notablemente en las localidades del sur'.",
+        "solution": "Se debe usar un conector de consecuencia, por ejemplo: 'Bogotá implementó el sistema de pico y placa ambiental durante la sequía; en consecuencia, la calidad del aire mejoró notablemente en las localidades del sur'."
+      }
+    },
+    {
+      "title": "Revisión y corrección",
+      "paragraphs": [
+        "Un buen escritor no es el que redacta un texto perfecto en el primer intento, sino el que sabe revisar y corregir su propio trabajo de manera sistemática. La revisión debe hacerse por capas: primero verificas la solidez de los argumentos y la estructura global; luego revisas la ortografía, la puntuación y el uso adecuado de los tiempos verbales en todo el documento.",
+        "Una estrategia muy útil en el aula es el intercambio de borradores entre compañeros o la lectura en voz alta frente a un espejo. Cuando lees en voz alta, detectas con facilidad frases demasiado largas, redundancias innecesarias o párrafos que no tienen una puntuación adecuada. Recuerda que una coma mal puesta puede cambiar totalmente el sentido de tu argumento central."
+      ],
+      "example": {
+        "statement": "Corrige el siguiente enunciado con problemas de puntuación y concordancia: 'Los estudio sobre la biodiversidad en la Amazonía colombiana demuestra un gran potencial'.",
+        "solution": "Corrección: 'Los estudios sobre la biodiversidad en la Amazonía colombiana demuestran un gran potencial'. Se corrigió la concordancia plural entre 'estudios' y 'demuestran'."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es la principal diferencia entre una tesis y un tema de ensayo?",
+      "answer": "El tema es el asunto general a tratar, mientras que la tesis es la postura específica y debatible que se defiende sobre ese tema."
+    },
+    {
+      "question": "Mencione los tres momentos estructurales básicos de un ensayo académico.",
+      "answer": "Introducción, desarrollo y conclusión."
+    },
+    {
+      "question": "¿Qué elemento obligatorio debe incluirse al final de una cita textual corta según la norma APA?",
+      "answer": "El apellido del autor, el año de publicación y el número de página."
+    },
+    {
+      "question": "¿Cómo se le llama al proceso de explicar la idea de un autor utilizando las palabras propias del estudiante sin perder el sentido original?",
+      "answer": "Parafraseo."
+    },
+    {
+      "question": "Identifique el error en la siguiente oración: 'A pesar de que el río Magdalena es clave para la economía, pero su contaminación ha aumentado'.",
+      "answer": "Uso incorrecto de doble conector ('A pesar de que' y 'pero'). Se debe eliminar uno de los dos."
+    },
+    {
+      "question": "Explique por qué la revisión en voz alta es una herramienta eficaz en la producción de textos académicos.",
+      "answer": "Permite identificar con mayor facilidad errores de puntuación, frases confusas y problemas de ritmo que la lectura visual pasa por alto."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Tesis",
+      "definition": "Oración afirmativa y debatible que expresa la postura central que un autor defiende a lo largo de un ensayo académico."
+    },
+    {
+      "term": "Plagio",
+      "definition": "Acción antiética de presentar ideas, palabras o datos ajenos como si fueran propios, sin dar el crédito correspondiente a la fuente."
+    },
+    {
+      "term": "Normas APA",
+      "definition": "Estándar internacional creado por la Asociación Americana de Psicología para la presentación formal de trabajos escritos y citas bibliográficas."
+    },
+    {
+      "term": "Progresión temática",
+      "definition": "Hilo conductor que organiza la información conocida y la información nueva en un texto para garantizar su coherencia y avance."
+    },
+    {
+      "term": "Parafraseo",
+      "definition": "Reescritura de un texto ajeno empleando palabras propias, manteniendo el significado original y citando debidamente al autor."
+    }
+  ],
+  "closing": "Escribir un ensayo académico no es un requisito exclusivo de las notas escolares; es una herramienta poderosa para alzar tu voz frente a los desafíos de nuestra sociedad. Cada vez que defiendes una idea con argumentos sólidos, citas con ética y revisas tu redacción, fortaleces tu ciudadanía crítica. ¡Atrévete a escribir y transformar tu entorno con la fuerza de la palabra escrita!",
+  "dbaStatements": [
+    "DBA 5. Comprende que los argumentos de sus interlocutores involucran procesos de comprensión, crítica y proposición.",
+    "DBA 8. Produce textos académicos a partir de procedimientos sistemáticos de corrección lingüística, atendiendo al tipo de texto y al contexto comunicativo."
+  ]
+}

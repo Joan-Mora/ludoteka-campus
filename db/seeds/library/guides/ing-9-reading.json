@@ -1,0 +1,107 @@
+{
+  "intro": "Welcome to your English study guide for ninth grade in Colombia. When you read long articles or texts about technology and modern society, you do not need to read every single word to understand them. By learning and practicing reading strategies like skimming and scanning, you will save time and improve your reading comprehension. These techniques help you find the main idea or specific details quickly, which is very useful for your English classes and national exams.",
+  "objectives": [
+    "Identify the main idea of a text using skimming techniques.",
+    "Locate specific details in a text using scanning techniques.",
+    "Recognize cognates and context clues to understand new vocabulary.",
+    "Summarize academic and expository texts clearly."
+  ],
+  "sections": [
+    {
+      "title": "Skimming for the main idea",
+      "paragraphs": [
+        "Skimming is a fast reading technique used to get a general overview or the main idea of a text without reading every word. When you skim, you should look at the title, headings, subheadings, and pictures. You can also read the first and last sentence of each paragraph. This strategy helps you understand what the text is about in a very short time.",
+        "In your ninth-grade English classes, skimming is very useful when you need to choose a book, review an article about technology, or check if a text is useful for your homework. You do not stop at unknown words; your goal is only to capture the general topic."
+      ],
+      "example": {
+        "statement": "Text: 'Social networks have changed how Colombian teenagers communicate. Platforms like Instagram and WhatsApp allow instant connection. However, spending too much time online can affect academic performance.' Question: What is the main idea?",
+        "solution": "Step 1: Read the title and the first sentence. The text mentions social networks and Colombian teenagers. Step 2: Read the last sentence about academic performance. Step 3: Conclusion: The main idea is the positive and negative impact of social networks on teenagers."
+      }
+    },
+    {
+      "title": "Scanning for details",
+      "paragraphs": [
+        "Scanning is another rapid reading technique, but its purpose is very different from skimming. When you scan, you search for a specific piece of information, such as a date, a name, a number, or a specific keyword. You move your eyes quickly across the text like a radar until you spot the exact data you need.",
+        "Imagine you are reading a text about internet access in Colombia and you need to find the exact percentage of students who use smartphones. You do not need to read the whole paragraph about history; you just scan the text looking for numbers and percentage signs."
+      ],
+      "example": {
+        "statement": "Text: 'In 2022, a study showed that 85 percent of students in Bogotá use educational apps daily, while only 40 percent in rural areas have stable internet.' Question: What percentage of students in Bogotá use educational apps daily?",
+        "solution": "Step 1: Identify the keyword in the question: Bogotá and educational apps. Step 2: Scan the text for numbers and the word Bogotá. Step 3: Locate '85 percent'. Answer: 85 percent."
+      }
+    },
+    {
+      "title": "Cognates and context clues",
+      "paragraphs": [
+        "When reading texts in English, you will often find words that look and mean almost the same as Spanish words. These are called cognates. Words like 'information', 'technology', and 'problem' are easy to understand because of their similarity to 'informacion', 'tecnologia', and 'problema'.",
+        "If you encounter a word that is not a cognate, you can use context clues. This means looking at the other words in the same sentence or paragraph to guess the meaning of the unknown word without opening a dictionary every time."
+      ],
+      "example": {
+        "statement": "Sentence: 'Digital applications are very popular because they facilitate daily communication.' Question: What does the word 'facilitate' mean based on context and similarity?",
+        "solution": "Step 1: Look at the cognate/similarity to Spanish ('facilitar'). Step 2: Read the context: applications make daily communication easier and popular. Step 3: Solution: To make something easier."
+      }
+    },
+    {
+      "title": "Summarizing a text",
+      "paragraphs": [
+        "Summarizing is the process of reducing a text to its most important points. After you skim for the main idea and scan for details, you can write a short synthesis in your own words. A good summary includes the general topic and the main arguments without adding personal opinions or unnecessary details.",
+        "In academic writing, summarizing helps you demonstrate that you understood a reading passage. You can use connectors like 'consequently', 'therefore', or 'in addition' to connect your ideas logically and clearly."
+      ],
+      "example": {
+        "statement": "Text: 'Fast fashion creates huge amounts of textile waste. Therefore, experts suggest buying second-hand clothes.' Question: Write a one-sentence summary.",
+        "solution": "Step 1: Identify main problem (fast fashion creates waste). Step 2: Identify solution (buy second-hand clothes). Step 3: Combine with a connector. Solution: Because fast fashion creates textile waste, experts suggest buying second-hand clothes."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "What reading strategy should you use if you only want to know the general topic of an article?",
+      "answer": "Skimming"
+    },
+    {
+      "question": "What strategy should you use to find a specific date or number in a text?",
+      "answer": "Scanning"
+    },
+    {
+      "question": "What are words in English that look and mean the same in Spanish called?",
+      "answer": "Cognates"
+    },
+    {
+      "question": "Read the sentence: 'Technology has a positive impact on education.' Is 'impact' a cognate?",
+      "answer": "Yes"
+    },
+    {
+      "question": "Read the text: 'Many students use blogs to share homework. Blogs are free online journals.' What do blogs allow students to do?",
+      "answer": "Share homework"
+    },
+    {
+      "question": "What connector of cause and effect can replace 'As a result' in a sentence?",
+      "answer": "Therefore"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Skimming",
+      "definition": "Fast reading technique used to get the general idea or overview of a text without reading every word."
+    },
+    {
+      "term": "Scanning",
+      "definition": "Fast reading technique used to locate specific information, such as names, dates, or numbers in a text."
+    },
+    {
+      "term": "Cognate",
+      "definition": "A word that has the same origin, similar spelling, and similar meaning in two different languages."
+    },
+    {
+      "term": "Context clues",
+      "definition": "Hints or surrounding words in a text that help readers understand the meaning of an unfamiliar word."
+    },
+    {
+      "term": "Summary",
+      "definition": "A brief statement or restatement of the main points of a text in your own words."
+    }
+  ],
+  "closing": "Mastering skimming and scanning will make your reading assignments much easier and faster, whether you are studying in Colombia or exploring international topics online. Practice these techniques daily with news articles, school texts, or social media posts, and watch your English confidence grow!",
+  "dbaStatements": [
+    "Esquema curricular sugerido de inglés del MEN: nivel B1.1, grado sugerido 9.°."
+  ]
+}

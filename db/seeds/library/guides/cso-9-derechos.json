@@ -1,0 +1,109 @@
+{
+  "intro": "¡Hola, estudiantes de noveno grado! En esta guía de Ciencias Sociales exploraremos cómo funciona nuestro país a partir de la Constitución de 1991. Veremos qué significa vivir en un Estado social de derecho, por qué tus derechos fundamentales son tan importantes y cómo la acción de tutela es una herramienta poderosa para protegerlos. También analizaremos las luchas históricas de las mujeres por la igualdad y descubriremos que cualquier conflicto en el colegio o el barrio puede resolverse mediante el diálogo y los acuerdos pacíficos. ¡Prepárense para fortalecer su ciudadanía!",
+  "objectives": [
+    "Comprender las características principales del Estado social de derecho establecido en la Constitución Política de Colombia de 1991.",
+    "Identificar los mecanismos de protección ciudadana, especialmente la acción de tutela, para la defensa de los derechos fundamentales.",
+    "Analizar el papel histórico de las mujeres en la conquista de la igualdad de derechos en la sociedad colombiana.",
+    "Reconocer la importancia del diálogo y la negociación en la resolución pacífica de conflictos cotidianos."
+  ],
+  "sections": [
+    {
+      "title": "Constitución de 1991",
+      "paragraphs": [
+        "Antes de 1991, Colombia se regía por la Constitución de 1886, un documento que centralizaba mucho el poder y restringía la participación ciudadana. Tras un movimiento social liderado por jóvenes universitarios conocido como la Séptima Papeleta, se convocó a una Asamblea Nacional Constituyente. Esta asamblea redactó una nueva carta magna que transformó a Colombia en un Estado social de derecho, lo cual significa que el Estado no solo debe garantizar el orden público, sino también velar por el bienestar social, la dignidad humana y la justicia.",
+        "A diferencia de un Estado de derecho tradicional, donde la ley se aplica sin importar las condiciones de pobreza o desigualdad, el Estado social de derecho prioriza a las poblaciones vulnerables y establece que la Constitución es de aplicación inmediata. Esto quiere decir que los derechos de los ciudadanos están por encima de los intereses de gobernantes o particulares, y que existen mecanismos institucionales para hacerlos cumplir en todo el territorio nacional, desde Leticia hasta Riohacha."
+      ],
+      "example": {
+        "statement": "Un grupo de habitantes de un barrio popular en Cali nota que el municipio no les provee agua potable, afectando su salud. ¿Cómo actúa el Estado social de derecho frente a esta situación?",
+        "solution": "Paso 1: Identificar que el acceso al agua potable y a la salud son condiciones ligadas a la dignidad humana. Paso 2: Reconocer que el Estado social de derecho obliga a las instituciones públicas a garantizar mínimos vitales a las comunidades vulnerables. Paso 3: Los habitantes pueden exigir judicialmente la protección de sus derechos para que la alcaldía implemente soluciones de acueducto."
+      }
+    },
+    {
+      "title": "Derechos fundamentales y tutela",
+      "paragraphs": [
+        "Los derechos fundamentales son aquellas garantías inherentes a todos los seres humanos por el simple hecho de existir, como la vida, la salud, la educación, la libertad de expresión y el debido proceso. En la Constitución colombiana de 1991, estos derechos están consagrados principalmente entre los artículos 11 y 41. Su protección es prioritaria porque sin ellos una persona no puede desarrollarse con dignidad ni participar plenamente en la vida democrática del país.",
+        "Para defender estos derechos de manera rápida y efectiva cuando son vulnerados por una autoridad pública o, en ciertos casos, por particulares, la Constitución creó la acción de tutela. Cualquier persona, incluso un menor de edad sin necesidad de abogado, puede presentar una tutela ante cualquier juez de la República. El juez tiene un plazo máximo de diez días para resolver el caso y ordenar la protección inmediata del derecho afectado si comprueba que hubo una violación."
+      ],
+      "example": {
+        "statement": "A Camila, estudiante de noveno en Bogotá, la EPS le niega un medicamento vital para su tratamiento médico, argumentando que no está en el Plan de Beneficios. ¿Qué debe hacer?",
+        "solution": "Paso 1: Reconocer que se está vulnerando el derecho fundamental a la salud y a la vida en condiciones dignas. Paso 2: Redactar un formato simple de acción de tutela dirigido a los jueces de la República explicando el caso y adjuntando la orden médica. Paso 3: Radicarla en el juzgado. El juez ordenará a la EPS entregar el medicamento en un plazo máximo de diez días."
+      }
+    },
+    {
+      "title": "Derechos de las mujeres",
+      "paragraphs": [
+        "La historia de los derechos de las mujeres en Colombia ha sido una lucha constante contra la exclusión política, económica y social. Durante gran parte del siglo XX, las mujeres no podían votar ni ocupar cargos públicos, y su educación superior era muy limitada. Gracias a movimientos feministas y al liderazgo de pioneras como Ofelia Uribe de Acosta, en 1957 las colombianas ejercieron por primera vez el derecho al voto tras un plebiscito histórico.",
+        "La Constitución de 1991 marcó un hito definitivo al consagrar la igualdad de derechos entre hombres y mujeres y prohibir cualquier forma de discriminación. A pesar de estos avances legales, hoy persisten retos enormes como la brecha salarial, la violencia intrafamiliar y la baja representación en espacios de poder. Por ello, las organizaciones de mujeres siguen movilizándose para exigir políticas públicas efectivas que garanticen una verdadera equidad de género en las regiones de Colombia."
+      ],
+      "example": {
+        "statement": "En una empresa de Medellín, dos personas con el mismo cargo y rendimiento, un hombre y una mujer, descubren que el salario de ella es inferior. ¿Qué principio constitucional se está incumpliendo?",
+        "solution": "Paso 1: Analizar la situación frente al artículo 13 de la Constitución, que habla de la igualdad ante la ley. Paso 2: Identificar la discriminación basada en el género dentro del ámbito laboral. Paso 3: Concluir que se incumple el derecho a la igualdad y a recibir una remuneración justa, lo cual puede ser denunciado ante el Ministerio del Trabajo."
+      }
+    },
+    {
+      "title": "Resolución pacífica de conflictos",
+      "paragraphs": [
+        "El conflicto es una característica natural de la convivencia humana; siempre que interactuamos con otros habrá diferencias de opiniones, intereses o valores. Sin embargo, lo que define a una sociedad democrática es la forma en que gestiona esas discrepancias. En lugar de acudir a la violencia, la agresión verbal o la polarización, un Estado social de derecho promueve la cultura del diálogo, la empatía y la negociación para transformar los conflictos en oportunidades de aprendizaje.",
+        "En Colombia existen diversos mecanismos alternativos de resolución de conflictos, como la mediación, la conciliación y el arbitraje. En el ámbito escolar y comunitario, prácticas como los comités de convivencia y la justicia restaurativa permiten que las partes involucradas escuchen sus puntos de vista, reconozcan sus errores y lleguen a acuerdos voluntarios. Poner de nuestra parte significa estar dispuestos a ceder en algunos aspectos para construir consensos duraderos."
+      ],
+      "example": {
+        "statement": "Dos cursos de noveno grado discuten acaloradamente en el patio del colegio sobre quién se queda con la cancha de fútbol para el torneo interclases. ¿Cómo resolverlo pacíficamente?",
+        "solution": "Paso 1: Detener la discusión agresiva y convocar a los representantes de ambos cursos. Paso 2: Establecer una mesa de diálogo mediada por un docente donde cada parte exponga sus razones sin interrumpir. Paso 3: Construir un acuerdo, por ejemplo, rotar los días de uso de la cancha o establecer un horario compartido para que ambos cursos puedan jugar."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Qué tipo de Estado estableció la Constitución Política de Colombia de 1991?",
+      "answer": "Un Estado social de derecho."
+    },
+    {
+      "question": "¿Cómo se llama el mecanismo constitucional creado para proteger de forma inmediata los derechos fundamentales?",
+      "answer": "Acción de tutela."
+    },
+    {
+      "question": "¿En qué año votaron por primera vez las mujeres en Colombia tras una larga lucha por sus derechos políticos?",
+      "answer": "En el año 1957."
+    },
+    {
+      "question": "Menciona dos ejemplos de derechos fundamentales consagrados en la Constitución colombiana.",
+      "answer": "La vida y la salud."
+    },
+    {
+      "question": "¿Cuál es la diferencia principal entre un Estado de derecho tradicional y un Estado social de derecho?",
+      "answer": "El Estado social de derecho prioriza la protección de los sectores vulnerables y garantiza condiciones mínimas de dignidad humana."
+    },
+    {
+      "question": "Explica por qué la negociación y el diálogo son superiores a la violencia en la resolución de un conflicto escolar.",
+      "answer": "Porque permiten transformar las diferencias mediante acuerdos voluntarios sin vulnerar los derechos de los demás."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Constitución",
+      "definition": "Norma de normas y ley suprema de un Estado que organiza el poder y establece los derechos y deberes de los ciudadanos."
+    },
+    {
+      "term": "Derechos fundamentales",
+      "definition": "Garantías básicas e inalienables que posee toda persona para asegurar una vida digna."
+    },
+    {
+      "term": "Acción de tutela",
+      "definition": "Mecanismo judicial rápido que protege los derechos fundamentales cuando resultan vulnerados o amenazados."
+    },
+    {
+      "term": "Equidad de género",
+      "definition": "Principio que garantiza que hombres y mujeres accedan con los mismos derechos, responsabilidades y oportunidades a la sociedad."
+    },
+    {
+      "term": "Mediación",
+      "definition": "Proceso pacífico donde un tercero neutral ayuda a las partes en conflicto a llegar a un acuerdo."
+    }
+  ],
+  "closing": "Comprender nuestros derechos y deberes es el primer paso para transformar nuestra realidad cotidiana. Desde las decisiones que tomamos en el colegio hasta nuestra participación en la comunidad, cada acción cuenta para construir un país más justo, equitativo y pacífico. ¡Recuerda que la democracia la construimos todos los días!",
+  "dbaStatements": [
+    "DBA 5. Evalúa cómo las sociedades democráticas en un Estado social de Derecho tienen el deber de proteger y promover los derechos fundamentales de los ciudadanos.",
+    "DBA 6. Comprende el papel de las mujeres en los cambios sociales, políticos, económicos y culturales en el mundo y la igualdad de derechos que han adquirido en los últimos años.",
+    "DBA 7. Evalúa cómo todo conflicto puede solucionarse mediante acuerdos en que las personas ponen de su parte para superar las diferencias."
+  ]
+}

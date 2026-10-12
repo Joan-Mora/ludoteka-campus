@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola! En esta guía recorreremos una época que transformó para siempre a nuestro continente: la llegada de los europeos a América, su avance sobre los territorios indígenas y el orden colonial que impusieron. Analizaremos por qué los navegantes cruzaron el océano Atlántico, cómo respondieron comunidades como los muiscas en Colombia y de qué manera se estructuró una sociedad desigual y diversa. Además, reflexionaremos sobre el choque cultural de aquellos siglos para entender cómo la imposición y la violencia causaron heridas históricas, y por qué hoy en día necesitamos herramientas de diálogo y mediación pacífica para convivir en nuestras aulas, familias y comunidades colombianas.",
+  "objectives": [
+    "Identificar las causas económicas, técnicas y comerciales que impulsaron los viajes de exploración europea en el siglo XV.",
+    "Analizar el impacto de la conquista y los procesos de resistencia que adelantaron los pueblos indígenas en Colombia.",
+    "Reconocer las características jerárquicas y económicas de la sociedad colonial establecida en América.",
+    "Aplicar técnicas de mediación escolar para resolver desacuerdos pacíficamente y construir una cultura comunitaria de paz."
+  ],
+  "sections": [
+    {
+      "title": "Causas de los viajes de exploración",
+      "paragraphs": [
+        "En el siglo XV, el comercio entre Europa y Asia dependía de rutas terrestres conocidas como la Ruta de la Seda. Por allí llegaban especias, telas finas y metales preciosos indispensables para la vida europea. Sin embargo, en 1453, el Imperio otomano tomó el control de Constantinopla y bloqueó el paso terrestre. Esta situación obligó a naciones con costas oceánicas, especialmente España y Portugal, a buscar rutas alternas por mar para llegar a las ricas tierras de la India y China sin pagar tributos abusivos ni arriesgar cargamentos enteros en caminos inseguros.",
+        "La expansión también fue posible gracias a notables innovaciones náuticas. El uso de la brújula magnética traída de Oriente, el astrolabio para calcular latitudes, la elaboración de mapas portulanos y el diseño de la carabela —un barco más ligero, rápido y maniobrable— permitieron a los marinos adentrarse con mayor confianza en el océano Atlántico. Estas herramientas técnicas, unidas a la ambición mercantil y al fervor religioso de la Corona española, hicieron viable la travesía de Cristóbal Colón en 1492, creyendo haber encontrado un camino rápido hacia el continente asiático."
+      ],
+      "example": {
+        "statement": "Un comerciante de Sevilla en 1480 necesita traer pimienta y canela, pero la ruta tradicional por Constantinopla está clausurada. ¿Qué razones técnicas y económicas justifican que apoye una expedición marítima?",
+        "solution": "Primero, analiza la causa económica: el bloqueo encareció los productos, así que encontrar una ruta marítima directa abarataría costos y aumentaría sus ganancias. Segundo, evalúa la viabilidad técnica: con inventos como la carabela y el astrolabio, los navegantes pueden guiarse en mar abierto sin perderse. Por tanto, invertir en nuevas rutas es una decisión estratégica viable y necesaria."
+      }
+    },
+    {
+      "title": "Conquista y resistencia indígena",
+      "paragraphs": [
+        "La llegada de los conquistadores al continente desató un proceso violento de invasión militar, sometimiento y saqueo de recursos. En lo que hoy es Colombia, conquistadores como Gonzalo Jiménez de Quesada avanzaron por el río Magdalena hasta la sabana de Bogotá, donde hallaron la confederación muisca. A pesar de la superioridad bélica europea —armas de fuego, armaduras de hierro, caballos y perros de guerra—, el mayor factor de colapso demográfico fueron las enfermedades como la viruela y el sarampión, frente a las cuales el sistema inmunológico de los pobladores nativos carecía de defensas.",
+        "Frente a este avance, los pueblos originarios no fueron espectadores pasivos sino actores con diversas estrategias de resistencia. Algunos grupos, como los taironas en la Sierra Nevada de Santa Marta o los pijaos en el actual Tolima, ofrecieron una férrea resistencia militar en las montañas y selvas que retrasó el dominio colonial por décadas. Otras comunidades recurrieron a la resistencia cultural y cotidiana: preservaron sus lenguas, transmitieron sus rituales a escondidas, huyeron a zonas de difícil acceso y adaptaron sus saberes para mantener viva su memoria e identidad ancestral."
+      ],
+      "example": {
+        "statement": "Si analizas por qué los muiscas fueron doblegados con mayor rapidez que los pijaos en el siglo XVI, ¿qué factores geográficos y políticos explican esta diferencia?",
+        "solution": "Paso 1: Observa la organización política. Los muiscas tenían un gobierno centralizado (el Zipa y el Zaque), por lo que al capturar a sus líderes, el control colectivo se facilitó. Los pijaos, en cambio, eran grupos confederados y móviles sin un único mando. Paso 2: Analiza el terreno. La sabana facilitó el despliegue de caballos españoles, mientras que las escarpadas cordilleras de los pijaos imposibilitaron las tácticas militares convencionales."
+      }
+    },
+    {
+      "title": "Orden social y económico colonial",
+      "paragraphs": [
+        "Tras consolidar la conquista, la Corona española instauró un estricto orden social piramidal basado en el origen étnico y el lugar de nacimiento. En la cúspide estaban los españoles peninsulares, quienes ocupaban los altos cargos del gobierno colonial y de la Iglesia. Debajo de ellos figuraban los criollos, que eran hijos de españoles nacidos en América con poder económico pero sin acceso a las máximas decisiones políticas. En los estratos inferiores se encontraban los mestizos, los indígenas sometidos a tributo y los afrodescendientes esclavizados, traídos forzosamente para trabajar en minas y plantaciones.",
+        "La economía colonial en el Nuevo Reino de Granada se sostuvo mediante la explotación de mano de obra y de recursos naturales. Instituciones como la encomienda entregaban grupos de indígenas a un español a cambio de protección y evangelización, aunque en la práctica derivó en servidumbre. La mita obligaba al trabajo forzado y rotativo en faenas mineras o agrícolas, mientras que puertos como Cartagena de Indias se convirtieron en epicentros de comercio monopolizado y de trata de personas esclavizadas. Este esquema generó grandes desigualdades sociales que aún repercuten en la actualidad."
+      ],
+      "example": {
+        "statement": "En Cartagena durante el siglo XVII, compara las condiciones jurídicas y laborales de un esclavo africano con las de un indígena asignado a una encomienda.",
+        "solution": "Paso 1: Examina el estatus legal. El indígena era considerado jurídicamente un vasallo libre de la Corona (aunque tutelado), mientras que la persona africana era despojada de su libertad y considerada legalmente una mercancía. Paso 2: Evalúa las labores. El indígena pagaba tributo con cosechas o mano de obra temporal, mientras que el africano sufría trabajo permanente, no remunerado y sin derechos sobre su familia ni su vida."
+      }
+    },
+    {
+      "title": "Mediación pacífica frente a la imposición",
+      "paragraphs": [
+        "Durante el periodo colonial, la imposición violenta de voluntades, la intolerancia religiosa y el racismo institucional destruyeron la posibilidad de un entendimiento mutuo entre culturas. Cuando surgen diferencias entre grupos humanos con distintas visiones del mundo, la imposición unilateral suele generar dolor, rebeliones y rupturas prolongadas del tejido social. La historia de la conquista nos enseña que ignorar la dignidad del otro impide la paz verdadera y que cualquier sociedad construida sobre la opresión acumula rencores que explotan tarde o temprano si no se transforman constructivamente.",
+        "Para superar este legado autoritario, la mediación de conflictos surge en la actualidad como un pilar indispensable de la convivencia pacífica. Mediar implica invitar a un tercero neutral que ayude a las partes enfrentadas a comunicarse, escuchar activamente sus necesidades y construir acuerdos justos sin recurrir a la agresión verbal o física. En las aulas y barrios de Colombia, aprender a mediar nos permite transformar las disputas cotidianas en oportunidades de aprendizaje, valorando la diversidad de opiniones y construyendo juntos una auténtica cultura de paz y respeto mutuo."
+      ],
+      "example": {
+        "statement": "Dos estudiantes de séptimo discuten acaloradamente porque uno usó materiales colectivos sin consultar y el otro respondió insultándolo. Diseña una ruta de mediación para resolver el pleito.",
+        "solution": "Paso 1: Preparación. Invitar a ambas partes a un espacio tranquilo con un mediador escolar neutral, estableciendo normas de respeto y no agresión. Paso 2: Diálogo y escucha. Cada estudiante expone su sentir sin interrupciones: uno explica por qué necesitaba el material y el otro por qué sintió vulnerado su espacio. Paso 3: Propuestas y acuerdo. Guiarlos para proponer soluciones conjuntas: acordar un sistema de préstamo de útiles y ofrecer disculpas sinceras por la ofensa."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Qué ciudad estratégica tomada por los turcos otomanos en 1453 cerró el paso terrestre hacia las Indias?",
+      "answer": "Constantinopla."
+    },
+    {
+      "question": "¿Qué embarcación ágil y con velas mixtas hizo posibles las largas travesías atlánticas de los exploradores?",
+      "answer": "La carabela."
+    },
+    {
+      "question": "¿Cuál fue el factor principal que causó la mayor mortalidad en las poblaciones indígenas tras la llegada europea?",
+      "answer": "Las enfermedades y epidemias traídas por los europeos, como la viruela y el sarampión."
+    },
+    {
+      "question": "¿Qué diferencia política existía entre los españoles peninsulares y los criollos en la sociedad colonial?",
+      "answer": "Los peninsulares ocupaban los altos cargos del gobierno virreinal, mientras que los criollos tenían restricciones para acceder a dichos puestos."
+    },
+    {
+      "question": "¿Por qué la encomienda colonial terminó convirtiéndose en un sistema de abuso social y laboral?",
+      "answer": "Porque los encomenderos priorizaron la explotación del trabajo indígena para beneficio propio, desatendiendo sus deberes de protección y cuidado."
+    },
+    {
+      "question": "¿Cómo ayuda la figura de un mediador neutral a solucionar un desacuerdo escolar antes de que escale a la violencia?",
+      "answer": "Facilita la comunicación serena, evita ataques personales y guía a las partes para que reconozcan sus errores y pacten soluciones voluntarias."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Encomienda",
+      "definition": "Institución colonial en la que la Corona asignaba un grupo indígena a un español para recibir tributos a cambio de protección e instrucción religiosa católica."
+    },
+    {
+      "term": "Mita",
+      "definition": "Sistema de trabajo indígena forzado y por turnos, aplicado por los colonizadores en faenas agrícolas, obras públicas y extracción minera."
+    },
+    {
+      "term": "Criollo",
+      "definition": "Hijo de españoles nacido en territorio americano; poseía tierras y privilegios económicos, pero carecía de acceso a los máximos cargos políticos coloniales."
+    },
+    {
+      "term": "Carabela",
+      "definition": "Barco a vela ligero, largo y maniobrable desarrollado en la península ibérica, ideal para la navegación oceánica de exploración en los siglos XV y XVI."
+    },
+    {
+      "term": "Mediación",
+      "definition": "Procedimiento pacífico donde una persona neutral orienta a dos partes en disputa a dialogar, comprender sus intereses y acordar soluciones sin violencia."
+    }
+  ],
+  "closing": "Estudiar la historia nos ayuda a comprender las raíces de las desigualdades que aún vemos en Colombia. Además, nos desafía a cambiar las viejas actitudes de imposición por prácticas diarias de tolerancia y diálogo. Cada vez que escuchas al otro y resuelves un conflicto sin agredir, honras la diversidad y ayudas a construir un país más justo y en paz desde tu salón de clases.",
+  "dbaStatements": [
+    "DBA 6. Evalúa las causas y consecuencias de los procesos de Conquista y colonización europea dados en en América.",
+    "DBA 8. Aplica procesos y técnicas de mediación de conflictos en pro del establecimiento de una cultura de la paz."
+  ]
+}

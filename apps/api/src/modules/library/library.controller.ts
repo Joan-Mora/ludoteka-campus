@@ -21,11 +21,13 @@ export class LibraryController {
     @CurrentUser() user: AuthUser,
     @Query('q') q?: string,
     @Query('subjectId') subjectId?: string,
+    @Query('gradeId') gradeId?: string,
     @Query('kind') kind?: string,
     @Query('tag') tag?: string,
     @Query('saved') saved?: string,
   ) {
-    return this.library.list(user, { q, subjectId, kind, tag, saved: saved === '1' || saved === 'true' });
+    const uuid = (value?: string) => (value && /^[0-9a-f-]{36}$/i.test(value) ? value : undefined);
+    return this.library.list(user, { q, subjectId: uuid(subjectId), gradeId: uuid(gradeId), kind, tag, saved: saved === '1' || saved === 'true' });
   }
 
   @Get('items/:id')

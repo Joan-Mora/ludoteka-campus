@@ -1,0 +1,103 @@
+{
+  "intro": "¡Hola, estudiantes de sexto grado! Bienvenidos a esta guía de estudio diseñada para acompañarlos en su camino por el inglés básico. En este recorrido aprenderemos a hablar sobre nuestras acciones diarias, nuestros hábitos saludables y la manera correcta de organizar el tiempo. Usaremos herramientas gramaticales muy útiles como el presente simple y los adverbios de frecuencia. Todo esto les permitirá contar qué hacen desde que se levantan en sus casas colombianas hasta que regresan del colegio. ¡Prepárense para practicar con entusiasmo y mucha dedicación!",
+  "objectives": [
+    "Describir hábitos y rutinas de cuidado personal usando el presente simple.",
+    "Emplear adverbios de frecuencia para indicar qué tan seguido se realizan actividades.",
+    "Preguntar y decir la hora de forma clara en inglés.",
+    "Reconocer vocabulario sobre hábitos saludables para aplicarlo en la vida diaria."
+  ],
+  "sections": [
+    {
+      "title": "Simple present",
+      "paragraphs": [
+        "El presente simple en inglés se usa para hablar de acciones habituales, verdades y rutinas que forman parte de nuestro día a día. Para los pronombres I, you, we y they, el verbo principal se mantiene en su forma base. Por ejemplo: I wake up early. En cambio, cuando hablamos en tercera persona singular (he, she, it), debemos agregar una letra s o es al final del verbo principal.",
+        "Por ejemplo, si decimos que Camilo se levanta temprano, escribimos: He wakes up early. Si queremos negar una acción en tercera persona, usamos doesn't antes del verbo en su forma base; para las demás personas usamos don't. Esta estructura es la base para conversar sobre nuestras costumbres escolares y familiares en Colombia."
+      ],
+      "example": {
+        "statement": "Escribe la oración correcta para: She / brush / her teeth / every morning.",
+        "solution": "1. Identificamos el sujeto: She (tercera persona del singular). 2. Tomamos el verbo brush y le añadimos es porque termina en sh: brushes. 3. Completamos con el resto de la oración: She brushes her teeth every morning."
+      }
+    },
+    {
+      "title": "Adverbs of frequency",
+      "paragraphs": [
+        "Los adverbios de frecuencia nos ayudan a responder a la pregunta ¿con qué frecuencia hacemos algo? Se ubican generalmente antes del verbo principal o después del verbo to be. Los principales que usamos en sexto grado son always (siempre), usually (usualmente), sometimes (a veces) y never (nunca).",
+        "Por ejemplo, si tomamos un desayuno saludable todos los días, podemos decir: I always eat fruit for breakfast. Si jugamos fútbol solo algunos días en el parque, decimos: We sometimes play soccer. Estos adverbios enriquecen nuestras descripciones y muestran matices sobre nuestro estilo de vida y bienestar."
+      ],
+      "example": {
+        "statement": "Organiza las palabras: plays / He / soccer / never / on Sundays.",
+        "solution": "1. Identificamos el sujeto: He. 2. Colocamos el adverbio de frecuencia antes del verbo principal: never plays. 3. Añadimos el complemento: soccer on Sundays. 4. Resultado: He never plays soccer on Sundays."
+      }
+    },
+    {
+      "title": "Telling the time",
+      "paragraphs": [
+        "Saber decir la hora en inglés es fundamental para organizar nuestras rutinas escolares y personales. Para preguntar la hora usamos What time is it? o What's the time? Para responder, iniciamos siempre con It is o It's.",
+        "Cuando la hora es en punto, usamos o'clock. Por ejemplo: It is 7 o'clock. Si queremos decir los minutos antes de la media hora, usamos la estructura minutos + past + hora. Por ejemplo, las 7 y 15 se dice: It is quarter past seven. Para la media hora usamos half past. Por ejemplo, las 7 y 30 es It is half past seven. Practica mirando el reloj de tu casa."
+      ],
+      "example": {
+        "statement": "Escribe en inglés la hora: 6:30.",
+        "solution": "1. Reconocemos que son las seis y media. 2. Usamos la expresión half past para la media hora. 3. Indicamos la hora: six. 4. Resultado: It is half past six."
+      }
+    },
+    {
+      "title": "Healthy habits vocabulary",
+      "paragraphs": [
+        "El cuidado personal integral abarca nuestra mente, nuestras emociones y nuestro cuerpo. En este módulo incorporamos vocabulario esencial para mantener una vida sana en el colegio y en el hogar. Palabras como brush teeth (cepillar los dientes), comb hair (peinar el cabello), exercise (ejercitarse), eat healthy (comer sano), drink water (tomar agua) y sleep well (dormir bien) son claves.",
+        "Practicar estos hábitos diariamente nos ayuda a rendir mejor en las clases y a mantener una convivencia armónica. Al combinarlas con el presente simple, podemos crear rutinas poderosas para nuestro bienestar físico y mental."
+      ],
+      "example": {
+        "statement": "Completa la frase con una acción saludable: I drink ... when I am thirsty.",
+        "solution": "1. Analizamos la oración: Yo tomo ... cuando tengo sed. 2. Buscamos en el vocabulario de hábitos saludables una bebida esencial. 3. La palabra correcta es water. 4. Resultado: I drink water when I am thirsty."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "Complete: I ... (wake up) at 6:00 a.m. every day.",
+      "answer": "wake up"
+    },
+    {
+      "question": "Complete with third person: She ... (brush) her teeth after lunch.",
+      "answer": "brushes"
+    },
+    {
+      "question": "Choose the correct frequency adverb: We ... (always / eat) vegetables for dinner; we love them!",
+      "answer": "always eat"
+    },
+    {
+      "question": "Write the time in English: 8:00 a.m.",
+      "answer": "It is eight o'clock"
+    },
+    {
+      "question": "Unscramble: drinks / He / water / never / soda.",
+      "answer": "He never drinks soda."
+    },
+    {
+      "question": "Translate into English: Yo hago ejercicio a las cinco de la tarde.",
+      "answer": "I exercise at five in the afternoon."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Simple present",
+      "definition": "Tiempo verbal que se utiliza para expresar acciones habituales, rutinas diarias y verdades generales en el momento actual."
+    },
+    {
+      "term": "Adverb of frequency",
+      "definition": "Palabra que indica qué tan seguido se realiza una acción, por ejemplo, always, usually, sometimes o never."
+    },
+    {
+      "term": "Healthy habits",
+      "definition": "Acciones y costumbres positivas que realizamos para cuidar nuestra salud física, mental y emocional."
+    },
+    {
+      "term": "Routine",
+      "definition": "Secuencia de acciones o actividades que realizamos de manera cotidiana y organizada todos los días."
+    }
+  ],
+  "closing": "Llevar una rutina organizada y practicar hábitos saludables transforma nuestra vida escolar y personal. Al usar el presente simple y la hora en inglés, podemos compartir con nuestros compañeros cómo cuidamos nuestro cuerpo y mente en Colombia. ¡Sigan practicando cada día y verán grandes avances!",
+  "dbaStatements": [
+    "Esquema curricular sugerido de inglés del MEN: nivel A1, grado sugerido 6.°."
+  ]
+}

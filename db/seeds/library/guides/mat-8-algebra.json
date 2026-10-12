@@ -1,0 +1,108 @@
+{
+  "intro": "¡Hola, pilos de octavo! Bienvenidos a esta guía de estudio diseñada especialmente para ustedes. Hoy nos adentraremos en un universo fascinante donde los números que no se pueden escribir como fracción cobran vida, y donde las letras y los números se unen para resolver enigmas matemáticos. En nuestro recorrido por los colegios de Colombia, desde la Guajira hasta el Amazonas, usamos las matemáticas para entender el espacio, calcular presupuestos en la tienda escolar y diseñar estructuras. Prepárense para descubrir cómo los números irracionales y el álgebra simplifican nuestra cotidianidad, potenciando su pensamiento crítico y preparando el camino hacia la educación media.",
+  "objectives": [
+    "Reconocer la existencia de los números irracionales y sus características principales en la recta numérica.",
+    "Simplificar expresiones algebraicas identificando y agrupando términos semejantes.",
+    "Aplicar productos notables y casos básicos de factorización para hallar equivalencias algebraicas."
+  ],
+  "sections": [
+    {
+      "title": "Números irracionales",
+      "paragraphs": [
+        "Hasta ahora has trabajado con números enteros y fraccionarios, los cuales forman los racionales. Sin embargo, existen otros números que no pueden expresarse como el cociente de dos enteros. Estos son los números irracionales, caracterizados por tener infinitas cifras decimales que no son periódicas. Ejemplos clásicos son la raiz cuadrada de 2 o el famoso número pi, que usamos para calcular longitudes de circunferencias.",
+        "Imagina que tienes un cuadrado perfecto con un lado que mide 1 metro. Si mides su diagonal utilizando el teorema de Pitágoras, te darás cuenta de que su longitud es la raiz cuadrada de 2, un número decimal que empieza por 1,414213... y nunca termina ni repite un patrón fijo. Estos números completan la recta numérica, permitiéndonos medir longitudes exactas que las fracciones no alcanzan a tocar."
+      ],
+      "example": {
+        "statement": "Ubica de forma aproximada el número raiz cuadrada de 5 en la recta numérica.",
+        "solution": "Paso 1: Identificamos los cuadrados perfectos cercanos a 5, los cuales son 4 y 9. Sabemos que la raiz cuadrada de 4 es 2 y la raiz cuadrada de 9 es 3. Por lo tanto, la raiz cuadrada de 5 debe estar entre 2 y 3. Paso 2: Como 5 está muy cerca de 4, el valor decimal es aproximadamente 2,23. Paso 3: En la recta numérica, nos ubicamos en el número 2 y avanzamos un poquito más de dos décimas hacia el 3."
+      }
+    },
+    {
+      "title": "Expresiones algebraicas",
+      "paragraphs": [
+        "El álgebra es el idioma de las matemáticas donde las letras, llamadas variables, representan cantidades desconocidas. Una expresión algebraica es una combinación de números y letras unidos por operaciones de suma, resta, multiplicación, división o potenciación. Por ejemplo, si compras tres cuadernos a un precio desconocido equis y dos esferos a precio ye, la expresión 3x + 2y representa el costo total de tu compra en la papelería.",
+        "Para operar con estas expresiones, es fundamental identificar los términos semejantes, que son aquellos que tienen exactamente las mismas letras elevadas a los mismos exponentes. Solo podemos sumar o restar términos semejantes agrupando sus coeficientes numéricos. Por ejemplo, 5x y menos 2x son semejantes y su suma es 3x, pero 3x y 3x² no se pueden combinar directamente porque sus exponentes son diferentes."
+      ],
+      "example": {
+        "statement": "Reduce la siguiente expresión algebraica: 7a + 4b - 3a + 2b - 5.",
+        "solution": "Paso 1: Identificamos y agrupamos los términos semejantes con la letra a: 7a - 3a = 4a. Paso 2: Agrupamos los términos semejantes con la letra b: 4b + 2b = 6b. Paso 3: El término numérico solo es -5. Paso 4: Juntamos todo en una sola expresión reducida: 4a + 6b - 5."
+      }
+    },
+    {
+      "title": "Productos notables",
+      "paragraphs": [
+        "Los productos notables son multiplicaciones de expresiones algebraicas que siguen reglas fijas, lo que nos permite calcular el resultado de manera directa sin necesidad de hacer la multiplicación término a término. Son herramientas muy útiles en física y geometría para calcular áreas de terrenos o volúmenes de cuerpos geométricos de forma rápida y eficiente.",
+        "Entre los productos notables más importantes tenemos el binomio al cuadrado y el producto de la suma por la diferencia. Por ejemplo, el cuadrado de una suma (a + b)² es igual al cuadrado del primero, más el doble del primero por el segundo, más el cuadrado del segundo. Conocer estas fórmulas te ahorrará mucho tiempo al resolver problemas complejos de ingeniería y arquitectura."
+      ],
+      "example": {
+        "statement": "Calcula el producto notable de (x + 5)².",
+        "solution": "Paso 1: Reconocemos que es el cuadrado de una suma de la forma (a + b)², donde a es x y b es 5. Paso 2: Aplicamos la regla: el cuadrado del primero (x²), más el doble del primero por el segundo (2 × x × 5 = 10x), más el cuadrado del segundo (5² = 25). Paso 3: Unimos los resultados para obtener la expresión final: x² + 10x + 25."
+      }
+    },
+    {
+      "title": "Factorización básica",
+      "paragraphs": [
+        "Factorizar es el proceso inverso a los productos notables; consiste en transformar una expresión algebraica en una multiplicación de factores más simples. Es como descomponer un número en sus factores primos, pero aplicado a polinomios. Esta habilidad es indispensable para simplificar fracciones algebraicas y resolver ecuaciones de segundo grado en grados superiores.",
+        "El caso más sencillo es el factor común, que consiste en buscar un divisor común (número o letra) que se encuentre en todos los términos del polinomio. Si tienes la expresión 2x + 4, el factor común numérico es el 2, por lo que al extraerlo queda 2 multiplicado por (x + 2). Dominar este método te abrirá las puertas para resolver problemas de optimización."
+      ],
+      "example": {
+        "statement": "Factoriza la expresión 6x² - 9x usando factor común.",
+        "solution": "Paso 1: Buscamos el máximo común divisor de los coeficientes 6 y 9, que es 3. Paso 2: Identificamos la variable común con su menor exponente en los términos, que es x. El factor común total es 3x. Paso 3: Dividimos cada término entre 3x: (6x² / 3x) = 2x y (-9x / 3x) = -3. Paso 4: Escribimos el resultado como producto: 3x(2x - 3)."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál de los siguientes números es irracional: 3,1416, raiz cuadrada de 9, raiz cuadrada de 7, o 5/2?",
+      "answer": "raiz cuadrada de 7"
+    },
+    {
+      "question": "Simplifica la expresión: 4x + 3y - 2x + 5y",
+      "answer": "2x + 8y"
+    },
+    {
+      "question": "Desarrolla el producto notable: (x + 3)²",
+      "answer": "x² + 6x + 9"
+    },
+    {
+      "question": "Factoriza sacando el factor común en: 5x + 15",
+      "answer": "5(x + 3)"
+    },
+    {
+      "question": "Desarrolla el producto notable de la suma por la diferencia: (x - 4)(x + 4)",
+      "answer": "x² - 16"
+    },
+    {
+      "question": "Factoriza el trinomio cuadrado perfecto: x² + 8x + 16",
+      "answer": "(x + 4)²"
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Número irracional",
+      "definition": "Número con infinitas cifras decimales no periódicas que no puede representarse como una fracción de dos números enteros."
+    },
+    {
+      "term": "Términos semejantes",
+      "definition": "Expresiones algebraicas que tienen exactamente las mismas variables elevadas a los mismos exponentes."
+    },
+    {
+      "term": "Producto notable",
+      "definition": "Multiplicación algebraica que cumple reglas fijas y cuyo resultado se puede escribir sin verificar la multiplicación paso a paso."
+    },
+    {
+      "term": "Factorización",
+      "definition": "Proceso de escribir una expresión algebraica o número como una multiplicación de sus factores más simples."
+    },
+    {
+      "term": "Factor común",
+      "definition": "Término numérico o literal que se repite en todos los componentes de un polinomio."
+    }
+  ],
+  "closing": "El estudio de los números irracionales y el álgebra no se queda solo en el cuaderno del colegio. Cada vez que calculas rutas en mapas digitales, determinas materiales para construir una casa o analizas el crecimiento poblacional de una ciudad colombiana como Medellín o Bogotá, estás aplicando estos conceptos. ¡Sigue practicando con entusiasmo porque las matemáticas son la llave para entender y transformar tu entorno!",
+  "dbaStatements": [
+    "DBA 1. Reconoce la existencia de los números irracionales como números no racionales y los describe de acuerdo con sus características y propiedades.",
+    "DBA 2. Construye representaciones, argumentos y ejemplos de propiedades de los números racionales y no racionales.",
+    "DBA 3. Reconoce los diferentes usos y significados de las operaciones (convencionales y no convencionales) y del signo igual (relación de equivalencia e igualdad condicionada) y los utiliza para argumentar equivalencias entre expresiones algebraicas y resolver sistemas de ecuaciones."
+  ]
+}

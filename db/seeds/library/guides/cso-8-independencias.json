@@ -1,0 +1,108 @@
+{
+  "intro": "A finales del siglo XVIII y comienzos del XIX, el continente americano vivió una profunda transformación política y social. Las colonias, cansadas del dominio de imperios como el español y el británico, iniciaron luchas decisivas para alcanzar su soberanía. Este periodo no solo significó el nacimiento de nuevas repúblicas, como nuestra Colombia, sino también el cuestionamiento de jerarquías sociales basadas en la servidumbre y el color de piel. En esta guía exploraremos cómo las ideas de libertad cambiaron el rumbo de nuestra historia, las tensiones que surgieron entre criollos, indígenas y afrodescendientes, y los retos que aún enfrentamos como sociedad para garantizar la igualdad y la dignidad de todas las personas.",
+  "objectives": [
+    "Analizar las causas ideológicas y políticas de las revoluciones e independencias en América durante los siglos XVIII y XIX.",
+    "Explicar las etapas y tensiones del proceso de independencia en la Nueva Granada y el papel de diversos sectores sociales.",
+    "Evaluar el impacto histórico de la abolición de la esclavitud en Colombia y sus limitaciones en la construcción de equidad.",
+    "Reconocer la vigencia de los ideales republicanos frente a las discriminaciones contemporáneas que afectan a minorías y mujeres."
+  ],
+  "sections": [
+    {
+      "title": "Ilustración y revoluciones atlánticas",
+      "paragraphs": [
+        "Durante el siglo XVIII floreció en Europa la Ilustración, una corriente de pensamiento que defendía la razón, la soberanía popular y la división de poderes frente al absolutismo monárquico. Autores como Montesquieu y Rousseau plantearon que los gobiernos debían fundamentarse en leyes justas y no en el derecho divino de los reyes. En las colonias americanas, los criollos letrados leyeron con entusiasmo estos textos. En Santafé de Bogotá, Antonio Nariño tradujo e imprimió de forma clandestina en 1793 la Declaración de los Derechos del Hombre y del Ciudadano, hecho que le costó prisión y destierro, pero que sembró inquietudes revolucionarias en la juventud granadina.",
+        "A estas ideas se sumaron hechos históricos determinantes como la Independencia de los Estados Unidos en 1776 y la Revolución Francesa en 1789. Asimismo, en el Caribe estalló la Revolución Haitiana en 1791, una insurrección liderada por personas esclavizadas que demostró que el orden colonial podía destruirse desde las bases populares. El detonante final para Hispanoamérica ocurrió en 1808, cuando el emperador francés Napoleón Bonaparte invadió España y capturó al rey Fernando VII. La falta de un monarca legítimo abrió el camino para que las colonias reclamaran su autogobierno a través de juntas locales."
+      ],
+      "example": {
+        "statement": "¿Por qué la invasión napoleónica a España en 1808 aceleró los movimientos juntistas en las colonias americanas?",
+        "solution": "Paso 1: Napoleón obligó a renunciar a Fernando VII y coronó a su hermano José Bonaparte. Paso 2: El pueblo español rechazó la usurpación y formó juntas locales alegando que, sin rey, el poder volvía al pueblo. Paso 3: Las élites criollas de ciudades como Santafé y Cartagena aplicaron la misma doctrina jurídica: si el rey legítimo estaba ausente, los americanos tenían derecho a gobernar sus propios territorios sin someterse a autoridades francesas."
+      }
+    },
+    {
+      "title": "Independencia de la Nueva Granada",
+      "paragraphs": [
+        "El camino hacia la libertad en la Nueva Granada fue prolongado y conflictivo. Empezó formalmente con juntas provinciales en 1810, destacando el 20 de julio en Santafé y movimientos previos en Cali y Cartagena. Entre 1810 y 1816 transcurrió la Primera República, periodo marcado por discordias civiles entre centralistas y federalistas. Esta desunión facilitó la Reconquista española liderada por el general Pablo Morillo en 1815, quien impuso el régimen del terror y ordenó fusilar a notables figuras como Camilo Torres, Francisco José de Caldas y la espía patriota Policarpa Salavarrieta.",
+        "La independencia definitiva se logró con la Campaña Libertadora de 1819, encabezada por Simón Bolívar y Francisco de Paula Santander. El cruce del páramo de Pisba y los triunfos militares en el Pantano de Vargas y el Puente de Boyacá sellaron el retiro de las autoridades virreinales. En los campos de batalla, miles de mestizos, indígenas y afrodescendientes entregaron su vida con la esperanza de liberarse de tributos coloniales y de la esclavitud, aunque al fundarse la República de Colombia muchas de sus aspiraciones quedaron aplazadas por los intereses de las élites terratenientes."
+      ],
+      "example": {
+        "statement": "Explica la causa principal de la inestabilidad política interna en la Nueva Granada entre 1810 y 1816.",
+        "solution": "Paso 1: Cada provincia se proclamó autónoma y redactó su propia constitución sin acordar un gobierno nacional único. Paso 2: Surgieron dos posturas irreconciliables: centralistas encabezados por Nariño, que pedían un poder fuerte en la capital, y federalistas liderados por Torres, que defendían la soberanía de las provincias. Paso 3: Esta confrontación armada interna impidió organizar un ejército común y dejó al territorio vulnerable ante la posterior reconquista española."
+      }
+    },
+    {
+      "title": "Abolición de la esclavitud",
+      "paragraphs": [
+        "A pesar de que hombres negros formaron la vanguardia de los batallones patriotas bajo promesas de libertad inmediata, los nuevos gobiernos mantuvieron el sistema esclavista para proteger los negocios de hacendados y mineros de regiones como Popayán, Chocó y el valle del río Cauca. En el Congreso de Cúcuta de 1821 solo se aprobó la Ley de Libertad de Vientres, ordenanza gradualista que decretó que los hijos de mujeres esclavizadas nacerían libres, pero deberían servir al amo de su madre hasta cumplir dieciocho años de edad.",
+        "Fue necesario esperar tres décadas más para conseguir la abolición absoluta. Mediante la ley del 21 de mayo de 1851, sancionada durante la presidencia de José Hilario López, se declaró libres a todas las personas esclavizadas a partir del 1 de enero de 1852. Sin embargo, el Estado indemnizó con recursos públicos a los amos y no a los libertos. Hombres y mujeres liberados quedaron sin tierras ni recursos, resistiendo en condiciones de marginación a orillas de ríos como el Magdalena, el Atrato y el Patía mediante economías campesinas autónomas."
+      ],
+      "example": {
+        "statement": "¿Qué diferencia esencial existió entre la Ley de Libertad de Vientres de 1821 y la Ley de Abolición de 1851?",
+        "solution": "Paso 1: La ley de 1821 mantuvo en servidumbre a todas las personas nacidas antes de su vigencia y postergó la libertad de los recién nacidos hasta su adultez. Paso 2: La ley de 1851 suprimió jurídicamente la institución de la esclavitud en todo el territorio nacional de manera general. Paso 3: La primera norma fue una medida de transición pactada con los propietarios; la segunda extinguió definitivamente la condición legal de esclavo."
+      }
+    },
+    {
+      "title": "Legado republicano y retos contemporáneos",
+      "paragraphs": [
+        "La gesta independentista sentó las bases institucionales de nuestras naciones: la adopción de regímenes republicanos, la división del poder público y la creación de códigos civiles. No obstante, el modelo inicial fue excluyente. Mujeres ilustres como Antonia Santos y Manuela Beltrán participaron decididamente en la resistencia, pero las leyes republicanas del siglo XIX las privaron del voto y de la administración de sus bienes. Asimismo, los resguardos indígenas fueron vulnerados y parcelados bajo el argumento liberal de transformar a los comuneros en pequeños propietarios individuales.",
+        "Hoy en día, la Constitución Política de 1991 consagra que Colombia es un Estado social de derecho, pluriétnico y multicultural. Sin embargo, persisten graves brechas históricas que afectan a pueblos afrocolombianos, indígenas y campesinos en departamentos como Nariño, Chocó y La Guajira, donde la pobreza y el despojo continúan presentes. El legado de la independencia nos enseña que la libertad no se agota con expulsar a un poder imperial; es un proyecto cívico permanente que exige combatir el racismo, la desigualdad social y la violencia sistemática."
+      ],
+      "example": {
+        "statement": "¿Cómo se manifiesta la contradicción entre la igualdad jurídica proclamada en la independencia y la realidad actual de las minorías étnicas?",
+        "solution": "Paso 1: La legislación colombiana declara que todos los ciudadanos son iguales ante la ley y reconoce derechos étnicos territoriales. Paso 2: No obstante, los indicadores sociales muestran que las zonas de mayor presencia afro e indígena presentan índices superiores de necesidades básicas insatisfechas y menor inversión estatal. Paso 3: Se concluye que la igualdad formal consagrada en el papel requiere acciones materiales continuas para reparar el rezago histórico originado en la colonia."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Qué prócer neogranadino fue encarcelado en 1793 por traducir e imprimir la Declaración de los Derechos del Hombre y del Ciudadano?",
+      "answer": "Antonio Nariño."
+    },
+    {
+      "question": "¿En qué fecha se constituyó la Junta Suprema de Gobierno en Santafé tras el famoso florero de Llorente?",
+      "answer": "El 20 de julio de 1810."
+    },
+    {
+      "question": "¿Qué modelo de Estado defendía Camilo Torres frente a la postura centralista de Antonio Nariño durante la Primera República?",
+      "answer": "El modelo federalista, que otorgaba autonomía y soberanía a las provincias."
+    },
+    {
+      "question": "¿Por qué la Ley de Libertad de Vientres aprobada en el Congreso de Cúcuta de 1821 no abolió la esclavitud de forma inmediata?",
+      "answer": "Porque solo liberaba a los futuros hijos de mujeres esclavizadas al cumplir la mayoría de edad, manteniendo cautivos a los adultos."
+    },
+    {
+      "question": "¿Cómo influyó la captura del rey Fernando VII por Napoleón Bonaparte en la creación de juntas autónomas en América?",
+      "answer": "Permitió a los criollos reclamar la retroversión de la soberanía al pueblo ante la ausencia del monarca legítimo."
+    },
+    {
+      "question": "¿Por qué se afirma que la abolición de la esclavitud en 1851 benefició económicamente más a los amos que a las personas liberadas?",
+      "answer": "Porque el Estado pagó indemnizaciones en dinero a los propietarios de esclavos, mientras que los libertos no recibieron tierras ni recursos para subsistir."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Criollo",
+      "definition": "Persona descendiente de españoles nacida en América colonial; gozaba de privilegios económicos, pero tenía vetado el acceso a los cargos más altos del gobierno virreinal."
+    },
+    {
+      "term": "Ilustración",
+      "definition": "Movimiento filosófico y cultural del siglo XVIII que promovió el uso de la razón crítica, la ciencia, las libertades individuales y la soberanía popular frente a las tiranías."
+    },
+    {
+      "term": "Libertad de vientres",
+      "definition": "Principio legal que dictaminaba que los hijos nacidos de mujeres esclavizadas serían considerados personas libres, usualmente al alcanzar la mayoría de edad reglamentaria."
+    },
+    {
+      "term": "Soberanía popular",
+      "definition": "Principio democrático que establece que el poder supremo de una nación reside en sus ciudadanos, quienes delegan transitoriamente su ejercicio en representantes electos."
+    },
+    {
+      "term": "Reconquista",
+      "definition": "Campaña militar enviada por la Corona española en 1815 para restablecer por la fuerza su dominio colonial sobre los territorios rebeldes de la Nueva Granada."
+    }
+  ],
+  "closing": "Comprender las independencias no consiste en memorizar fechas de batallas remotas, sino en valorar nuestras libertades cotidianas. Cada vez que opinas en clase sin temor, exiges respeto hacia tus compañeros o rechazas actos de discriminación racial y de género, estás ejerciendo la ciudadanía que soñaron generaciones pasadas. La construcción de una Colombia verdaderamente justa, solidaria y pacífica continúa estando en manos de tu generación.",
+  "dbaStatements": [
+    "DBA 5. Comprende cómo se produjeron los procesos de independencia de las colonias americanas durante los siglos XVIII y XIX y sus implicaciones para las sociedades contemporáneas.",
+    "DBA 7. Evalúa hechos trascendentales para la dignidad humana (abolición de la esclavitud, reconocimiento de los derechos de las mujeres,derechos de las minorías) y describe las discriminaciones que aún se presentan."
+  ]
+}

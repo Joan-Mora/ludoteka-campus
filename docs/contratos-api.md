@@ -170,6 +170,22 @@ El PDF lleva un QR y un pie con el código y la URL `APP_PUBLIC_URL/verificar-re
 
 `POST /news` acepta `official: true` solo de `rector` (`403 FORBIDDEN` para los demás); `GET /news/targets` devuelve `canOfficial`. En los foros, `canPost` es falso para coordinación y rectoría: leen y moderan, no publican.
 
+**Foros de curso (fase 5 de Ludoteka 2)**
+
+| Método | Ruta | Roles | Notas |
+|---|---|---|---|
+| POST | `/courses/:id/forum` | `student`, `teacher`, `admin` | `{title, body, attachments?: uuid[] (máx. 5)}` |
+| GET | `/courses/:id/forum` | Lectores del curso | Cada tema trae además `files` (adjuntos) y `mentioned` (te nombraron en alguna respuesta) |
+| GET | `/courses/:id/forum/members` | `student`, `teacher`, `admin` | Docente y estudiantes activos del curso, sin incluirte; alimenta el autocompletado de `@` |
+| GET | `/forum/threads/:id` | Lectores del curso | Por respuesta: `reactions[{kind, n, mine}]`, `mentions[{id, name}]`, `attachments[{id, title, kind}]`. Del tema: `attachments`, `canSummarize` y, solo para quien modera, `summary`, `summary_at`, `summaryStale` |
+| POST | `/forum/threads/:id/posts` | `student`, `teacher`, `admin` | `{body, mentions?: uuid[] (máx. 10), attachments?: uuid[]}`. Solo se guarda y avisa a quien es del curso y aparece como `@Nombre completo` en el texto. El autor del tema no recibe dos avisos si también lo nombran |
+| POST | `/forum/posts/:id/reactions` | `student`, `teacher`, `admin` | `{kind: util\|idea\|gracias\|duda}` alterna la reacción. `409 OWN_POST` sobre un mensaje propio |
+| POST | `/forum/posts/:id/answer` | `student`, `teacher`, `admin` | Alterna la mejor respuesta. La primera vez que se elige la respuesta de un estudiante (por otra persona) se emite `forum.best_answer`: 20 XP una sola vez por respuesta (`xp_ledger.source_type = 'forum_answer'`) y aviso de logro |
+| POST | `/forum/threads/:id/summary[?force=1]` | `teacher`, `admin`, `coordinator` (quien modera) | `{summary, summary_at, source: cache\|llm\|fragmentos}`. El modelo recibe el hilo con seudónimos (`Estudiante N`, `Docente`, `Participante N`); se reemplazan los nombres de todo el curso también dentro del texto y se quitan correos y teléfonos. El servidor devuelve los nombres reales en la respuesta. Sin IA responde un conteo del hilo (`fragmentos`) que no se guarda |
+| DELETE | `/forum/threads/:id` | Quien modera | Borra el tema con sus respuestas, reacciones, menciones y adjuntos |
+
+Los adjuntos deben ser documentos publicados de la biblioteca general (`public`, `institution`) o del mismo curso; si no, `400 ATTACHMENT_NOT_VISIBLE`. Así todo el curso puede abrirlos.
+
 ## 6 ter. Arcade, logros, notificaciones y campus (fase 4 de Ludoteka 2)
 
 **Arcade** (`arcade`, todo `@Roles('student')`). Las preguntas y respuestas viven en `arcade_sessions`; el cliente solo recibe enunciados y el servidor califica cada respuesta.
@@ -214,6 +230,21 @@ Leer un aviso de la cartelera (`news.read`) marca leída su notificación, y ver
 
 Las salas de Arena y en vivo sin cerrar en 3 horas se dan por terminadas al arrancar y cada 10 minutos.
 
+## 6 quater. Contenido de la biblioteca
+
+`GET /library/items?q=&subjectId=&gradeId=&kind=&tag=&saved=1` devuelve, además de los campos de siempre, `grade`, `course`, `source_name`, `source_url` y `license`. Con `gradeId` llegan los recursos de ese grado más los que no tienen grado (los documentos de todos los grados). `subjectId` y `gradeId` que no sean UUID se ignoran. `GET /library/items/:id` incluye también los nombres de `grade` y `course`.
+
+La siembra (`npm run library:seed -w @eduquest/api`, idempotente, `-- --dry` para simular) lee `db/seeds/library/manifest.json`:
+
+| Bloque | Qué crea |
+|---|---|
+| `subjects` | MAT, LEN, CNA, CSO e ING si faltan |
+| grupos y cursos | Un grupo `<grado>A` por grado y un curso por grado y materia. Si ya existe un curso real para ese grupo y materia, se reutiliza; si no, se crea uno de demostración (`is_demo`, publicado) a cargo de un docente demo **deshabilitado**, con una unidad «Guías de la biblioteca» y una lección por guía |
+| `guides` (60) | Guía propia por grado (6 a 11) y materia, 2 por curso, con los DBA que trabaja. El texto está en `db/seeds/library/guides/<slug>.json`; el PDF se genera con pdfkit, se sube a Cloudinary, queda con visibilidad `course` y se indexa (fragmentos y embeddings). Su glosario va directo a `glossary_terms` |
+| `documents` (9) | DBA de Matemáticas, Lenguaje, Ciencias Naturales y Ciencias Sociales y el esquema curricular de inglés (MEN, en Colombia Aprende): PDF que se indexa **desde su URL oficial**, sin copia en Cloudinary, porque no tienen licencia abierta. Libros de OpenStax en español (CC BY 4.0) como enlaces |
+
+`/api/courses` lista primero los cursos reales y después los de demostración (`demo: true`).
+
 ## 7. Resto de módulos (resumen de rutas)
 
 | Módulo | Rutas principales |
@@ -229,7 +260,7 @@ Las salas de Arena y en vivo sin cerrar en 3 horas se dan por terminadas al arra
 | tutor | `POST /tutor/chat` (student, teacher; `403 KIOSK_ACTIVE` con un examen o sala en vivo activos; `method` opcional cambia el estilo y, si falta, se usa el del perfil del estudiante), `/tutor/drafts`, `/courses/:id/recommendations`, `/route[...]` (`POST /route/generate` acepta `method` y `boss`; el jefe exige nivel 4 y uno pendiente a la vez), `GET /route/topics/:id/examples` (student; 3 ejemplos resueltos sin IA), `/courses/:id/mastery` |
 | profile | `GET /profile` (student; perfil, `canTake`, estadísticas por método de 60 días y recomendación), `POST /profile` (student; `{version, answers[12]}`, `409 ALREADY_TAKEN` si ya respondió en el periodo), `POST /profile/activity` (student), `GET /profile/courses/:id/distribution` (teacher solo de sus cursos, admin, coordinator, rector) |
 | study | `/study`, `/study/pages[...]` (summary, cards), `/study/cards[...]`, `/study/goals`, `/study/focus[...]` |
-| library | `/library/{catalog,items,glossary,ask}`, `/library/uploads/ticket`, `/library/items/:id/{bookmark,reindex}` |
+| library | `/library/{catalog,items,glossary,ask}`, `/library/uploads/ticket`, `/library/items/:id/{bookmark,reindex}` (sección 6 quater) |
 | observatory | `GET /observatory/schema`, `GET /observatory/history`, `POST /observatory/ask` |
 | gamification | `GET /gamification/{me,leaderboard}`, `POST /gamification/seen` (sección 6 ter) |
 | arcade | `GET /arcade`, `GET /arcade/ranking`, `POST /arcade/sessions[/:id/{answer,finish}]` (sección 6 ter) |

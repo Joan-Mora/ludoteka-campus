@@ -1,6 +1,6 @@
 # Ludoteka Campus — Arquitectura
 
-> Última revisión: 2026-10-09 · Responsable: Cronista
+> Última revisión: 2026-10-12 · Responsable: Cronista
 > **Nombre:** Ludoteka Campus (nombre pendiente de confirmar por Darwin; antes EduQuest).
 
 Monolito modular. Un repositorio, un proceso y una base de datos. Los servicios externos solo guardan lo que CockroachDB no debe guardar: archivos, inferencia de IA y envío de correo.
@@ -34,7 +34,7 @@ apps/web/src/app           router y shell (campus, navegación por rol)
 apps/web/src/features      pantallas, alineadas a los módulos
 apps/web/src/shared        cliente API, auth, voz, face-api
 packages/contracts         esquemas zod compartidos
-db/migrations              SQL versionado (0000 a 0019)
+db/migrations              SQL versionado (documentado: 0000 a 0027)
 db/seeds                   contenido demostrable
 ```
 
@@ -67,6 +67,8 @@ integrity ─── tutor
 | `tutor.message` | tutor | gamification |
 | `news.published` | learning (cartelera) | notifications |
 | `forum.reply` | learning (foros) | notifications |
+| `forum.mention` | learning (foros) | notifications |
+| `forum.best_answer` | learning (foros) | gamification (20 XP una vez), notifications |
 | `guardian.facial_revoked` | identity (acudientes) | biometrics (borra la plantilla) |
 | `route.solved` | tutor (Mi ruta) | gamification |
 | `arena.finished` | arena | gamification |
@@ -82,7 +84,8 @@ Los tableros leen tablas de otros módulos en solo lectura. La escritura de una 
 - `readOnly()` abre `BEGIN TRANSACTION READ ONLY` con `statement_timeout` y rol restringido; lo usa el Observatorio (ADR-006).
 - SSL según la cadena `DATABASE_URL`.
 - Las migraciones se aplican al arrancar y quedan en `schema_migrations`. La `0000` eliminó el esquema del prototipo de quizzes y solo corrió una vez (en una base vacía no encuentra tablas).
-- Hoy hay migraciones de la **0000 a la 0019** (21 archivos).
+- La documentación cubre las migraciones **0000 a 0027** (31 archivos: dos `0011` y tres `0020`). El rango definitivo es el que liste `schema_migrations` en producción (Sentinel, E7/E9); si la última no es la 0027, se ajusta a lo que se lea ahí.
+- **Post-15-oct:** en el repo hay además 0028 (`0028_library_sources_a` y `_b`), 0029 (`demo_courses`) y 0030 (`forum_social`), sin commit al 2026-10-12. Quedan fuera del ER, de E9 y de E12; su detalle está en `er-post-15oct.md`.
 - **Hay dos migraciones `0011`:** `0011_library.sql` y `0011_library_citations.sql`.
   - Según Forge, esto puede saltarse una migración o romper el migrate en un deploy limpio.
   - Por inspección de `core/database/migrate.ts`, el id es el nombre completo del archivo sin `.sql`, así que no chocan. El orden es el de `readdirSync().sort()`, y `0011_library.sql` va antes que `0011_library_citations.sql` porque `.` ordena antes que `_`.

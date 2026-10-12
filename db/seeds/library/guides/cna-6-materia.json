@@ -1,0 +1,113 @@
+{
+  "intro": "¡Hola, estudiantes de sexto grado! Bienvenidos a esta emocionante guía de Ciencias Naturales preparada para ustedes en nuestros colegios públicos de Colombia. En este recorrido por el fascinante mundo de la materia, vamos a descubrir de qué están hechos los objetos que nos rodean, desde una refrescante agua panela hasta el aire que respiramos en Bogotá o Medellín. Aprenderemos a clasificar las sustancias puras y las mezclas, exploraremos cómo podemos separarlas utilizando propiedades como la temperatura y la presión, y finalmente nos divertiremos entendiendo por qué los globos a veces se pegan a nuestra ropa debido a la carga eléctrica. ¡Prepárense para observar la naturaleza con ojos de científicos y científicas!",
+  "objectives": [
+    "Diferenciar entre elementos, compuestos, mezclas homogéneas y heterogéneas a partir de sus características fisicoquímicas.",
+    "Explicar los métodos de separación de mezclas relacionándolos con propiedades como la temperatura, la densidad y el punto de ebullición.",
+    "Comprender los fenómenos de atracción y repulsión electrostática asociándolos con la transferencia de carga eléctrica.",
+    "Aplicar los conceptos científicos aprendidos en la solución de situaciones cotidianas del entorno colombiano."
+  ],
+  "sections": [
+    {
+      "title": "Elementos y compuestos",
+      "paragraphs": [
+        "Todo lo que existe en el universo y en nuestro hermoso territorio colombiano está hecho de materia. La materia se clasifica principalmente en sustancias puras, las cuales tienen una composición fija y definida que no cambia sin importar de dónde se extraigan. Dentro de las sustancias puras encontramos los elementos químicos, que son aquellas sustancias fundamentales que no se pueden descomponer en otras más sencillas por métodos químicos comunes. Los elementos están formados por un solo tipo de átomos, como el oro que se extrae en las minas del Chocó o el oxígeno que respiramos en las cumbres de la cordillera de los Andes.",
+        "Por otro lado, cuando dos o más elementos diferentes se combinan químicamente en proporciones fijas y definidas, forman un compuesto. Un ejemplo clásico y muy cotidiano en nuestras cocinas es el agua, cuya fórmula química es H2O, lo que significa que cada molécula está compuesta por dos átomos de hidrógeno y uno de oxígeno. A diferencia de los elementos que los forman, los compuestos tienen propiedades fisicoquímicas totalmente nuevas y diferentes; por ejemplo, el sodio es un metal explosivo y el cloro es un gas tóxico, pero al unirse forman el cloruro de sodio, ¡la sal de cocina que usamos para dar sabor a nuestras sopas!"
+      ],
+      "example": {
+        "statement": "Identifica si el gas carbono (C), presente en la atmósfera, y el dióxido de carbono (CO2), que exhalamos al respirar, son elementos o compuestos.",
+        "solution": "El carbono (C) es un elemento porque aparece en la tabla periódica con un solo tipo de átomo y no se puede descomponer más. El dióxido de carbono (CO2) es un compuesto porque está formado por la unión química de dos elementos diferentes: carbono y oxígeno, en una proporción fija."
+      }
+    },
+    {
+      "title": "Mezclas homogéneas y heterogéneas",
+      "paragraphs": [
+        "En nuestra vida diaria rara vez encontramos sustancias puras aisladas; casi siempre interactuamos con mezclas. Una mezcla es la unión física de dos o más sustancias donde cada una conserva sus propiedades originales. Las mezclas se dividen en dos grandes grupos según su apariencia visual. Las mezclas homogéneas son aquellas en las que sus componentes se distribuyen de manera tan uniforme que no se pueden distinguir a simple vista ni con un microscopio común. Un excelente ejemplo colombiano es una taza de café tinto bien colado o un vaso de agua con azúcar completamente disuelta, donde el líquido se ve igual en cualquier parte del recipiente.",
+        "En contraste, las mezclas heterogéneas son aquellas cuyos componentes se pueden distinguir fácilmente a simple vista porque no se mezclan de manera uniforme. Piensa por ejemplo en una sopa de verduras caliente o en un vaso de agua con aceite y arena que recogemos del fondo del río Magdalena; en estos casos, cada componente conserva su espacio y podemos identificar claramente las diferentes fases. La temperatura y la presión también influyen en cómo interactúan los componentes, afectando propiedades como la solubilidad y la viscosidad dentro de la mezcla."
+      ],
+      "example": {
+        "statement": "Clasifica los siguientes ejemplos cotidianos en mezcla homogénea o heterogénea: a) Ensalada de frutas con crema de leche. b) Agua de panela bien disuelta.",
+        "solution": "a) Es una mezcla heterogénea porque podemos ver y separar fácilmente los trozos de papaya, banano y mango. b) Es una mezcla homogénea porque el azúcar y la panela se disuelven por completo en el agua, formando una sola fase uniforme."
+      }
+    },
+    {
+      "title": "Métodos de separación",
+      "paragraphs": [
+        "Como los componentes de una mezcla no están unidos químicamente, podemos separarlos utilizando métodos físicos que aprovechan las diferencias en sus propiedades fisicoquímicas, tales como el punto de ebullición, la densidad, el tamaño de las partículas y la solubilidad. Por ejemplo, cuando se nos cae arena en una bolsa de frijoles secos, usamos la tamización o filtración, donde se aprovecha el tamaño de los sólidos para retener los más grandes y dejar pasar los pequeños, un método muy usado en la construcción y en la agricultura colombiana.",
+        "Otro método muy importante es la destilación, que se aprovecha de las diferencias en los puntos de ebullición de los líquidos. Cuando calentamos una mezcla líquida, la sustancia que hierve a menor temperatura se evapora primero, luego se enfría en un condensador y se recupera pura. Este principio físico se utiliza tanto en los grandes complejos industriales para refinar el petróleo como en los trapiches artesanales para separar sustancias. La temperatura y la presión juegan un papel crucial aquí, pues determinan el momento exacto en que una sustancia cambia de estado físico."
+      ],
+      "example": {
+        "statement": "¿Qué método de separación utilizarías para separar una mezcla heterogénea de agua y aceite, sabiendo que el aceite es menos denso y no se disuelve en el agua?",
+        "solution": "Se utiliza la decantación. Como el aceite y el agua tienen densidades diferentes y son inmiscibles (no se mezclan), el aceite flota sobre el agua. Al usar un embudo de decantación, dejamos salir primero el agua por la parte inferior y cerramos la llave antes de que baje el aceite."
+      }
+    },
+    {
+      "title": "Carga eléctrica: atracción y repulsión",
+      "paragraphs": [
+        "Además de la materia y sus mezclas, a nuestro alrededor ocurren fenómenos fascinantes relacionados con la electricidad estática. Si frotas un globo inflado contra tu cabello seco durante unos segundos, notarás que al acercarlo a pequeños trozos de papel, estos se pegan al globo. Este fenómeno ocurre porque al frotar los cuerpos se produce una transferencia de cargas eléctricas microscópicas llamadas electrones. La materia posee cargas positivas (protones) y cargas negativas (electrones); cuando los cuerpos ganan o pierden electrones, quedan cargados eléctricamente.",
+        "Existen dos reglas fundamentales en la electrostática que rigen el comportamiento de estas cargas en la naturaleza. La primera regla dice que las cargas de igual signo se repelen, es decir, se alejan mutuamente (positivo con positivo, o negativo con negativo). La segunda regla establece que las cargas de distinto signo se atraen, lo que explica por qué el globo cargado atrae al papel neutro. Este principio invisible es la base para entender cómo funcionan desde un rayo en medio de una tormenta en la sabana hasta los circuitos electrónicos de nuestros celulares y computadores escolares."
+      ],
+      "example": {
+        "statement": "Dos esferas pequeñas de icopor suspendidas por hilos tienen cargas eléctricas. Si la esfera A tiene carga positiva y la esfera B tiene carga positiva, ¿se atraen o se repelen?",
+        "solution": "Se repelen. Como ambas esferas tienen cargas del mismo signo (positivas), la ley de la carga eléctrica indica que las cargas iguales se rechazan o alejan mutuamente."
+      }
+    }
+  ],
+  "practice": [
+    {
+      "question": "¿Cuál es la diferencia principal entre un elemento y un compuesto químico?",
+      "answer": "El elemento está formado por un solo tipo de átomo y el compuesto por dos o más elementos unidos químicamente."
+    },
+    {
+      "question": "Clasifica el aire limpio que respiramos en la ciudad como elemento, compuesto, mezcla homogénea o mezcla heterogénea.",
+      "answer": "Es una mezcla homogénea de gases como nitrógeno, oxígeno y argón."
+    },
+    {
+      "question": "¿Qué propiedad fisicoquímica aprovecha el método de la destilación para separar los líquidos de una mezcla?",
+      "answer": "La diferencia en los puntos de ebullición de las sustancias."
+    },
+    {
+      "question": "Si tienes una mezcla de agua con limaduras de hierro, ¿qué método físico usarías para separar el hierro rápidamente?",
+      "answer": "La imantación, aprovechando las propiedades magnéticas del hierro."
+    },
+    {
+      "question": "Explica qué sucede cuando se acercan dos objetos que tienen cargas eléctricas de signos opuestos.",
+      "answer": "Se atraen mutuamente debido a la fuerza electrostática entre cargas de diferente signo."
+    },
+    {
+      "question": "Un estudiante frota una regla de plástico con suéter de lana y logra atraer papelitos. ¿Qué tipo de partícula se transfirió para generar esta carga?",
+      "answer": "Los electrones, que poseen carga negativa."
+    }
+  ],
+  "glossary": [
+    {
+      "term": "Materia",
+      "definition": "Todo aquello que tiene masa y ocupa un lugar en el espacio."
+    },
+    {
+      "term": "Elemento",
+      "definition": "Sustancia pura formada por átomos de una sola clase que no se puede descomponer."
+    },
+    {
+      "term": "Compuesto",
+      "definition": "Sustancia pura formada por la unión química de dos o más elementos en proporciones fijas."
+    },
+    {
+      "term": "Mezcla homogénea",
+      "definition": "Unión física de sustancias donde sus componentes no se pueden distinguir a simple vista."
+    },
+    {
+      "term": "Decantación",
+      "definition": "Método para separar mezclas heterogéneas de líquidos o sólidos aprovechando la diferencia de densidades."
+    },
+    {
+      "term": "Carga eléctrica",
+      "definition": "Propiedad física de algunas partículas subatómicas que causa fenómenos de atracción y repulsión."
+    }
+  ],
+  "closing": "Comprender la materia, las mezclas y la electricidad no solo nos ayuda a aprobar las evaluaciones de ciencias, sino a entender la magia que ocurre cada día en nuestra cocina, en la industria colombiana y en la naturaleza. La próxima vez que cocines un sancocho, prepares un jugo o cargues un dispositivo, recuerda que la ciencia está presente en cada detalle. ¡Sigan explorando y preguntándose el porqué de las cosas!",
+  "dbaStatements": [
+    "DBA 1. Comprende cómo los cuerpos pueden ser cargados eléctricamente asociando esta carga a efectos de atracción y repulsión.",
+    "DBA 2. Comprende que la temperatura (T) y la presión (P) influyen en algunas propiedades fisicoquímicas (solubilidad, viscosidad, densidad, puntos de ebullición y fusión) de las sustancias, y que estas pueden ser aprovechadas en las técnicas de separación de mezclas.",
+    "DBA 3. Comprende la clasificación de los materiales a partir de grupos de sustancias (elementos y compuestos) y mezclas (homogéneas y heterogéneas)."
+  ]
+}

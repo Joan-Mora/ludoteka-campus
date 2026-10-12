@@ -1,8 +1,9 @@
-import { FormEvent, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { FormEvent, useEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
+  AtSign,
   BellRing,
   BookOpen,
   CalendarClock,
@@ -14,10 +15,12 @@ import {
   Eye,
   FileText,
   HeartHandshake,
+  Library,
   Lock,
   MessageCircle,
   MessagesSquare,
   Megaphone,
+  Paperclip,
   Pin,
   PinOff,
   ScanFace,
@@ -25,12 +28,15 @@ import {
   Sparkles,
   Trash2,
   Unlock,
+  X,
   Zap,
   type LucideIcon,
 } from 'lucide-react';
-import { ROLE_LABELS } from '@eduquest/contracts';
+import { ROLE_LABELS, type ForumReaction } from '@eduquest/contracts';
 import { api, download } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
+import { useCompanion } from '@/shared/companion';
+import { RichText } from '@/shared/rich-text';
 import { MicButton, SpeakButton } from '@/shared/voice-ui';
 import { joinDictation } from '@/shared/voice';
 import { Avatar, Bar, Empty, PageHeader, Reveal, Stat, Tile, type Tone } from '@/ui';
@@ -371,14 +377,196 @@ function Composer({ onDone }: { onDone: () => void }) {
 /* Foros                                                               */
 /* ------------------------------------------------------------------ */
 
-interface ThreadSummary { id: string; title: string; body: string; pinned: boolean; locked: boolean; posts_count: number; last_post_at: string; author: string; answered: boolean }
+interface ThreadSummary { id: string; title: string; body: string; pinned: boolean; locked: boolean; posts_count: number; last_post_at: string; author: string; answered: boolean; files?: number; mentioned?: boolean }
+interface ForumAttachment { id: string; title: string; kind: string }
+interface ForumMember { id: string; name: string; role: 'teacher' | 'student' }
+interface ForumPost {
+  id: string;
+  body: string;
+  is_answer: boolean;
+  created_at: string;
+  author_id: string;
+  author: string;
+  role: string;
+  reactions: { kind: ForumReaction; n: number; mine: boolean }[];
+  mentions: { id: string; name: string }[];
+  attachments: ForumAttachment[];
+}
 interface ThreadDetail extends ThreadSummary {
   moderator: boolean;
   canAnswer: boolean;
   canPost?: boolean;
+  canSummarize?: boolean;
   course_id: string;
   created_at: string;
-  posts: { id: string; body: string; is_answer: boolean; created_at: string; author_id: string; author: string; role: string }[];
+  summary: string | null;
+  summary_at: string | null;
+  summaryStale: boolean;
+  attachments: ForumAttachment[];
+  posts: ForumPost[];
+}
+
+const REACTIONS: { kind: ForumReaction; emoji: string; label: string }[] = [
+  { kind: 'util', emoji: '👍', label: 'Me sirvió' },
+  { kind: 'idea', emoji: '💡', label: 'Buena idea' },
+  { kind: 'gracias', emoji: '🙏', label: 'Gracias' },
+  { kind: 'duda', emoji: '🤔', label: 'Tengo la misma duda' },
+];
+
+const fold = (text: string) => text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase();
+const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+/** Highlights the @mentions the server accepted for this post. */
+function PostBody({ body, mentions }: { body: string; mentions: { name: string }[] }) {
+  if (!mentions.length) return <>{body}</>;
+  const re = new RegExp(`(${mentions.map((m) => `@${escapeRegex(m.name)}`).join('|')})`, 'g');
+  return <>{body.split(re).map((part, i) => (i % 2 ? <span key={i} className="mention">{part}</span> : part))}</>;
+}
+
+function AttachmentChips({ items, onRemove }: { items: ForumAttachment[]; onRemove?: (id: string) => void }) {
+  if (!items.length) return null;
+  return (
+    <div className="row g-8 wrap forum-attachments">
+      {items.map((item) => (
+        <span key={item.id} className="chip sky">
+          <Library size={12} />
+          {onRemove ? item.title : <Link to={`/app/biblioteca/${item.id}`}>{item.title}</Link>}
+          {onRemove && (
+            <button type="button" className="chip-x" aria-label={`Quitar ${item.title}`} onClick={() => onRemove(item.id)}><X size={12} /></button>
+          )}
+        </span>
+      ))}
+    </div>
+  );
+}
+
+/** Textarea with @ autocomplete over the course members and a library picker for attachments. */
+function ForumComposer({
+  courseId,
+  label,
+  rows,
+  body,
+  setBody,
+  mentions = [],
+  setMentions,
+  attachments,
+  setAttachments,
+  maxLength = 6000,
+}: {
+  courseId: string;
+  label: string;
+  rows: number;
+  body: string;
+  setBody: (value: string) => void;
+  /** Omit to turn the @ autocomplete off (new threads notify through the course feed instead). */
+  mentions?: ForumMember[];
+  setMentions?: (value: ForumMember[]) => void;
+  attachments: ForumAttachment[];
+  setAttachments: (value: ForumAttachment[]) => void;
+  maxLength?: number;
+}) {
+  const area = useRef<HTMLTextAreaElement>(null);
+  const members = useQuery({ queryKey: ['forum-members', courseId], queryFn: () => api<ForumMember[]>(`/api/courses/${courseId}/forum/members`), staleTime: 5 * 60_000, enabled: Boolean(setMentions) });
+  const [query, setQuery] = useState<string | null>(null);
+  const [active, setActive] = useState(0);
+  const [picking, setPicking] = useState(false);
+  const [search, setSearch] = useState('');
+  const library = useQuery({
+    queryKey: ['forum-library', search],
+    queryFn: () => api<{ id: string; title: string; kind: string; status: string; visibility: string; course_id: string | null }[]>(`/api/library/items?q=${encodeURIComponent(search)}`),
+    enabled: picking && search.trim().length >= 2,
+  });
+  const options = useMemo(() => {
+    if (query == null) return [];
+    const q = fold(query.trimStart());
+    return (members.data ?? []).filter((m) => !q || fold(m.name).startsWith(q) || fold(m.name).split(/\s+/).some((w) => w.startsWith(q))).slice(0, 6);
+  }, [query, members.data]);
+  const candidates = (library.data ?? [])
+    .filter((item) => item.status === 'published' && (item.visibility !== 'course' || item.course_id === courseId) && !attachments.some((a) => a.id === item.id))
+    .slice(0, 6);
+
+  function track(value: string, caret: number) {
+    if (!setMentions) return;
+    const match = /(?:^|\s)@([^@\n]{0,30})$/u.exec(value.slice(0, caret));
+    setQuery(match ? match[1]! : null);
+    setActive(0);
+  }
+
+  function pick(member: ForumMember) {
+    const el = area.current;
+    const caret = el?.selectionStart ?? body.length;
+    const before = body.slice(0, caret).replace(/@([^@\n]{0,30})$/u, `@${member.name} `);
+    const next = before + body.slice(caret);
+    setBody(next);
+    if (!mentions.some((m) => m.id === member.id)) setMentions?.([...mentions, member]);
+    setQuery(null);
+    requestAnimationFrame(() => {
+      el?.focus();
+      el?.setSelectionRange(before.length, before.length);
+    });
+  }
+
+  function keys(e: KeyboardEvent<HTMLTextAreaElement>) {
+    if (!options.length) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); setActive((a) => (a + 1) % options.length); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); setActive((a) => (a - 1 + options.length) % options.length); }
+    else if (e.key === 'Enter' || e.key === 'Tab') { e.preventDefault(); pick(options[active]!); }
+    else if (e.key === 'Escape') setQuery(null);
+  }
+
+  return (
+    <div className="forum-composer">
+      <label className="field">
+        <span className="row between">{label} <MicButton label="Dictar" onText={(text) => setBody(joinDictation(body, text))} /></span>
+        <textarea
+          ref={area}
+          rows={rows}
+          required
+          value={body}
+          maxLength={maxLength}
+          placeholder={setMentions ? 'Escribe @ para nombrar a alguien del curso' : undefined}
+          aria-autocomplete="list"
+          aria-expanded={options.length > 0}
+          aria-controls="forum-mention-list"
+          onChange={(e) => { setBody(e.target.value); track(e.target.value, e.target.selectionStart); }}
+          onKeyDown={keys}
+          onBlur={() => setTimeout(() => setQuery(null), 150)}
+        />
+      </label>
+      {options.length > 0 && (
+        <ul id="forum-mention-list" role="listbox" className="mention-list" aria-label="Personas del curso">
+          {options.map((m, i) => (
+            <li key={m.id} role="option" aria-selected={i === active}>
+              <button type="button" className={i === active ? 'active' : ''} onMouseDown={(e) => { e.preventDefault(); pick(m); }}>
+                <Avatar name={m.name} /> <span className="mention-name">{m.name}</span> {m.role === 'teacher' && <span className="chip sky">Docente</span>}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+      <AttachmentChips items={attachments} onRemove={(id) => setAttachments(attachments.filter((a) => a.id !== id))} />
+      {attachments.length < 5 && (
+        <button type="button" className="btn sm ghost" onClick={() => setPicking(!picking)} aria-expanded={picking}>
+          <Paperclip size={14} /> Adjuntar de la biblioteca
+        </button>
+      )}
+      {picking && (
+        <div className="forum-picker">
+          <input className="input" placeholder="Busca una guía o documento (mín. 2 letras)" value={search} onChange={(e) => setSearch(e.target.value)} aria-label="Buscar en la biblioteca" />
+          {search.trim().length >= 2 && (
+            <div className="stack" style={{ gap: 4, marginTop: 8 }}>
+              {candidates.map((item) => (
+                <button key={item.id} type="button" className="btn sm ghost" style={{ justifyContent: 'flex-start' }} onClick={() => { setAttachments([...attachments, { id: item.id, title: item.title, kind: item.kind }]); setPicking(false); setSearch(''); }}>
+                  <Library size={14} /> {item.title}
+                </button>
+              ))}
+              {!library.isLoading && !candidates.length && <span className="muted" style={{ fontSize: 13 }}>Nada que adjuntar con esas palabras en este curso.</span>}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 }
 
 function Forums() {
@@ -413,6 +601,7 @@ function ThreadList({ courseId, onOpen }: { courseId: string; onOpen: (id: strin
   const data = useQuery({ queryKey: ['forum', courseId], queryFn: () => api<{ moderator: boolean; threads: ThreadSummary[] }>(`/api/courses/${courseId}/forum`) });
   const [composing, setComposing] = useState(false);
   const [body, setBody] = useState('');
+  const [attachments, setAttachments] = useState<ForumAttachment[]>([]);
   const [error, setError] = useState('');
 
   async function create(e: FormEvent<HTMLFormElement>) {
@@ -421,8 +610,9 @@ function ThreadList({ courseId, onOpen }: { courseId: string; onOpen: (id: strin
     const d = new FormData(form);
     setError('');
     try {
-      const created = await api<{ id: string }>(`/api/courses/${courseId}/forum`, { method: 'POST', body: JSON.stringify({ title: d.get('title'), body }) });
+      const created = await api<{ id: string }>(`/api/courses/${courseId}/forum`, { method: 'POST', body: JSON.stringify({ title: d.get('title'), body, attachments: attachments.map((a) => a.id) }) });
       setBody('');
+      setAttachments([]);
       setComposing(false);
       client.invalidateQueries({ queryKey: ['forum', courseId] });
       onOpen(created.id);
@@ -436,10 +626,7 @@ function ThreadList({ courseId, onOpen }: { courseId: string; onOpen: (id: strin
       {composing && (
         <form onSubmit={create} className="card" style={{ padding: 16, marginBottom: 16, background: 'var(--surface-2)' }}>
           <label className="field">Título<input name="title" required minLength={3} maxLength={160} placeholder="¿Cómo se simplifica 18/24?" /></label>
-          <label className="field">
-            <span className="row between">Pregunta o idea <MicButton label="Dictar" onText={(text) => setBody((b) => joinDictation(b, text))} /></span>
-            <textarea rows={4} required value={body} onChange={(e) => setBody(e.target.value)} />
-          </label>
+          <ForumComposer courseId={courseId} label="Pregunta o idea" rows={4} body={body} setBody={setBody} attachments={attachments} setAttachments={setAttachments} />
           {error && <p className="form-error">{error}</p>}
           <button className="btn" type="submit">Publicar tema</button>
         </form>
@@ -453,6 +640,8 @@ function ThreadList({ courseId, onOpen }: { courseId: string; onOpen: (id: strin
                 {t.locked && <Lock size={14} />}
                 <b>{t.title}</b>
                 {t.answered && <span className="chip mint"><CheckCircle2 size={12} /> Resuelto</span>}
+                {t.mentioned && <span className="chip violet"><AtSign size={12} /> Te nombraron</span>}
+                {Boolean(t.files) && <span className="chip" aria-label={`${t.files} adjuntos`}><Paperclip size={12} /> {t.files}</span>}
               </div>
               <div className="muted" style={{ fontSize: 13 }}>{t.author} · última actividad {when(t.last_post_at)}</div>
             </div>
@@ -470,6 +659,8 @@ function ThreadView({ id, onBack }: { id: string; onBack: () => void }) {
   const client = useQueryClient();
   const data = useQuery({ queryKey: ['thread', id], queryFn: () => api<ThreadDetail>(`/api/forum/threads/${id}`) });
   const [reply, setReply] = useState('');
+  const [mentions, setMentions] = useState<ForumMember[]>([]);
+  const [attachments, setAttachments] = useState<ForumAttachment[]>([]);
   const [error, setError] = useState('');
   const thread = data.data;
 
@@ -482,9 +673,21 @@ function ThreadView({ id, onBack }: { id: string; onBack: () => void }) {
     e.preventDefault();
     setError('');
     try {
-      await api(`/api/forum/threads/${id}/posts`, { method: 'POST', body: JSON.stringify({ body: reply }) });
+      const named = mentions.filter((m) => reply.includes(`@${m.name}`)).map((m) => m.id);
+      await api(`/api/forum/threads/${id}/posts`, { method: 'POST', body: JSON.stringify({ body: reply, mentions: named, attachments: attachments.map((a) => a.id) }) });
       setReply('');
+      setMentions([]);
+      setAttachments([]);
       refresh();
+    } catch (err) {
+      setError((err as Error).message);
+    }
+  }
+
+  async function react(postId: string, kind: ForumReaction) {
+    try {
+      await api(`/api/forum/posts/${postId}/reactions`, { method: 'POST', body: JSON.stringify({ kind }) });
+      client.invalidateQueries({ queryKey: ['thread', id] });
     } catch (err) {
       setError((err as Error).message);
     }
@@ -505,12 +708,26 @@ function ThreadView({ id, onBack }: { id: string; onBack: () => void }) {
           <>
             <button className="btn sm ghost" onClick={() => moderate({ pinned: !thread.pinned })}>{thread.pinned ? <PinOff size={15} /> : <Pin size={15} />} {thread.pinned ? 'Desfijar' : 'Fijar'}</button>
             <button className="btn sm ghost" onClick={() => moderate({ locked: !thread.locked })}>{thread.locked ? <Unlock size={15} /> : <Lock size={15} />} {thread.locked ? 'Reabrir' : 'Cerrar'}</button>
+            <button
+              className="btn sm ghost"
+              aria-label="Borrar tema"
+              onClick={async () => {
+                if (!confirm('Se borrará el tema con todas sus respuestas. ¿Continuar?')) return;
+                await api(`/api/forum/threads/${id}`, { method: 'DELETE' });
+                client.invalidateQueries({ queryKey: ['forum', thread.course_id] });
+                onBack();
+              }}
+            >
+              <Trash2 size={15} />
+            </button>
           </>
         )}
       </div>
       <div className="card-title" style={{ fontSize: 22 }}>{thread.title}</div>
       <div className="muted" style={{ fontSize: 13, marginBottom: 10 }}>{thread.author} · {when(thread.created_at)}</div>
       <p className="news-body">{thread.body}</p>
+      <AttachmentChips items={thread.attachments} />
+      {thread.canSummarize && <ThreadDigest thread={thread} />}
       <div className="stack" style={{ gap: 10, marginTop: 18 }}>
         {thread.posts.map((post) => (
           <div key={post.id} className={`post${post.is_answer ? ' answer' : ''}`}>
@@ -522,10 +739,32 @@ function ThreadView({ id, onBack }: { id: string; onBack: () => void }) {
                 {post.is_answer && <span className="chip mint"><CheckCircle2 size={12} /> Respuesta</span>}
                 <span className="muted" style={{ fontSize: 12 }}>{when(post.created_at)}</span>
               </div>
-              <p style={{ margin: '6px 0 0', whiteSpace: 'pre-wrap' }}>{post.body}</p>
-              <div className="row g-8" style={{ marginTop: 6 }}>
+              <p style={{ margin: '6px 0 0', whiteSpace: 'pre-wrap' }}><PostBody body={post.body} mentions={post.mentions} /></p>
+              <AttachmentChips items={post.attachments} />
+              <div className="row g-8 wrap" style={{ marginTop: 6 }}>
+                <div className="reactions" role="group" aria-label="Reacciones">
+                  {REACTIONS.map((r) => {
+                    const count = post.reactions.find((x) => x.kind === r.kind);
+                    const own = post.author_id === user?.id;
+                    if (!count && (own || thread.canPost === false)) return null;
+                    return (
+                      <button
+                        key={r.kind}
+                        type="button"
+                        className={`reaction${count?.mine ? ' mine' : ''}`}
+                        title={r.label}
+                        aria-label={`${r.label}${count ? `: ${count.n}` : ''}`}
+                        aria-pressed={Boolean(count?.mine)}
+                        disabled={own || thread.canPost === false}
+                        onClick={() => react(post.id, r.kind)}
+                      >
+                        <span aria-hidden>{r.emoji}</span>{count ? <b>{count.n}</b> : null}
+                      </button>
+                    );
+                  })}
+                </div>
                 {thread.canAnswer && (
-                  <button className="btn sm ghost" onClick={async () => { await api(`/api/forum/posts/${post.id}/answer`, { method: 'POST' }); refresh(); }}>
+                  <button className="btn sm ghost" title={post.is_answer || post.author_id === user?.id ? undefined : 'La primera vez que se elige, quien respondió gana 20 XP'} onClick={async () => { await api(`/api/forum/posts/${post.id}/answer`, { method: 'POST' }); refresh(); }}>
                     <CheckCircle2 size={14} /> {post.is_answer ? 'Quitar marca' : 'Marcar respuesta'}
                   </button>
                 )}
@@ -544,15 +783,59 @@ function ThreadView({ id, onBack }: { id: string; onBack: () => void }) {
         <p className="chip" style={{ marginTop: 16 }}><Lock size={13} /> El docente cerró este tema.</p>
       ) : (
         <form onSubmit={send} style={{ marginTop: 18 }}>
-          <label className="field">
-            <span className="row between">Tu respuesta <MicButton label="Dictar" onText={(text) => setReply((r) => joinDictation(r, text))} /></span>
-            <textarea rows={3} required value={reply} onChange={(e) => setReply(e.target.value)} maxLength={6000} />
-          </label>
+          <ForumComposer courseId={thread.course_id} label="Tu respuesta" rows={3} body={reply} setBody={setReply} mentions={mentions} setMentions={setMentions} attachments={attachments} setAttachments={setAttachments} />
           {error && <p className="form-error">{error}</p>}
           <button className="btn" type="submit" disabled={!reply.trim()}>Responder</button>
         </form>
       )}
     </div>
+  );
+}
+
+/** Moderator-only digest; the companion reads the thread with pseudonyms and the API puts the names back. */
+function ThreadDigest({ thread }: { thread: ThreadDetail }) {
+  const companion = useCompanion();
+  const client = useQueryClient();
+  const [busy, setBusy] = useState(false);
+  const [result, setResult] = useState<{ summary: string; source: string } | null>(null);
+  const [error, setError] = useState('');
+  const summary = result?.summary ?? thread.summary;
+
+  async function ask(force: boolean) {
+    setBusy(true);
+    setError('');
+    try {
+      const data = await api<{ summary: string; source: string }>(`/api/forum/threads/${thread.id}/summary${force ? '?force=1' : ''}`, { method: 'POST' });
+      setResult(data);
+      if (data.source === 'llm') client.invalidateQueries({ queryKey: ['thread', thread.id] });
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <section className="forum-digest" aria-label={`Resumen de ${companion.name}`}>
+      <div className="row g-8 wrap">
+        <Sparkles size={16} color="var(--violet)" />
+        <b style={{ flex: 1 }}>Resumen de {companion.name}</b>
+        {thread.summaryStale && !result && <span className="chip gold">Hay respuestas nuevas</span>}
+        <button className="btn sm ghost" type="button" disabled={busy || thread.posts_count === 0} onClick={() => ask(Boolean(summary))}>
+          <Sparkles size={14} /> {busy ? 'Leyendo el hilo…' : summary ? 'Actualizar' : `Pedir resumen a ${companion.name}`}
+        </button>
+      </div>
+      {summary ? (
+        <div className="forum-digest-body"><RichText text={summary} /></div>
+      ) : (
+        <p className="muted" style={{ margin: '6px 0 0', fontSize: 13 }}>
+          {thread.posts_count === 0 ? 'Cuando haya respuestas podrás pedir un resumen.' : 'Ideas principales, dudas sin resolver y quién podría necesitar apoyo.'}
+        </p>
+      )}
+      {result?.source === 'fragmentos' && <p className="muted" style={{ margin: '6px 0 0', fontSize: 12 }}>{companion.name} no respondió a tiempo; esto es un conteo rápido del hilo.</p>}
+      {error && <p className="form-error">{error}</p>}
+      <p className="muted" style={{ margin: '8px 0 0', fontSize: 12 }}><ShieldCheck size={12} /> {companion.name} lee el hilo con seudónimos (Estudiante 1, 2…): ningún nombre sale del colegio.</p>
+    </section>
   );
 }
 

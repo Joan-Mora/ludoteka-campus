@@ -141,6 +141,14 @@ El rol abre la puerta; la relación decide qué datos se ven. Ejemplos:
 - El filtro de errores nunca devuelve trazas: lo desconocido sale como `500 INTERNAL`.
 - El build de la web no publica mapas de código y ofusca los chunks propios. Esto solo disuade; no es un control de seguridad.
 
+**Peticiones salientes de la API** (portadas de la biblioteca, `modules/library/library.service.ts`):
+
+- Para la portada de un enlace, la API descarga la página y lee su `og:image`. Para un PDF externo, descarga el archivo y dibuja la primera página.
+- `publicHttps` solo acepta `https` con un nombre de dominio. Rechaza direcciones IP, `localhost` y dominios `.local`, `.internal` o `.localhost`, tanto en la página como en la imagen.
+- Cada descarga tiene tiempo límite (15 s la página, 60 s el PDF) y de la página se leen como máximo 600 000 caracteres.
+- La imagen la descarga Cloudinary, no la API.
+- Solo docentes y administración crean enlaces. Por la API, los PDF solo llegan como subidas firmadas de Cloudinary; los PDF externos vienen del manifiesto de la biblioteca. Ver el riesgo 13 en [Riesgos conocidos](#riesgos-conocidos).
+
 ## Auditoría
 
 `audit_log` registra quién hizo qué sobre qué entidad, con metadatos en JSON:
@@ -222,3 +230,4 @@ Hallazgos de la revisión del código que siguen abiertos, ordenados por priorid
 | 10 | El Observatorio devuelve el texto del error de la base al cliente | Filtra detalles del esquema a quien ya puede consultarlo | Mensaje genérico y detalle solo en el registro |
 | 11 | `FACIAL_ENC_KEY` no está en `render.yaml`; producción deriva la llave de `JWT_SECRET` | Rotar `JWT_SECRET` destruye las plantillas | Definir `FACIAL_ENC_KEY` explícita en todos los entornos |
 | 12 | `SEED_PASSWORD` tiene un valor por defecto escrito en el código, y las cuentas de laboratorio (incluida una de administración) se recrean en cada arranque si faltan | Una instalación sin esa variable deja cuentas con una clave pública; el código por correo es la única barrera | Quitar el valor por defecto y no arrancar en producción sin `SEED_PASSWORD`; desactivar (no borrar) las cuentas de laboratorio que no se usen |
+| 13 | Al generar portadas, `publicHttps` revisa solo el nombre del dominio: sigue redirecciones sin volver a revisarlas y no comprueba a qué IP resuelve el dominio | Un docente o administrador podría publicar un enlace que haga al servidor pedir una dirección interna; la respuesta no se devuelve, solo se busca en ella la imagen de portada | Usar `redirect: 'manual'` y revisar cada salto, y resolver el DNS para rechazar rangos privados. Los PDF externos no pasan por `publicHttps`, pero solo entran por el manifiesto que carga el equipo técnico; por la API los PDF llegan como subidas firmadas de Cloudinary |

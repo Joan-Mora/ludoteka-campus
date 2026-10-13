@@ -9,19 +9,29 @@ El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). La
 Primera versión entregable: campus por rol, manuales completos en Markdown y PDF, e imagen Docker.
 
 ### Añadido
-- **Luka y Luna unificados en un solo compañero.** Vive en la esquina inferior derecha de todas las pantallas, sin fondo blanco, flota, sigue el puntero con la mirada y saluda cuando hay pendientes nuevos o cuando el estudiante lleva un rato sin actividad. Al tocarlo habla y ofrece un menú: qué tengo pendiente (con conteo por edificio), cómo funciona esta pantalla, recorrido del campus, preguntarme un tema u Observatorio, orden por voz, leer la página y elegir entre Luka y Luna. Tiene modo silencio. Reemplaza la burbuja grande del inicio y el bloque del inicio en el teléfono.
-- **Portadas automáticas en la biblioteca** (migración `0032`). Los PDF enlazados desde otros sitios (por ejemplo los DBA del MEN) se dibujan en el servidor a partir de su primera página. Los enlaces web (por ejemplo OpenStax) usan la imagen `og:image` de la página. Ambas portadas se guardan en Cloudinary. Al arrancar, el servidor completa las portadas que falten.
-- **Manuales en PDF** con el diseño de Ludoteka Campus en `docs/manuales/pdf/`: Manual de Instalación, Manual de Usuario, Manual Técnico, Guía de Arquitectura y Manual de Seguridad. Se generan con `npm run docs:pdf`.
-- `CHANGELOG.md`.
+- [`6871acd`] **Luka y Luna unificados en un solo compañero.** Vive en la esquina inferior derecha de todas las pantallas, sin fondo blanco, flota, sigue el puntero con la mirada y saluda cuando hay pendientes nuevos o cuando el estudiante lleva un rato sin actividad. Al tocarlo habla y ofrece un menú: qué tengo pendiente (con conteo por edificio), cómo funciona esta pantalla, recorrido del campus, preguntarme un tema u Observatorio, orden por voz, leer la página y elegir entre Luka y Luna. Tiene modo silencio. Reemplaza la burbuja grande del inicio y el bloque del inicio en el teléfono.
+- [`6871acd`] **Portadas automáticas en la biblioteca** (migración `0032`). Los PDF enlazados desde otros sitios (por ejemplo los DBA del MEN) se dibujan en el servidor a partir de su primera página. Los enlaces web (por ejemplo OpenStax) usan la imagen `og:image` de la página. Ambas portadas se guardan en Cloudinary. Al arrancar, el servidor completa las portadas que falten.
+- [`6871acd`] **Manuales en PDF** con el diseño de Ludoteka Campus en `docs/manuales/pdf/`: Manual de Instalación, Manual de Usuario, Manual Técnico, Guía de Arquitectura y Manual de Seguridad. Los genera el equipo con una herramienta local que no forma parte del repositorio.
+- [`6871acd`] `CHANGELOG.md`.
+- [`6871acd`] Capturas del manual: `MANUAL_ONLY` permite repetir solo algunas sin rehacer las demás.
 
 ### Cambiado
-- El título de la portada y del ingreso ya no habla de roles: «Aprender se siente como explorar un campus» y «Entra a tu campus».
-- Las capturas del manual se agrupan por sección (`acceso`, `campus`, `cuenta`, `estudiante`, `docente`, `coordinacion`, `rectoria`, `acudiente`, `administracion`).
-- `Architecture.md` y `Security.md` pasan a `docs/manuales/`.
-- En las tarjetas de la biblioteca, las etiquetas de tipo y estado bajan a la parte inferior de la portada para no tapar el encabezado del documento.
-- El libro de Química de OpenStax apunta a la página de lectura en lugar de la ficha del libro.
+- [`6871acd`] El título de la portada y del ingreso ya no habla de roles: «Aprender se siente como explorar un campus» y «Entra a tu campus».
+- [`6871acd`] Las capturas del manual se agrupan por sección (`acceso`, `campus`, `cuenta`, `estudiante`, `docente`, `coordinacion`, `rectoria`, `acudiente`, `administracion`).
+- [`6871acd`] `Architecture.md` y `Security.md` pasan a `docs/manuales/`.
+- [`6871acd`] En las tarjetas de la biblioteca, las etiquetas de tipo y estado bajan a la parte inferior de la portada, con fondo sólido, para no tapar el encabezado del documento.
+- [`6871acd`] El libro de Química de OpenStax apunta a la página de lectura en lugar de la ficha del libro.
+- La imagen Docker ya no incluye las herramientas locales ni el registro de cambios (`.dockerignore`).
 
 ### Documentación
+- Documentación al día con el compañero único y las portadas:
+  - Frontend explica el compañero.
+  - API documenta `thumbnail`.
+  - Datos documenta `cover_url` y las tareas al arrancar.
+  - Operación explica cómo reintentar una portada.
+  - Arquitectura documenta las tareas de inicio de cada módulo.
+  - Seguridad documenta las peticiones salientes y suma el riesgo 13: redirecciones y DNS al generar portadas.
+  - Los manuales técnico, de instalación y de usuario quedan alineados con lo anterior.
 - [`0a076a5`] Manual de usuario con capturas reales por rol, manual técnico, manual de instalación, `Dockerfile` y `docker-compose` (con CockroachDB local opcional) y créditos del equipo.
 - [`8324654`] Documentación técnica actualizada: arquitectura, seguridad, datos, API, frontend, roles y permisos, operación y desarrollo.
 

@@ -132,11 +132,12 @@ Los avisos **no** llegan por socket: la web consulta `/api/notifications` cada 6
 - **IA** (`core/ai/ai.service.ts`): cliente de la API compatible con OpenAI. Orden de modelos: `AI_MODEL_SMART` (solo en llamadas «inteligentes»), luego `AI_MODEL`, luego `AI_FALLBACK_MODELS`. Pasa al siguiente ante 404, 408, 429 o 5xx, respuesta vacía o tiempo agotado (30 s). Si no hay clave o fallan todos, devuelve `null` y la función usa su camino sin IA. Los embeddings (`gemini-embedding-2`, 768 dimensiones) no tienen modelo de respaldo. Cada uso se registra en `ai_usage` (función, modelo, usuario; nunca el contenido).
 - **Correo** (`core/mail`): Resend si hay `RESEND_API_KEY`; siempre deja copia en `email_outbox`, redactada cuando el correo lleva códigos, enlaces de recuperación o claves temporales. Las cuentas `@eduquest.local` se redirigen a `LAB_OTP_INBOX`.
 - **Reportes** (`core/reports`): PDF con pdfkit y Excel con exceljs. Cada reporte toma un número `LK-<año>-<secuencia>` de la secuencia `report_seq`, lo guarda en `report_log` e imprime un QR hacia `/verificar-reporte/<código>`.
+- **Tareas al iniciar los módulos** (`onApplicationBootstrap`): Tutor sincroniza los temas de Mi ruta y Gamification el catálogo de insignias. Si hay Cloudinary, Library crea la guía de ejemplo cuando la biblioteca está vacía y genera hasta 25 portadas pendientes: descarga el PDF externo y dibuja su primera página, o lee la imagen `og:image` del enlace. Fuera de los servicios configurados (base, IA, correo y Cloudinary), estas son las únicas descargas de sitios externos que hace la API (ver [Seguridad](Security.md#protección-web)). Las portadas que faltan también se generan al indexar un PDF nuevo o al publicar un enlace.
 - **Tareas periódicas:** temporizadores dentro del proceso. Assessment cierra salas en vivo abandonadas y Arena barre salas viejas cada 10 minutos; Governance envía el resumen semanal a acudientes cada hora si corresponde.
 
 ## Frontend
 
-React 19 con Vite, TanStack Query y React Router 7. Todas las páginas se cargan bajo demanda. La web importa los esquemas y roles de `packages/contracts` directamente desde el código fuente. El detalle está en [Frontend](../frontend.md).
+React 19 con Vite, TanStack Query y React Router 7. Todas las páginas se cargan bajo demanda. La web importa los esquemas y roles de `packages/contracts` directamente desde el código fuente. El compañero Luka o Luna es un solo componente que acompaña en todas las pantallas (`src/app/guide.tsx`); lee los mismos contadores del campus que el mapa y usa los comandos de voz mediante eventos del navegador. El detalle está en [Frontend](../frontend.md).
 
 ## Decisiones de diseño
 

@@ -27,7 +27,7 @@ API REST bajo `/api`, servida por el mismo proceso que la web. Los esquemas de e
 
 **Límite de intentos.** Las rutas marcadas «límite» aceptan 10 peticiones por IP y sujeto cada 5 minutos y 300 por IP cada 15 minutos.
 
-**Archivos.** Los reportes PDF y Excel se generan en la respuesta (`Content-Disposition: attachment`). Los archivos de la biblioteca no pasan por la API: el navegador pide un ticket firmado (`POST /api/library/uploads/ticket`), sube directo a Cloudinary y luego registra el archivo (`POST /api/library/items`).
+**Archivos.** Los reportes PDF y Excel se generan en la respuesta (`Content-Disposition: attachment`). Los archivos de la biblioteca no pasan por la API: el navegador pide un ticket firmado (`POST /api/library/uploads/ticket`), sube directo a Cloudinary y luego registra el archivo (`POST /api/library/items`). Cada recurso de `GET /api/library/items` trae `thumbnail`. Es la portada generada por la API (`cover_url`, ver [Operación](operacion.md#biblioteca-y-embeddings)); si no la hay, la vista que dibuja Cloudinary (primera página del PDF, la imagen o un fotograma del video); si tampoco, `null`.
 
 **Tiempo real.** Socket.IO en `/socket.io` con el token de acceso en `auth.token`. Eventos en [Arquitectura](manuales/Architecture.md#tiempo-real).
 

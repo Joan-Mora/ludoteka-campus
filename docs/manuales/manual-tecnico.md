@@ -159,7 +159,7 @@ apps/web              Aplicación React
 packages/contracts    Roles y esquemas zod
 db/migrations         Esquema SQL (0000 a 0032)
 db/seeds              Contenido demo y manifiesto de la biblioteca
-docs/manuales         Manuales en Markdown, capturas (img/) y PDF (pdf/, generados con npm run docs:pdf)
+docs/manuales         Manuales en Markdown, capturas (img/) y PDF (pdf/)
 render.yaml           Definición del servicio en Render
 ```
 
@@ -258,6 +258,8 @@ Cada push a la rama principal vuelve a desplegar. Si una migración falla, Rende
 | Cambiar el modelo de IA | Cuando Google retire un modelo o cambie la cuota | [Operación](../operacion.md#cambiar-el-modelo-de-ia) |
 | Rotar secretos | Si se exponen o sale alguien del equipo | [Operación](../operacion.md#rotar-secretos) |
 | Completar los vectores de la biblioteca | Después de cargar archivos si la cuota de IA se agotó | `npm run library:seed -w @eduquest/api` |
+| Reintentar una portada de la biblioteca | Si un recurso quedó sin portada | `UPDATE library_items SET cover_url = NULL WHERE id = '…'` y reiniciar el servicio ([Operación](../operacion.md#biblioteca-y-embeddings)) |
+| Regenerar los manuales en PDF | Después de editar un manual o sus capturas | Lo hace el equipo con su herramienta local; el PDF debe quedar en el mismo commit que el Markdown |
 | Aplicar migraciones | Automático en cada despliegue | `npm run migrate` para hacerlo a mano |
 | Actualizar dependencias | Cada periodo académico | `npm outdated`, actualizar, y correr `typecheck`, `deps:check`, `build` y e2e |
 | Nuevo año lectivo | Una vez al año | El año y sus periodos se crean con SQL (ver abajo); después administración crea grupos, carga docente, matrículas y cursos en Institución |
@@ -338,6 +340,7 @@ Las pruebas corren en cuatro perfiles: iPhone 13, iPad y Safari de escritorio (W
 | Las passkeys fallan tras cambiar de dominio | `APP_PUBLIC_URL` o `CORS_ORIGIN` no coinciden con el dominio | Ajustar ambas variables |
 | El acceso facial no reconoce a nadie | Cambió la llave facial | Restaurar la llave anterior o volver a registrar los rostros |
 | Falla subir a la biblioteca | `CLOUDINARY_URL` vacía o revocada | Revisar la variable en Render |
+| Un recurso de la biblioteca no tiene portada | El sitio no publica `og:image`, el PDF externo no se pudo descargar, o la portada está pendiente (se generan 25 por arranque) | Ver «Sin portada para…» en Render → Logs; reintentar con `cover_url = NULL` |
 | El Observatorio responde error de permisos | El usuario de la base no es administrador del clúster | Usar un usuario administrador en `DATABASE_URL` |
 
 Más casos en [Operación](../operacion.md#solución-de-problemas).

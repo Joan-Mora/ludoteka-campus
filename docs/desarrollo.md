@@ -144,12 +144,10 @@ docker compose -f docker-compose.yml -f docker-compose.cockroach.yml up -d --bui
 E2E_PASSWORD=Ludoteka-Local-2026 npm run manual:shots -w @eduquest/web
 ```
 
-Una captura que falla no detiene las demás; al final se listan las que faltaron. Nunca se toman contra producción. Cada captura cae en la carpeta de su sección (`img/estudiante/`, `img/docente/`, etc.); la regla está en `FOLDERS` dentro del mismo archivo.
-
-**Manuales en PDF:** después de editar cualquier manual o sus capturas, se regeneran los PDF de `docs/manuales/pdf/` desde la raíz:
+Una captura que falla no detiene las demás; al final se listan las que faltaron. Nunca se toman contra producción. Cada captura cae en la carpeta de su sección (`img/estudiante/`, `img/docente/`, etc.); la regla está en `FOLDERS` dentro del mismo archivo. Para repetir solo algunas capturas sin rehacer las demás, se pasan sus nombres en `MANUAL_ONLY` y se filtra la prueba con `-g` (desde `apps/web`):
 
 ```bash
-npm run docs:pdf
+E2E_PASSWORD=Ludoteka-Local-2026 MANUAL_ONLY=estudiante-biblioteca,docente-biblioteca npx playwright test -c playwright.manual.config.ts manual.capture -g "estudiante|docente"
 ```
 
-El script `scripts/docs-pdf.mjs` convierte el Markdown con `marked`, dibuja los diagramas Mermaid y genera los PDF con Chromium de Playwright. Necesita conexión, porque descarga las fuentes y Mermaid. El nombre, la portada y el color de cada PDF están en la lista `DOCS` del mismo script.
+**Manuales en PDF:** los PDF de `docs/manuales/pdf/` los genera el equipo con una herramienta local que no se versiona. Al editar un manual o sus capturas, el PDF regenerado va en el mismo commit que el Markdown.

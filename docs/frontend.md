@@ -10,7 +10,7 @@
 | `src/app/router.tsx` | Rutas; cada página se carga bajo demanda (`lazy`) dentro de un único `Suspense` |
 | `src/app/nav.ts` | `ROUTE_ROLES`, secciones del menú lateral y pestañas del teléfono |
 | `src/app/shell.tsx` | Shell de escritorio o de teléfono según `useLayout()`, más la guía y la oferta de passkey |
-| `src/app/guide.tsx` | Luka o Luna: recorrido guiado y ayuda por edificio |
+| `src/app/guide.tsx` | Luka o Luna, el compañero único de la esquina: menú de ayuda, pendientes, recorrido, consejos y ayuda por edificio |
 | `src/features/*` | Pantallas por área (aula, evaluación, juegos, biblioteca, gobierno…) |
 | `src/shared/*` | Sesión (`auth.tsx`), cliente HTTP (`api.ts`), avisos, voz, rostro, passkeys, catálogo de edificios |
 | `src/ui/*` | Componentes base (`Sheet`, `PageHeader`, `Tile`…) y dibujo isométrico (`iso.tsx`, `campus-mini.tsx`) |
@@ -50,7 +50,29 @@ El inicio es un campus isométrico y cada sección es un edificio. Cada rol tien
 - El mapa crece con el número de edificios: cada uno ocupa una manzana de la cuadrícula, la central es la plaza y las sobrantes son parques (`campusFor`).
 - La barra lateral de escritorio es el mismo mapa en miniatura, con un marcador «Estás aquí» sobre el techo del edificio actual (`roofTop`).
 - Al entrar a un edificio, el dibujo crece hasta la cabecera de la página con la View Transitions API (`src/shared/enter.ts`). Sin la API o con «reducir movimiento», se navega sin animación.
-- Luka o Luna acompaña desde un botón flotante. La primera visita a `/app` hace el recorrido por distritos; dentro de cada edificio explica cómo se usa para ese rol.
+- Luka o Luna es un solo componente (`src/app/guide.tsx`) que vive en la esquina inferior derecha de todas las pantallas; el inicio no tiene una versión aparte. Ver [Compañero](#compañero-luka-o-luna).
+
+## Compañero (Luka o Luna)
+
+- **Dibujo:** `Luka` en `src/features/campus.tsx`, sin fondo, flotando. Con `watch`, `useGaze` mueve los ojos y la cabeza hacia el puntero mediante las variables CSS `--gx`, `--gy` y `--tilt`; con «reducir movimiento» se queda quieto.
+- **Llamar la atención:** saluda y salta cuando sube el total de pendientes o tras 45 s sin actividad. Un globo rojo muestra el total (`useCampusData`).
+- **Al tocarlo** habla y abre un panel con estos modos:
+  - `menu`: consejo del momento (`tipsFor`) y opciones;
+  - `pending`: los tres primeros pendientes y el conteo por edificio;
+  - recorrido por distritos y ayuda del edificio actual.
+- **Opciones del menú:**
+  - qué tengo pendiente;
+  - cómo funciona la pantalla actual;
+  - recorrido del campus;
+  - preguntarme un tema (estudiante) u Observatorio (personal);
+  - orden por voz;
+  - leer la página;
+  - elegir entre Luka y Luna (`/app/ajustes?seccion=companero`).
+- **Voz:** el texto de pendientes sale de `pendingSpeech` (`src/shared/voice-ui.tsx`), el mismo que usa el comando «qué tengo pendiente». La orden por voz llama `startVoice()` (`src/shared/guide.ts`), que emite el evento `eq:voice`; `VoiceNav` lo escucha y abre el micrófono.
+- **Inicio:** en `/app` muestra además una nota corta con el consejo, «Ir ahora» y «Otro consejo». Al cerrarla no vuelve en esa sesión (`sessionStorage['eq.peek.<usuario>']`). La primera visita hace el recorrido solo, salvo en pruebas automatizadas (`navigator.webdriver`).
+- **Silencio:** el botón del altavoz guarda `localStorage['eq.companion.quiet']`; el compañero sigue respondiendo, pero sin hablar.
+- **Desde otras pantallas:** `openGuide('here' | 'tour')` (`src/shared/guide.ts`) emite `eq:guide` y abre la ayuda del edificio o el recorrido. El recorrido visto se recuerda en `localStorage['eq.tour.<usuario>']`.
+- Escape cierra el panel. No aparece dentro de una sala de Arena.
 
 ## Sistema visual
 
@@ -100,7 +122,7 @@ Cuatro niveles de superficie: terreno (fondo), fachada (con textura), tarjeta (l
 |---|---|---|
 | Rostro | `src/shared/face.ts` | `@vladmandic/face-api` cargado bajo demanda; modelos copiados al build por `scripts/copy-face-models.mjs`. Prueba de vida por parpadeo o giro |
 | Passkeys | `src/shared/passkey.tsx` | `@simplewebauthn/browser`. Tras entrar con código, el inicio ofrece activar la llave del dispositivo una vez |
-| Voz | `src/shared/voice.ts`, `voice-ui.tsx` | Web Speech API: dictado, lectura en voz alta y comandos («qué tengo pendiente», «busca en la biblioteca…») |
+| Voz | `src/shared/voice.ts`, `voice-ui.tsx` | Web Speech API: dictado, lectura en voz alta y comandos («qué tengo pendiente», «busca en la biblioteca…»). El micrófono se abre desde la barra superior o desde el compañero (evento `eq:voice`) |
 | PWA | `vite.config.ts` | `vite-plugin-pwa` con actualización automática; manifiesto en español |
 
 ## Build

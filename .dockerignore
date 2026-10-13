@@ -26,6 +26,8 @@ apps/web/e2e/.results
 apps/web/e2e/.report
 apps/web/e2e/shots
 docs
+scripts
+CHANGELOG.md
 
 Dockerfile
 .dockerignore

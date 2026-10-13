@@ -4,7 +4,7 @@ Describe el sistema tal como está en el código; cuando el código cambie, se a
 
 ## Manuales
 
-Cada manual existe en Markdown y en PDF. Los PDF están en [`manuales/pdf/`](manuales/pdf/), comparten el diseño de Ludoteka Campus y se regeneran con `npm run docs:pdf` después de editar el Markdown.
+Cada manual existe en Markdown y en PDF. Los PDF están en [`manuales/pdf/`](manuales/pdf/), comparten el diseño de Ludoteka Campus y el equipo los regenera cada vez que cambia el Markdown.
 
 | Manual | PDF | Para quién |
 |---|---|---|
@@ -45,9 +45,7 @@ apps/web            React 19 + Vite + TanStack Query
 packages/contracts  Roles y esquemas zod compartidos por API y web
 db/migrations       Esquema SQL versionado (se aplica al arrancar la API)
 db/seeds            Contenido demo y manifiesto de la biblioteca
-docs/manuales       Manuales en Markdown, capturas (img/) y PDF (pdf/)
-scripts/docs-pdf.mjs  Genera los PDF de los manuales
-render.yaml         Blueprint del servicio en Render
+docs/manuales       Manuales en Markdown, capturas (img/) y PDF (pdf/)render.yaml         Blueprint del servicio en Render
 CHANGELOG.md        Historial de versiones
 ```
 

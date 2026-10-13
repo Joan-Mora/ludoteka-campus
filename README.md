@@ -210,7 +210,7 @@ Los secretos viven en `apps/api/.env` (ignorado por Git) y, en producción, en e
 | `JWT_SECRET`, `JWT_REFRESH_SECRET` | Firma de sesiones |
 | `APP_PUBLIC_URL`, `CORS_ORIGIN` | Enlaces de correo y origen permitido |
 | `AI_API_KEY`, `AI_BASE_URL`, `AI_MODEL`, `AI_MODEL_SMART`, `AI_FALLBACK_MODELS`, `AI_EMBED_MODEL`, `AI_EMBED_DIM` | Proveedor de IA compatible con OpenAI (por defecto Gemini) |
-| `CLOUDINARY_URL` | Archivos de la biblioteca |
+| `CLOUDINARY_URL` | Archivos y portadas de la biblioteca |
 | `RESEND_API_KEY`, `MAIL_FROM` | Correo de recuperación y código de ingreso. Sin clave, el correo queda en `email_outbox` y en el log |
 | `LAB_OTP_INBOX` | Buzón que recibe los códigos de las cuentas `@eduquest.local` (dominio sin buzón real). Vacía fuera del laboratorio |
 | `FACIAL_*` | Umbral, bloqueo, versión de política y llave AES del acceso facial |
@@ -240,6 +240,8 @@ npm run e2e:prod -w @eduquest/web       # el mismo smoke contra producción (E2E
 
 La clave de las cuentas se toma de `E2E_PASSWORD` o de `SEED_PASSWORD` en `apps/api/.env`. Las capturas quedan en `apps/web/e2e/shots/` (no versionadas).
 
+Las capturas del manual de usuario se regeneran con `npm run manual:shots -w @eduquest/web` contra la pila de Docker con CockroachDB local, nunca contra producción (ver [Desarrollo](docs/desarrollo.md#pruebas)).
+
 ## Despliegue
 
 Un Web Service de Render definido en [`render.yaml`](render.yaml) (plan gratuito, región Virginia, Node 22.14):
@@ -258,15 +260,13 @@ apps/web            React 19 + Vite + TanStack Query (app/, features/, shared/, 
 packages/contracts  Esquemas zod compartidos
 db/migrations       SQL del esquema (0000 a 0032)
 db/seeds            Contenido demo de Matemáticas de sexto y manifiesto de la biblioteca
-docs/               Manuales (usuario, técnico, instalación, arquitectura, seguridad) en Markdown y PDF, y referencia: roles, datos, API, frontend, operación y desarrollo
-scripts/            Utilidades del repositorio (docs-pdf.mjs genera los manuales en PDF)
-render.yaml         Blueprint del Web Service en Render
+docs/               Manuales (usuario, técnico, instalación, arquitectura, seguridad) en Markdown y PDF, y referencia: roles, datos, API, frontend, operación y desarrollorender.yaml         Blueprint del Web Service en Render
 Dockerfile          Imagen de producción (API + web en un contenedor); docker-compose*.yml para levantarla
 ```
 
 ## Documentación
 
-**Manuales** (cada uno en Markdown y en PDF con el diseño de Ludoteka Campus; los PDF están en [`docs/manuales/pdf/`](docs/manuales/pdf/) y se regeneran con `npm run docs:pdf`):
+**Manuales** (cada uno en Markdown y en PDF con el diseño de Ludoteka Campus; los PDF están en [`docs/manuales/pdf/`](docs/manuales/pdf/)):
 
 | Manual | PDF | Contenido |
 |---|---|---|

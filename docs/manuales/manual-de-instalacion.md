@@ -31,7 +31,7 @@ Este manual instala el sistema desde cero: base de datos, servicios externos, se
 | [CockroachDB Cloud](https://cockroachlabs.cloud) | Base de datos (es la única soportada) | Sí |
 | [Render](https://render.com) | Servidor | Sí, o cualquier hospedaje con Node.js y HTTPS |
 | [Resend](https://resend.com) | Correo: códigos de ingreso, claves temporales, avisos | Sí en producción: sin correo nadie puede terminar de ingresar |
-| [Cloudinary](https://cloudinary.com) | Archivos de la biblioteca | Para subir archivos |
+| [Cloudinary](https://cloudinary.com) | Archivos y portadas de la biblioteca | Para subir archivos y mostrar portadas |
 | [Google AI Studio](https://aistudio.google.com) | Clave de Gemini para el tutor, el Observatorio y la búsqueda semántica | No: sin clave, cada función usa su versión sin IA |
 
 **En el equipo de quien instala** (solo para desarrollo o para correr scripts):
@@ -150,7 +150,7 @@ docker compose -f docker-compose.yml -f docker-compose.cockroach.yml up -d --bui
 - La aplicación corre en modo desarrollo: el código de ingreso aparece en pantalla y no sale ningún correo.
 - Las cuentas de laboratorio usan la clave `Ludoteka-Local-2026`, salvo que defina `SEED_PASSWORD` en la terminal.
 - La consola de CockroachDB queda en `http://localhost:8080`.
-- Las claves de IA y Cloudinary se siguen tomando del `.env`: los archivos que suba a la biblioteca van a la cuenta real de Cloudinary.
+- Las claves de IA y Cloudinary se siguen tomando del `.env`: los archivos que suba a la biblioteca y las portadas que se generen van a la cuenta real de Cloudinary.
 
 **Comandos útiles** (con la opción B, agregue `-f docker-compose.yml -f docker-compose.cockroach.yml` después de `docker compose`):
 

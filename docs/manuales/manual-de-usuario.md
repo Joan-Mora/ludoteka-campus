@@ -140,7 +140,7 @@ Cada navegador admite una sola sesión abierta a la vez. Si en el mismo navegado
 - **Barra lateral (izquierda):** el minimapa del campus (el marcador indica dónde está), los edificios de su rol agrupados por zona, y **Notificaciones** y **Ajustes** al final. En la tarjeta inferior están su nombre, su rol y el botón para salir.
 - **Barra superior:** la experiencia acumulada (**XP**, solo estudiantes), el micrófono de comandos de voz, el botón de tema claro u oscuro y la campana de notificaciones.
 - **El mapa:** toque cualquier edificio para entrar. El saludo y el cielo cambian con la hora del día.
-- **Luka (esquina inferior derecha):** en el inicio le muestra un consejo según lo que tiene pendiente, con **Ir ahora** para abrirlo y **Otro consejo** para ver el siguiente. Cierre la nota con la **X**; vuelve a aparecer la próxima vez que entre.
+- **Luka (esquina inferior derecha):** en el inicio le muestra un consejo según lo que tiene pendiente, con **Ir ahora** para abrirlo y **Otro consejo** para ver el siguiente. Cierre la nota con la **X**; no vuelve a salir mientras tenga abierta esa pestaña y reaparece cuando abra el campus de nuevo.
 
 ### En el celular
 
@@ -166,7 +166,7 @@ Tóquelo y le saluda en voz alta con un consejo y estas opciones:
 | **Léeme esta página** | Lee en voz alta el contenido de la pantalla |
 | **Elegir entre Luka y Luna** | Abre **Ajustes › Compañero IA** |
 
-El botón del altavoz en la parte superior silencia a Luka o le devuelve la voz; la preferencia se guarda en ese navegador. **Esc** o la **X** cierran el panel.
+El botón del altavoz, arriba en el panel de Luka, lo silencia o le devuelve la voz; la preferencia se guarda en ese navegador. **Esc** o la **X** cierran el panel.
 
 | Opciones de Luka | Qué tengo pendiente |
 |---|---|

@@ -175,6 +175,6 @@ El rol `ludoteka_reader` solo tiene `SELECT` sobre estas vistas. La consulta lo 
   - corre si `users` está vacía y crea las cuentas de laboratorio, los vínculos de acudiente y el curso de Matemáticas 6.° con 12 lecciones, 12 preguntas y 3 evaluaciones;
   - en cada arranque recrea solo las cuentas de laboratorio que falten;
   - `npm run seed` rehace el contenido del curso demo (borra y vuelve a crear ese curso y sus preguntas).
-- **Sincronizaciones al arrancar:** temas de Mi ruta, catálogo de insignias y, si la biblioteca está vacía y hay Cloudinary, una guía de ejemplo.
+- **Sincronizaciones al arrancar:** temas de Mi ruta, catálogo de insignias y, si hay Cloudinary, dos tareas de biblioteca: una guía de ejemplo si la biblioteca está vacía, y hasta 25 portadas pendientes (`cover_url` nulo).
 - **Biblioteca completa** (`npm run library:seed -w @eduquest/api`): ver [Operación](operacion.md#biblioteca-y-embeddings).
 - **Hueco conocido:** `0022_periods.sql` crea los periodos 2 a 4 solo si el año 2026 ya existe. En una base nueva la migración corre antes de la siembra, así que solo queda el Periodo 1. La API no tiene endpoint de periodos: hoy hay que insertarlos con SQL o mover esa lógica a la siembra.

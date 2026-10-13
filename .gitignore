@@ -13,6 +13,7 @@ apps/*/dist/
 packages/*/dist/
 apps/web/public/models/
 .local/
+/scripts/
 apps/web/e2e/.auth/
 apps/web/e2e/.results/
 apps/web/e2e/.report/

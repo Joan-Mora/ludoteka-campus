@@ -1,32 +1,16 @@
-import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { AnimatePresence, motion } from 'framer-motion';
-import {
-  BookMarked,
-  ChevronRight,
-  Mic,
-  MicOff,
-  Moon,
-  Sparkles,
-  Sun,
-  Sunrise,
-  Sunset,
-  Volume2,
-  VolumeX,
-  type LucideIcon,
-} from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ChevronRight, Moon, Sun, Sunrise, Sunset, type LucideIcon } from 'lucide-react';
 import type { Role } from '@eduquest/contracts';
 import { api } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
-import { matchCommand, useDictation, useSpeech, type VoiceCommand } from '@/shared/voice';
 import { useCompanion, type Companion, type CompanionId } from '@/shared/companion';
 import { campusFor, ROAD, roofTop, type Building, type BuildingKey, type CampusLayout } from '@/shared/buildings';
 import { BuildingShape, iso, mix, pts, type Paint } from '@/ui/iso';
 import { campusView, Roads } from '@/ui/campus-mini';
 import { enterBuilding } from '@/shared/enter';
-import { openGuide } from '@/shared/guide';
-
 export { buildingsFor, campusFor, type BuildingKey } from '@/shared/buildings';
 
 /* ---------- Day / night ---------- */
@@ -351,12 +335,38 @@ const lookOf: Record<CompanionId, { stops: [string, string, string]; limb: strin
   luna: { stops: ['#ff9ad5', '#b45cff', '#5b8cff'], limb: '#9a4ff0', eye: '#7fd6ff', mark: '#fff1a8' },
 };
 
-export function Luka({ mood = 'idle', size = 112, variant = 'luka' }: { mood?: 'idle' | 'talking' | 'listening'; size?: number; variant?: CompanionId }) {
+/** Points the eyes and head toward the pointer by writing CSS variables, without re-rendering. */
+function useGaze(ref: RefObject<SVGSVGElement | null>, on: boolean) {
+  useEffect(() => {
+    const svg = ref.current;
+    if (!on || !svg || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let frame = 0;
+    const look = (event: PointerEvent) => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const box = svg.getBoundingClientRect();
+        const dx = event.clientX - (box.left + box.width / 2);
+        const dy = event.clientY - (box.top + box.height * 0.38);
+        const far = Math.max(1, Math.hypot(dx, dy));
+        const pull = Math.min(1, far / 260);
+        svg.style.setProperty('--gx', `${((dx / far) * 4.5 * pull).toFixed(2)}px`);
+        svg.style.setProperty('--gy', `${((dy / far) * 3.5 * pull).toFixed(2)}px`);
+        svg.style.setProperty('--tilt', `${Math.max(-9, Math.min(9, dx / 60)).toFixed(2)}deg`);
+      });
+    };
+    window.addEventListener('pointermove', look, { passive: true });
+    return () => { cancelAnimationFrame(frame); window.removeEventListener('pointermove', look); };
+  }, [ref, on]);
+}
+
+export function Luka({ mood = 'idle', size = 112, variant = 'luka', watch = false }: { mood?: 'idle' | 'talking' | 'listening'; size?: number; variant?: CompanionId; watch?: boolean }) {
   const look = lookOf[variant];
   const body = `cBody-${variant}`;
   const eye = `cEye-${variant}`;
+  const ref = useRef<SVGSVGElement>(null);
+  useGaze(ref, watch);
   return (
-    <svg className={`luka luka-${mood}`} width={size} height={size * 1.15} viewBox="0 0 120 138" aria-hidden>
+    <svg ref={ref} className={`luka luka-${mood}`} width={size} height={size * 1.15} viewBox="0 0 120 138" aria-hidden>
       <defs>
         <linearGradient id={body} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stopColor={look.stops[0]} />
@@ -367,38 +377,44 @@ export function Luka({ mood = 'idle', size = 112, variant = 'luka' }: { mood?: '
       </defs>
       <ellipse className="luka-shadow" cx="60" cy="132" rx="26" ry="5" fill="rgba(0,0,0,.22)" />
       <g className="luka-float">
-        <line x1="60" y1="24" x2="60" y2="10" stroke={look.limb} strokeWidth="3" strokeLinecap="round" />
-        {variant === 'luna'
-          ? <path className="luka-antenna" d="M63 1.5a7 7 0 1 0 0 13 5.6 5.6 0 1 1 0-13z" fill={look.mark} />
-          : <circle className="luka-antenna" cx="60" cy="8" r="5.5" fill={look.mark} />}
         <rect className="luka-arm l" x="10" y="88" width="16" height="26" rx="8" fill={look.limb} />
         <rect className="luka-arm r" x="94" y="88" width="16" height="26" rx="8" fill={look.limb} />
         <rect x="30" y="82" width="60" height="40" rx="20" fill={`url(#${body})`} />
         <circle cx="60" cy="101" r="9" fill="#140f2e" />
         <text x="60" y="105.5" textAnchor="middle" fontSize="12" fontWeight="800" fill={look.mark} fontFamily="var(--font-display)">L</text>
-        <rect x="16" y="22" width="88" height="66" rx="32" fill={`url(#${body})`} />
-        <rect x="16" y="22" width="88" height="66" rx="32" fill="none" stroke="#fff" strokeOpacity=".25" strokeWidth="2" />
-        <rect x="27" y="36" width="66" height="38" rx="19" fill="#140f2e" />
-        <g className="luka-eyes">
-          <ellipse cx="47" cy="53" rx="6.5" ry="8" fill={`url(#${eye})`} />
-          <ellipse cx="73" cy="53" rx="6.5" ry="8" fill={`url(#${eye})`} />
-          <circle cx="49" cy="50" r="2" fill="#fff" />
-          <circle cx="75" cy="50" r="2" fill="#fff" />
-          {variant === 'luna' && (
-            <g stroke={look.eye} strokeWidth="1.8" strokeLinecap="round">
-              <path d="M40 46l-3-3M43 44.5l-1.5-3.5M80 46l3-3M77 44.5l1.5-3.5" />
+        <g className="luka-head">
+          <line x1="60" y1="24" x2="60" y2="10" stroke={look.limb} strokeWidth="3" strokeLinecap="round" />
+          {variant === 'luna'
+            ? <path className="luka-antenna" d="M63 1.5a7 7 0 1 0 0 13 5.6 5.6 0 1 1 0-13z" fill={look.mark} />
+            : <circle className="luka-antenna" cx="60" cy="8" r="5.5" fill={look.mark} />}
+          <rect x="16" y="22" width="88" height="66" rx="32" fill={`url(#${body})`} />
+          <rect x="16" y="22" width="88" height="66" rx="32" fill="none" stroke="#fff" strokeOpacity=".25" strokeWidth="2" />
+          <rect x="27" y="36" width="66" height="38" rx="19" fill="#140f2e" />
+          <g className="luka-gaze">
+            <g className="luka-eyes">
+              <ellipse cx="47" cy="53" rx="6.5" ry="8" fill={`url(#${eye})`} />
+              <ellipse cx="73" cy="53" rx="6.5" ry="8" fill={`url(#${eye})`} />
+              <circle cx="49" cy="50" r="2" fill="#fff" />
+              <circle cx="75" cy="50" r="2" fill="#fff" />
+              {variant === 'luna' && (
+                <g stroke={look.eye} strokeWidth="1.8" strokeLinecap="round">
+                  <path d="M40 46l-3-3M43 44.5l-1.5-3.5M80 46l3-3M77 44.5l1.5-3.5" />
+                </g>
+              )}
             </g>
-          )}
+            <path className="luka-mouth" d="M51 64 Q60 70 69 64" stroke={look.eye} strokeWidth="3" fill="none" strokeLinecap="round" />
+          </g>
+          <circle cx="34" cy="66" r="5" fill="#ff5d73" opacity=".45" />
+          <circle cx="86" cy="66" r="5" fill="#ff5d73" opacity=".45" />
         </g>
-        <path className="luka-mouth" d="M51 64 Q60 70 69 64" stroke={look.eye} strokeWidth="3" fill="none" strokeLinecap="round" />
-        <circle cx="34" cy="66" r="5" fill="#ff5d73" opacity=".45" />
-        <circle cx="86" cy="66" r="5" fill="#ff5d73" opacity=".45" />
       </g>
     </svg>
   );
 }
 
-function tipsFor(role: string | undefined, counts: Partial<Record<BuildingKey, number>>, buildings: Building[], name: string, phase: Phase, companion: Companion) {
+export const phaseNow = () => phaseOf(bogotaHour());
+
+export function tipsFor(role: string | undefined, counts: Partial<Record<BuildingKey, number>>, buildings: Building[], name: string, phase: Phase, companion: Companion) {
   const tips: { text: string; to?: string }[] = [];
   const by = (k: BuildingKey) => buildings.find((b) => b.key === k);
   const n = (k: BuildingKey) => counts[k] ?? 0;
@@ -442,7 +458,7 @@ function tipsFor(role: string | undefined, counts: Partial<Record<BuildingKey, n
     add('institucion', 'En Institución organizas grados, grupos, asignaturas y la carga de cada docente.');
     add('observatorio', 'Pregúntale al Observatorio cosas como «promedio por grado este periodo»: respondo con una consulta segura de solo lectura.');
   }
-  tips.push({ text: `Soy ${companion.name}, tu ${companion.noun}. Tócame cuando quieras: te explico dónde estás y te llevo a donde necesites.` });
+  tips.push({ text: `Soy ${companion.name}, tu ${companion.noun}. Tócame cuando quieras: te digo qué tienes pendiente, te explico dónde estás y te llevo a donde necesites.` });
   return tips;
 }
 
@@ -478,10 +494,6 @@ export function MobileHub() {
   const counts = data.data?.buildings ?? {};
   const details = data.data?.pending ?? {};
   const firstName = user?.fullName.split(' ')[0] ?? '';
-  const tips = useMemo(() => tipsFor(user?.role, counts, buildings, firstName, phase, companion), [user?.role, counts, buildings, firstName, phase, companion]);
-  const [tip, setTip] = useState(0);
-  const current = tips[tip % tips.length]!;
-  const speech = useSpeech();
   const pending = buildings.filter((b) => (counts[b.key] ?? 0) > 0);
   const PhaseIcon = meta.icon;
 
@@ -493,25 +505,6 @@ export function MobileHub() {
         <div className="hub-pulse">
           {user?.role !== 'guardian' && <span className="campus-chip live"><i /> {data.data?.pulse.online ?? 0} en línea</span>}
           {pulseFor(user?.role, data.data?.pulse, counts).slice(0, 1).map((text) => <span key={text} className="campus-chip">{text}</span>)}
-        </div>
-      </section>
-
-      <section className="hub-companion">
-        <button className="luka-btn" onClick={() => openGuide()} aria-label={`Abrir la guía de ${companion.name}`}>
-          <Luka mood={speech.speaking ? 'talking' : 'idle'} size={64} variant={companion.id} />
-        </button>
-        <div style={{ minWidth: 0, flex: 1 }}>
-          <div className="luka-name"><Sparkles size={13} /> {companion.name}</div>
-          <p>{current.text}</p>
-          <div className="luka-actions">
-            {current.to && <button className="btn sm" onClick={() => navigate(current.to!)}>Ir ahora</button>}
-            {speech.supported && (
-              <button className="btn sm ghost" onClick={() => (speech.speaking ? speech.stop() : speech.speak(current.text))} aria-label="Leer en voz alta">
-                {speech.speaking ? <VolumeX size={14} /> : <Volume2 size={14} />}
-              </button>
-            )}
-            <button className="btn sm ghost" onClick={() => setTip((t) => t + 1)} aria-label="Otro consejo"><BookMarked size={14} /></button>
-          </div>
         </div>
       </section>
 
@@ -586,31 +579,6 @@ export function CampusHome() {
   const data = useCampusData();
   const counts = data.data?.buildings ?? {};
   const firstName = user?.fullName.split(' ')[0] ?? '';
-  const tips = useMemo(() => tipsFor(user?.role, counts, buildings, firstName, phase, companion), [user?.role, counts, buildings, firstName, phase, companion]);
-  const [tip, setTip] = useState(0);
-  const current = tips[tip % tips.length]!;
-  const speech = useSpeech();
-  const [heard, setHeard] = useState<string | null>(null);
-
-  const commands: (VoiceCommand & { say?: string })[] = useMemo(() => [
-    ...buildings.map((b) => ({ label: b.name, say: `Vamos a ${b.name}`, phrases: b.voice, run: () => navigate(b.to) })),
-    { label: 'Ajustes', say: 'Vamos a tus ajustes', phrases: ['ajustes', 'configuracion', 'acceso facial', 'rostro', 'mi cuenta'], run: () => navigate('/app/ajustes') },
-    { label: 'Siguiente consejo', phrases: ['siguiente', 'otro consejo', 'que mas'], run: () => { setHeard(null); setTip((t) => t + 1); } },
-    { label: 'Leer consejo', phrases: ['lee', 'leer', 'repite', 'que dijiste'], run: () => { setHeard(null); speech.speak(current.text); } },
-  ], [buildings, navigate, speech, current.text]);
-
-  const mic = useDictation((text) => {
-    const command = matchCommand(text, commands) as ((typeof commands)[number] | null);
-    if (command) {
-      setHeard(`«${text}» → ${command.label}`);
-      if (command.say) speech.speak(command.say);
-      window.setTimeout(() => command.run(), command.say ? 700 : 0);
-    } else {
-      setHeard(`«${text}» — no reconocí ese lugar. Prueba «abre la biblioteca».`);
-    }
-  });
-
-  const mood = mic.listening ? 'listening' : speech.speaking ? 'talking' : 'idle';
   const cycle: Phase[] = ['dawn', 'day', 'dusk', 'night'];
   const PhaseIcon = meta.icon;
   const time = now.toLocaleTimeString('es-CO', { timeZone: 'America/Bogota', hour: '2-digit', minute: '2-digit' });
@@ -667,31 +635,6 @@ export function CampusHome() {
           </motion.li>
         ))}
       </ul>
-
-      <div className="campus-luka">
-        <button className="luka-btn" onClick={() => openGuide('tour')} title={`Recorrido del campus con ${companion.name}`}><Luka mood={mood} variant={companion.id} /></button>
-        <AnimatePresence mode="wait">
-          <motion.div key={tip + (heard ?? '')} className="luka-bubble" initial={{ opacity: 0, y: 8, scale: 0.97 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: -6 }}>
-            <div className="luka-name"><Sparkles size={13} /> {companion.name} · tu {companion.noun} IA</div>
-            <p>{mic.listening ? (mic.interim || 'Te escucho…') : heard ?? current.text}</p>
-            {mic.error && <p className="err" style={{ fontSize: 12.5 }}>{mic.error}</p>}
-            <div className="luka-actions">
-              {current.to && !heard && <button className="btn sm" onClick={() => navigate(current.to!)}>Ir ahora</button>}
-              {speech.supported && (
-                <button className="btn sm ghost" onClick={() => (speech.speaking ? speech.stop() : speech.speak(heard ?? current.text))} title="Leer en voz alta">
-                  {speech.speaking ? <VolumeX size={14} /> : <Volume2 size={14} />}
-                </button>
-              )}
-              {mic.supported && (
-                <button className={`btn sm ${mic.listening ? '' : 'ghost'}`} onClick={() => { setHeard(null); mic.toggle(); }} title="Comando de voz">
-                  {mic.listening ? <MicOff size={14} /> : <Mic size={14} />}
-                </button>
-              )}
-              <button className="btn sm ghost" onClick={() => { setHeard(null); setTip((t) => t + 1); }} title="Otro consejo"><BookMarked size={14} /></button>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
     </section>
   );
 }

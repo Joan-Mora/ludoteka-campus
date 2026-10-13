@@ -31,7 +31,7 @@
 
 Ludoteka Campus es el campus virtual del Colegio Francisco Arango. Cada persona entra a un mapa con los edificios que necesita según su rol: un estudiante ve sus cursos, juegos y herramientas de estudio; un docente ve su planilla de notas y su banco de preguntas; un acudiente ve el seguimiento de sus hijos. Luka (o Luna), el compañero de inteligencia artificial, acompaña como guía en todo el campus.
 
-![Página de inicio pública](img/publico-inicio.png)
+![Página de inicio pública](img/acceso/publico-inicio.png)
 
 ### Roles
 
@@ -68,11 +68,11 @@ El colegio crea todas las cuentas. Cuando secretaría o administración crea la 
 1. Abra la dirección del campus y pulse **Ingresar**.
 2. Escriba su **Correo institucional** y su **Contraseña**, y pulse **Continuar**.
 
-   ![Pantalla de ingreso](img/ingresar.png)
+   ![Pantalla de ingreso](img/acceso/ingresar.png)
 
 3. Revise su correo: le llega un código de 6 dígitos con el asunto «Tu código de ingreso». Escríbalo en **Código de verificación**; al completar el sexto dígito se envía solo.
 
-   ![Pantalla del código de verificación](img/ingresar-codigo.png)
+   ![Pantalla del código de verificación](img/acceso/ingresar-codigo.png)
 
 Datos útiles sobre el código:
 
@@ -86,18 +86,18 @@ La primera vez que entra, el campus le pide tres cosas.
 
 **1. Crear su contraseña.** Escriba la **Clave temporal (la del correo)**, la **Nueva contraseña** y repítala, y pulse **Guardar y entrar**. La contraseña debe tener al menos 8 caracteres, con al menos una letra y un número.
 
-![Crear la contraseña](img/cambiar-clave.png)
+![Crear la contraseña](img/acceso/cambiar-clave.png)
 
 **2. Aceptar los documentos.** En la pantalla «Antes de entrar» puede abrir los términos y condiciones, la política de tratamiento de datos y el aviso de cookies. Marque la casilla de aceptación y pulse **Aceptar y entrar**.
 
-![Aceptar los documentos legales](img/aceptar-documentos.png)
+![Aceptar los documentos legales](img/acceso/aceptar-documentos.png)
 
 - Si es **acudiente de un menor**, la pantalla muestra «También aceptas en nombre de:» con sus hijos. Mientras usted no acepte, ellos no pueden usar el campus.
 - Si es **estudiante menor de edad** y su acudiente ya tiene cuenta, verá «Falta la autorización de tu acudiente». Pídale que entre con su cuenta y acepte; después pulse **Ya aceptó, revisar de nuevo**.
 
-**3. Recorrido con Luka.** La primera vez que llega a su campus, Luka le muestra cómo moverse en unos pocos pasos. Use **Siguiente** para avanzar o **Saltar** para cerrarlo. Puede repetirlo cuando quiera desde el botón de Luka (abajo a la derecha) › **Recorrido del campus**.
+**3. Recorrido con Luka.** La primera vez que llega a su campus, Luka le muestra cómo moverse en unos pocos pasos. Use **Siguiente** para avanzar o **Saltar** para cerrarlo. Puede repetirlo cuando quiera tocando a Luka (esquina inferior derecha) › **Recorrido del campus**.
 
-![Recorrido de bienvenida](img/guia-recorrido.png)
+![Recorrido de bienvenida](img/campus/guia-recorrido.png)
 
 ### Recuperar la contraseña
 
@@ -106,7 +106,7 @@ La primera vez que entra, el campus le pide tres cosas.
 3. Abra el correo «Recupera tu contraseña de Ludoteka Campus» y pulse **Elegir mi contraseña**. El enlace sirve una sola vez y vence en una hora.
 4. Escriba la nueva contraseña y pulse **Guardar contraseña**. Al cambiarla se cierran sus sesiones en otros equipos y la cuenta se desbloquea.
 
-![Recuperar el acceso](img/recuperar.png)
+![Recuperar el acceso](img/acceso/recuperar.png)
 
 ### Entrar más rápido
 
@@ -121,9 +121,9 @@ Además del equipo recordado, hay dos formas de entrar sin escribir el código.
 3. Pulse **Registrar mi rostro**, mire de frente a la cámara con buena luz y quédese quieto mientras se toman 5 muestras.
 4. Para entrar, en la pantalla de ingreso pulse **Acceso facial** › **Entrar con mi rostro** y haga el gesto que se le pida.
 
-![Registro del acceso facial](img/acceso-facial.png)
+![Registro del acceso facial](img/cuenta/acceso-facial.png)
 
-![Entrar con el rostro](img/ingresar-rostro.png)
+![Entrar con el rostro](img/acceso/ingresar-rostro.png)
 
 El campus no guarda fotos, solo un patrón numérico cifrado. Puede borrarlo cuando quiera con **Borrar mi rostro**. Tras 5 intentos fallidos el acceso facial se bloquea 15 minutos; la contraseña sigue funcionando.
 
@@ -135,11 +135,12 @@ Cada navegador admite una sola sesión abierta a la vez. Si en el mismo navegado
 
 ### La pantalla principal
 
-![Inicio del estudiante](img/estudiante-inicio.png)
+![Inicio del estudiante](img/estudiante/inicio.png)
 
 - **Barra lateral (izquierda):** el minimapa del campus (el marcador indica dónde está), los edificios de su rol agrupados por zona, y **Notificaciones** y **Ajustes** al final. En la tarjeta inferior están su nombre, su rol y el botón para salir.
 - **Barra superior:** la experiencia acumulada (**XP**, solo estudiantes), el micrófono de comandos de voz, el botón de tema claro u oscuro y la campana de notificaciones.
 - **El mapa:** toque cualquier edificio para entrar. El saludo y el cielo cambian con la hora del día.
+- **Luka (esquina inferior derecha):** en el inicio le muestra un consejo según lo que tiene pendiente, con **Ir ahora** para abrirlo y **Otro consejo** para ver el siguiente. Cierre la nota con la **X**; vuelve a aparecer la próxima vez que entre.
 
 ### En el celular
 
@@ -147,19 +148,35 @@ En el celular la barra lateral se reemplaza por una barra inferior con **Inicio*
 
 | Inicio | Menú «Todo Ludoteka» |
 |---|---|
-| ![Inicio en el celular](img/movil-inicio.png) | ![Menú Más en el celular](img/movil-mas.png) |
+| ![Inicio en el celular](img/campus/movil-inicio.png) | ![Menú Más en el celular](img/campus/movil-mas.png) |
 
 ### Luka, su guía
 
-El botón con el personaje, abajo a la derecha, abre la ayuda del edificio donde está: qué es y cómo se usa paso a paso. Desde ahí también puede volver a hacer el **Recorrido del campus**, escuchar la explicación en voz alta y, si es estudiante, **Preguntarme un tema** (abre el tutor).
+Luka vive en la esquina inferior derecha de todas las pantallas. Flota, sigue el puntero con la mirada y saluda con la mano cuando llega algo nuevo o cuando lleva un rato sin actividad. El número rojo sobre él indica cuántas cosas tiene por revisar.
 
-![Ayuda de Luka](img/estudiante-guia.png)
+Tóquelo y le saluda en voz alta con un consejo y estas opciones:
+
+| Opción | Qué hace |
+|---|---|
+| **Qué tengo pendiente** | Lista lo primero que debe atender y los edificios con pendientes; toque cualquiera para abrirlo |
+| **Cómo funciona…** | Explica el edificio donde está, paso a paso |
+| **Recorrido del campus** | Repite el recorrido guiado |
+| **Preguntarme un tema** | Abre el tutor (estudiantes). Docentes y directivos ven **Consultar el Observatorio** |
+| **Darme una orden por voz** | Activa el micrófono de comandos de voz |
+| **Léeme esta página** | Lee en voz alta el contenido de la pantalla |
+| **Elegir entre Luka y Luna** | Abre **Ajustes › Compañero IA** |
+
+El botón del altavoz en la parte superior silencia a Luka o le devuelve la voz; la preferencia se guarda en ese navegador. **Esc** o la **X** cierran el panel.
+
+| Opciones de Luka | Qué tengo pendiente |
+|---|---|
+| ![Opciones de Luka](img/estudiante/guia.png) | ![Pendientes según Luka](img/estudiante/guia-pendientes.png) |
 
 ### Comandos de voz
 
 Pulse el micrófono de la barra superior y hable. Para ver todas las frases, diga «qué puedo decir» o haga clic derecho sobre el micrófono.
 
-![Panel de comandos de voz](img/estudiante-voz.png)
+![Panel de comandos de voz](img/estudiante/voz.png)
 
 Algunos ejemplos:
 
@@ -177,7 +194,7 @@ En los campos de texto largos aparece además el botón **Dictar**, que conviert
 
 La campana muestra cuántos avisos nuevos tiene. **Ver todas** abre la página de notificaciones, donde puede filtrar por **Sin leer** o por tipo (avisos, cartelera, foros, logros, citaciones, mensajes, firmas…). El botón **Ir** de cada aviso lo lleva a donde ocurrió y lo marca como leído.
 
-![Notificaciones](img/notificaciones.png)
+![Notificaciones](img/campus/notificaciones.png)
 
 ### Ajustes
 
@@ -191,13 +208,13 @@ En **Ajustes** hay cinco pestañas:
 | **Apariencia** | Tema claro, oscuro o como el dispositivo |
 | **Privacidad** | Los documentos que aceptó, **Descargar mis datos** y **Solicitar eliminación de mis datos** |
 
-![Ajustes, perfil](img/ajustes-perfil.png)
+![Ajustes, perfil](img/cuenta/ajustes-perfil.png)
 
-![Ajustes, seguridad](img/ajustes-seguridad.png)
+![Ajustes, seguridad](img/cuenta/ajustes-seguridad.png)
 
-![Ajustes, compañero de IA](img/ajustes-companero.png)
+![Ajustes, compañero de IA](img/cuenta/ajustes-companero.png)
 
-![Ajustes, privacidad](img/ajustes-privacidad.png)
+![Ajustes, privacidad](img/cuenta/ajustes-privacidad.png)
 
 Si pierde un equipo, entre desde otro y use **Seguridad › Cerrar sesión en todos los dispositivos**: se cierran todas las sesiones y se olvidan los equipos de confianza.
 
@@ -211,11 +228,11 @@ Sus edificios están en cuatro zonas: **Mi día** (Mis cursos, Mi ruta, Cuaderno
 
 Cada curso es un mapa de aventura con unidades y lecciones. La tarjeta de cada curso muestra cuántas lecciones lleva.
 
-![Mis cursos](img/estudiante-cursos.png)
+![Mis cursos](img/estudiante/cursos.png)
 
 Al abrir un curso verá las unidades y sus lecciones como paradas del camino. La siguiente lección pendiente tiene la etiqueta **¡EMPIEZA!**. A la derecha están la **Liga del grupo** (ranking de XP) y el acceso al tutor.
 
-![Mapa del curso](img/estudiante-curso-mapa.png)
+![Mapa del curso](img/estudiante/curso-mapa.png)
 
 **Completar una lección:**
 
@@ -225,13 +242,13 @@ Al abrir un curso verá las unidades y sus lecciones como paradas del camino. La
 
 | Lección | Lección completada |
 |---|---|
-| ![Lección](img/estudiante-leccion.png) | ![Lección completada](img/estudiante-leccion-completa.png) |
+| ![Lección](img/estudiante/leccion.png) | ![Lección completada](img/estudiante/leccion-completa.png) |
 
 ### Tareas y evaluaciones del curso
 
 En el mapa del curso pulse **Tareas y evaluaciones**. Ahí están las evaluaciones, las tareas y el calendario del curso.
 
-![Tareas y evaluaciones](img/estudiante-aula.png)
+![Tareas y evaluaciones](img/estudiante/aula.png)
 
 **Entregar una tarea:** escriba su respuesta en **Tu entrega** (o use **Dictar**) y pulse **Entregar**. Puede reenviarla; cuando el docente califique verá «Calificada» con la nota. Las entregas son de texto; no se adjuntan archivos.
 
@@ -241,9 +258,9 @@ En el mapa del curso pulse **Tareas y evaluaciones**. Ahí están las evaluacion
 2. Responda cada pregunta tocando una opción. Muévase con **Anterior**, **Siguiente** o los números de arriba. Cada respuesta se guarda al instante y puede cambiarla hasta entregar.
 3. En la última pregunta pulse **Entregar evaluación**.
 
-![Presentando una práctica](img/estudiante-practica.png)
+![Presentando una práctica](img/estudiante/practica.png)
 
-![Resultado de la práctica](img/estudiante-practica-resultado.png)
+![Resultado de la práctica](img/estudiante/practica-resultado.png)
 
 Diferencias entre práctica y examen:
 
@@ -261,19 +278,19 @@ Cuando el docente proyecta un código:
 
 | Escribir el código | Responder |
 |---|---|
-| ![Entrar a la sala](img/estudiante-sala-codigo.png) | ![Pregunta en la sala](img/estudiante-sala-pregunta.png) |
+| ![Entrar a la sala](img/estudiante/sala-codigo.png) | ![Pregunta en la sala](img/estudiante/sala-pregunta.png) |
 
 ### Mi ruta
 
 Mi ruta es un sendero de temas de matemáticas con retos que se ajustan a su nivel. Cada parada muestra su nivel (1 a 10) y sus estrellas.
 
-![Mi ruta](img/estudiante-ruta.png)
+![Mi ruta](img/estudiante/ruta.png)
 
 1. Toque un tema del sendero (o pulse **Dame 3 retos** para que Luka elija).
 2. Pulse **3 retos**. Desde el nivel 4 se habilita el **Reto jefe**.
 3. Escriba su respuesta y pulse **Responder**. Si se atasca, use **Pista** o **Dibujarlo**.
 
-![Tema de Mi ruta](img/estudiante-ruta-tema.png)
+![Tema de Mi ruta](img/estudiante/ruta-tema.png)
 
 Reglas: dos aciertos seguidos suben un nivel y dos fallos seguidos lo bajan. Las estrellas se ganan en los niveles 4, 7 y 10. Vencer al jefe sube un nivel; perder no quita nada. Puede tener hasta 6 retos pendientes.
 
@@ -281,7 +298,7 @@ Reglas: dos aciertos seguidos suben un nivel y dos fallos seguidos lo bajan. Las
 
 El Cuaderno reúne sus apuntes, tarjetas de repaso, sesiones de enfoque y metas.
 
-![Cuaderno](img/estudiante-cuaderno.png)
+![Cuaderno](img/estudiante/cuaderno.png)
 
 - **Apuntes:** pulse **Nuevo apunte**, escriba un título y el contenido (o díctelo) y pulse **Guardar**. Con **Resumir con Luka** obtiene las ideas clave y tarjetas sugeridas que puede crear con **Crear estas tarjetas**.
 - **Repasar:** en la pestaña **Repasar** voltee cada tarjeta con **Ver respuesta** y califíquese con **Otra vez**, **Difícil**, **Bien** o **Fácil**. La tarjeta vuelve cuando está a punto de olvidarla.
@@ -292,13 +309,13 @@ El Cuaderno reúne sus apuntes, tarjetas de repaso, sesiones de enfoque y metas.
 
 Responda el cuestionario «Descubre cómo aprendes» (12 situaciones, unos 3 minutos) y Luka le recomendará uno de seis métodos: Teoría, Ejemplos resueltos, Juegos, Práctica y retos, Visual o Conversación. Puede cambiar de método cuando quiera y repetir el cuestionario una vez por periodo.
 
-![Mi espacio](img/estudiante-mi-espacio.png)
+![Mi espacio](img/estudiante/mi-espacio.png)
 
 ### Laboratorio IA (tutor)
 
 El tutor da pistas paso a paso, nunca la respuesta final. Escriba o dicte su duda y pulse **Pedir pista**. Cuando usa la biblioteca del colegio, cita la guía y la página.
 
-![Tutor de IA](img/estudiante-tutor.png)
+![Tutor de IA](img/estudiante/tutor.png)
 
 - **Voz activada** lee las respuestas en voz alta; **Manos libres** envía lo que dicta sin tocar el botón.
 - Si es menor de edad, su acudiente debe autorizar el tutor desde su cuenta. Si no lo ha hecho, verá «Tu acudiente debe autorizar el tutor con IA desde su panel antes de que puedas usarlo.».
@@ -308,7 +325,7 @@ El tutor da pistas paso a paso, nunca la respuesta final. Escriba o dicte su dud
 
 La Arena es una competencia por equipos que abre el docente.
 
-![Arena](img/estudiante-arena.png)
+![Arena](img/estudiante/arena.png)
 
 1. Escriba el código que proyecta el docente (o escanee el código QR) y pulse **Entrar**. El campus lo asigna a un equipo.
 2. En cada pregunta todos votan. El capitán (rota en cada pregunta) cierra el candado con **Cerrar con…**. Si el capitán no responde, después de 30 segundos cualquiera puede pulsar **Tomar el mando**.
@@ -318,21 +335,21 @@ La Arena es una competencia por equipos que abre el docente.
 
 Diez juegos cortos ligados a sus temas, más un **Reto del día** igual para todo el colegio. Las preguntas y la calificación vienen del servidor.
 
-![Arcade](img/estudiante-arcade.png)
+![Arcade](img/estudiante/arcade.png)
 
 Pulse **Jugar** en la tarjeta de un juego, responda las rondas antes de que se acabe el tiempo y al final verá sus aciertos, puntos y XP. El Arcade da como máximo 150 XP al día, para que el juego no reemplace la clase.
 
-![Partida del Arcade](img/estudiante-arcade-juego.png)
+![Partida del Arcade](img/estudiante/arcade-juego.png)
 
 ### Sala de trofeos
 
 Aquí están su nivel (Aprendiz, Explorador, Estratega, Analista, Mentor), su racha de días, las insignias ganadas y por ganar, las misiones de la semana y sus certificados. La racha crece cada día con actividad (una lección, un reto, un repaso, una partida…) y se rompe si pasa un día sin actividad.
 
-![Sala de trofeos](img/estudiante-trofeos.png)
+![Sala de trofeos](img/estudiante/trofeos.png)
 
 ### Biblioteca
 
-![Biblioteca](img/estudiante-biblioteca.png)
+![Biblioteca](img/estudiante/biblioteca.png)
 
 - **Recursos:** busque por título, etiqueta o dentro de los PDF, y filtre por materia, grado o tipo. El icono de marcador guarda un recurso; en el detalle puede anotar la página y una nota.
 - **Pregúntale a la biblioteca:** Luka responde solo con lo que dicen los documentos y cita la página.
@@ -342,13 +359,13 @@ Aquí están su nivel (Aprendiz, Explorador, Estratega, Analista, Mentor), su ra
 
 En **Novedades** están las circulares del colegio y los avisos de sus cursos. Si un aviso dice «Requiere confirmación», ábralo y pulse **Confirmo que la leí**. En **Foros de curso** puede abrir temas (**Nuevo tema**), responder, mencionar a alguien con @, adjuntar recursos de la biblioteca y reaccionar a las respuestas. El autor de un tema puede marcar la mejor respuesta.
 
-![Cartelera](img/estudiante-cartelera.png)
+![Cartelera](img/estudiante/cartelera.png)
 
 ## 5. Docente
 
 Sus edificios: **Enseñar** (Mis cursos, Planilla de notas, Banco de preguntas), **En clase** (Sala en vivo, Arena), **Comunicación** (Mensajes, Cartelera) y **Recursos** (Biblioteca, Observatorio).
 
-![Inicio del docente](img/docente-inicio.png)
+![Inicio del docente](img/docente/inicio.png)
 
 El inicio resume sus cursos, las entregas por calificar, las salas abiertas y los mensajes sin leer. La tarjeta «Tu semana docente» tiene accesos directos a las tareas más frecuentes.
 
@@ -356,20 +373,20 @@ El inicio resume sus cursos, las entregas por calificar, las salas abiertas y lo
 
 Abra **Mis cursos** y luego el curso. Los cursos los abre administración; usted les agrega unidades y lecciones.
 
-![Mapa del curso, docente](img/docente-curso-mapa.png)
+![Mapa del curso, docente](img/docente/curso-mapa.png)
 
 **Agregar una unidad con sus lecciones:**
 
 1. Baje hasta el formulario **Nueva unidad**, escriba el **Título** y el **Resumen**, y pulse **Agregar unidad**.
 2. El formulario cambia a **Nueva lección** para esa unidad. Escriba el **Título** y el **Contenido** (las líneas en blanco separan párrafos) y pulse **Agregar lección**. Repita para cada lección.
 
-![Formulario de nueva unidad](img/docente-curso-nueva-unidad.png)
+![Formulario de nueva unidad](img/docente/curso-nueva-unidad.png)
 
 Las unidades y lecciones quedan visibles para los estudiantes en cuanto se crean. Revise bien el texto antes de guardar: por ahora no se pueden editar ni borrar desde la pantalla, y las lecciones solo se pueden agregar a la unidad recién creada (ver [Limitaciones conocidas](#12-limitaciones-conocidas)).
 
 ### Banco de preguntas y evaluaciones
 
-![Banco de preguntas](img/docente-banco.png)
+![Banco de preguntas](img/docente/banco.png)
 
 **Crear una pregunta:** en **Nueva pregunta** elija la **Materia**, escriba el **Enunciado**, las opciones **A** a **D**, marque la **Correcta** y, si quiere, una **Explicación** (se muestra en la Arena). Pulse **Guardar pregunta**.
 
@@ -387,37 +404,37 @@ Los exámenes duran 10 minutos, se presentan una vez y en pantalla completa con 
 
 En el mapa del curso pulse **Tareas y evaluaciones**. Desde aquí puede abrir una evaluación en vivo (**Abrir en vivo**), descargar sus resultados (**Excel**) y calificar las entregas de las tareas: escriba la **Nota**, un **Comentario** opcional y pulse **Calificar**.
 
-![Tareas y evaluaciones, docente](img/docente-aula.png)
+![Tareas y evaluaciones, docente](img/docente/aula.png)
 
 ### Sala en vivo
 
 1. Entre a **Sala en vivo**, elija una evaluación de tipo práctica o en vivo y pulse **Abrir sala**.
 
-   ![Elegir la evaluación](img/docente-sala-elegir.png)
+   ![Elegir la evaluación](img/docente/sala-elegir.png)
 
 2. Proyecte el código. Los estudiantes lo escriben en su **Sala en vivo**. Cuando haya al menos uno, pulse **Empezar**.
 
-   ![Código de la sala](img/docente-sala-codigo.png)
+   ![Código de la sala](img/docente/sala-codigo.png)
 
 3. En cada pregunta verá cuántos respondieron y el conteo por opción. Puede **Mostrar respuesta correcta** y luego pasar a la **Siguiente pregunta**. En la última, **Terminar y ver resultados**.
 
-   ![Pregunta en curso](img/docente-sala-pregunta.png)
+   ![Pregunta en curso](img/docente/sala-pregunta.png)
 
 4. Los resultados quedan en la planilla de cada estudiante. **Cerrar sala** termina en cualquier momento y califica lo que cada uno respondió.
 
-   ![Resultados de la sala](img/docente-sala-resultados.png)
+   ![Resultados de la sala](img/docente/sala-resultados.png)
 
 ### Arena
 
 En **Arena** › **Abrir una sala** elija el curso, las preguntas (al azar del banco o de una evaluación), la cantidad, los integrantes por equipo y el tiempo por pregunta. Luego pulse **Abrir proyector** para mostrar el código QR. El botón principal avanza las fases: **Empezar**, **Cerrar candados**, **Mostrar respuesta**, **Ver tabla**, **Siguiente pregunta** y **Revelar podio**. Durante una pregunta puede pausar o sumar 15 segundos.
 
-![Arena, docente](img/docente-arena.png)
+![Arena, docente](img/docente/arena.png)
 
 ### Planilla de notas
 
 La planilla calcula la nota definitiva en escala 1.0 a 5.0. Elija el curso arriba a la derecha.
 
-![Planilla de notas](img/docente-planilla.png)
+![Planilla de notas](img/docente/planilla.png)
 
 | Pestaña | Para qué sirve |
 |---|---|
@@ -429,25 +446,25 @@ La planilla calcula la nota definitiva en escala 1.0 a 5.0. Elija el curso arrib
 
 **Configurar la ponderación:** cada fila tiene un nombre, una fuente (Exámenes, Prácticas, Quiz en vivo, Tareas, Rúbricas o Asistencia) y un peso. Use **Agregar categoría** (hasta 6) y pulse **Guardar ponderación** cuando la suma marque 100 %. La ponderación institucional por defecto es Exámenes 40, Prácticas 20, Tareas 25 y Asistencia 15. **Las notas de la sala en vivo y de las rúbricas solo cuentan si agrega esas categorías.**
 
-![Ponderación](img/docente-planilla-ponderacion.png)
+![Ponderación](img/docente/planilla-ponderacion.png)
 
 **Tomar asistencia:** elija la fecha, pulse **Todos presentes** si aplica y marque a cada estudiante con **P** (presente), **T** (tarde, cuenta media), **A** (ausente) o **E** (excusa, no cuenta). Pulse **Guardar asistencia**.
 
-![Asistencia](img/docente-planilla-asistencia.png)
+![Asistencia](img/docente/planilla-asistencia.png)
 
 **Rúbricas:** pulse **Nueva rúbrica**, escriba el título, los criterios y sus puntos, y pulse **Crear rúbrica**. Luego escriba los puntos de cada estudiante y guarde la fila. La nota es 1 + 4 × (puntos / máximo).
 
-![Rúbricas](img/docente-planilla-rubricas.png)
+![Rúbricas](img/docente/planilla-rubricas.png)
 
 **Alertas tempranas:** se recalculan al abrir la planilla. Aparecen por nota menor a 3.0, 15 % o más de inasistencias, 3 o más eventos de integridad en 60 días, o 14 días sin actividad, y se cierran solas cuando la causa desaparece. Puede marcarlas **En seguimiento** o **Resolver**. Los acudientes vinculados reciben un aviso.
 
-![Alertas](img/docente-planilla-alertas.png)
+![Alertas](img/docente/planilla-alertas.png)
 
 ### Integridad
 
 En **Tareas y evaluaciones › Integridad** ve en tiempo real los eventos de los exámenes del curso: salidas de pantalla completa, cambios de pestaña, pérdida de foco y Esc. La página se actualiza sola cada 4 segundos.
 
-![Integridad del curso](img/docente-integridad.png)
+![Integridad del curso](img/docente/integridad.png)
 
 ### Reportes y certificados
 
@@ -457,7 +474,7 @@ En **Tareas y evaluaciones › Reportes** puede descargar el reporte del curso e
 - **Pedir firma** envía el boletín a rectoría.
 - **Certificar** envía el certificado del curso a rectoría. Requiere un examen del curso con al menos 60 %.
 
-![Reportes del curso](img/docente-reportes.png)
+![Reportes del curso](img/docente/reportes.png)
 
 Cada documento lleva un consecutivo `LK-año-número` y un código QR que cualquiera puede verificar.
 
@@ -465,39 +482,39 @@ Cada documento lleva un consecutivo `LK-año-número` y un código QR que cualqu
 
 Hay dos pestañas: **Familias** (acudientes de sus estudiantes) y **Colegas**. Pulse **Nuevo mensaje**, elija a la persona, escriba y pulse **Enviar**. Cada conversación muestra el nombre y el rol; sus mensajes leídos muestran «· leído».
 
-![Mensajes del docente](img/docente-mensajes.png)
+![Mensajes del docente](img/docente/mensajes.png)
 
-![Nuevo mensaje](img/docente-mensaje-nuevo.png)
+![Nuevo mensaje](img/docente/mensaje-nuevo.png)
 
 ### Cartelera
 
 En **Publicar novedad** escriba el **Título**, el **Mensaje** y la **Categoría**, elija los **Destinatarios** (sus grupos y cursos) y pulse **Publicar**. Puede programar la fecha, fijarla arriba y pedir confirmación de lectura. En sus publicaciones, **Ver acuses** muestra quién la leyó y quién la confirmó. En los foros de sus cursos puede fijar, cerrar o borrar temas, marcar respuestas y pedir a Luka un resumen del hilo.
 
-![Cartelera del docente](img/docente-cartelera.png)
+![Cartelera del docente](img/docente/cartelera.png)
 
 ### Biblioteca
 
-En **Publicar recurso** suba un archivo (hasta 50 MB) o pegue un enlace, complete el título, la materia, el grado, la visibilidad (todo el colegio, un curso o pública) y las etiquetas, y pulse **Publicar**. Los PDF se leen automáticamente para que Luka pueda citarlos. En **Glosario** puede agregar términos.
+En **Publicar recurso** suba un archivo (hasta 50 MB) o pegue un enlace, complete el título, la materia, el grado, la visibilidad (todo el colegio, un curso o pública) y las etiquetas, y pulse **Publicar**. Los PDF se leen automáticamente para que Luka pueda citarlos. La portada de la tarjeta también se genera sola: la primera página del PDF o, en los enlaces, la imagen que publica la página. En **Glosario** puede agregar términos.
 
-![Biblioteca del docente](img/docente-biblioteca.png)
+![Biblioteca del docente](img/docente/biblioteca.png)
 
 ### Observatorio
 
 Haga preguntas en español sobre los datos de sus grupos, por ejemplo «¿Qué preguntas se fallan más?». Escriba o dicte la pregunta y pulse **Consultar**, o toque uno de los ejemplos. El resultado trae una tabla, un gráfico cuando aplica, el SQL ejecutado y el botón **CSV**. Las consultas son de solo lectura y usted solo ve sus grupos.
 
-![Observatorio](img/docente-observatorio.png)
+![Observatorio](img/docente/observatorio.png)
 
 ## 6. Coordinación
 
 Sus edificios: **Seguimiento** (Alertas, Asistencia, Citaciones), **Académico** (Grupos y cursos, Consolidado de notas, Observatorio) y **Comunicación** (Mensajes, Cartelera, Biblioteca).
 
-![Inicio de coordinación](img/coordinacion-inicio.png)
+![Inicio de coordinación](img/coordinacion/inicio.png)
 
 ### Alertas (mesa de seguimiento)
 
 Aquí llegan las alertas académicas y de convivencia de todos los grupos. Filtre por **Activas**, **Abiertas**, **En seguimiento** o **Cerradas**.
 
-![Mesa de seguimiento](img/coordinacion-alertas.png)
+![Mesa de seguimiento](img/coordinacion/alertas.png)
 
 **Trabajar una alerta:**
 
@@ -512,29 +529,29 @@ Aquí llegan las alertas académicas y de convivencia de todos los grupos. Filtr
 3. Elija **Fecha y hora** (al menos 30 minutos en el futuro), **Modalidad** (presencial o virtual), **Lugar o enlace** y **Motivo**.
 4. Pulse **Enviar citación**. Cada acudiente recibe un aviso en el campus y un correo para confirmar.
 
-![Nueva citación](img/coordinacion-nueva-citacion.png)
+![Nueva citación](img/coordinacion/nueva-citacion.png)
 
 En **Citaciones** verá el estado de cada una: «Por confirmar», «Confirmada», «No asistirá», «Realizada» o «Cancelada». Después de la reunión pulse **Realizada** y escriba lo acordado.
 
-![Citaciones](img/coordinacion-citaciones.png)
+![Citaciones](img/coordinacion/citaciones.png)
 
 ### Asistencia consolidada
 
 Muestra las faltas y llegadas tarde por grupo en los últimos 30, 60 o 90 días, y la lista de estudiantes que superan el umbral (3 faltas o 15 % de las clases), con el botón **Citar**.
 
-![Asistencia consolidada](img/coordinacion-asistencia.png)
+![Asistencia consolidada](img/coordinacion/asistencia.png)
 
 ### Consolidado de notas
 
 Es la planilla de notas de cualquier curso en modo consulta: las notas, la asistencia y las rúbricas las registra el docente. En la pestaña **Alertas** sí puede marcar alertas **En seguimiento** o **Resolver**.
 
-![Consolidado de notas](img/coordinacion-consolidado.png)
+![Consolidado de notas](img/coordinacion/consolidado.png)
 
 ### Cartelera y foros
 
 Coordinación puede publicar para **Toda la comunidad**, por rol (estudiantes, acudientes, docentes…) o por grupo y curso, y puede emitir circulares urgentes con confirmación de lectura (los docentes no). En los foros de curso modera (fijar, cerrar, borrar) pero no publica.
 
-![Publicar en la cartelera](img/cartelera-publicar.png)
+![Publicar en la cartelera](img/coordinacion/cartelera-publicar.png)
 
 **Mensajes** y **Observatorio** funcionan igual que para el docente, con dos diferencias: en Mensajes solo aparecen colegas y en el Observatorio se ven todos los grupos.
 
@@ -542,37 +559,37 @@ Coordinación puede publicar para **Toda la comunidad**, por rol (estudiantes, a
 
 Sus edificios: **Dirección** (Tablero, Sala de firmas, Archivo de reportes), **Datos** (Observatorio) y **Comunicación** (Mensajes, Cartelera, Biblioteca).
 
-![Inicio de rectoría](img/rectoria-inicio.png)
+![Inicio de rectoría](img/rectoria/inicio.png)
 
 ### Tablero estratégico
 
 Elija el año o un periodo. Las tarjetas muestran el promedio (1 a 5), la aprobación (estudiantes con 3.0 o más), la asistencia, las alertas y el uso de IA, con flechas que comparan con el periodo anterior. Debajo están el promedio por grado, el uso de IA por función, el riesgo por tipo y la comparación entre grupos.
 
-![Tablero estratégico](img/rectoria-tablero.png)
+![Tablero estratégico](img/rectoria/tablero.png)
 
 ### Sala de firmas
 
 Aquí llegan los certificados (los pide el docente cuando el estudiante aprueba el examen del curso) y los boletines. Pulse **Ver** para revisar el PDF y luego **Firmar** o **Devolver**; al devolver se le pide una nota para quien lo solicitó. Los certificados firmados se pueden verificar públicamente con su código QR.
 
-![Sala de firmas](img/rectoria-firmas.png)
+![Sala de firmas](img/rectoria/firmas.png)
 
 ### Comunicados oficiales
 
 Lista los comunicados ya emitidos. **Ir a la cartelera** abre el formulario de publicación con la casilla «Comunicado oficial de Rectoría» marcada; el comunicado aparece en la cartelera con ese sello.
 
-![Comunicados oficiales](img/rectoria-comunicados.png)
+![Comunicados oficiales](img/rectoria/comunicados.png)
 
 ### Archivo de reportes
 
 El historial de todos los documentos emitidos con su consecutivo verificable, y los reportes institucionales **Uso de biblioteca e IA** y **Usuarios de la institución** para 7, 30 o 90 días.
 
-![Archivo de reportes](img/rectoria-reportes.png)
+![Archivo de reportes](img/rectoria/reportes.png)
 
 ## 8. Acudiente
 
 Sus edificios: **Familia** (Mis hijos, Mensajes) y **Colegio** (Cartelera, Biblioteca).
 
-![Inicio del acudiente](img/acudiente-inicio.png)
+![Inicio del acudiente](img/acudiente/inicio.png)
 
 ### Mis hijos
 
@@ -585,7 +602,7 @@ Por cada hijo verá:
 - **Docentes**: toque uno para escribirle.
 - **Boletín PDF** para descargar el boletín.
 
-![Seguimiento familiar](img/acudiente-hijos.png)
+![Seguimiento familiar](img/acudiente/hijos.png)
 
 La casilla **Resumen semanal por correo (viernes)** le envía cada viernes un resumen; **Enviármelo ahora** lo envía de inmediato.
 
@@ -597,7 +614,7 @@ Al final de la tarjeta de cada hijo está el bloque **Autorizaciones**. Pulse **
 - **Acceso con reconocimiento facial.** Sin ella, un menor no puede registrar su rostro. Revocar borra el patrón facial guardado.
 - **Tratamiento de datos académicos.**
 
-![Autorizaciones](img/acudiente-autorizaciones.png)
+![Autorizaciones](img/acudiente/autorizaciones.png)
 
 Cada decisión queda registrada con fecha.
 
@@ -605,7 +622,7 @@ Cada decisión queda registrada con fecha.
 
 Pulse **Nuevo mensaje**, elija al docente (aparecen agrupados por hijo con sus materias), escriba y pulse **Enviar**. El docente recibe un aviso y un correo.
 
-![Mensajes del acudiente](img/acudiente-mensajes.png)
+![Mensajes del acudiente](img/acudiente/mensajes.png)
 
 ### Cartelera
 
@@ -615,7 +632,7 @@ Usted ve las **Novedades** dirigidas a acudientes o a los grupos de sus hijos. S
 
 Sus edificios: **Administración** (Usuarios, Institución), **Datos** (Observatorio) y **Comunicación** (Mensajes, Cartelera, Biblioteca).
 
-![Inicio de administración](img/admin-inicio.png)
+![Inicio de administración](img/administracion/inicio.png)
 
 ### Orden recomendado al iniciar el año
 
@@ -629,7 +646,7 @@ El año lectivo y sus periodos no se crean desde la pantalla; los prepara el equ
 
 ### Usuarios
 
-![Usuarios](img/admin-usuarios.png)
+![Usuarios](img/administracion/usuarios.png)
 
 **Crear una cuenta:**
 
@@ -639,7 +656,7 @@ El año lectivo y sus periodos no se crean desde la pantalla; los prepara el equ
 4. Marque **Es menor de edad** si aplica (viene marcada para estudiantes).
 5. Pulse **Crear y enviar acceso**. La persona recibe por correo su clave temporal.
 
-![Nueva cuenta](img/admin-nueva-cuenta.png)
+![Nueva cuenta](img/administracion/nueva-cuenta.png)
 
 **Importar desde Excel:**
 
@@ -648,7 +665,7 @@ El año lectivo y sus periodos no se crean desde la pantalla; los prepara el equ
 3. Pulse **Elegir archivo** y suba el .xlsx o .csv (máximo 2000 filas). Antes de crear nada verá una revisión fila por fila con los errores y advertencias.
 4. Pulse **Crear n cuentas**. Las filas con errores se omiten.
 
-![Importar usuarios](img/admin-importar.png)
+![Importar usuarios](img/administracion/importar.png)
 
 Si desmarca el envío de correos, el campus le deja descargar las claves temporales en un CSV **una sola vez**: entréguelas en sobre cerrado y destruya el archivo después.
 
@@ -662,13 +679,13 @@ Si desmarca el envío de correos, el campus le deja descargar las claves tempora
 | **Desactivar** / **Reactivar** | Bloquea o devuelve el acceso; reactivar también desbloquea la cuenta |
 | **Datos** | Corregir nombre, rol o la marca de menor de edad |
 
-![Gestionar una cuenta](img/admin-gestionar.png)
+![Gestionar una cuenta](img/administracion/gestionar.png)
 
 **Solicitudes de eliminación de datos:** cuando alguien la pide desde Ajustes, aparece en Usuarios la tarjeta «Solicitudes de eliminación de datos» con el plazo de 15 días hábiles. Marque **Atendida** cuando haya desactivado la cuenta o suprimido los datos (el campus no borra nada automáticamente), o **Rechazar** indicando el motivo legal.
 
 ### Institución
 
-![Institución](img/admin-institucion.png)
+![Institución](img/administracion/institucion.png)
 
 **Estructura:**
 
@@ -677,11 +694,11 @@ Si desmarca el envío de correos, el campus le deja descargar las claves tempora
 
 **Acudientes:** la tabla de vínculos muestra cada acudiente con su estudiante, parentesco y estado. Use **Nuevo vínculo** (acudiente, estudiante, parentesco) › **Vincular**, o **Revocar** para quitarlo.
 
-![Vínculos de acudientes](img/admin-acudientes.png)
+![Vínculos de acudientes](img/administracion/acudientes.png)
 
 **Cursos:** **Nuevo curso** (título, descripción, materia, grupo y año) › **Abrir curso**. El curso queda publicado de inmediato, con administración como docente a cargo.
 
-![Cursos](img/admin-cursos.png)
+![Cursos](img/administracion/cursos.png)
 
 ## 10. Preguntas frecuentes
 

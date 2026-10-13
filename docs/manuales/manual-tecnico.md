@@ -82,7 +82,7 @@ Hay seis roles: Estudiante, Docente, Coordinación, Rectoría, Acudiente y Admin
 | IA | Proveedor compatible con la API de OpenAI | Google Gemini (AI Studio) |
 | Correo | Resend con dominio verificado | Resend |
 
-Solo hay un proceso: no se necesita Redis, colas ni servidor de archivos. Con más de una instancia el sistema no funciona bien (ver [Límites conocidos](../Architecture.md#límites-conocidos)).
+Solo hay un proceso: no se necesita Redis, colas ni servidor de archivos. Con más de una instancia el sistema no funciona bien (ver [Límites conocidos](Architecture.md#límites-conocidos)).
 
 ## 4. Arquitectura
 
@@ -124,7 +124,7 @@ flowchart LR
 
 **Tiempo real:** Socket.IO para la sala en vivo, la Arena y las alertas de integridad. Las pantallas en vivo también consultan cada pocos segundos por si el socket se cae. Los avisos se consultan cada 60 s.
 
-El detalle (arranque, tabla de módulos, eventos y decisiones de diseño) está en [Arquitectura](../Architecture.md).
+El detalle (arranque, tabla de módulos, eventos y decisiones de diseño) está en [Arquitectura](Architecture.md).
 
 ## 5. Tecnologías
 
@@ -157,8 +157,9 @@ apps/web              Aplicación React
   src/ui/             Componentes base y dibujo isométrico
   e2e/                Pruebas Playwright
 packages/contracts    Roles y esquemas zod
-db/migrations         Esquema SQL (0000 a 0031)
+db/migrations         Esquema SQL (0000 a 0032)
 db/seeds              Contenido demo y manifiesto de la biblioteca
+docs/manuales         Manuales en Markdown, capturas (img/) y PDF (pdf/, generados con npm run docs:pdf)
 render.yaml           Definición del servicio en Render
 ```
 
@@ -215,7 +216,7 @@ Tablas por módulo, migraciones y particularidades de CockroachDB: [Modelo de da
 | Datos personales | Ley 1581: aceptación versionada, autorización del acudiente para menores, descarga y solicitud de eliminación |
 | Secretos | Solo en variables de entorno; nunca en el repositorio |
 
-El detalle y la lista de riesgos conocidos pendientes están en [Seguridad](../Security.md).
+El detalle y la lista de riesgos conocidos pendientes están en [Seguridad](Security.md).
 
 ## 9. Configuración
 

@@ -57,13 +57,22 @@ export class Cloudinary {
     return expected === signature && publicId.startsWith(`${LIBRARY_FOLDER}/`);
   }
 
-  /** Server-side signed upload, used only to seed the demo guide. */
-  async uploadBuffer(file: Buffer, filename: string, mime: string) {
+  /** Server-side signed upload: seeded guides and the covers of external resources. */
+  uploadBuffer(file: Buffer | Uint8Array, filename: string, mime: string) {
+    return this.upload((form) => form.append('file', new Blob([new Uint8Array(file)], { type: mime }), filename));
+  }
+
+  /** Cloudinary downloads the file itself; used for the og:image of linked pages. */
+  uploadRemote(url: string) {
+    return this.upload((form) => form.append('file', url));
+  }
+
+  private async upload(attach: (form: FormData) => void) {
     const { cloudName, apiKey } = this.require();
     const timestamp = Math.floor(Date.now() / 1000);
     const params = { folder: LIBRARY_FOLDER, timestamp, use_filename: 'true', unique_filename: 'true' };
     const form = new FormData();
-    form.append('file', new Blob([new Uint8Array(file)], { type: mime }), filename);
+    attach(form);
     for (const [key, value] of Object.entries(params)) form.append(key, String(value));
     form.append('api_key', apiKey);
     form.append('signature', this.sign(params));

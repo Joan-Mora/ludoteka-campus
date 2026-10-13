@@ -215,7 +215,7 @@ async function main() {
       if (doc.kind === 'pdf') {
         await library.ingest(itemId, null, { glossary: false });
         await pause(PACE_MS);
-      }
+      } else await library.makeCover(itemId);
       const status = await db.selectFrom('library_items').select('status').where('id', '=', itemId).executeTakeFirstOrThrow();
       log(`${status.status === 'published' ? '✓' : '✗'} ${doc.title}`);
     }

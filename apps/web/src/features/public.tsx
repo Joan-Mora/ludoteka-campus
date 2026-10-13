@@ -152,11 +152,11 @@ export function Landing() {
                 <Zap size={14} /> Campus virtual · Colegio Francisco Arango
               </span>
               <h1 className="display" style={{ fontSize: 'clamp(44px, 6vw, 80px)', margin: '22px 0 20px' }}>
-                Un campus distinto <span className="text-grad">para cada rol.</span>
+                Aprender se siente como <span className="text-grad">explorar un campus.</span>
               </h1>
               <p className="landing-lead" style={{ fontSize: 19, lineHeight: 1.6, maxWidth: 560 }}>
-                Estudiantes, docentes, coordinación, rectoría, familias y administración entran a su propio mapa:
-                solo los edificios que necesitan, con Luka como guía en cada paso.
+                Clases, notas, retos y comunicación del colegio en un mapa que recorres edificio por edificio.
+                Cada persona entra solo a lo que necesita, con Luka como guía en cada paso.
               </p>
               <div className="row g-12 wrap" style={{ marginTop: 32 }}>
                 <EnterLink className="btn lg" />
@@ -338,8 +338,8 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
         <div className="orb" style={{ position: 'absolute', width: 380, height: 380, borderRadius: '50%', background: 'radial-gradient(circle, rgba(255,93,115,.4), transparent 70%)', bottom: -140, left: -100 }} />
         <Brand />
         <div style={{ position: 'relative' }}>
-          <h2 className="display" style={{ fontSize: 'clamp(34px, 3.4vw, 50px)' }}>Un campus <span className="text-grad">para cada rol.</span></h2>
-          <p className="auth-lead">Al entrar llegas a tu propio campus: los edificios, el menú y las herramientas cambian según quién eres en el colegio.</p>
+          <h2 className="display" style={{ fontSize: 'clamp(34px, 3.4vw, 50px)' }}>Entra a <span className="text-grad">tu campus.</span></h2>
+          <p className="auth-lead">Clases, notas, mensajes y retos del Colegio Francisco Arango, organizados como un campus que recorres edificio por edificio.</p>
           <div className="auth-roles">
             {ROLE_SHOWCASE.map((r) => <span key={r.label}><i style={{ background: r.color }} />{r.label}</span>)}
           </div>

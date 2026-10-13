@@ -240,9 +240,11 @@ button.chip:hover { border-color: var(--violet); }
 .lib-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
 .lib-cover { position: relative; height: 140px; display: grid; place-items: center; background: linear-gradient(135deg, rgba(124,92,255,.14), rgba(58,184,255,.12)); }
 .lib-cover img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-.lib-kind, .lib-status { position: absolute; left: 10px; background: rgba(255,255,255,.95); box-shadow: 0 4px 12px -4px rgba(0,0,0,.25); }
-.lib-kind { top: 10px; }
-.lib-status { bottom: 10px; }
+.lib-cover:has(img)::after { content: ''; position: absolute; inset: auto 0 0; height: 52px; background: linear-gradient(transparent, rgba(20, 15, 46, .32)); pointer-events: none; }
+.lib-cover .chip.lib-kind, .lib-cover .chip.lib-status { position: absolute; z-index: 1; bottom: 10px; background: #fff; box-shadow: 0 4px 12px -4px rgba(0,0,0,.3); }
+[data-theme='dark'] .lib-cover .chip.lib-kind, [data-theme='dark'] .lib-cover .chip.lib-status { background: #1d1838; }
+.lib-kind { left: 10px; }
+.lib-status { right: 10px; }
 .lib-save { position: absolute; right: 10px; top: 10px; width: 34px; height: 34px; border-radius: 11px; border: 0; display: grid; place-items: center; background: rgba(255,255,255,.92); color: var(--ink-2); cursor: pointer; box-shadow: 0 4px 12px -4px rgba(0,0,0,.25); }
 .lib-save.on { color: #b07800; background: #fff3c7; }
 .lib-title { font-weight: 800; font-size: 15px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
@@ -850,8 +852,6 @@ html.scrolling .mini-campus *, html.scrolling .facade *,
 .iso-label-ico { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; color: #fff; }
 .iso-count { min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--coral); color: #fff; font-size: 11px; font-weight: 800; display: inline-grid; place-items: center; }
 
-.campus-luka { position: absolute; left: 24px; bottom: 22px; display: flex; align-items: flex-end; gap: 10px; z-index: 3; max-width: min(440px, 60%); }
-.luka-btn { border: 0; background: none; padding: 0; flex: none; }
 .luka { flex: none; overflow: visible; }
 .luka-bubble { position: relative; background: rgba(255, 255, 255, .95); color: #16132d; border-radius: 20px 20px 20px 6px; padding: 12px 14px; box-shadow: 0 18px 36px -14px rgba(20, 15, 46, .5); margin-bottom: 40px; }
 .luka-bubble p { font-size: 14px; line-height: 1.5; font-weight: 600; }
@@ -959,7 +959,6 @@ html.scrolling .mini-campus *, html.scrolling .facade *,
   .campus-map { display: none; }
   .campus-list { display: block; }
   .campus-hud { justify-content: flex-start; }
-  .campus-luka { position: relative; left: auto; bottom: auto; max-width: none; margin-top: 14px; }
   .luka-bubble { margin-bottom: 26px; }
   .campus-sun, .campus-moon { width: 50px; height: 50px; top: 20px; right: 18px; }
 }
@@ -1364,8 +1363,6 @@ html.scrolling .mini-campus *, html.scrolling .facade *,
 .hub-hero.phase-night, .hub-hero.phase-dusk { color: #fff; }
 .hub-hero h1 { font-size: 27px; letter-spacing: -0.03em; margin: 10px 0 10px; }
 .hub-pulse { display: flex; gap: 8px; flex-wrap: wrap; }
-.hub-companion { display: flex; gap: 12px; align-items: flex-start; padding: 14px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow-sm, 0 8px 24px -16px rgba(20, 15, 46, .3)); }
-.hub-companion p { font-size: 14px; line-height: 1.5; font-weight: 600; margin: 0; }
 .hub-title { font-size: 17px; margin: 0 0 10px; letter-spacing: -0.01em; }
 .hub-row { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border-radius: 18px; background: var(--surface); border: 1px solid var(--line); text-align: left; color: var(--ink); }
 .hub-row .campus-list-text { flex: 1; min-width: 0; }
@@ -1732,14 +1729,44 @@ html.scrolling .mini-campus *, html.scrolling .facade *,
 .m-icon.mic-on { background: rgba(255, 77, 106, .14); }
 
 /* ---------- Companion guide ---------- */
-.guide-fab { position: fixed; right: calc(var(--safe-right, 0px) + 22px); bottom: calc(var(--safe-bottom, 0px) + 22px); z-index: 40; width: 62px; height: 62px; border-radius: 22px; display: grid; place-items: center; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 14px 30px -12px rgba(40, 22, 120, .45); transition: transform .15s ease, box-shadow .15s ease; }
-.guide-fab:hover { transform: translateY(-2px); box-shadow: 0 18px 34px -12px rgba(40, 22, 120, .55); }
-.guide-fab.on { border-color: var(--violet); }
-.guide-fab .luka { margin-top: 4px; }
-.guide-fab .luka .luka-float { animation: none; }
-.m-shell ~ .guide-fab { bottom: calc(var(--safe-bottom, 0px) + 84px); right: calc(var(--safe-right, 0px) + 12px); width: 54px; height: 54px; border-radius: 18px; }
-.guide-pop { position: fixed; right: calc(var(--safe-right, 0px) + 22px); bottom: calc(var(--safe-bottom, 0px) + 96px); z-index: 41; width: min(380px, calc(100vw - 24px)); max-height: min(560px, calc(100dvh - 140px)); overflow: auto; overscroll-behavior: contain; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 24px 60px -18px rgba(20, 12, 70, .45); }
-.m-shell ~ .guide-pop { right: 12px; left: 12px; width: auto; bottom: calc(var(--safe-bottom, 0px) + 148px); }
+.guide-fab { position: fixed; right: calc(var(--safe-right, 0px) + 16px); bottom: calc(var(--safe-bottom, 0px) + 6px); z-index: 40; padding: 0; border: 0; background: none; cursor: pointer; line-height: 0; filter: drop-shadow(0 10px 14px rgba(40, 22, 120, .32)); transition: transform .2s ease, filter .2s ease; -webkit-tap-highlight-color: transparent; }
+.guide-fab:hover { transform: translateY(-3px) scale(1.05); filter: drop-shadow(0 16px 20px rgba(40, 22, 120, .42)); }
+.guide-fab:active { transform: scale(.96); }
+.guide-fab:focus-visible { outline: 3px solid var(--violet); outline-offset: 2px; border-radius: 28px; }
+.guide-fab.on .luka-antenna { animation-duration: .6s; }
+.guide-fab.nudge .luka { animation: lukaHop .6s ease 2; }
+.guide-fab.nudge .luka-arm.r { animation: wave .3s ease-in-out 8 alternate; transform-origin: 102px 90px; }
+.guide-badge { position: absolute; top: 2px; right: 0; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px; display: grid; place-items: center; background: #ff5d73; color: #fff; font-size: 12px; font-weight: 800; line-height: 1; box-shadow: 0 0 0 3px var(--bg); }
+.luka-head { transform: rotate(var(--tilt, 0deg)); transform-origin: 60px 84px; transition: transform .3s ease-out; }
+.luka-gaze { transform: translate(var(--gx, 0px), var(--gy, 0px)); transition: transform .15s ease-out; }
+@keyframes lukaHop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-12px); } }
+.m-shell ~ .guide-fab { right: calc(var(--safe-right, 0px) + 8px); bottom: calc(var(--safe-bottom, 0px) + 70px); }
+.m-shell.fullscreen ~ .guide-fab { bottom: calc(var(--safe-bottom, 0px) + 8px); }
+.guide-peek { position: fixed; right: calc(var(--safe-right, 0px) + 112px); bottom: calc(var(--safe-bottom, 0px) + 46px); z-index: 39; width: min(340px, calc(100vw - 140px)); padding: 14px 16px; border-radius: 20px 20px 6px 20px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 20px 44px -18px rgba(20, 12, 70, .45); }
+.guide-peek p { margin: 4px 0 8px; color: var(--ink-2); font-size: 14px; line-height: 1.5; font-weight: 600; }
+.guide-peek .guide-who { display: block; padding-right: 28px; }
+.guide-peek-x { position: absolute; top: 8px; right: 8px; }
+.m-shell ~ .guide-peek { right: 12px; left: 12px; width: auto; bottom: calc(var(--safe-bottom, 0px) + 150px); border-radius: 20px 20px 6px 20px; }
+.guide-pop { position: fixed; right: calc(var(--safe-right, 0px) + 22px); bottom: calc(var(--safe-bottom, 0px) + 118px); z-index: 41; width: min(380px, calc(100vw - 24px)); max-height: min(600px, calc(100dvh - 150px)); overflow: auto; overscroll-behavior: contain; border-radius: 22px 22px 8px 22px; background: var(--surface); border: 1px solid var(--line); box-shadow: 0 24px 60px -18px rgba(20, 12, 70, .45); }
+.m-shell ~ .guide-pop { right: 12px; left: 12px; width: auto; bottom: calc(var(--safe-bottom, 0px) + 150px); max-height: calc(100dvh - 230px); }
+.m-shell.fullscreen ~ .guide-pop { bottom: calc(var(--safe-bottom, 0px) + 90px); }
+.guide-tip { display: flex; gap: 10px; align-items: flex-start; padding: 12px; margin: 4px 0 14px; border-radius: 16px; background: color-mix(in srgb, var(--violet) 10%, transparent); color: var(--violet-2); }
+.guide-tip > svg { flex: none; margin-top: 2px; }
+.guide-body .guide-tip p { margin: 0 0 4px; color: var(--ink); font-size: 14px; font-weight: 600; }
+.guide-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.guide-grid button { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; width: 100%; height: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface-2); color: inherit; font: inherit; text-align: left; cursor: pointer; transition: border-color .15s ease, transform .15s ease, box-shadow .15s ease; }
+.guide-grid button:hover { border-color: var(--violet); transform: translateY(-2px); box-shadow: 0 10px 20px -14px rgba(60, 30, 160, .5); }
+.guide-grid b { font-size: 13.5px; line-height: 1.3; }
+.guide-grid small { margin-top: -3px; color: var(--muted); font-size: 12px; line-height: 1.3; }
+.guide-menu { list-style: none; margin: 0 0 12px; padding: 0; display: grid; gap: 6px; }
+.guide-menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 10px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface-2); color: inherit; font: inherit; text-align: left; cursor: pointer; transition: border-color .15s ease, transform .15s ease; }
+.guide-menu button:hover { border-color: var(--violet); transform: translateX(2px); }
+.guide-menu button > span:nth-child(2) { flex: 1; min-width: 0; }
+.guide-menu b { display: block; font-size: 14px; }
+.guide-menu small { display: block; color: var(--muted); font-size: 12.5px; line-height: 1.35; }
+.guide-menu button > svg:last-child { flex: none; color: var(--muted); }
+.guide-ico.violet { background: linear-gradient(135deg, #8b6cff, #6a45f0); }
+.guide-count { flex: none; min-width: 26px; height: 26px; padding: 0 8px; border-radius: 13px; display: grid; place-items: center; background: #ff5d73; color: #fff; font-size: 12.5px; font-weight: 800; }
 .guide-head { display: flex; align-items: center; gap: 6px; padding: 12px 12px 0 18px; }
 .guide-who { flex: 1; font-size: 12.5px; font-weight: 800; letter-spacing: .02em; color: var(--violet-2); text-transform: uppercase; }
 .icon-btn.sm { width: 32px; height: 32px; border-radius: 10px; }
@@ -1754,7 +1781,7 @@ html.scrolling .mini-campus *, html.scrolling .facade *,
 .guide-list small { display: block; color: var(--muted); font-size: 12.5px; line-height: 1.4; }
 .guide-how { margin: 0 0 12px; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; color: var(--ink-2); line-height: 1.45; }
 .guide-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 6px; }
-@media (prefers-reduced-motion: reduce) { .guide-fab { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .guide-fab, .luka-head, .luka-gaze { transition: none; } .guide-fab.nudge .luka { animation: none; } }
 
 /* ---------- Sala en vivo (docente) ---------- */
 .live-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 22px; }
@@ -1822,6 +1849,6 @@ html.scrolling .mini-campus *, html.scrolling .facade *,
 
 /* Oferta de llave de acceso tras el ingreso */
 .passkey-offer { position: fixed; left: calc(var(--safe-left, 0px) + 22px); bottom: calc(var(--safe-bottom, 0px) + 22px); z-index: 41; display: flex; gap: 14px; align-items: flex-start; width: min(400px, calc(100vw - 120px)); padding: 16px 18px; box-shadow: 0 18px 40px -16px rgba(40, 22, 120, .45); animation: offer-in .3s ease both; }
-.m-shell ~ .passkey-offer { left: 12px; right: 78px; width: auto; bottom: calc(var(--safe-bottom, 0px) + 84px); }
+.m-shell ~ .passkey-offer { left: 12px; right: 84px; width: auto; bottom: calc(var(--safe-bottom, 0px) + 84px); }
 @keyframes offer-in { from { opacity: 0; transform: translateY(12px); } }
 @media (prefers-reduced-motion: reduce) { .passkey-offer { animation: none; } }

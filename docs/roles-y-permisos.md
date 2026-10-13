@@ -16,7 +16,7 @@ Hay seis roles, definidos en `packages/contracts` (`ROLES`). Cada cuenta tiene e
 | Capa | Mecanismo | Archivo |
 |---|---|---|
 | API, por ruta | `@Roles(...)` con `RolesGuard` global; sin `@Roles` basta con sesión | `apps/api/src/core/auth/guards.ts` |
-| API, por dato | Filtros por relación en cada servicio (docente–curso, acudiente–hijo, estudiante–matrícula) | Ver [Seguridad](Security.md#autorización) |
+| API, por dato | Filtros por relación en cada servicio (docente–curso, acudiente–hijo, estudiante–matrícula) | Ver [Seguridad](manuales/Security.md#autorización) |
 | Web, menú y rutas | `ROUTE_ROLES` derivado del mapa de cada rol; `RoleRoute` muestra «Esta sección no es para tu rol» | `apps/web/src/app/nav.ts`, `apps/web/src/shared/buildings.ts` |
 | Pruebas | `routesByRole` y `forbiddenByRole` recorren lo permitido y lo prohibido de cada rol | `apps/web/e2e/accounts.ts` |
 

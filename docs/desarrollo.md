@@ -59,7 +59,7 @@ public-api.ts            Lo único que otros módulos pueden importar
 
 **Efectos transversales:** XP, insignias, avisos y correos se disparan con un evento de `core/events/domain-events.ts`; no se importan `gamification` ni `notifications`.
 
-**Permisos por relación:** además del rol, cada servicio comprueba la relación (curso del docente, hijo del acudiente). Ver ejemplos en [Seguridad](Security.md#autorización).
+**Permisos por relación:** además del rol, cada servicio comprueba la relación (curso del docente, hijo del acudiente). Ver ejemplos en [Seguridad](manuales/Security.md#autorización).
 
 ## Convenciones de la web
 
@@ -144,4 +144,12 @@ docker compose -f docker-compose.yml -f docker-compose.cockroach.yml up -d --bui
 E2E_PASSWORD=Ludoteka-Local-2026 npm run manual:shots -w @eduquest/web
 ```
 
-Una captura que falla no detiene las demás; al final se listan las que faltaron. Nunca se toman contra producción.
+Una captura que falla no detiene las demás; al final se listan las que faltaron. Nunca se toman contra producción. Cada captura cae en la carpeta de su sección (`img/estudiante/`, `img/docente/`, etc.); la regla está en `FOLDERS` dentro del mismo archivo.
+
+**Manuales en PDF:** después de editar cualquier manual o sus capturas, se regeneran los PDF de `docs/manuales/pdf/` desde la raíz:
+
+```bash
+npm run docs:pdf
+```
+
+El script `scripts/docs-pdf.mjs` convierte el Markdown con `marked`, dibuja los diagramas Mermaid y genera los PDF con Chromium de Playwright. Necesita conexión, porque descarga las fuentes y Mermaid. El nombre, la portada y el color de cada PDF están en la lista `DOCS` del mismo script.

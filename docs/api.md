@@ -4,7 +4,7 @@ API REST bajo `/api`, servida por el mismo proceso que la web. Los esquemas de e
 
 ## Convenciones
 
-**Autenticación.** Toda ruta exige `Authorization: Bearer <token de acceso>` salvo las públicas. El token se obtiene en `/api/auth/login` (o tras `/api/auth/otp/verify`), dura 20 minutos y se renueva con `POST /api/auth/refresh`, que lee la cookie `eq_refresh`. El cliente debe enviar `credentials: 'include'` en las rutas de `/api/auth`. Detalle en [Seguridad](Security.md#sesiones).
+**Autenticación.** Toda ruta exige `Authorization: Bearer <token de acceso>` salvo las públicas. El token se obtiene en `/api/auth/login` (o tras `/api/auth/otp/verify`), dura 20 minutos y se renueva con `POST /api/auth/refresh`, que lee la cookie `eq_refresh`. El cliente debe enviar `credentials: 'include'` en las rutas de `/api/auth`. Detalle en [Seguridad](manuales/Security.md#sesiones).
 
 **Errores.** Siempre con la misma forma:
 
@@ -29,7 +29,7 @@ API REST bajo `/api`, servida por el mismo proceso que la web. Los esquemas de e
 
 **Archivos.** Los reportes PDF y Excel se generan en la respuesta (`Content-Disposition: attachment`). Los archivos de la biblioteca no pasan por la API: el navegador pide un ticket firmado (`POST /api/library/uploads/ticket`), sube directo a Cloudinary y luego registra el archivo (`POST /api/library/items`).
 
-**Tiempo real.** Socket.IO en `/socket.io` con el token de acceso en `auth.token`. Eventos en [Arquitectura](Architecture.md#tiempo-real).
+**Tiempo real.** Socket.IO en `/socket.io` con el token de acceso en `auth.token`. Eventos en [Arquitectura](manuales/Architecture.md#tiempo-real).
 
 **Salud.** `GET /api/health` responde `{ ok, service, db }` con un ping a la base; lo usa Render como healthcheck.
 

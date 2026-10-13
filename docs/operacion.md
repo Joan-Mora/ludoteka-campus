@@ -94,6 +94,13 @@ Se rota un secreto cuando se expone (aparece en un registro, una captura o un ch
 - Al final rellena los vectores (`embedding`) que falten, en lotes de 64. Si Gemini responde 429 espera 60 s y lo intenta hasta 6 veces; si la cuota no vuelve, termina y basta correrlo otro día.
 - Requiere `CLOUDINARY_URL` y `AI_API_KEY`. Con `-- --dry` solo informa qué haría.
 
+**Portadas.** Los PDF subidos a Cloudinary muestran su primera página directamente. Para los demás recursos, la API genera la portada y la guarda en Cloudinary y en `library_items.cover_url`:
+
+- PDF alojados en otro sitio: dibuja la primera página en el servidor.
+- Enlaces web: toma la imagen `og:image` de la página (solo sitios `https` públicos).
+
+Las portadas que faltan se generan al arrancar, hasta 25 por arranque. Si un recurso queda sin portada (`cover_url = ''`), se puede volver a intentar con `UPDATE library_items SET cover_url = NULL WHERE id = '…'` y reiniciando el servicio.
+
 Mientras falten vectores, la búsqueda por texto sigue funcionando; la búsqueda semántica mejora cuando se completan. Para ver cuántos faltan:
 
 ```sql

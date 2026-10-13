@@ -5,7 +5,7 @@ import { test, type Browser, type BrowserContext, type Locator, type Page } from
 import { accounts, labPassword, storageFor, type E2ERole } from './accounts';
 
 /**
- * Capturas del manual de usuario (docs/manuales/img). Corre contra la pila de Docker con CockroachDB local para
+ * Capturas del manual de usuario (docs/manuales/img/<sección>/). Corre contra la pila de Docker con CockroachDB local para
  * que solo aparezcan datos de demostración, nunca datos reales de estudiantes:
  *   docker compose -f docker-compose.yml -f docker-compose.cockroach.yml up -d --build
  *   npm run manual:shots -w @eduquest/web
@@ -42,14 +42,38 @@ async function settle(page: Page) {
   await page.waitForTimeout(900);
 }
 
-async function shot(page: Page, name: string, fullPage = false) {
-  mkdirSync(outDir, { recursive: true });
-  await settle(page);
-  await page.screenshot({ path: path.join(outDir, `${name}.png`), fullPage });
+/** One folder per section of the manual; the role prefix becomes the folder (estudiante-inicio → estudiante/inicio.png). */
+const FOLDERS: [RegExp, string][] = [
+  [/^(publico-inicio|ingresar.*|recuperar|cambiar-clave|aceptar-documentos)$/, 'acceso'],
+  [/^(guia-recorrido|notificaciones|movil-.+)$/, 'campus'],
+  [/^(ajustes-.+|acceso-facial)$/, 'cuenta'],
+  [/^estudiante-/, 'estudiante'],
+  [/^docente-/, 'docente'],
+  [/^(coordinacion-|cartelera-publicar$)/, 'coordinacion'],
+  [/^rectoria-/, 'rectoria'],
+  [/^acudiente-/, 'acudiente'],
+  [/^admin-/, 'administracion'],
+];
+
+function fileFor(name: string) {
+  const folder = FOLDERS.find(([pattern]) => pattern.test(name))?.[1];
+  if (!folder) throw new Error(`captura sin sección: ${name}`);
+  return path.join(outDir, folder, `${name.replace(/^(estudiante|docente|coordinacion|rectoria|acudiente|admin)-/, '')}.png`);
 }
+
+async function shot(page: Page, name: string, fullPage = false) {
+  const file = fileFor(name);
+  mkdirSync(path.dirname(file), { recursive: true });
+  await settle(page);
+  await page.screenshot({ path: file, fullPage });
+}
+
+/** Comma-separated step names; when set, every other step is skipped (retake a single image without redoing the rest). */
+const only = process.env.MANUAL_ONLY?.split(',').map((name) => name.trim()).filter(Boolean);
 
 /** Una captura que falla no detiene las demás; al final se listan las que faltaron. */
 async function step(name: string, run: () => Promise<void>) {
+  if (only && !only.includes(name)) return;
   try {
     await run();
   } catch (error) {
@@ -186,8 +210,12 @@ test('estudiante', async ({ browser }) => {
     await page.keyboard.press('Escape');
   });
   await step('estudiante-guia', async () => {
-    await page.getByRole('button', { name: /Pedir ayuda a/ }).click();
+    await page.locator('.guide-fab').click();
+    await page.getByText('¿En qué te ayudo?').waitFor();
     await shot(page, 'estudiante-guia');
+    await page.getByRole('button', { name: /Qué tengo pendiente/ }).click();
+    await page.getByText('Por edificio').waitFor({ timeout: 10_000 }).catch(() => undefined);
+    await shot(page, 'estudiante-guia-pendientes');
     await page.keyboard.press('Escape');
   });
   await step('estudiante-cursos', async () => { await open(page, '/app/cursos'); await shot(page, 'estudiante-cursos'); });
@@ -246,7 +274,6 @@ test('estudiante', async ({ browser }) => {
     ['estudiante-arena', '/app/arena'],
     ['estudiante-arcade', '/app/jugar'],
     ['estudiante-trofeos', '/app/logros'],
-    ['estudiante-biblioteca', '/app/biblioteca'],
     ['estudiante-cartelera', '/app/novedades'],
     ['notificaciones', '/app/notificaciones'],
     ['ajustes-perfil', '/app/ajustes'],
@@ -256,6 +283,13 @@ test('estudiante', async ({ browser }) => {
     ['acceso-facial', '/app/rostro'],
   ];
   for (const [name, route] of routes) await step(name, async () => { await open(page, route); await shot(page, name); });
+  await step('estudiante-biblioteca', async () => {
+    await open(page, '/app/biblioteca');
+    await page.locator('.lib-card').first().scrollIntoViewIfNeeded();
+    await page.mouse.wheel(0, 220);
+    await page.waitForTimeout(800);
+    await shot(page, 'estudiante-biblioteca');
+  });
   await step('estudiante-ruta-tema', async () => {
     await open(page, '/app/ruta');
     await page.locator('.trail-node').first().click();

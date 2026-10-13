@@ -15,7 +15,8 @@
     <a href="https://ludoteka-campus.onrender.com"><b>Demo en vivo</b></a> ·
     <a href="docs/"><b>Documentación</b></a> ·
     <a href="docs/manuales/manual-de-usuario.md"><b>Manual de usuario</b></a> ·
-    <a href="docs/Architecture.md"><b>Arquitectura</b></a>
+    <a href="docs/manuales/Architecture.md"><b>Arquitectura</b></a> ·
+    <a href="CHANGELOG.md"><b>Cambios</b></a>
   </p>
 </div>
 
@@ -39,12 +40,13 @@ Ludoteka Campus reúne todo eso en una sola aplicación web para seis roles (adm
 - **Evaluación:** banco de preguntas, prácticas, exámenes en kiosco con control de integridad y quiz en vivo.
 - **Libro de calificaciones:** ponderación por categorías (escala 1.0 a 5.0), asistencia, rúbricas y alertas de riesgo al docente y al acudiente.
 - **Juego:** campus isométrico con los pendientes de cada edificio, XP, rachas, misiones, sala de trofeos (41 insignias con niveles, ocultas y de temporada), Arcade de 10 juegos calificados en el servidor con reto del día, y **Arena** por equipos con QR.
+- **Luka o Luna, el compañero:** vive en la esquina de cada pantalla, sigue el puntero con la mirada y saluda cuando hay pendientes nuevos. Al tocarlo habla y ofrece ayuda: qué tengo pendiente por edificio, cómo funciona la pantalla actual, recorrido del campus, preguntas al tutor, órdenes por voz y lectura de la página.
 - **Avisos y voz:** notificaciones que llevan al lugar exacto, página `/app/notificaciones` con filtros y comandos de voz con panel «Qué puedo decir» («qué tengo pendiente», «léeme la lección», «busca en la biblioteca…»).
 - **Estudio:**
   - Mi ruta adaptativa por maestría de temas;
   - Cuaderno con resumen IA y tarjetas SM-2;
   - metas y sesiones de enfoque.
-- **Biblioteca:** archivos en Cloudinary, etiquetas, marcadores, glosario y tutor IA con citas a las guías. Trae 60 guías propias por grado y materia alineadas con los DBA, los DBA oficiales del MEN y libros abiertos de OpenStax, cada uno con su fuente y licencia (`npm run library:seed -w @eduquest/api`).
+- **Biblioteca:** archivos en Cloudinary, etiquetas, marcadores, glosario y tutor IA con citas a las guías. Trae 60 guías propias por grado y materia alineadas con los DBA, los DBA oficiales del MEN y libros abiertos de OpenStax, cada uno con su fuente y licencia (`npm run library:seed -w @eduquest/api`). Todo recurso muestra portada: la primera página del PDF, aunque esté alojado en otro sitio, o la imagen de vista previa de la página enlazada.
 - **Observatorio:** preguntas en español convertidas a SQL de solo lectura sobre vistas `v_*`.
 - **Cuentas institucionales:**
   - el administrador crea las cuentas (una a una o importando un Excel), y el usuario cambia la clave temporal en el primer ingreso;
@@ -139,11 +141,11 @@ flowchart LR
   health
 ```
 
-Decisiones técnicas principales (detalle y motivos en [`docs/Architecture.md`](docs/Architecture.md#decisiones-de-diseño)):
+Decisiones técnicas principales (detalle y motivos en [`docs/manuales/Architecture.md`](docs/manuales/Architecture.md#decisiones-de-diseño)):
 
 - **Monolito modular con fronteras exigidas:** cada módulo expone su fachada en `public-api.ts` y `dependency-cruiser` impide importar archivos internos de otro módulo (`npm run deps:check`).
 - **Eventos para lo transversal:** gamificación y notificaciones escuchan eventos; la escritura de cada tabla la hace solo su módulo dueño y los tableros leen en solo lectura.
-- **CockroachDB con Kysely y SQL versionado:** claves `UUID`, `withTx()` reintenta ante el SQLSTATE `40001` y las migraciones (`db/migrations`, 0000 a 0031) se aplican al arrancar la API (o a mano con `npm run migrate`).
+- **CockroachDB con Kysely y SQL versionado:** claves `UUID`, `withTx()` reintenta ante el SQLSTATE `40001` y las migraciones (`db/migrations`, 0000 a 0032) se aplican al arrancar la API (o a mano con `npm run migrate`).
 - **Observatorio NL→SQL acotado:** la IA genera SQL que corre en una transacción `READ ONLY`, con `statement_timeout` y rol restringido, solo sobre vistas `v_*`.
 - **Biometría en el navegador:** face-api calcula el descriptor de 128 dimensiones en el cliente; la API promedia de 3 a 10 muestras, las cifra con AES-256-GCM y compara por distancia euclidiana, con el marco de la Ley 1581.
 - **IA con camino alterno:** `AiService` usa modelos de respaldo si el principal falla, cada función quita los datos personales que no necesita antes de enviar texto y cada una tiene una versión sin IA (el tutor responde con la lección, el Cuaderno usa un resumen local, Mi ruta usa plantillas).
@@ -254,35 +256,38 @@ El sistema de archivos de Render es efímero, así que los PDF y Excel se genera
 apps/api            NestJS 11 + Kysely sobre CockroachDB (core/ y modules/ con public-api.ts)
 apps/web            React 19 + Vite + TanStack Query (app/, features/, shared/, e2e/)
 packages/contracts  Esquemas zod compartidos
-db/migrations       SQL del esquema (0000 a 0031)
+db/migrations       SQL del esquema (0000 a 0032)
 db/seeds            Contenido demo de Matemáticas de sexto y manifiesto de la biblioteca
-docs/               Manuales (usuario, técnico, instalación) y referencia: arquitectura, seguridad, roles, datos, API, frontend, operación y desarrollo
+docs/               Manuales (usuario, técnico, instalación, arquitectura, seguridad) en Markdown y PDF, y referencia: roles, datos, API, frontend, operación y desarrollo
+scripts/            Utilidades del repositorio (docs-pdf.mjs genera los manuales en PDF)
 render.yaml         Blueprint del Web Service en Render
 Dockerfile          Imagen de producción (API + web en un contenedor); docker-compose*.yml para levantarla
 ```
 
 ## Documentación
 
-**Manuales:**
+**Manuales** (cada uno en Markdown y en PDF con el diseño de Ludoteka Campus; los PDF están en [`docs/manuales/pdf/`](docs/manuales/pdf/) y se regeneran con `npm run docs:pdf`):
 
-| Manual | Contenido |
-|---|---|
-| [Manual de usuario](docs/manuales/manual-de-usuario.md) | Cómo usar el campus paso a paso, por rol |
-| [Manual técnico](docs/manuales/manual-tecnico.md) | Arquitectura, tecnologías, datos, seguridad, configuración, mantenimiento, respaldo y solución de problemas |
-| [Manual de instalación y despliegue](docs/manuales/manual-de-instalacion.md) | Instalación desde cero: CockroachDB, servicios externos, Render y primer ingreso |
+| Manual | PDF | Contenido |
+|---|---|---|
+| [Manual de usuario](docs/manuales/manual-de-usuario.md) | [PDF](<docs/manuales/pdf/Manual de Usuario.pdf>) | Cómo usar el campus paso a paso, por rol |
+| [Manual técnico](docs/manuales/manual-tecnico.md) | [PDF](<docs/manuales/pdf/Manual Tecnico.pdf>) | Arquitectura, tecnologías, datos, seguridad, configuración, mantenimiento, respaldo y solución de problemas |
+| [Manual de instalación y despliegue](docs/manuales/manual-de-instalacion.md) | [PDF](<docs/manuales/pdf/Manual de Instalación.pdf>) | Instalación desde cero: CockroachDB, servicios externos, Render y primer ingreso |
+| [Guía de arquitectura](docs/manuales/Architecture.md) | [PDF](<docs/manuales/pdf/Guia de Arquitectura.pdf>) | Procesos, módulos, eventos, tiempo real, IA y decisiones de diseño |
+| [Manual de seguridad](docs/manuales/Security.md) | [PDF](<docs/manuales/pdf/Manual de Seguridad.pdf>) | Autenticación, sesiones, autorización, protección web, biometría, datos personales y riesgos conocidos |
 
 **Referencia técnica:**
 
 | Documento | Contenido |
 |---|---|
-| [`docs/Architecture.md`](docs/Architecture.md) | Procesos, módulos, eventos, tiempo real, IA y decisiones de diseño |
-| [`docs/Security.md`](docs/Security.md) | Autenticación, sesiones, autorización, protección web, biometría, datos personales y riesgos conocidos |
 | [`docs/roles-y-permisos.md`](docs/roles-y-permisos.md) | Campus y capacidades de cada rol, y dónde se exigen |
 | [`docs/datos.md`](docs/datos.md) | Tablas por módulo, vistas del Observatorio, migraciones y particularidades de CockroachDB |
 | [`docs/api.md`](docs/api.md) | Convenciones, errores y todos los endpoints con su rol |
 | [`docs/frontend.md`](docs/frontend.md) | Estructura de la web, sesión, campus por rol y sistema visual |
 | [`docs/operacion.md`](docs/operacion.md) | Despliegue, variables, rotación de secretos, biblioteca y solución de problemas |
 | [`docs/desarrollo.md`](docs/desarrollo.md) | Entorno local, convenciones, cómo extender y pruebas |
+
+El historial de versiones está en [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Equipo
 

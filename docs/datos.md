@@ -21,7 +21,7 @@ La única base es **CockroachDB Cloud** (dialecto PostgreSQL). La API accede con
 - Archivos SQL en `db/migrations`, aplicados en orden alfabético al arrancar la API o con `npm run migrate`.
 - Cada archivo corre en su propia transacción junto con su registro en `schema_migrations (id, applied_at)`; si falla, se deshace y la API no arranca.
 - **No hay checksum:** editar un archivo ya aplicado no tiene efecto. Todo cambio va en un archivo nuevo con el siguiente número.
-- Hoy van de `0000_drop_legacy` a `0031_staff_messages` (36 archivos; `0011`, `0020` y `0028` tienen variantes con sufijo).
+- Hoy van de `0000_drop_legacy` a `0032_library_covers_b` (38 archivos; `0011`, `0020`, `0028` y `0032` tienen variantes con sufijo).
 
 **Particularidades de CockroachDB al escribir migraciones:**
 
@@ -116,7 +116,7 @@ El dueño es el módulo que escribe la tabla. Se listan las restricciones que ca
 |---|---|
 | `notebook_pages`, `flashcards`, `flashcard_reviews` | Cuaderno con resumen y tarjetas SM-2 |
 | `goals`, `focus_sessions` | Metas (una activa por tipo y periodo) y sesiones de enfoque (una en curso por usuario) |
-| `library_items` | Archivo: tipo, visibilidad (pública/institución/curso), estado, fuente y licencia; `cloudinary_public_id` único |
+| `library_items` | Archivo: tipo, visibilidad (pública/institución/curso), estado, fuente y licencia; `cloudinary_public_id` único; `cover_url` con la portada (`NULL` = por generar, vacío = sin portada) |
 | `library_tags`, `bookmarks`, `library_views`, `library_visits`, `glossary_terms` | Etiquetas, marcadores, vistas, última visita y glosario |
 | `library_chunks` | Fragmentos de texto con `tsv` (búsqueda en español) y `embedding VECTOR(768)` |
 | `tutor_conversations`, `tutor_messages` | Conversaciones del tutor con citas en JSONB |

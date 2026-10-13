@@ -519,6 +519,7 @@ export interface Database {
     source_name: NullableString;
     source_url: NullableString;
     license: NullableString;
+    cover_url: NullableString;
   };
   library_tags: {
     item_id: string;

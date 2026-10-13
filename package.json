@@ -20,9 +20,12 @@
     "migrate": "npm run migrate -w @eduquest/api",
     "seed": "npm run seed -w @eduquest/api",
     "typecheck": "npm run build -w @eduquest/contracts && npm run typecheck -w @eduquest/api && npm run typecheck -w @eduquest/web",
-    "deps:check": "npm run deps:check -w @eduquest/api"
+    "deps:check": "npm run deps:check -w @eduquest/api",
+    "docs:pdf": "node scripts/docs-pdf.mjs"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1"
+    "@napi-rs/canvas": "^0.1.80",
+    "concurrently": "^9.2.1",
+    "marked": "^18.1.1"
   }
 }

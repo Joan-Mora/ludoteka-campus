@@ -97,6 +97,38 @@ function orQuery(question: string) {
   return [...new Set(words)].join(' | ');
 }
 
+/** Card-sized JPEG from an uploaded cover, anchored to the top so titles stay visible. */
+const coverOf = (secureUrl: string) =>
+  secureUrl.replace('/upload/', '/upload/w_480,h_320,c_fill,g_north,q_auto/').replace(/\.(png|jpe?g|webp|gif|avif)$/i, '.jpg');
+
+/** Teachers type these links: only public https hosts are fetched, never IPs or internal names. */
+function publicHttps(raw: string) {
+  try {
+    const url = new URL(raw);
+    const host = url.hostname.toLowerCase();
+    if (url.protocol !== 'https:' || !host.includes('.') || /^[\d.]+$|:|^localhost$|\.(local|internal|localhost)$/.test(host)) return null;
+    return url;
+  } catch {
+    return null;
+  }
+}
+
+/** The page's og:image (or twitter:image), resolved against the page URL. */
+async function ogImage(page: string) {
+  const url = publicHttps(page);
+  if (!url) return null;
+  const response = await fetch(url, { headers: { 'user-agent': 'Mozilla/5.0 (compatible; LudotekaCampus/1.0)', accept: 'text/html' }, redirect: 'follow', signal: AbortSignal.timeout(15_000) });
+  if (!response.ok || !(response.headers.get('content-type') ?? '').includes('html')) return null;
+  const html = (await response.text()).slice(0, 600_000);
+  for (const tag of html.match(/<meta\b[^>]*>/gi) ?? []) {
+    if (!/(property|name)\s*=\s*["'](og:image(:secure_url)?|twitter:image)["']/i.test(tag)) continue;
+    const content = /content\s*=\s*["']([^"']+)["']/i.exec(tag)?.[1]?.replace(/&amp;/g, '&');
+    const image = content ? publicHttps(new URL(content, response.url).href) : null;
+    if (image) return image.href;
+  }
+  return null;
+}
+
 @Injectable()
 export class LibraryService implements OnApplicationBootstrap {
   private readonly logger = new Logger('Biblioteca');
@@ -108,7 +140,51 @@ export class LibraryService implements OnApplicationBootstrap {
   ) {}
 
   onApplicationBootstrap() {
-    void this.seedGuide().catch((error) => this.logger.warn(`Guía de ejemplo no sembrada: ${error instanceof Error ? error.message : error}`));
+    void this.seedGuide()
+      .catch((error) => this.logger.warn(`Guía de ejemplo no sembrada: ${error instanceof Error ? error.message : error}`))
+      .then(() => this.backfillCovers());
+  }
+
+  /** Resources from before covers existed, a few per boot so a cold start stays light. */
+  private async backfillCovers() {
+    if (!this.cloudinary.enabled) return;
+    const pending = await this.database.db
+      .selectFrom('library_items')
+      .select('id')
+      .where('cover_url', 'is', null)
+      .where((eb) => eb.or([eb('kind', '=', 'link'), eb.and([eb('kind', '=', 'pdf'), eb.or([eb('resource_type', 'is', null), eb('resource_type', '=', 'raw')])])]))
+      .orderBy('created_at')
+      .limit(25)
+      .execute()
+      .catch(() => []);
+    for (const { id } of pending) await this.makeCover(id);
+  }
+
+  /**
+   * Cover for what Cloudinary can't preview: page 1 of an external or raw PDF, or the og:image of a linked page.
+   * The image is hosted on Cloudinary; an empty string records that there was nothing to show.
+   */
+  async makeCover(itemId: string, pdf?: Uint8Array) {
+    const item = await this.database.db.selectFrom('library_items').select(['kind', 'url', 'resource_type', 'cover_url']).where('id', '=', itemId).executeTakeFirst();
+    if (!item || !this.cloudinary.enabled || this.cloudinaryThumb(item.url, item.kind, item.resource_type)) return;
+    let cover = '';
+    try {
+      if (item.kind === 'pdf') {
+        const data = pdf ?? new Uint8Array(await (await fetch(item.url, { signal: AbortSignal.timeout(60_000) })).arrayBuffer());
+        const { PDFParse } = await import('pdf-parse');
+        const parser = new PDFParse({ data });
+        const shot = await parser.getScreenshot({ first: 1, desiredWidth: 640, imageBuffer: true, imageDataUrl: false });
+        await parser.destroy();
+        const page = shot.pages[0]?.data;
+        if (page) cover = coverOf((await this.cloudinary.uploadBuffer(page, 'portada.png', 'image/png')).secure_url);
+      } else if (item.kind === 'link' && !/youtu\.?be|vimeo\.com/i.test(item.url)) {
+        const image = await ogImage(item.url);
+        if (image) cover = coverOf((await this.cloudinary.uploadRemote(image)).secure_url);
+      }
+    } catch (error) {
+      this.logger.warn(`Sin portada para ${itemId}: ${error instanceof Error ? error.message : error}`);
+    }
+    await this.database.db.updateTable('library_items').set({ cover_url: cover }).where('id', '=', itemId).execute();
   }
 
   /** First boot with an empty library: generate, upload and index the sixth-grade guide. */
@@ -166,11 +242,11 @@ export class LibraryService implements OnApplicationBootstrap {
       id: string; title: string; description: string; kind: string; url: string; format: string | null; bytes: number; pages: number | null;
       visibility: string; status: string; course_id: string | null; subject: string; subject_id: string; grade: string | null; course: string | null; uploaded_by: string | null;
       uploader: string | null; created_at: Date; views: number; saved: boolean; tags: string[] | null; resource_type: string | null; public_id: string | null;
-      source_name: string | null; source_url: string | null; license: string | null;
+      source_name: string | null; source_url: string | null; license: string | null; cover_url: string | null;
     }>`
       SELECT li.id, li.title, li.description, li.kind, li.url, li.format, li.bytes, li.pages, li.visibility, li.status, li.course_id,
              s.name AS subject, li.subject_id, g.name AS grade, c.title AS course, li.uploaded_by, u.full_name AS uploader, li.created_at,
-             li.resource_type, li.cloudinary_public_id AS public_id, li.source_name, li.source_url, li.license,
+             li.resource_type, li.cloudinary_public_id AS public_id, li.source_name, li.source_url, li.license, li.cover_url,
              (SELECT count(*)::INT FROM library_views v WHERE v.item_id = li.id) AS views,
              EXISTS (SELECT 1 FROM bookmarks b WHERE b.item_id = li.id AND b.user_id = ${viewer.id}) AS saved,
              (SELECT array_agg(t.tag ORDER BY t.tag) FROM library_tags t WHERE t.item_id = li.id) AS tags
@@ -202,13 +278,17 @@ export class LibraryService implements OnApplicationBootstrap {
     return rows.rows.map((row) => ({
       ...row,
       tags: row.tags ?? [],
-      thumbnail: this.thumbnail(row.url, row.kind, row.resource_type),
+      thumbnail: this.thumbnail(row.url, row.kind, row.resource_type, row.cover_url),
       canManage: row.uploaded_by === viewer.id || isBoard(viewer),
     }));
   }
 
+  private thumbnail(url: string, kind: string, resourceType: string | null, cover: string | null) {
+    return cover || this.cloudinaryThumb(url, kind, resourceType);
+  }
+
   /** Cloudinary renders the first page of an image-type PDF or a frame of a video as a JPEG cover. */
-  private thumbnail(url: string, kind: string, resourceType: string | null) {
+  private cloudinaryThumb(url: string, kind: string, resourceType: string | null) {
     if (!url.includes('res.cloudinary.com') || !resourceType || resourceType === 'raw') return null;
     const transform = kind === 'pdf' ? 'pg_1,w_480,h_320,c_fill,g_north,f_jpg' : 'w_480,h_320,c_fill,f_jpg';
     if (kind !== 'pdf' && kind !== 'image' && kind !== 'video') return null;
@@ -244,7 +324,7 @@ export class LibraryService implements OnApplicationBootstrap {
       chunks: Number(chunks.n),
       views: Number(views.n),
       glossary,
-      thumbnail: this.thumbnail(item.url, item.kind, item.resource_type),
+      thumbnail: this.thumbnail(item.url, item.kind, item.resource_type, item.cover_url),
       canManage: item.uploaded_by === viewer.id || isBoard(viewer),
     };
   }
@@ -308,6 +388,7 @@ export class LibraryService implements OnApplicationBootstrap {
       return row;
     });
     if (kind === 'pdf') void this.ingest(item.id, viewer.id);
+    if (kind === 'link') void this.makeCover(item.id);
     return { id: item.id, status: kind === 'pdf' ? 'processing' : 'published' };
   }
 
@@ -319,6 +400,7 @@ export class LibraryService implements OnApplicationBootstrap {
       const response = await fetch(item.url, { signal: AbortSignal.timeout(60_000) });
       if (!response.ok) throw new Error(`descarga ${response.status}`);
       const data = new Uint8Array(await response.arrayBuffer());
+      if (item.cover_url === null) await this.makeCover(itemId, data.slice());
       const { PDFParse } = await import('pdf-parse');
       const parser = new PDFParse({ data });
       const result = await parser.getText();

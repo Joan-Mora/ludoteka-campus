@@ -8,6 +8,7 @@ import { api } from './api';
 import { useAuth } from './auth';
 import { useCompanion } from './companion';
 import { setTheme } from './theme';
+import { VOICE_EVENT } from './guide';
 import { dictationUnavailable, matchCommand, matchSlot, useDictation, useSpeech, voiceSupport, type SlotCommand, type VoiceCommand } from './voice';
 
 /** Appends dictated phrases through `onText`. Hidden-but-explained when the browser lacks speech recognition. */
@@ -79,7 +80,7 @@ const destinations: Destination[] = [
   { label: 'Familia', to: '/app/acudiente', phrases: ['familia', 'seguimiento', 'mis hijos', 'acudidos'], roles: ['guardian'] },
 ];
 
-type CampusSnapshot = { buildings: Record<string, number>; pending: Record<string, { title: string; meta: string; link: string }[]> };
+export type CampusSnapshot = { buildings: Record<string, number>; pending: Record<string, { title: string; meta: string; link: string }[]> };
 
 const PLACES: Record<string, string> = {
   aula: 'el Aula',
@@ -97,7 +98,7 @@ function placeOf(key: string, role: string | undefined) {
 }
 
 /** What the campus counts, said out loud: totals per building and the first two concrete items. */
-function pendingSpeech(data: CampusSnapshot, role: string | undefined) {
+export function pendingSpeech(data: CampusSnapshot, role: string | undefined) {
   const parts = Object.entries(data.buildings).filter(([, n]) => n > 0).sort((a, b) => b[1] - a[1]);
   if (!parts.length) return { text: 'No tienes nada pendiente. Todo al día.', link: null as string | null };
   const total = parts.reduce((sum, [, n]) => sum + n, 0);
@@ -262,6 +263,14 @@ export function VoiceNav({ compact = false }: { compact?: boolean }) {
     }
     mic.toggle();
   };
+
+  const toggleRef = useRef(toggle);
+  toggleRef.current = toggle;
+  useEffect(() => {
+    const listen = () => toggleRef.current();
+    window.addEventListener(VOICE_EVENT, listen);
+    return () => window.removeEventListener(VOICE_EVENT, listen);
+  }, []);
 
   const layers = (
     <AnimatePresence>

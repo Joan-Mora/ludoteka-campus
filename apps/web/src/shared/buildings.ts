@@ -43,7 +43,7 @@ export type Shape =
   | 'school' | 'library' | 'lab' | 'stadium' | 'hall' | 'board' | 'house' | 'tower'
   | 'post' | 'capitol' | 'arcade' | 'studio' | 'observatory' | 'office' | 'pavilion';
 
-/** What each building is made of; the page header (its facade) uses it as texture. See docs/diseno-campus.md. */
+/** What each building is made of; the page header (its facade) uses it as texture. See docs/frontend.md. */
 export type Material = 'papel' | 'pizarra' | 'cuadricula' | 'neon' | 'corcho' | 'rayado' | 'topografia' | 'laton';
 
 export interface Building {

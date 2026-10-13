@@ -25,7 +25,7 @@ export class IdentityController {
   @UseGuards(AuthThrottleGuard)
   @Post('auth/login')
   async login(@Body(new ZodPipe(loginSchema)) body: { email: string; password: string }, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
-    const result = await this.identity.login(body.email, body.password, clientInfo(req), deviceTokens(req));
+    const result = await this.identity.login(body.email, body.password, clientInfo(req), deviceTokens(req), req.cookies?.[REFRESH_COOKIE]);
     if (result.kind === 'otp') return { otp: result.otp };
     return this.sendSession(res, result.session);
   }
@@ -40,7 +40,7 @@ export class IdentityController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const client = clientInfo(req);
-    const { userId, session } = await this.identity.verifyOtp(body.challengeId, body.code, client);
+    const { userId, session } = await this.identity.verifyOtp(body.challengeId, body.code, client, req.cookies?.[REFRESH_COOKIE]);
     if (body.trustDevice) addDeviceToken(req, res, this.env.values, await this.identity.trustDevice(userId, client), TRUSTED_DAYS);
     return this.sendSession(res, session);
   }

@@ -7,7 +7,7 @@ import { CurrentUser, Public, Roles, type AuthUser } from '../../core/auth/auth.
 import { rejectImageFields, ZodPipe } from '../../core/common/zod.pipe';
 import { AuthThrottleGuard } from '../../core/security/throttle';
 import { ApiError } from '../../core/errors/api-error';
-import { requireVerifiedSession, setRefreshCookie } from '../../core/auth/session-cookies';
+import { REFRESH_COOKIE, requireVerifiedSession, setRefreshCookie } from '../../core/auth/session-cookies';
 import { BiometricsService } from './biometrics.service';
 import { IdentityService } from '../identity/public-api';
 
@@ -74,6 +74,7 @@ export class BiometricsController {
     rejectImageFields(body);
     const parsed = parseBody(facialLoginSchema, body);
     const session = await this.facial.login(parsed, clientIp(req));
+    await this.identity.keepBrowserAccount(req.cookies?.[REFRESH_COOKIE], session);
     setRefreshCookie(res, this.env.values, session.refreshToken);
     return { accessToken: session.accessToken, user: session.user, distance: Number(session.distance.toFixed(3)) };
   }

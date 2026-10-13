@@ -79,6 +79,14 @@ function Gate({ children }: { children: ReactNode }) {
   return children;
 }
 
+/** Sign-in pages: with a session already open in this browser, keep it instead of offering another login. */
+function GuestOnly({ children }: { children: ReactNode }) {
+  const { user, ready } = useAuth();
+  if (!ready) return <Splash />;
+  if (user) return <Navigate to="/app" replace />;
+  return children;
+}
+
 export function NotForRole() {
   const { user } = useAuth();
   return (
@@ -144,8 +152,8 @@ export function AppRouter() {
     <Suspense fallback={<Splash />}>
       <Routes>
         <Route path="/" element={<Landing />} />
-        <Route path="/ingresar" element={<LoginPage />} />
-        <Route path="/ingresar/rostro" element={<FacialLoginPage />} />
+        <Route path="/ingresar" element={<GuestOnly><LoginPage /></GuestOnly>} />
+        <Route path="/ingresar/rostro" element={<GuestOnly><FacialLoginPage /></GuestOnly>} />
         <Route path="/cambiar-clave" element={<ChangePasswordPage />} />
         <Route path="/recuperar" element={<ForgotPage />} />
         <Route path="/restablecer" element={<ResetPage />} />

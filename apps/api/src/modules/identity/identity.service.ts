@@ -133,7 +133,7 @@ export class IdentityService {
 
   /* ---------- Paso 1: contraseña ---------- */
 
-  async login(email: string, password: string, client: ClientInfo, trustedTokens: string[] = []): Promise<LoginResult> {
+  async login(email: string, password: string, client: ClientInfo, trustedTokens: string[] = [], browserSession?: string): Promise<LoginResult> {
     const user = await this.findByEmail(email);
     if (user?.locked_until && user.locked_until.getTime() > Date.now()) {
       const minutes = Math.ceil((user.locked_until.getTime() - Date.now()) / 60000);
@@ -145,6 +145,7 @@ export class IdentityService {
       throw new ApiError(401, 'INVALID_CREDENTIALS', 'Correo o contraseña incorrectos');
     }
     if (user.status !== 'active') throw new ApiError(403, 'ACCOUNT_DISABLED', 'Tu cuenta está desactivada. Comunícate con el colegio.');
+    await this.assertBrowserAccount(browserSession, user.id);
     if (user.failed_logins > 0 || user.locked_until) {
       await this.database.db.updateTable('users').set({ failed_logins: 0, locked_until: null }).where('id', '=', user.id).execute();
     }
@@ -214,11 +215,12 @@ export class IdentityService {
     return this.createChallenge(user, client);
   }
 
-  async verifyOtp(challengeId: string, code: string, client: ClientInfo) {
+  async verifyOtp(challengeId: string, code: string, client: ClientInfo, browserSession?: string) {
     const row = await this.database.db.selectFrom('login_challenges').selectAll().where('id', '=', challengeId).executeTakeFirst();
     if (!row || row.used_at || row.expires_at.getTime() < Date.now()) {
       throw new ApiError(400, 'OTP_EXPIRED', 'El código venció o ya se usó. Vuelve a ingresar tu contraseña.');
     }
+    await this.assertBrowserAccount(browserSession, row.user_id);
     if (row.attempts >= row.max_attempts) {
       throw new ApiError(429, 'OTP_LOCKED', 'Superaste los intentos. Vuelve a ingresar tu contraseña para recibir otro código.');
     }
@@ -303,6 +305,36 @@ export class IdentityService {
     let query = this.database.db.updateTable('refresh_tokens').set({ revoked_at: new Date() }).where('revoked_at', 'is', null);
     query = row.family_id ? query.where('family_id', '=', row.family_id) : query.where('token_hash', '=', sha256(rawToken));
     await query.execute();
+  }
+
+  /**
+   * One account per browser: every tab shares the refresh cookie, so a second login with another
+   * account would silently take over the session the other tabs are still showing.
+   */
+  async assertBrowserAccount(rawToken: string | undefined, userId: string) {
+    if (!rawToken) return;
+    const owner = await this.database.db
+      .selectFrom('refresh_tokens as t')
+      .innerJoin('users as u', 'u.id', 't.user_id')
+      .select(['u.id', 'u.full_name'])
+      .where('t.token_hash', '=', sha256(rawToken))
+      .where('t.revoked_at', 'is', null)
+      .where('t.expires_at', '>', new Date())
+      .where('u.status', '=', 'active')
+      .executeTakeFirst();
+    if (owner && owner.id !== userId) {
+      throw new ApiError(409, 'SESSION_ACTIVE', `Este navegador ya tiene abierta la sesión de ${owner.full_name}. Ciérrala antes de entrar con otra cuenta.`);
+    }
+  }
+
+  /** For sign-ins that only reveal the account after verifying it (passkey, face): undo the new session if it collides. */
+  async keepBrowserAccount(rawToken: string | undefined, session: Session) {
+    try {
+      await this.assertBrowserAccount(rawToken, session.user.id);
+    } catch (error) {
+      await this.logout(session.refreshToken);
+      throw error;
+    }
   }
 
   /** Closes every session and forgets every trusted device of the user. */

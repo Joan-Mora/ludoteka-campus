@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import type { Role } from '@eduquest/contracts';
 import { api, setToken } from './api';
 
@@ -42,9 +42,16 @@ interface AuthState {
 
 const AuthContext = createContext<AuthState | null>(null);
 
+type SessionSignal = { type: 'login'; userId: string } | { type: 'logout' };
+
+/** Tabs share the refresh cookie, so they must agree on who is signed in. */
+const sessionChannel = typeof BroadcastChannel === 'undefined' ? null : new BroadcastChannel('eq-session');
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [ready, setReady] = useState(false);
+  const userId = useRef<string | null>(null);
+  userId.current = user?.id ?? null;
 
   useEffect(() => {
     api<SessionUser>('/api/auth/me')
@@ -53,9 +60,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .finally(() => setReady(true));
   }, []);
 
+  useEffect(() => {
+    if (!sessionChannel) return;
+    const onSignal = ({ data }: MessageEvent<SessionSignal>) => {
+      if (data.type === 'logout') {
+        setToken(null);
+        setUser(null);
+      } else if (data.userId !== userId.current) {
+        setToken(null);
+        if (userId.current) window.location.reload();
+        else api<SessionUser>('/api/auth/me').then(setUser, () => setUser(null));
+      }
+    };
+    sessionChannel.addEventListener('message', onSignal);
+    return () => sessionChannel.removeEventListener('message', onSignal);
+  }, []);
+
   function enter(accessToken: string, next: SessionUser) {
     setToken(accessToken);
     setUser(next);
+    sessionChannel?.postMessage({ type: 'login', userId: next.id } satisfies SessionSignal);
+  }
+
+  function leave() {
+    setToken(null);
+    setUser(null);
+    sessionChannel?.postMessage({ type: 'logout' } satisfies SessionSignal);
   }
 
   async function login(email: string, password: string) {
@@ -97,14 +127,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function logout() {
     await api('/api/auth/logout', { method: 'POST' }).catch(() => undefined);
-    setToken(null);
-    setUser(null);
+    leave();
   }
 
   async function logoutEverywhere() {
     await api('/api/auth/logout-all', { method: 'POST' });
-    setToken(null);
-    setUser(null);
+    leave();
   }
 
   return (

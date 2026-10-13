@@ -14,7 +14,7 @@
   <p>
     <a href="https://ludoteka-campus.onrender.com"><b>Demo en vivo</b></a> ·
     <a href="docs/"><b>Documentación</b></a> ·
-    <a href="docs/arquitectura.md"><b>Arquitectura</b></a>
+    <a href="docs/Architecture.md"><b>Arquitectura</b></a>
   </p>
 </div>
 
@@ -76,7 +76,7 @@ Ludoteka Campus reúne todo eso en una sola aplicación web para seis roles (adm
 | Acudiente | Sigue a cada hijo (lo que viene, notas, asistencia y alertas), confirma citaciones, escribe a los docentes, recibe un resumen semanal por correo, acepta los documentos legales por el menor y autoriza o revoca su acceso facial |
 | Administrador | Gestiona años, grupos, materias, matrículas y cuentas (alta individual o importación por Excel) |
 
-Solo el docente y la administración escriben contenido académico. Cada ruta de la web declara sus roles en `apps/web/src/app/nav.ts` y la API los exige con `@Roles`; la matriz completa está en [`docs/vision.md`](docs/vision.md#matriz-de-responsabilidades).
+Solo el docente y la administración escriben contenido académico. Cada ruta de la web declara sus roles en `apps/web/src/app/nav.ts` y la API los exige con `@Roles`; la matriz completa está en [`docs/roles-y-permisos.md`](docs/roles-y-permisos.md).
 
 ## Arquitectura
 
@@ -90,10 +90,10 @@ flowchart LR
 
   subgraph nest["Proceso Node.js (Render Web Service)"]
     rest["/api<br/>REST"]
-    ws["/socket.io<br/>quiz en vivo, Arena,<br/>integridad, notificaciones"]
+    ws["/socket.io<br/>sala en vivo, Arena,<br/>alertas de integridad"]
     spa["/<br/>build estático de React"]
     core["core<br/>auth · seguridad · eventos · IA<br/>correo · reportes · base de datos"]
-    mods["16 módulos de dominio<br/>(fachada public-api.ts)"]
+    mods["19 módulos<br/>(fachada public-api.ts)"]
     rest --> mods
     ws --> mods
     mods --> core
@@ -109,7 +109,7 @@ flowchart LR
   core -- HTTPS --> mail["Resend<br/>correo"]
 ```
 
-Los módulos de dominio solo se llaman de forma síncrona en una dirección; `gamification`, `analytics` y `notifications` no se importan desde ningún módulo y reaccionan a eventos de dominio (`@nestjs/event-emitter`):
+Los módulos de dominio solo se llaman de forma síncrona en una dirección; `gamification`, `analytics` y `notifications` no se importan desde ningún módulo, y gamificación y avisos reaccionan a eventos de dominio (`@nestjs/event-emitter`):
 
 ```mermaid
 flowchart LR
@@ -138,14 +138,14 @@ flowchart LR
   health
 ```
 
-Decisiones técnicas principales (cada una con su ADR en [`docs/adr/`](docs/adr/)):
+Decisiones técnicas principales (detalle y motivos en [`docs/Architecture.md`](docs/Architecture.md#decisiones-de-diseño)):
 
-- **Monolito modular con fronteras exigidas** (ADR-001): cada módulo expone su fachada en `public-api.ts` y `dependency-cruiser` impide importar archivos internos de otro módulo (`npm run deps:check`).
-- **Eventos para lo transversal** (ADR-003): gamificación y notificaciones escuchan eventos; la escritura de cada tabla la hace solo su módulo dueño y los tableros leen en solo lectura.
-- **CockroachDB con Kysely y SQL versionado** (ADR-004): claves `UUID`, `withTx()` reintenta ante el SQLSTATE `40001` y las migraciones (`db/migrations`, 0000 a 0030) se aplican al arrancar la API (o a mano con `npm run migrate`).
-- **Observatorio NL→SQL acotado** (ADR-006): la IA genera SQL que corre en una transacción `READ ONLY`, con `statement_timeout` y rol restringido, solo sobre vistas `v_*`.
-- **Biometría en el navegador** (ADR-002 y ADR-007): face-api calcula el descriptor de 128 dimensiones en el cliente; la API promedia 5 muestras, las cifra con AES-256-GCM y compara por distancia euclidiana, con el marco de la Ley 1581.
-- **IA con camino alterno:** `AiService` usa modelos de respaldo si el principal falla, quita datos personales antes de enviar texto y cada funcionalidad tiene una versión sin IA (el tutor responde con la lección, el Cuaderno usa un resumen local, Mi ruta usa plantillas).
+- **Monolito modular con fronteras exigidas:** cada módulo expone su fachada en `public-api.ts` y `dependency-cruiser` impide importar archivos internos de otro módulo (`npm run deps:check`).
+- **Eventos para lo transversal:** gamificación y notificaciones escuchan eventos; la escritura de cada tabla la hace solo su módulo dueño y los tableros leen en solo lectura.
+- **CockroachDB con Kysely y SQL versionado:** claves `UUID`, `withTx()` reintenta ante el SQLSTATE `40001` y las migraciones (`db/migrations`, 0000 a 0031) se aplican al arrancar la API (o a mano con `npm run migrate`).
+- **Observatorio NL→SQL acotado:** la IA genera SQL que corre en una transacción `READ ONLY`, con `statement_timeout` y rol restringido, solo sobre vistas `v_*`.
+- **Biometría en el navegador:** face-api calcula el descriptor de 128 dimensiones en el cliente; la API promedia de 3 a 10 muestras, las cifra con AES-256-GCM y compara por distancia euclidiana, con el marco de la Ley 1581.
+- **IA con camino alterno:** `AiService` usa modelos de respaldo si el principal falla, cada función quita los datos personales que no necesita antes de enviar texto y cada una tiene una versión sin IA (el tutor responde con la lección, el Cuaderno usa un resumen local, Mi ruta usa plantillas).
 
 ## Stack tecnológico
 
@@ -236,7 +236,7 @@ Un Web Service de Render definido en [`render.yaml`](render.yaml) (plan gratuito
 - Inicio: `npm start` (escucha en `0.0.0.0:$PORT`)
 - Healthcheck: `GET /api/health`, que incluye un ping a la base
 
-El sistema de archivos de Render es efímero, así que los PDF y Excel se generan en la respuesta y los archivos de la biblioteca van a Cloudinary (ADR-005). Las variables secretas se marcan con `sync: false` y se cargan en el panel de Render.
+El sistema de archivos de Render es efímero, así que los PDF y Excel se generan en la respuesta y los archivos de la biblioteca van a Cloudinary. Las variables secretas se marcan con `sync: false` y se cargan en el panel de Render.
 
 ## Estructura del repositorio
 
@@ -244,9 +244,9 @@ El sistema de archivos de Render es efímero, así que los PDF y Excel se genera
 apps/api            NestJS 11 + Kysely sobre CockroachDB (core/ y modules/ con public-api.ts)
 apps/web            React 19 + Vite + TanStack Query (app/, features/, shared/, e2e/)
 packages/contracts  Esquemas zod compartidos
-db/migrations       SQL del esquema (0000 a 0019)
-db/seeds            Contenido demo de Matemáticas de sexto
-docs/               Visión, arquitectura, ER, ADRs, requisitos y Confluence
+db/migrations       SQL del esquema (0000 a 0031)
+db/seeds            Contenido demo de Matemáticas de sexto y manifiesto de la biblioteca
+docs/               Arquitectura, seguridad, roles, datos, API, frontend, operación y desarrollo
 render.yaml         Blueprint del Web Service en Render
 ```
 
@@ -254,16 +254,14 @@ render.yaml         Blueprint del Web Service en Render
 
 | Documento | Contenido |
 |---|---|
-| [`docs/vision.md`](docs/vision.md) | Visión del producto, problema, roles y estado |
-| [`docs/arquitectura.md`](docs/arquitectura.md) | Módulos, eventos, auth, IA y despliegue |
-| [`docs/er.md`](docs/er.md) | Modelo entidad-relación tabla por tabla, vistas y consultas de evidencia |
-| [`docs/contratos-api.md`](docs/contratos-api.md) | Contratos de la API |
-| [`docs/RF-RNF.md`](docs/RF-RNF.md) | Requisitos funcionales y no funcionales |
-| [`docs/threat-model-eq-p09-facial.md`](docs/threat-model-eq-p09-facial.md) | Modelo de amenazas del acceso facial |
-| [`docs/confluence-eq-p08.md`](docs/confluence-eq-p08.md) | Página Confluence: matriz de la rúbrica, guion de sustentación y evidencias |
-| [`docs/adr/`](docs/adr/) | ADR-001 monolito modular · 002 facial y Ley 1581 · 003 eventos · 004 CockroachDB y Kysely · 005 Cloudinary · 006 Observatorio NL→SQL · 007 face-api · 008 Arena con snapshot · 009 seguridad web · 010 cuentas y autenticación |
-| [`docs/glosario.md`](docs/glosario.md) | Términos del dominio |
-| [`docs/bitacora.md`](docs/bitacora.md) | Bitácora de decisiones y riesgos |
+| [`docs/Architecture.md`](docs/Architecture.md) | Procesos, módulos, eventos, tiempo real, IA y decisiones de diseño |
+| [`docs/Security.md`](docs/Security.md) | Autenticación, sesiones, autorización, protección web, biometría, datos personales y riesgos conocidos |
+| [`docs/roles-y-permisos.md`](docs/roles-y-permisos.md) | Campus y capacidades de cada rol, y dónde se exigen |
+| [`docs/datos.md`](docs/datos.md) | Tablas por módulo, vistas del Observatorio, migraciones y particularidades de CockroachDB |
+| [`docs/api.md`](docs/api.md) | Convenciones, errores y todos los endpoints con su rol |
+| [`docs/frontend.md`](docs/frontend.md) | Estructura de la web, sesión, campus por rol y sistema visual |
+| [`docs/operacion.md`](docs/operacion.md) | Despliegue, variables, rotación de secretos, biblioteca y solución de problemas |
+| [`docs/desarrollo.md`](docs/desarrollo.md) | Entorno local, convenciones, cómo extender y pruebas |
 
 ## Autoría
 

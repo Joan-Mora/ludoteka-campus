@@ -4,9 +4,10 @@ import type { AuthenticationResponseJSON, RegistrationResponseJSON } from '@simp
 import { passkeyRenameSchema, passkeyVerifySchema } from '@eduquest/contracts';
 import { Env } from '../../core/config/config.module';
 import { CurrentUser, Public, type AuthUser } from '../../core/auth/auth.decorators';
-import { clientInfo, setRefreshCookie } from '../../core/auth/session-cookies';
+import { clientInfo, REFRESH_COOKIE, setRefreshCookie } from '../../core/auth/session-cookies';
 import { ZodPipe } from '../../core/common/zod.pipe';
 import { AuthThrottleGuard } from '../../core/security/throttle';
+import { IdentityService } from './identity.service';
 import { PasskeysService } from './passkeys.service';
 
 interface VerifyBody<T> {
@@ -18,6 +19,7 @@ interface VerifyBody<T> {
 export class PasskeysController {
   constructor(
     private readonly passkeys: PasskeysService,
+    private readonly identity: IdentityService,
     private readonly env: Env,
   ) {}
 
@@ -68,6 +70,7 @@ export class PasskeysController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const session = await this.passkeys.loginVerify(body.challengeId, body.response, clientInfo(req));
+    await this.identity.keepBrowserAccount(req.cookies?.[REFRESH_COOKIE], session);
     setRefreshCookie(res, this.env.values, session.refreshToken);
     return { accessToken: session.accessToken, user: session.user };
   }

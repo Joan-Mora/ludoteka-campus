@@ -108,6 +108,15 @@ export function LegalLinks({ className = '' }: { className?: string }) {
   );
 }
 
+function EnterLink({ className }: { className: string }) {
+  const { user } = useAuth();
+  return user ? (
+    <Link to="/app" className={className}>Ir a mi campus <ArrowRight size={18} /></Link>
+  ) : (
+    <Link to="/ingresar" className={className}>Ingresar <ArrowRight size={18} /></Link>
+  );
+}
+
 function PublicNav() {
   const [open, setOpen] = useState(false);
   return (
@@ -116,12 +125,12 @@ function PublicNav() {
       <div className="row g-8 public-nav-desk">
         <a href="#acceso" className="btn glass">Cómo obtener mi cuenta</a>
         <ThemeButton className="icon-btn on-dark" />
-        <Link to="/ingresar" className="btn white">Ingresar</Link>
+        <EnterLink className="btn white" />
       </div>
       <button className="icon-btn on-dark public-nav-burger" aria-label="Abrir menú" onClick={() => setOpen(true)}><Menu size={20} /></button>
       <Sheet open={open} onClose={() => setOpen(false)} title="Ludoteka Campus">
         <div className="stack g-10">
-          <Link to="/ingresar" className="btn lg">Ingresar <ArrowRight size={18} /></Link>
+          <EnterLink className="btn lg" />
           <a href="#acceso" className="btn ghost lg" onClick={() => setOpen(false)}>Cómo obtener mi cuenta</a>
           <ThemeButton className="btn ghost lg" label />
           <LegalLinks className="sheet-legal" />
@@ -150,7 +159,7 @@ export function Landing() {
                 solo los edificios que necesitan, con Luka como guía en cada paso.
               </p>
               <div className="row g-12 wrap" style={{ marginTop: 32 }}>
-                <Link to="/ingresar" className="btn lg">Ingresar <ArrowRight size={18} /></Link>
+                <EnterLink className="btn lg" />
                 <a href="#roles" className="btn lg glass">Ver los campus</a>
               </div>
               <div className="row g-24 wrap" style={{ marginTop: 44 }}>

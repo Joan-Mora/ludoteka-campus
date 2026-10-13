@@ -132,6 +132,31 @@ test('llave de acceso: el inicio la ofrece tras el código y se activa en un toq
   await signed!.close();
 });
 
+test('una cuenta por navegador: otra ventana conserva la sesión y no admite otra cuenta', async ({ browser }, info) => {
+  test.skip(info.project.name !== 'safari-mac' || (process.env.E2E_TARGET ?? 'local') !== 'local', 'una vez basta, contra el servidor local');
+  const signed = await signedContext(browser, info, 'teacher');
+  test.skip(!signed, 'sin sesión de docente');
+  const first = await signed!.newPage();
+  await first.goto('/app');
+  const second = await signed!.newPage();
+  await second.goto('/ingresar');
+  await expect(second).toHaveURL(/\/app$/);
+  await second.goto('/');
+  await expect(second.getByRole('link', { name: /Ir a mi campus/ }).first()).toBeVisible();
+
+  const other = await signed!.request.post('/api/auth/login', { data: { email: accounts.student, password: labPassword() } });
+  expect(other.status()).toBe(409);
+  expect(((await other.json()) as { error: { code: string } }).error.code).toBe('SESSION_ACTIVE');
+
+  await second.goto('/app');
+  await first.getByTitle('Salir').click();
+  await expect(second).toHaveURL(/\/ingresar$/);
+  await second.bringToFront();
+  await expect(second.getByRole('heading', { name: 'Bienvenido de nuevo' })).toBeVisible();
+  await shoot(second, info, 'sesion-unica');
+  await signed!.close();
+});
+
 test.describe('aprendizaje del estudiante', () => {
   test('Mi espacio: seis métodos con navegación libre', async ({ browser }, info) => {
     test.skip(info.project.name !== 'android', 'una vez basta');

@@ -10,9 +10,19 @@ export interface Citation {
   url: string;
 }
 
+/** The prompts forbid LaTeX, but the model still slips some in; it is shown as plain school notation instead. */
+function plainMath(text: string) {
+  return text
+    .replace(/\$([^$]+)\$/g, '$1')
+    .replace(/\\[()[\]]/g, '')
+    .replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, '$1/$2')
+    .replace(/\\(div|times|cdot)\b/g, (_, op) => (op === 'div' ? '÷' : '×'))
+    .replace(/\\(left|right)\b/g, '')
+    .replace(/\\[,;!]/g, ' ');
+}
+
 function inline(text: string, citations: Citation[] | undefined, keyBase: string): ReactNode[] {
-  const clean = text.replace(/\$([^$]+)\$/g, '$1').replace(/\\(div|times|cdot)/g, (_, op) => (op === 'div' ? '÷' : '×'));
-  const parts = clean.split(/(\*\*[^*]+\*\*|\[\d+\])/g);
+  const parts = plainMath(text).split(/(\*\*[^*]+\*\*|\[\d+\])/g);
   return parts.map((part, i) => {
     const key = `${keyBase}-${i}`;
     if (/^\*\*[^*]+\*\*$/.test(part)) return <b key={key}>{part.slice(2, -2)}</b>;

@@ -1,6 +1,18 @@
-# Documentación técnica de Ludoteka Campus
+# Documentación de Ludoteka Campus
 
-Documentación de referencia para quien mantiene, despliega o audita la plataforma. Describe el sistema tal como está en el código; cuando el código cambie, se actualiza el documento en el mismo commit.
+Describe el sistema tal como está en el código; cuando el código cambie, se actualiza el documento en el mismo commit.
+
+## Manuales
+
+| Manual | Para quién |
+|---|---|
+| [Manual de usuario](manuales/manual-de-usuario.md) | Estudiantes, docentes, coordinación, rectoría, acudientes y administración: cómo usar el campus paso a paso |
+| [Manual técnico](manuales/manual-tecnico.md) | Quien recibe el sistema: arquitectura, tecnologías, datos, seguridad, configuración, mantenimiento, respaldo y solución de problemas |
+| [Manual de instalación y despliegue](manuales/manual-de-instalacion.md) | Quien instala el sistema desde cero: base de datos, servicios externos, Render y primer ingreso |
+
+## Referencia técnica
+
+Para quien mantiene, despliega o audita la plataforma.
 
 | Documento | Para qué sirve |
 |---|---|
@@ -31,3 +43,11 @@ db/migrations       Esquema SQL versionado (se aplica al arrancar la API)
 db/seeds            Contenido demo y manifiesto de la biblioteca
 render.yaml         Blueprint del servicio en Render
 ```
+
+## Equipo
+
+| Integrante | Responsabilidades |
+|---|---|
+| Darwin Joan Aveiga Mora | Arquitectura del sistema y desarrollo full stack |
+| Mariana Sofía Azabache Moreno | Gestión del proyecto (project manager), área creativa, diseño UI/UX y todo el frontend |
+| Julián Esteban Chávez Zamora | Aseguramiento de calidad (QA) del sistema y apoyo en el desarrollo del backend |

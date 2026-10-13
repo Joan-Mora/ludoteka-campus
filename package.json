@@ -1,6 +1,11 @@
 {
   "name": "eduquest",
   "private": true,
+  "author": "Darwin Joan Aveiga Mora (https://github.com/Joan-Mora)",
+  "contributors": [
+    "Mariana Sofía Azabache Moreno (https://github.com/mariazabache0510-ctrl)",
+    "Julián Esteban Chávez Zamora (https://github.com/MrRoar154)"
+  ],
   "workspaces": [
     "apps/*",
     "packages/*"

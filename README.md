@@ -14,6 +14,7 @@
   <p>
     <a href="https://ludoteka-campus.onrender.com"><b>Demo en vivo</b></a> ·
     <a href="docs/"><b>Documentación</b></a> ·
+    <a href="docs/manuales/manual-de-usuario.md"><b>Manual de usuario</b></a> ·
     <a href="docs/Architecture.md"><b>Arquitectura</b></a>
   </p>
 </div>
@@ -174,6 +175,15 @@ npm run dev
 
 La API queda en `http://localhost:3000` y la web en `http://localhost:5173`. Al arrancar, la API aplica las migraciones pendientes y, si la tabla `users` está vacía, siembra el colegio de demo.
 
+### Con Docker
+
+```bash
+docker compose up -d --build                                                    # contra la base del .env
+docker compose -f docker-compose.yml -f docker-compose.cockroach.yml up -d --build   # con CockroachDB local de demo
+```
+
+Todo queda en `http://localhost:3000`. La segunda forma no toca la base de la nube: levanta CockroachDB v26.2 en un contenedor, siembra el colegio de demo y muestra el código de ingreso en pantalla (clave de laboratorio `Ludoteka-Local-2026`). Detalles en el [Manual de instalación](docs/manuales/manual-de-instalacion.md#5-instalación-con-docker).
+
 ### Cuentas de laboratorio
 
 La clave de todas es la que definas en `SEED_PASSWORD` dentro de `apps/api/.env`. En desarrollo, sin `RESEND_API_KEY`, el código de ingreso aparece en la pantalla y en el log de la API.
@@ -246,11 +256,22 @@ apps/web            React 19 + Vite + TanStack Query (app/, features/, shared/, 
 packages/contracts  Esquemas zod compartidos
 db/migrations       SQL del esquema (0000 a 0031)
 db/seeds            Contenido demo de Matemáticas de sexto y manifiesto de la biblioteca
-docs/               Arquitectura, seguridad, roles, datos, API, frontend, operación y desarrollo
+docs/               Manuales (usuario, técnico, instalación) y referencia: arquitectura, seguridad, roles, datos, API, frontend, operación y desarrollo
 render.yaml         Blueprint del Web Service en Render
+Dockerfile          Imagen de producción (API + web en un contenedor); docker-compose*.yml para levantarla
 ```
 
 ## Documentación
+
+**Manuales:**
+
+| Manual | Contenido |
+|---|---|
+| [Manual de usuario](docs/manuales/manual-de-usuario.md) | Cómo usar el campus paso a paso, por rol |
+| [Manual técnico](docs/manuales/manual-tecnico.md) | Arquitectura, tecnologías, datos, seguridad, configuración, mantenimiento, respaldo y solución de problemas |
+| [Manual de instalación y despliegue](docs/manuales/manual-de-instalacion.md) | Instalación desde cero: CockroachDB, servicios externos, Render y primer ingreso |
+
+**Referencia técnica:**
 
 | Documento | Contenido |
 |---|---|
@@ -263,22 +284,30 @@ render.yaml         Blueprint del Web Service en Render
 | [`docs/operacion.md`](docs/operacion.md) | Despliegue, variables, rotación de secretos, biblioteca y solución de problemas |
 | [`docs/desarrollo.md`](docs/desarrollo.md) | Entorno local, convenciones, cómo extender y pruebas |
 
-## Autoría
+## Equipo
 
 <table>
   <tr>
-    <td align="center"><a href="https://github.com/Joan-Mora"><img src="https://github.com/Joan-Mora.png" width="80" alt="Darwin Aveiga"/><br/><b>Darwin Joan Aveiga Mora</b></a><br/><sub>Diseño, arquitectura y desarrollo full stack</sub></td>
+    <td align="center" width="33%"><a href="https://github.com/Joan-Mora"><img src="https://github.com/Joan-Mora.png" width="80" alt="Darwin Aveiga"/><br/><b>Darwin Joan Aveiga Mora</b></a><br/><sub>Arquitectura y desarrollo full stack</sub></td>
+    <td align="center" width="33%"><a href="https://github.com/mariazabache0510-ctrl"><img src="https://github.com/mariazabache0510-ctrl.png" width="80" alt="Mariana Azabache"/><br/><b>Mariana Sofía Azabache Moreno</b></a><br/><sub>Project manager, documentación - confluence,  dirección creativa, diseño UI/UX y frontend</sub></td>
+    <td align="center" width="33%"><a href="https://github.com/MrRoar154"><img src="https://github.com/MrRoar154.png" width="80" alt="Julián Chávez"/><br/><b>Julián Esteban Chávez Zamora</b></a><br/><sub>QA y apoyo en backend</sub></td>
   </tr>
 </table>
+
+| Integrante | Responsabilidades |
+|---|---|
+| Darwin Joan Aveiga Mora | Arquitectura del sistema y desarrollo full stack |
+| Mariana Sofía Azabache Moreno | Gestión del proyecto (project manager), área creativa, diseño UI/UX y todo el frontend |
+| Julián Esteban Chávez Zamora | Aseguramiento de calidad (QA) del sistema y apoyo en el desarrollo del backend |
 
 Desarrollado para el Colegio Francisco Arango. Nació como voluntariado del programa de Tecnología en Desarrollo de Software y como parcial de Gestión y Operación de Bases de Datos, UNIMINUTO.
 
 ## Licencia
 
-Copyright © 2026 Darwin Joan Aveiga Mora. **Todos los derechos reservados.**
+Copyright © 2026 Darwin Joan Aveiga Mora, Mariana Sofía Azabache Moreno y Julián Esteban Chávez Zamora. **Todos los derechos reservados.**
 
-Este repositorio es público para que el código pueda consultarse como parte de mi portafolio. Eso no concede permiso para copiarlo, reutilizarlo, modificarlo, distribuirlo ni presentarlo como trabajo propio. Los términos completos están en [`LICENSE`](LICENSE). Para cualquier uso, escribe a [darwin@abacore.co](mailto:darwin@abacore.co).
+Este repositorio es público para que el código pueda consultarse como parte del portafolio de sus autores. Eso no concede permiso para copiarlo, reutilizarlo, modificarlo, distribuirlo ni presentarlo como trabajo propio. Los términos completos están en [`LICENSE`](LICENSE). Para cualquier uso, escribe a [darwin@abacore.co](mailto:darwin@abacore.co).
 
 <div align="center">
-<sub>Hecho por <a href="https://github.com/Joan-Mora">Darwin Aveiga</a> · <a href="https://abacore.co">Abacore S.A.S.</a></sub>
+<sub>Hecho por <a href="https://github.com/Joan-Mora">Darwin Aveiga</a>, <a href="https://github.com/mariazabache0510-ctrl">Mariana Azabache</a> y <a href="https://github.com/MrRoar154">Julián Chávez</a> · <a href="https://abacore.co">Abacore S.A.S.</a></sub>
 </div>

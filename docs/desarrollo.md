@@ -135,3 +135,13 @@ npx playwright test --no-deps --project=android              # un dispositivo
 ```
 
 Las capturas quedan en `apps/web/e2e/shots/<proyecto>/` (no se versionan).
+
+**Capturas del manual de usuario:** `e2e/manual.capture.ts` regenera `docs/manuales/img/` contra la pila de Docker con CockroachDB local, para que solo salgan datos de demostración:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.cockroach.yml down -v      # base limpia
+docker compose -f docker-compose.yml -f docker-compose.cockroach.yml up -d --build
+E2E_PASSWORD=Ludoteka-Local-2026 npm run manual:shots -w @eduquest/web
+```
+
+Una captura que falla no detiene las demás; al final se listan las que faltaron. Nunca se toman contra producción.

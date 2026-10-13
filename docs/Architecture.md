@@ -142,7 +142,7 @@ React 19 con Vite, TanStack Query y React Router 7. Todas las páginas se cargan
 
 | Decisión | Motivo | Consecuencia |
 |---|---|---|
-| Monolito modular en lugar de microservicios | Un solo desarrollador, plan gratuito de Render y un dominio muy conectado | Fronteras exigidas por herramienta; un solo despliegue |
+| Monolito modular en lugar de microservicios | Equipo pequeño, plan gratuito de Render y un dominio muy conectado | Fronteras exigidas por herramienta; un solo despliegue |
 | Eventos para lo transversal | Gamificación y avisos tocan todo; sin eventos, cada módulo los importaría | Agregar una insignia o un aviso no toca el módulo que origina la acción |
 | CockroachDB con Kysely y SQL a mano | CockroachDB es obligatorio; Kysely da tipos sin esconder el SQL | Migraciones en SQL puro, reintentos por serialización, sin triggers |
 | Archivos en Cloudinary con subida firmada directa | El disco de Render es efímero y la base no es almacén de binarios | El archivo no pasa por la API; la API solo firma el ticket y registra el resultado |

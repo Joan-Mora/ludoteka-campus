@@ -1,0 +1,33 @@
+.git
+.gitignore
+.cursor
+.local
+.vscode
+.idea
+**/node_modules
+**/dist
+**/*.tsbuildinfo
+**/*.log
+**/.DS_Store
+coverage
+.turbo
+
+# Secretos: la imagen se configura con variables de entorno al ejecutarse.
+**/.env
+**/.env.*
+!**/.env.example
+
+# Generado durante el build desde node_modules.
+apps/web/public/models
+
+# Pruebas y documentación no hacen falta en la imagen.
+apps/web/e2e/.auth
+apps/web/e2e/.results
+apps/web/e2e/.report
+apps/web/e2e/shots
+docs
+
+Dockerfile
+.dockerignore
+docker-compose*.yml
+compose*.yml

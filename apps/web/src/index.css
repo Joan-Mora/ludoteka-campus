@@ -1772,9 +1772,9 @@ html.scrolling .mini-campus *, html.scrolling .facade *,
 .live-title b { font-size: 20px; }
 .live-title .muted { font-size: 13px; }
 .live-grid { display: grid; grid-template-columns: minmax(260px, 320px) minmax(0, 1fr) minmax(200px, 240px); gap: 16px; align-items: start; }
-.live-code { display: flex; flex-direction: column; align-items: stretch; gap: 14px; text-align: center; }
+.live-code { display: flex; flex-direction: column; align-items: stretch; gap: 14px; text-align: center; container-type: inline-size; }
 .live-code small { color: var(--muted); font-weight: 700; font-size: 12.5px; }
-.live-code-value { font-family: var(--font-display); font-size: clamp(40px, 5vw, 64px); font-weight: 800; letter-spacing: .14em; color: var(--ink); line-height: 1; padding: 14px 6px; border-radius: 18px; background: var(--surface-2); border: 2px dashed rgba(255, 107, 139, .5); }
+.live-code-value { font-family: var(--font-display); font-size: clamp(26px, 13cqi, 64px); font-weight: 800; letter-spacing: .12em; color: var(--ink); line-height: 1; padding: 14px 6px; border-radius: 18px; background: var(--surface-2); border: 2px dashed rgba(255, 107, 139, .5); }
 .live-stage { min-height: 320px; display: flex; flex-direction: column; gap: 16px; }
 .live-stage h2 { font-size: clamp(20px, 2.4vw, 28px); margin: 0; }
 .live-wait { margin: auto; text-align: center; max-width: 440px; display: flex; flex-direction: column; align-items: center; gap: 10px; }

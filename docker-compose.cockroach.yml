@@ -1,0 +1,49 @@
+# CockroachDB local de un nodo para trabajar sin tocar la base de la nube.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.cockroach.yml up --build
+#
+# La base vive en el volumen cockroach-data. Consola de CockroachDB: http://localhost:8080
+# Borrar todo y empezar de cero: docker compose -f docker-compose.yml -f docker-compose.cockroach.yml down -v
+
+services:
+  cockroach:
+    image: cockroachdb/cockroach:${COCKROACH_VERSION:-latest-v26.2}
+    command: start-single-node --insecure --accept-sql-without-tls
+    volumes:
+      - cockroach-data:/cockroach/cockroach-data
+    ports:
+      - "${COCKROACH_SQL_PORT:-26257}:26257"
+      - "${COCKROACH_UI_PORT:-8080}:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health?ready=1"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+
+  cockroach-init:
+    image: cockroachdb/cockroach:${COCKROACH_VERSION:-latest-v26.2}
+    depends_on:
+      cockroach:
+        condition: service_healthy
+    entrypoint: ["./cockroach", "sql", "--insecure", "--host=cockroach:26257"]
+    command:
+      - -e
+      - CREATE DATABASE IF NOT EXISTS ludoteka
+      - -e
+      - SET CLUSTER SETTING feature.vector_index.enabled = true
+    restart: "no"
+
+  app:
+    depends_on:
+      cockroach-init:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: postgresql://root@cockroach:26257/ludoteka?sslmode=disable
+      JWT_SECRET: ${JWT_SECRET:-solo-para-docker-local-cambiar}
+      SEED_PASSWORD: ${SEED_PASSWORD:-Ludoteka-Local-2026}
+      # Base de laboratorio: el código de ingreso aparece en pantalla y ningún correo sale por Resend.
+      NODE_ENV: development
+      RESEND_API_KEY: ""
+
+volumes:
+  cockroach-data:

@@ -1,0 +1,25 @@
+# Ludoteka Campus en un contenedor.
+#
+#   docker compose up --build
+#
+# Toma la configuración de apps/api/.env (la misma de npm run dev). Con ese archivo, el contenedor usa la base
+# de CockroachDB Cloud que indique DATABASE_URL: si es la de producción, lo que se haga aquí cambia producción.
+# Para una base de CockroachDB aislada en Docker, sume docker-compose.cockroach.yml (ver docs/manuales).
+
+name: ludoteka
+
+services:
+  app:
+    build:
+      context: .
+    image: ludoteka-campus:local
+    env_file:
+      - path: apps/api/.env
+        required: false
+    environment:
+      PORT: "3000"
+      APP_PUBLIC_URL: ${APP_PUBLIC_URL:-http://localhost:3000}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+    ports:
+      - "${APP_PORT:-3000}:3000"
+    restart: unless-stopped

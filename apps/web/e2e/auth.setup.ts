@@ -32,7 +32,7 @@ async function acceptLegal(context: APIRequestContext, role: E2ERole, token: str
 setup('sesiones de laboratorio', async ({ baseURL }) => {
   mkdirSync(authDir, { recursive: true });
   const password = labPassword();
-  const local = (process.env.E2E_TARGET ?? 'local') === 'local';
+  const local = process.env.E2E_TARGET !== 'prod';
   for (const role of LEGAL_ORDER) {
     const file = storageFor(role);
     if (!local && !existsSync(file)) {

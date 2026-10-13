@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "e2e": "playwright test",
     "e2e:prod": "playwright test -c playwright.prod.config.ts",
-    "e2e:browsers": "playwright install webkit chromium"
+    "e2e:browsers": "playwright install webkit chromium",
+    "manual:shots": "playwright test -c playwright.manual.config.ts"
   },
   "dependencies": {
     "@eduquest/contracts": "*",

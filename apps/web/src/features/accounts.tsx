@@ -35,6 +35,7 @@ interface Account {
   groupId: string | null;
   group: string | null;
   linked: string[];
+  teaching: string[];
 }
 
 interface Group { id: string; name: string; grade_level: number; grade_name: string; year_name: string }
@@ -107,9 +108,29 @@ function StatusChip({ account }: { account: Account }) {
   return <span className="chip mint">Activa</span>;
 }
 
+/** One tab per kind of account, each with the columns that matter for it. */
+const TABS: { role: Role; label: string }[] = [
+  { role: 'student', label: 'Estudiantes' },
+  { role: 'teacher', label: 'Docentes' },
+  { role: 'guardian', label: 'Acudientes' },
+  { role: 'coordinator', label: 'Coordinación' },
+  { role: 'rector', label: 'Rectoría' },
+  { role: 'admin', label: 'Administración' },
+];
+
+function People({ items, max = 2 }: { items: string[]; max?: number }) {
+  if (!items.length) return <span className="muted">—</span>;
+  return (
+    <span className="row g-4 wrap" title={items.join(', ')}>
+      {items.slice(0, max).map((name) => <span key={name} className="chip" style={{ fontSize: 12, padding: '3px 8px' }}>{name}</span>)}
+      {items.length > max && <span className="muted" style={{ fontSize: 12 }}>+{items.length - max}</span>}
+    </span>
+  );
+}
+
 export function UsuariosPage() {
   const [q, setQ] = useState('');
-  const [role, setRole] = useState('');
+  const [role, setRole] = useState<Role>('student');
   const [groupId, setGroupId] = useState('');
   const [status, setStatus] = useState('');
   const [selected, setSelected] = useState<Account | null>(null);
@@ -132,6 +153,14 @@ export function UsuariosPage() {
   }, [all.data]);
 
   const current = selected && (all.data ?? []).find((a) => a.id === selected.id);
+  const perRole = useMemo(() => {
+    const counts: Partial<Record<Role, number>> = {};
+    for (const a of all.data ?? []) counts[a.role] = (counts[a.role] ?? 0) + 1;
+    return counts;
+  }, [all.data]);
+  const tabs = TABS.filter((t) => t.role !== 'admin' || perRole.admin);
+  const byGroup = role === 'student' || role === 'teacher' || role === 'guardian';
+  const rows = accounts.data ?? [];
 
   return (
     <div>
@@ -155,23 +184,27 @@ export function UsuariosPage() {
         <Stat icon={Power} tone="coral" value={totals.disabled} label="Desactivadas" />
       </div>
 
+      <div className="seg-tabs" role="tablist" aria-label="Tipo de cuenta">
+        {tabs.map((t) => (
+          <button key={t.role} role="tab" aria-selected={role === t.role} className={role === t.role ? 'on' : ''} onClick={() => { setRole(t.role); if (t.role !== 'student' && t.role !== 'teacher' && t.role !== 'guardian') setGroupId(''); }}>
+            {t.label} <span className="seg-count">{perRole[t.role] ?? 0}</span>
+          </button>
+        ))}
+      </div>
+
       <div className="card" style={{ marginBottom: 18 }}>
         <div className="row g-12 wrap user-filters">
           <label className="field" style={{ flex: '2 1 240px', margin: 0, minWidth: 0 }}>Buscar
             <input type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Nombre o correo" />
           </label>
-          <label className="field" style={{ flex: '1 1 150px', margin: 0 }}>Rol
-            <select value={role} onChange={(e) => setRole(e.target.value)}>
-              <option value="">Todos</option>
-              {Object.entries(ROLE_NAME).map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-            </select>
-          </label>
-          <label className="field" style={{ flex: '1 1 120px', margin: 0 }}>Grupo
-            <select value={groupId} onChange={(e) => setGroupId(e.target.value)}>
-              <option value="">Todos</option>
-              {(groups.data ?? []).map((g) => <option key={g.id} value={g.id}>{groupLabel(g)} · {g.year_name}</option>)}
-            </select>
-          </label>
+          {byGroup && (
+            <label className="field" style={{ flex: '1 1 120px', margin: 0 }}>{role === 'student' ? 'Grupo' : role === 'teacher' ? 'Grupo a cargo' : 'Grupo del estudiante'}
+              <select value={groupId} onChange={(e) => setGroupId(e.target.value)}>
+                <option value="">Todos</option>
+                {(groups.data ?? []).map((g) => <option key={g.id} value={g.id}>{groupLabel(g)} · {g.year_name}</option>)}
+              </select>
+            </label>
+          )}
           <label className="field" style={{ flex: '1 1 130px', margin: 0 }}>Estado
             <select value={status} onChange={(e) => setStatus(e.target.value)}>
               <option value="">Todos</option>
@@ -183,26 +216,35 @@ export function UsuariosPage() {
       </div>
 
       <div className="card">
-        {accounts.data && !accounts.data.length ? (
-          <Empty icon={Users} title="Sin resultados" body="Prueba con otro nombre o quita los filtros." />
+        {accounts.data && !rows.length ? (
+          <Empty icon={Users} title={`Sin ${TABS.find((t) => t.role === role)?.label.toLowerCase() ?? 'cuentas'} con ese filtro`} body={q || groupId || status ? 'Prueba con otro nombre o quita los filtros.' : 'Crea la cuenta o impórtala desde la plantilla.'} />
         ) : (
           <div className="table-wrap">
             <table className="table">
-              <thead><tr><th>Persona</th><th className="num">Rol</th><th className="num">Grupo</th><th className="num">Estado</th><th className="num">Último ingreso</th><th className="act" /></tr></thead>
+              <thead>
+                <tr>
+                  <th>Persona</th>
+                  {role === 'student' && <><th className="num">Grupo</th><th>Acudientes</th></>}
+                  {role === 'teacher' && <th>Cursos a cargo</th>}
+                  {role === 'guardian' && <th>Estudiantes a cargo</th>}
+                  <th className="num">Estado</th><th className="num">Último ingreso</th><th className="act" />
+                </tr>
+              </thead>
               <tbody>
-                {(accounts.data ?? []).map((a) => (
+                {rows.map((a) => (
                   <tr key={a.id}>
                     <td>
                       <div className="row g-12" style={{ minWidth: 0 }}>
                         <Avatar name={a.fullName} />
                         <div style={{ minWidth: 0 }}>
-                          <b className="ellipsis">{a.fullName}</b>
+                          <b className="ellipsis">{a.fullName} {a.isMinor && role === 'student' && <span className="chip gold" style={{ fontSize: 11, padding: '2px 7px', marginLeft: 4 }}>Menor</span>}</b>
                           <span className="muted ellipsis" style={{ fontSize: 13 }}>{a.email}</span>
                         </div>
                       </div>
                     </td>
-                    <td className="num"><span className={`chip ${ROLE_TONE[a.role]}`}>{ROLE_NAME[a.role]}</span></td>
-                    <td className="num">{a.group ?? <span className="muted">—</span>}</td>
+                    {role === 'student' && <><td className="num">{a.group ?? <span className="muted">Sin grupo</span>}</td><td><People items={a.linked} /></td></>}
+                    {role === 'teacher' && <td><People items={a.teaching} max={3} /></td>}
+                    {role === 'guardian' && <td><People items={a.linked} /></td>}
                     <td className="num"><StatusChip account={a} /></td>
                     <td className="num muted">{when(a.lastLoginAt)}</td>
                     <td className="act"><button className="btn sm ghost" onClick={() => setSelected(a)}>Gestionar</button></td>
@@ -238,7 +280,7 @@ export function UsuariosPage() {
       )}
 
       <Sheet open={creating} onClose={() => setCreating(false)} title="Nueva cuenta">
-        <CreateAccount groups={groups.data ?? []} onDone={() => setCreating(false)} />
+        {creating && <CreateAccount groups={groups.data ?? []} defaultRole={role} onDone={() => setCreating(false)} />}
       </Sheet>
       <Sheet open={importing} onClose={() => setImporting(false)} title="Importar usuarios" full>
         {importing && <ImportWizard onClose={() => setImporting(false)} />}
@@ -311,9 +353,9 @@ function DataRequests() {
   );
 }
 
-function CreateAccount({ groups, onDone }: { groups: Group[]; onDone: () => void }) {
+function CreateAccount({ groups, defaultRole, onDone }: { groups: Group[]; defaultRole: Role; onDone: () => void }) {
   const client = useQueryClient();
-  const [role, setRole] = useState<Role>('student');
+  const [role, setRole] = useState<Role>(defaultRole);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [sentTo, setSentTo] = useState('');
@@ -338,7 +380,7 @@ function CreateAccount({ groups, onDone }: { groups: Group[]; onDone: () => void
         }),
       });
       form.reset();
-      setRole('student');
+      setRole(defaultRole);
       setSentTo(result.sentTo);
       client.invalidateQueries({ queryKey: ['admin-users'] });
     } catch (err) {

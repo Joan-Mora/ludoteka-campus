@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type CSSProperties, type ReactNode } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, type CSSProperties, type ReactNode, type RefObject, type TextareaHTMLAttributes } from 'react';
 import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router-dom';
 import { AnimatePresence, motion, useDragControls } from 'framer-motion';
@@ -251,6 +251,33 @@ export function Avatar({ name, large }: { name?: string; large?: boolean }) {
     <div className={`avatar ${large ? 'lg' : ''}`} style={{ background: pickGradient(name ?? 'x') }}>
       {initials(name)}
     </div>
+  );
+}
+
+/** Grows downward with its content; Enter sends and Shift+Enter breaks the line when `onSend` is given. */
+export function AutoTextarea({ onSend, inputRef, className = '', ...props }: TextareaHTMLAttributes<HTMLTextAreaElement> & { onSend?: () => void; inputRef?: RefObject<HTMLTextAreaElement | null> }) {
+  const own = useRef<HTMLTextAreaElement>(null);
+  const ref = inputRef ?? own;
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${el.scrollHeight}px`;
+  }, [props.value]);
+  return (
+    <textarea
+      ref={ref}
+      rows={1}
+      {...props}
+      className={`auto-textarea ${className}`}
+      onKeyDown={(e) => {
+        props.onKeyDown?.(e);
+        if (onSend && e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+          e.preventDefault();
+          onSend();
+        }
+      }}
+    />
   );
 }
 

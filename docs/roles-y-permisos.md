@@ -33,7 +33,7 @@ Cada rol tiene su propio mapa: solo sus edificios, agrupados en distritos. El me
 | Coordinación | **Seguimiento:** Alertas `/app/coordinacion`, Asistencia `/app/coordinacion/asistencia`, Citaciones `/app/coordinacion/citaciones` · **Académico:** Grupos y cursos `/app/cursos`, Consolidado de notas `/app/calificaciones`, Observatorio · **Comunicación:** Mensajes, Cartelera, Biblioteca |
 | Rectoría | **Dirección:** Tablero `/app/rectoria`, Sala de firmas `/app/rectoria/firmas`, Archivo de reportes `/app/rectoria/reportes` · **Datos:** Observatorio · **Comunicación:** Mensajes, Cartelera, Biblioteca |
 | Acudiente | **Familia:** Mis hijos `/app/acudiente`, Mensajes · **Colegio:** Cartelera, Biblioteca |
-| Administración | **Administración:** Usuarios `/app/admin/usuarios`, Institución `/app/admin` · **Datos:** Observatorio · **Comunicación:** Mensajes, Cartelera, Biblioteca |
+| Administración | **Administración:** Usuarios `/app/admin/usuarios`, Institución `/app/admin`, Grupos y cursos `/app/cursos` · **Académico:** Banco de preguntas `/app/banco`, Consolidado de notas `/app/calificaciones`, Archivo de reportes `/app/rectoria/reportes` · **Seguimiento:** Alertas, Asistencia, Citaciones · **Datos:** Tablero `/app/rectoria`, Observatorio · **Comunicación:** Mensajes, Cartelera, Biblioteca |
 
 Todos los roles tienen además Inicio (`/app`), Notificaciones, Ajustes y Acceso facial.
 
@@ -41,12 +41,12 @@ Todos los roles tienen además Inicio (`/app`), Notificaciones, Ajustes y Acceso
 
 | Ruta | Roles |
 |---|---|
-| `cursos/:id` | Estudiante, docente, coordinación, rectoría |
-| `lecciones/:id` | Estudiante, docente, coordinación |
-| `cursos/:id/aula` | Docente, coordinación, rectoría |
+| `cursos/:id` | Estudiante, docente, coordinación, rectoría, administración |
+| `lecciones/:id` | Estudiante, docente, coordinación, administración |
+| `cursos/:id/aula` | Docente, coordinación, rectoría, administración |
 | `arena/:id` | Estudiante, docente |
-| `integridad/:id` | Docente, coordinación |
-| `reportes/:id` | Docente, coordinación, rectoría |
+| `integridad/:id` | Docente, coordinación, administración |
+| `reportes/:id` | Docente, coordinación, rectoría, administración |
 | `rectoria/comunicados` | Rectoría |
 
 **El inicio cambia por rol:** estudiante y docente ven su semana (clases, pendientes, actividad). Coordinación, rectoría, acudiente y administración ven su campus con lo pendiente de cada edificio; el acudiente ve además una tarjeta por hijo.
@@ -82,6 +82,10 @@ Todos los roles tienen además Inicio (`/app`), Notificaciones, Ajustes y Acceso
 - Gestiona la estructura académica (años, grados, grupos, materias, matrículas y carga docente).
 - Crea cuentas una a una o por Excel, reenvía accesos, fuerza cambios de clave y cierra sesiones.
 - Resuelve solicitudes de datos personales. También puede crear contenido académico.
+- Entra a todos los módulos de gestión: banco de preguntas (puede editar o archivar cualquier pregunta), consolidado de notas, alertas, asistencia, citaciones, tablero y archivo de reportes. En Rectoría ve los indicadores y los reportes; firmar y emitir comunicados oficiales siguen siendo de Rectoría.
+- Ve las cuentas en pestañas por rol (Estudiantes, Docentes, Acudientes, Coordinación, Rectoría).
+
+En el banco de preguntas, un docente modifica las preguntas que creó y las de las materias que dicta; las demás las ve en modo lectura.
 
 Solo docentes y administración escriben contenido académico. Coordinación y rectoría leen cursos y notas, pero cualquier escritura responde `403 READ_ONLY`.
 

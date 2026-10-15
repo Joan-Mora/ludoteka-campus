@@ -93,6 +93,11 @@ Generado a partir de los decoradores de los controladores (`@Get`, `@Post`, `@Ro
 | `GET` | `/api/admin/structure/template.xlsx` | Admin |
 | `POST` | `/api/admin/structure/import` | Admin |
 
+`GET /api/admin/users` acepta `role`, `groupId`, `status` y `q`.
+
+- Con `groupId` devuelve los estudiantes del grupo, los docentes que dictan en él y los acudientes de esos estudiantes.
+- Cada docente trae `teaching`: sus cursos del año en curso, por ejemplo `Matemáticas 6A`.
+
 ### Acudientes
 
 | Método | Ruta | Acceso |
@@ -192,12 +197,21 @@ Generado a partir de los decoradores de los controladores (`@Get`, `@Post`, `@Ro
 | `POST` | `/api/forum/posts/:id/answer` | Docente, Admin, Estud. |
 | `DELETE` | `/api/forum/posts/:id` | Docente, Admin, Coord., Estud. |
 
+Destinatarios de la cartelera:
+
+- La audiencia de un aviso es una lista de `{ kind, value }`, donde `kind` es `all`, `role`, `grade` (todos los grupos de un grado), `group` o `course`.
+- `GET /api/news/targets` devuelve `allowAll`, `roles`, `canOfficial` y `grades` (cada grado con sus grupos). Al docente solo le llegan los grupos donde dicta.
+- Los docentes solo pueden dirigir avisos a sus propios grupos (`group`); la pantalla convierte cada grado que eligen en sus grupos.
+- Un aviso por grado llega a los estudiantes matriculados en sus grupos, a sus acudientes y a los docentes que dictan en ellos.
+
 ### Evaluaciones y sala en vivo
 
 | Método | Ruta | Acceso |
 |---|---|---|
 | `GET` | `/api/questions` | Docente, Admin |
 | `POST` | `/api/questions` | Docente, Admin |
+| `PUT` | `/api/questions/:id` | Docente, Admin |
+| `DELETE` | `/api/questions/:id` | Docente, Admin |
 | `POST` | `/api/questions/:id/active` | Docente, Admin |
 | `POST` | `/api/assessments` | Docente, Admin |
 | `GET` | `/api/courses/:id/assessments` | Con sesión |
@@ -213,6 +227,14 @@ Generado a partir de los decoradores de los controladores (`@Get`, `@Post`, `@Ro
 | `POST` | `/api/live/:id/next` | Docente, Admin |
 | `POST` | `/api/live/:id/end` | Docente, Admin |
 | `POST` | `/api/live/:id/answer` | Estud. |
+
+Banco de preguntas:
+
+- `GET /api/questions` devuelve, por pregunta, `subject`, `grade`, `author`, `uses` (en cuántas evaluaciones está) y `can_edit`.
+- Modificar (`PUT`, `DELETE`, `active`) lo puede quien creó la pregunta, el docente de un curso de esa materia o un administrador; los demás reciben `403`.
+- `PUT` reemplaza el enunciado y las opciones. Exige exactamente una opción correcta. Responde `409 OPTION_IN_USE` si se quita una opción que ya tiene respuestas guardadas.
+- `DELETE` borra la pregunta si nunca se usó. Si ya está en evaluaciones, intentos o salas de la Arena, la archiva (`archived_at`, `active = false`) y responde `{ deleted: true, archived: true }`.
+- `POST /api/assessments` rechaza preguntas apagadas o archivadas con `400 INACTIVE_QUESTIONS`.
 
 ### Planilla de notas
 
@@ -323,9 +345,21 @@ Generado a partir de los decoradores de los controladores (`@Get`, `@Post`, `@Ro
 | Método | Ruta | Acceso |
 |---|---|---|
 | `POST` | `/api/tutor/chat` | Estud., Docente |
+| `GET` | `/api/tutor/conversations` | Estud., Docente |
+| `GET` | `/api/tutor/conversations/:id` | Estud., Docente |
+| `DELETE` | `/api/tutor/conversations/:id` | Estud., Docente |
 | `POST` | `/api/tutor/drafts` | Docente, Admin |
 | `POST` | `/api/courses/:id/recommendations` | Docente, Admin |
 | `GET` | `/api/courses/:id/recommendations` | Docente, Admin, Coord., Rect. |
+
+Historial del tutor:
+
+- `POST /api/tutor/chat` solo continúa una `conversationId` del mismo usuario (otra responde `404`).
+- La respuesta incluye `title`: la IA lo pone tras la primera respuesta y lo ajusta en la tercera pregunta. Sin modelo disponible, se usan las primeras palabras de la pregunta.
+- `GET /api/tutor/conversations` lista hasta 60 conversaciones del usuario (`id`, `title`, `updatedAt`, `messages`), de la más reciente a la más antigua.
+- `GET /api/tutor/conversations/:id` devuelve los mensajes con sus citas. `DELETE` la borra junto con sus mensajes.
+
+`POST /api/tutor/drafts` recibe `subjectId` o `courseId`, `topic` y `count` (1 a 5). Un docente solo genera para materias que dicta.
 
 ### Mi ruta
 
@@ -337,6 +371,8 @@ Generado a partir de los decoradores de los controladores (`@Get`, `@Post`, `@Ro
 | `POST` | `/api/route/items/:id/answer` | Estud. |
 | `POST` | `/api/route/items/:id/skip` | Estud. |
 | `GET` | `/api/courses/:id/mastery` | Docente, Admin, Coord., Rect. |
+
+La respuesta de un reto (`answer`) admite hasta 500 caracteres. Si trae texto o un «=», se califica el número que sigue a la última señal («=», «respuesta», «resultado», «total», «es», «son», «da», «queda»…) o, si no hay ninguna, el último número.
 
 ### Perfil de aprendizaje
 

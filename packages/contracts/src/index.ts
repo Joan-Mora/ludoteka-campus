@@ -203,21 +203,22 @@ export const eventSchema = z.object({
 });
 
 export const questionSchema = z.object({
-  subjectId: z.string().uuid(),
+  subjectId: z.string().uuid('Elige la materia'),
   gradeId: z.string().uuid().optional(),
-  prompt: z.string().min(4),
+  prompt: z.string().trim().min(4, 'Escribe el enunciado').max(1000),
   difficulty: z.enum(['baja', 'media', 'alta']).optional(),
-  explanation: z.string().optional(),
+  explanation: z.string().trim().max(1000).optional(),
   options: z
     .array(
       z.object({
         label: z.string().min(1).max(2),
-        text: z.string().min(1),
+        text: z.string().trim().min(1, 'Completa todas las opciones').max(300),
         correct: z.boolean(),
       }),
     )
     .min(2)
-    .max(6),
+    .max(6)
+    .refine((options) => options.filter((o) => o.correct).length === 1, 'Marca una sola opción correcta'),
 });
 
 export const assessmentSchema = z.object({
@@ -287,11 +288,14 @@ export const tutorChatSchema = z.object({
   method: z.enum(LEARNING_METHODS).optional(),
 });
 
-export const draftSchema = z.object({
-  courseId: z.string().uuid(),
-  topic: z.string().min(2).max(200),
-  count: z.number().int().min(1).max(5).optional(),
-});
+export const draftSchema = z
+  .object({
+    subjectId: z.string().uuid().optional(),
+    courseId: z.string().uuid().optional(),
+    topic: z.string().trim().min(2, 'Escribe el tema').max(200),
+    count: z.number().int().min(1).max(5).optional(),
+  })
+  .refine((d) => d.subjectId || d.courseId, 'Elige la materia');
 
 export const facialConsentSchema = z.object({
   accepted: z.literal(true),
@@ -342,6 +346,7 @@ export const NEWS_CATEGORIES = ['general', 'academico', 'evento', 'convivencia',
 export const newsAudienceSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('all') }),
   z.object({ kind: z.literal('role'), value: z.enum(ROLES) }),
+  z.object({ kind: z.literal('grade'), value: z.string().uuid() }),
   z.object({ kind: z.literal('group'), value: z.string().uuid() }),
   z.object({ kind: z.literal('course'), value: z.string().uuid() }),
 ]);
@@ -357,7 +362,7 @@ export const newsSchema = z
     official: z.boolean().default(false),
     publishAt: z.string().datetime({ offset: true }).optional(),
     expiresAt: z.string().datetime({ offset: true }).optional(),
-    audience: z.array(newsAudienceSchema).min(1).max(20),
+    audience: z.array(newsAudienceSchema).min(1, 'Elige a quién va dirigida').max(60),
   })
   .refine((v) => !v.expiresAt || new Date(v.expiresAt) > new Date(v.publishAt ?? Date.now()), {
     message: 'La fecha de vencimiento debe ser posterior a la publicación',
@@ -622,7 +627,7 @@ export const routeGenerateSchema = z.object({
 });
 
 export const routeAnswerSchema = z.object({
-  answer: z.string().trim().min(1, 'Escribe tu respuesta').max(60),
+  answer: z.string().trim().min(1, 'Escribe tu respuesta').max(500, 'Tu respuesta puede tener hasta 500 caracteres'),
 });
 
 export const nlQuerySchema = z.object({

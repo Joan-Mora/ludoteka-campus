@@ -30,7 +30,7 @@ import { api, ApiException } from '@/shared/api';
 import { MicButton, SpeakButton } from '@/shared/voice-ui';
 import { spokenAnswer } from '@/shared/voice';
 import { useCompanion } from '@/shared/companion';
-import { Empty, PageHeader, Reveal, Ring } from '@/ui';
+import { AutoTextarea, Empty, PageHeader, Reveal, Ring } from '@/ui';
 import { hasManipulative, Manipulative, MANIPULATIVE_NAME, MethodChip, TheoryCard } from './learning-kit';
 
 interface Topic {
@@ -349,13 +349,25 @@ function Challenge({ item, onDone }: { item: Pending; onDone: () => void }) {
   const [skipped, setSkipped] = useState<{ answer: string; explanation: string } | null>(null);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const game = item.method === 'juegos';
   const seconds = useSeconds(game && !result && !skipped);
   const missionStars = useMemo(() => (seconds <= 30 ? 3 : seconds <= 75 ? 2 : 1), [result]);
 
-  async function submit(event: FormEvent) {
-    event.preventDefault();
-    if (!answer.trim()) return;
+  function insert(symbol: string) {
+    const el = inputRef.current;
+    const start = el?.selectionStart ?? answer.length;
+    const end = el?.selectionEnd ?? answer.length;
+    setAnswer(answer.slice(0, start) + symbol + answer.slice(end));
+    requestAnimationFrame(() => {
+      el?.focus();
+      el?.setSelectionRange(start + symbol.length, start + symbol.length);
+    });
+  }
+
+  async function submit(event?: FormEvent) {
+    event?.preventDefault();
+    if (!answer.trim() || sending) return;
     setSending(true);
     setError(null);
     try {
@@ -390,11 +402,27 @@ function Challenge({ item, onDone }: { item: Pending; onDone: () => void }) {
           <MethodAid item={item} />
           {showKit && hasManipulative(item.generator) && <Manipulative generator={item.generator} params={item.params} />}
           {hint && <p className="hint"><Lightbulb size={15} /> {item.hint}</p>}
-          <form className="composer" onSubmit={submit}>
-            <input value={answer} onChange={(e) => setAnswer(e.target.value)} placeholder="Tu respuesta: 3/4, 2,5, 1.200…" inputMode="text" autoComplete="off" aria-label="Tu respuesta" />
-            <MicButton onText={(text) => setAnswer(spokenAnswer(text) || text)} />
-            <button className="btn" type="submit" disabled={sending || !answer.trim()}>{sending ? <Loader2 size={16} className="spin" /> : 'Responder'}</button>
+          <form className="answer-box" onSubmit={submit}>
+            <AutoTextarea
+              inputRef={inputRef}
+              value={answer}
+              onChange={(e) => setAnswer(e.target.value)}
+              onSend={() => submit()}
+              maxLength={500}
+              placeholder="Escribe tu respuesta (3/4, 2,5, 1.200…). Si quieres, explica cómo lo pensaste."
+              autoComplete="off"
+              aria-label="Tu respuesta"
+            />
+            <div className="answer-tools">
+              {['/', ',', '.', '-'].map((symbol) => (
+                <button key={symbol} type="button" className="key-btn" onClick={() => insert(symbol)} aria-label={`Escribir ${symbol}`}>{symbol === '-' ? '−' : symbol}</button>
+              ))}
+              <span className="muted answer-count">{answer.length}/500</span>
+              <MicButton onText={(text) => setAnswer(spokenAnswer(text) || text)} />
+              <button className="btn" type="submit" disabled={sending || !answer.trim()}>{sending ? <Loader2 size={16} className="spin" /> : 'Responder'}</button>
+            </div>
           </form>
+          <p className="muted answer-help">Enter envía y Shift+Enter baja de línea. Si explicas tu razonamiento, se califica el número que va después de «=» o «la respuesta es», o el último que escribas.</p>
           {error && <p className="form-error">{error}</p>}
           <div className="row g-8 wrap" style={{ marginTop: 10 }}>
             {!hint && <button className="btn sm ghost" onClick={() => setHint(true)}><Lightbulb size={14} /> Pista</button>}

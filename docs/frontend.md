@@ -13,7 +13,7 @@
 | `src/app/guide.tsx` | Luka o Luna, el compañero único de la esquina: menú de ayuda, pendientes, recorrido, consejos y ayuda por edificio |
 | `src/features/*` | Pantallas por área (aula, evaluación, juegos, biblioteca, gobierno…) |
 | `src/shared/*` | Sesión (`auth.tsx`), cliente HTTP (`api.ts`), avisos, voz, rostro, passkeys, catálogo de edificios |
-| `src/ui/*` | Componentes base (`Sheet`, `PageHeader`, `Tile`…) y dibujo isométrico (`iso.tsx`, `campus-mini.tsx`) |
+| `src/ui/*` | Componentes base (`Sheet`, `PageHeader`, `Tile`, `AutoTextarea`…), selector de fecha y hora (`date-time.tsx`) y dibujo isométrico (`iso.tsx`, `campus-mini.tsx`) |
 | `e2e/*` | Pruebas Playwright (ver [Desarrollo](desarrollo.md#pruebas)) |
 
 ## Rutas y acceso
@@ -73,6 +73,19 @@ El inicio es un campus isométrico y cada sección es un edificio. Cada rol tien
 - **Silencio:** el botón del altavoz guarda `localStorage['eq.companion.quiet']`; el compañero sigue respondiendo, pero sin hablar.
 - **Desde otras pantallas:** `openGuide('here' | 'tour')` (`src/shared/guide.ts`) emite `eq:guide` y abre la ayuda del edificio o el recorrido. El recorrido visto se recuerda en `localStorage['eq.tour.<usuario>']`.
 - Escape cierra el panel. No aparece dentro de una sala de Arena.
+
+## Formularios
+
+- **Fecha y hora:** no se usa `datetime-local`. `DateTimeField` (`src/ui/date-time.tsx`) abre un calendario (semana desde el lunes, días anteriores a `min` deshabilitados) y un desplegable de horas cada 30 minutos. Así no se puede elegir una fecha que no existe ni una hora pasada. Lo usan la cartelera (publicar y vence) y las citaciones.
+- **Texto largo:** `AutoTextarea` (`src/ui/index.tsx`) crece hacia abajo con el contenido. Enter llama `onSend` y Shift+Enter baja de línea; no envía mientras se compone un carácter (IME). Lo usan los retos de Mi ruta (con botones para `/ , . −` y contador de 500) y el Laboratorio IA.
+- **Destinatarios de la cartelera:** `AudiencePicker` (`src/features/community.tsx`) ofrece «Toda la comunidad», grados y roles a los directivos. Al docente le ofrece «Todos mis grupos» y sus grados, que se expanden a sus grupos. No ofrece materias ni cursos.
+- **Pestañas:** `.seg-tabs` con `.seg-count` para el conteo. Usuarios tiene una tabla por rol, el banco filtra por estado y el Laboratorio IA alterna entre Historial y Consejos.
+
+## Laboratorio IA
+
+- `src/features/tutor.tsx` guarda la conversación abierta en `?c=<id>`, así que recargar la página la reabre.
+- El historial (`GET /api/tutor/conversations`) se refresca después de cada respuesta para mostrar el título nuevo.
+- **Nueva conversación** y el botón **+** vacían el estado sin borrar nada en el servidor.
 
 ## Sistema visual
 

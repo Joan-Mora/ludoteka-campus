@@ -7,6 +7,7 @@ import { ApiError } from '../../core/errors/api-error';
 import { DomainEvents } from '../../core/events/domain-events';
 import { shortCode } from '../../core/common/crypto';
 import { personaLine, personaOf } from '../../core/common/companion';
+import { redact } from '../../core/common/redact';
 import type { AuthUser } from '../../core/auth/auth.decorators';
 import { GuardiansService } from '../identity/public-api';
 import { IntegrityService } from '../integrity/public-api';
@@ -42,7 +43,11 @@ export class TutorService {
       throw new ApiError(403, 'GUARDIAN_REQUIRED', 'Tu acudiente debe autorizar el tutor con IA desde su panel antes de que puedas usarlo.');
     }
     let conversationId = input.conversationId;
-    if (!conversationId) {
+    let title: string | null = null;
+    if (conversationId) {
+      const owned = await this.ownConversation(user, conversationId);
+      title = owned.title;
+    } else {
       const created = await this.database.db
         .insertInto('tutor_conversations')
         .values({ user_id: user.id, course_id: input.courseId ?? null, lesson_id: input.lessonId ?? null })
@@ -57,13 +62,15 @@ export class TutorService {
     const lesson = input.lessonId
       ? await this.database.db.selectFrom('lessons').select(['title', 'body_md']).where('id', '=', input.lessonId).executeTakeFirst()
       : null;
-    const history = await this.database.db
-      .selectFrom('tutor_messages')
-      .select(['role', 'content'])
-      .where('conversation_id', '=', conversationId)
-      .orderBy('created_at')
-      .limit(12)
-      .execute();
+    const history = (
+      await this.database.db
+        .selectFrom('tutor_messages')
+        .select(['role', 'content'])
+        .where('conversation_id', '=', conversationId)
+        .orderBy('created_at', 'desc')
+        .limit(12)
+        .execute()
+    ).reverse();
     const context = lesson ? `Lección «${lesson.title}»:\n${lesson.body_md.slice(0, 2500)}` : 'Práctica general de matemáticas de sexto.';
     const citations = await this.library.search(user, input.message, { limit: 3 }).catch(() => []);
     const sources = citations.length
@@ -76,7 +83,7 @@ export class TutorService {
         { role: 'system', content: `${SYSTEM}\n${personaLine(persona)}${style ? `\n${style}` : ''}` },
         { role: 'system', content: context },
         ...(sources ? [{ role: 'system' as const, content: sources }] : []),
-        ...history.map((message) => ({ role: message.role as 'user' | 'assistant', content: message.content })),
+        ...history.map((message) => ({ role: message.role as 'user' | 'assistant', content: message.role === 'user' ? redact(message.content) : message.content })),
       ],
       { feature: 'tutor', userId: user.id },
     );
@@ -86,8 +93,89 @@ export class TutorService {
       .insertInto('tutor_messages')
       .values({ conversation_id: conversationId, role: 'assistant', content, citations: cited.length ? JSON.stringify(cited) : null })
       .execute();
+    const exchanges = history.filter((m) => m.role === 'user').length;
+    if (!title || exchanges === 3) title = await this.retitle(user, conversationId, title);
+    await this.database.db.updateTable('tutor_conversations').set({ updated_at: new Date() }).where('id', '=', conversationId).execute();
     this.events.emit(DomainEvents.TutorMessage, { userId: user.id });
-    return { conversationId, content, citations: cited, source: llm ? 'llm' : 'leccion' };
+    return { conversationId, title, content, citations: cited, source: llm ? 'llm' : 'leccion' };
+  }
+
+  private async ownConversation(user: AuthUser, id: string) {
+    const row = await this.database.db
+      .selectFrom('tutor_conversations')
+      .select(['id', 'title', 'updated_at'])
+      .where('id', '=', id)
+      .where('user_id', '=', user.id)
+      .executeTakeFirst();
+    if (!row) throw new ApiError(404, 'NOT_FOUND', 'Esa conversación no existe');
+    return row;
+  }
+
+  /**
+   * A short title from what was talked about: after the first answer, and once more after the third exchange,
+   * when the topic is clearer. Without a model it falls back to the start of the first question.
+   */
+  private async retitle(user: AuthUser, conversationId: string, current: string | null) {
+    const messages = await this.database.db
+      .selectFrom('tutor_messages')
+      .select(['role', 'content'])
+      .where('conversation_id', '=', conversationId)
+      .orderBy('created_at')
+      .limit(6)
+      .execute();
+    const transcript = messages.map((m) => `${m.role === 'user' ? 'Estudiante' : 'Tutor'}: ${redact(m.content).replace(/\s+/g, ' ').slice(0, 400)}`).join('\n');
+    const llm = await this.ai.chatText(
+      [
+        { role: 'system', content: 'Pon un título breve en español (de 3 a 6 palabras) que diga de qué trató esta conversación de estudio. Sin comillas, sin punto final, sin nombres de personas. Responde solo el título.' },
+        { role: 'user', content: transcript },
+      ],
+      { feature: 'tutor.titulo', userId: user.id },
+    );
+    const first = messages.find((m) => m.role === 'user')?.content ?? '';
+    const fallback = first.replace(/\s+/g, ' ').trim().split(' ').slice(0, 7).join(' ');
+    const title = (llm ?? '').replace(/["«»“”*#]/g, '').replace(/[.\s]+$/, '').split('\n')[0]!.trim().slice(0, 80) || current || fallback.slice(0, 80) || 'Conversación';
+    await this.database.db.updateTable('tutor_conversations').set({ title }).where('id', '=', conversationId).execute();
+    return title;
+  }
+
+  async conversations(user: AuthUser) {
+    const rows = await sql<{ id: string; title: string | null; updated_at: Date; preview: string | null; messages: number }>`
+      SELECT c.id, c.title, c.updated_at,
+        (SELECT m.content FROM tutor_messages m WHERE m.conversation_id = c.id AND m.role = 'user' ORDER BY m.created_at LIMIT 1) AS preview,
+        (SELECT count(*)::INT FROM tutor_messages m WHERE m.conversation_id = c.id) AS messages
+      FROM tutor_conversations c
+      WHERE c.user_id = ${user.id}
+        AND EXISTS (SELECT 1 FROM tutor_messages m WHERE m.conversation_id = c.id)
+      ORDER BY c.updated_at DESC
+      LIMIT 60`.execute(this.database.db);
+    return rows.rows.map((r) => ({
+      id: r.id,
+      title: r.title ?? (r.preview ?? 'Conversación').replace(/\s+/g, ' ').slice(0, 60),
+      updatedAt: r.updated_at,
+      messages: Number(r.messages),
+    }));
+  }
+
+  async conversation(user: AuthUser, id: string) {
+    const row = await this.ownConversation(user, id);
+    const messages = await this.database.db
+      .selectFrom('tutor_messages')
+      .select(['role', 'content', 'citations'])
+      .where('conversation_id', '=', id)
+      .where('role', 'in', ['user', 'assistant'])
+      .orderBy('created_at')
+      .execute();
+    return {
+      id: row.id,
+      title: row.title,
+      messages: messages.map((m) => ({ role: m.role, content: m.content, citations: m.citations ?? undefined })),
+    };
+  }
+
+  async deleteConversation(user: AuthUser, id: string) {
+    await this.ownConversation(user, id);
+    await this.database.db.deleteFrom('tutor_conversations').where('id', '=', id).execute();
+    return { deleted: true };
   }
 
   private localHint(message: string, title?: string, body?: string) {
@@ -95,14 +183,24 @@ export class TutorService {
     return `Pista desde ${title ? `«${title}»` : 'el temario de sexto'}. No te voy a dar el resultado de «${message.slice(0, 80)}».\n\n${excerpt}\n\nDime qué dato del enunciado ya tienes y cuál te falta.`;
   }
 
-  async drafts(user: AuthUser, input: { courseId: string; topic: string; count?: number }) {
-    const course = await this.database.db.selectFrom('courses').selectAll().where('id', '=', input.courseId).executeTakeFirst();
-    if (!course) throw new ApiError(404, 'NOT_FOUND', 'El curso no existe');
-    if (course.teacher_id !== user.id && user.role !== 'admin') throw new ApiError(403, 'FORBIDDEN', 'Solo el docente pide borradores');
+  /** AI drafts land inactive in the bank, for the subject chosen (or the course's subject); the teacher reviews and activates them. */
+  async drafts(user: AuthUser, input: { subjectId?: string; courseId?: string; topic: string; count?: number }) {
+    let subjectId = input.subjectId;
+    if (input.courseId) {
+      const course = await this.database.db.selectFrom('courses').select(['subject_id', 'teacher_id']).where('id', '=', input.courseId).executeTakeFirst();
+      if (!course) throw new ApiError(404, 'NOT_FOUND', 'El curso no existe');
+      if (course.teacher_id !== user.id && user.role !== 'admin') throw new ApiError(403, 'FORBIDDEN', 'Solo el docente pide borradores');
+      subjectId = course.subject_id;
+    } else if (user.role !== 'admin') {
+      const teaches = await this.database.db.selectFrom('courses').select('id').where('teacher_id', '=', user.id).where('subject_id', '=', subjectId!).executeTakeFirst();
+      if (!teaches) throw new ApiError(403, 'FORBIDDEN', 'Pide borradores de una materia que dictes');
+    }
+    const subject = await this.database.db.selectFrom('subjects').select(['id', 'name']).where('id', '=', subjectId!).executeTakeFirst();
+    if (!subject) throw new ApiError(404, 'NOT_FOUND', 'La materia no existe');
     const count = input.count ?? 2;
     const llm = await this.ai.chatText(
       [
-        { role: 'system', content: 'Genera preguntas de opción múltiple para matemáticas de sexto. Responde solo JSON: {"questions":[{"prompt":"","explanation":"","options":[{"text":"","correct":false}]}]}' },
+        { role: 'system', content: `Genera preguntas de opción múltiple de ${subject.name} para bachillerato colombiano, con cuatro opciones. Responde solo JSON: {"questions":[{"prompt":"","explanation":"","options":[{"text":"","correct":false}]}]}` },
         { role: 'user', content: `Tema: ${input.topic}. Cantidad: ${count}. Una sola opción correcta por pregunta.` },
       ],
       { feature: 'docente.borradores', userId: user.id, smart: true, json: true },
@@ -115,7 +213,7 @@ export class TutorService {
           .insertInto('questions')
           .values({
             code: `DRAFT-${shortCode(8)}`,
-            subject_id: course.subject_id,
+            subject_id: subject.id,
             prompt: draft.prompt,
             explanation: draft.explanation,
             created_by: user.id,

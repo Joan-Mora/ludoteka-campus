@@ -8,7 +8,6 @@ import {
   BadgeCheck,
   BookOpen,
   Building2,
-  CheckCircle2,
   ClipboardCheck,
   Download,
   FileSpreadsheet,
@@ -18,10 +17,8 @@ import {
   Layers,
   Library,
   Plus,
-  Search,
   ShieldAlert,
   ShieldCheck,
-  Sparkles,
   UserPlus,
   Users,
   Wand2,
@@ -44,175 +41,6 @@ function Panel({ icon, tone, title, subtitle, children, className, delay }: { ic
       </div>
       {children}
     </Reveal>
-  );
-}
-
-export function BankPage() {
-  const subjects = useQuery({ queryKey: ['subjects'], queryFn: () => api<{ id: string; name: string }[]>('/api/institution/subjects') });
-  const [subjectId, setSubjectId] = useState('');
-  const questions = useQuery({
-    queryKey: ['questions', subjectId],
-    queryFn: () => api<{ id: string; prompt: string; active: boolean; code: string }[]>(`/api/questions${subjectId ? `?subjectId=${subjectId}` : ''}`),
-  });
-  const courses = useQuery({ queryKey: ['courses'], queryFn: () => api<{ id: string; title: string }[]>('/api/courses') });
-  const client = useQueryClient();
-  const [picked, setPicked] = useState<string[]>([]);
-  const [filter, setFilter] = useState('');
-  const [notice, setNotice] = useState('');
-
-  function flash(text: string) {
-    setNotice(text);
-    setTimeout(() => setNotice(''), 2600);
-  }
-
-  async function createQuestion(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    await api('/api/questions', {
-      method: 'POST',
-      body: JSON.stringify({
-        subjectId: String(data.get('subjectId')),
-        prompt: String(data.get('prompt')),
-        explanation: String(data.get('explanation') || ''),
-        options: ['A', 'B', 'C', 'D'].map((label) => ({
-          label,
-          text: String(data.get(`opt${label}`)),
-          correct: data.get('correct') === label,
-        })),
-      }),
-    });
-    client.invalidateQueries({ queryKey: ['questions'] });
-    form.reset();
-    flash('Pregunta guardada en el banco');
-  }
-
-  async function createAssessment(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const form = event.currentTarget;
-    const data = new FormData(form);
-    await api('/api/assessments', {
-      method: 'POST',
-      body: JSON.stringify({
-        courseId: String(data.get('courseId')),
-        title: String(data.get('title')),
-        kind: String(data.get('kind')),
-        questionIds: picked,
-      }),
-    });
-    setPicked([]);
-    form.reset();
-    flash('Evaluación publicada en el curso');
-  }
-
-  async function drafts(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    await api('/api/tutor/drafts', { method: 'POST', body: JSON.stringify({ courseId: String(data.get('courseId')), topic: String(data.get('topic')), count: 2 }) });
-    client.invalidateQueries({ queryKey: ['questions'] });
-    flash('Borradores generados (inactivos)');
-  }
-
-  const list = (questions.data ?? []).filter((q) => q.prompt.toLowerCase().includes(filter.toLowerCase()));
-  const active = (questions.data ?? []).filter((q) => q.active).length;
-
-  return (
-    <div>
-      <PageHeader eyebrow="Docencia" title="Banco de preguntas" subtitle="Crea, genera con IA y arma evaluaciones en segundos." />
-      <AnimatePresence>
-        {notice && (
-          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="row g-8 card" style={{ padding: 14, marginBottom: 18, borderColor: 'var(--mint)', background: 'rgba(25,195,156,.08)' }}>
-            <CheckCircle2 size={18} color="var(--mint)" /> <b>{notice}</b>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <div className="grid cols-3" style={{ marginBottom: 18 }}>
-        <Stat icon={Library} tone="violet" value={questions.data?.length ?? 0} label="Preguntas en el banco" />
-        <Stat icon={CheckCircle2} tone="mint" value={active} label="Activas" />
-        <Stat icon={ClipboardCheck} tone="gold" value={picked.length} label="Seleccionadas para evaluar" />
-      </div>
-
-      <div className="grid cols-3" style={{ alignItems: 'start' }}>
-        <div className="span-2 stack" style={{ gap: 18 }}>
-          <Reveal className="card">
-            <div className="row between wrap g-12" style={{ marginBottom: 16 }}>
-              <div className="row g-12"><Tile icon={Layers} tone="violet" /><div className="card-title">Preguntas</div></div>
-              <div className="row g-8">
-                <select value={subjectId} onChange={(e) => setSubjectId(e.target.value)} style={{ padding: '9px 12px', borderRadius: 12, border: '1px solid var(--line)', background: 'var(--surface-2)' }}>
-                  <option value="">Todas las materias</option>
-                  {(subjects.data ?? []).map((subject) => <option key={subject.id} value={subject.id}>{subject.name}</option>)}
-                </select>
-                <div className="search" style={{ width: 220, padding: '8px 12px' }}>
-                  <Search size={15} />
-                  <input value={filter} onChange={(e) => setFilter(e.target.value)} placeholder="Buscar" style={{ border: 0, outline: 'none', background: 'transparent', width: '100%' }} />
-                </div>
-              </div>
-            </div>
-            <div className="stack g-8" style={{ maxHeight: 460, overflowY: 'auto', paddingRight: 4 }}>
-              {list.map((question) => {
-                const on = picked.includes(question.id);
-                return (
-                  <label key={question.id} className="row g-12" style={{ padding: '12px 14px', borderRadius: 14, border: on ? '1.5px solid var(--violet)' : '1px solid var(--line)', background: on ? 'rgba(124,92,255,.07)' : 'var(--surface-2)', cursor: 'pointer' }}>
-                    <input type="checkbox" checked={on} onChange={() => setPicked((prev) => (prev.includes(question.id) ? prev.filter((id) => id !== question.id) : [...prev, question.id]))} style={{ width: 18, height: 18, accentColor: 'var(--violet)' }} />
-                    <span className="chip" style={{ fontFamily: 'monospace', fontSize: 11.5 }}>{question.code}</span>
-                    <span style={{ flex: 1, fontWeight: 600, fontSize: 14.5 }}>{question.prompt}</span>
-                    {!question.active && <span className="chip gold">Borrador</span>}
-                  </label>
-                );
-              })}
-              {!list.length && <Empty icon={Library} title="Sin preguntas" />}
-            </div>
-          </Reveal>
-
-          <Panel icon={Plus} tone="mint" title="Nueva pregunta" subtitle="Opción múltiple con cuatro alternativas." delay={0.05}>
-            <form onSubmit={createQuestion}>
-              <label className="field">Materia
-                <select name="subjectId" required>
-                  <option value="">Elige</option>
-                  {(subjects.data ?? []).map((subject) => <option key={subject.id} value={subject.id}>{subject.name}</option>)}
-                </select>
-              </label>
-              <label className="field">Enunciado<textarea name="prompt" rows={3} required /></label>
-              <div className="grid cols-2" style={{ gap: 12 }}>
-                {['A', 'B', 'C', 'D'].map((label) => <label className="field" key={label} style={{ marginBottom: 0 }}>Opción {label}<input name={`opt${label}`} required /></label>)}
-              </div>
-              <div className="grid cols-2" style={{ gap: 12, marginTop: 14 }}>
-                <label className="field">Correcta
-                  <select name="correct" defaultValue="A">{['A', 'B', 'C', 'D'].map((label) => <option key={label}>{label}</option>)}</select>
-                </label>
-                <label className="field">Explicación<input name="explanation" /></label>
-              </div>
-              <button className="btn" type="submit"><Plus size={16} /> Guardar pregunta</button>
-            </form>
-          </Panel>
-        </div>
-
-        <div className="stack" style={{ gap: 18, position: 'sticky', top: 90 }}>
-          <Panel icon={ClipboardCheck} tone="gold" title="Armar evaluación" subtitle={`${picked.length} preguntas marcadas`} delay={0.05}>
-            <form onSubmit={createAssessment}>
-              <label className="field">Curso
-                <select name="courseId">{(courses.data ?? []).map((course) => <option key={course.id} value={course.id}>{course.title}</option>)}</select>
-              </label>
-              <label className="field">Título<input name="title" required /></label>
-              <label className="field">Tipo
-                <select name="kind"><option value="practice">Práctica</option><option value="exam">Examen</option><option value="live">En vivo</option></select>
-              </label>
-              <button className="btn" type="submit" disabled={!picked.length} style={{ width: '100%' }}>Publicar evaluación</button>
-            </form>
-          </Panel>
-          <Panel icon={Wand2} tone="violet" title="Generar con IA" subtitle="Crea borradores inactivos para revisar." delay={0.1}>
-            <form onSubmit={drafts}>
-              <label className="field">Curso
-                <select name="courseId">{(courses.data ?? []).map((course) => <option key={course.id} value={course.id}>{course.title}</option>)}</select>
-              </label>
-              <label className="field">Tema<input name="topic" placeholder="Ej. fracciones equivalentes" required /></label>
-              <button className="btn soft" type="submit" style={{ width: '100%' }}><Sparkles size={16} /> Pedir borradores</button>
-            </form>
-          </Panel>
-        </div>
-      </div>
-    </div>
   );
 }
 

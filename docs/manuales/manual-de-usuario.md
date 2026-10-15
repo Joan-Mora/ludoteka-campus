@@ -288,9 +288,13 @@ Mi ruta es un sendero de temas de matemáticas con retos que se ajustan a su niv
 
 1. Toque un tema del sendero (o pulse **Dame 3 retos** para que Luka elija).
 2. Pulse **3 retos**. Desde el nivel 4 se habilita el **Reto jefe**.
-3. Escriba su respuesta y pulse **Responder**. Si se atasca, use **Pista** o **Dibujarlo**.
+3. Escriba su respuesta y pulse **Responder** (o la tecla Enter). Si se atasca, use **Pista** o **Dibujarlo**.
 
 ![Tema de Mi ruta](img/estudiante/ruta-tema.png)
+
+**Cómo responder:** el cuadro crece hacia abajo a medida que escribe y admite hasta 500 caracteres, así que puede explicar cómo lo pensó. Enter envía y Shift+Enter baja de línea. Los botones **/**, **,**, **.** y **−** escriben esos signos sin buscarlos en el teclado del celular, y el micrófono dicta la respuesta. Puede escribir fracciones (3/4), decimales con coma o punto (2,5) y miles con punto (1.200). Si explica su razonamiento, se califica el número que va después de «=» o de «la respuesta es»; si no hay ninguno, el último número que escriba.
+
+Los retos de Mi ruta **no salen del banco de preguntas**: los redacta Luka para su nivel (llevan la etiqueta «IA») o un generador del tema, y el servidor verifica cada respuesta. Las preguntas del banco se usan en las evaluaciones del curso, la Sala en vivo y la Arena.
 
 Reglas: dos aciertos seguidos suben un nivel y dos fallos seguidos lo bajan. Las estrellas se ganan en los niveles 4, 7 y 10. Vencer al jefe sube un nivel; perder no quita nada. Puede tener hasta 6 retos pendientes.
 
@@ -316,6 +320,14 @@ Responda el cuestionario «Descubre cómo aprendes» (12 situaciones, unos 3 min
 El tutor da pistas paso a paso, nunca la respuesta final. Escriba o dicte su duda y pulse **Pedir pista**. Cuando usa la biblioteca del colegio, cita la guía y la página.
 
 ![Tutor de IA](img/estudiante/tutor.png)
+
+**Conversaciones e historial:** cada conversación es independiente. Después de la primera respuesta, Luka le pone un título corto según lo que hablaron (y lo ajusta en la tercera pregunta, cuando el tema está más claro).
+
+- **Nueva conversación** (o el botón **+**) empieza una conversación en blanco; la anterior queda guardada.
+- La pestaña **Historial** lista sus conversaciones con su título, la fecha y cuántas preguntas tiene. Tóquela para reabrirla y seguir donde quedó.
+- El ícono de la papelera la borra del historial (pide confirmación).
+- La pestaña **Consejos** tiene ideas para sacarle provecho.
+- El cuadro de escritura crece hacia abajo; Enter envía y Shift+Enter baja de línea.
 
 - **Voz activada** lee las respuestas en voz alta; **Manos libres** envía lo que dicta sin tocar el botón.
 - Si es menor de edad, su acudiente debe autorizar el tutor desde su cuenta. Si no lo ha hecho, verá «Tu acudiente debe autorizar el tutor con IA desde su panel antes de que puedas usarlo.».
@@ -388,17 +400,21 @@ Las unidades y lecciones quedan visibles para los estudiantes en cuanto se crean
 
 ![Banco de preguntas](img/docente/banco.png)
 
-**Crear una pregunta:** en **Nueva pregunta** elija la **Materia**, escriba el **Enunciado**, las opciones **A** a **D**, marque la **Correcta** y, si quiere, una **Explicación** (se muestra en la Arena). Pulse **Guardar pregunta**.
+La pantalla muestra el camino en tres pasos: **Escribe o genera**, **Revisa los borradores** y **Arma la evaluación**, cada uno con su conteo. Arriba de la lista están las pestañas **Todas**, **Activas** y **Borradores**, el filtro por materia y un buscador por enunciado o código.
 
-**Generar con IA:** en **Generar con IA** elija el curso, escriba el tema y pulse **Pedir borradores**. Se crean dos preguntas en estado «Borrador» para que las revise.
+**Crear una pregunta:** pulse **Nueva pregunta**, elija la **Materia** y la **Dificultad**, escriba el **Enunciado** y las opciones (de 2 a 6; **Añadir opción** suma una). Marque el círculo de la opción correcta y, si quiere, escriba una **Explicación** (se muestra en la Arena). Pulse **Guardar pregunta**.
+
+**Pedir borradores a la IA:** elija la materia (solo aparecen las que usted dicta), escriba el tema, elija cuántas preguntas (1 a 5) y pulse **Pedir borradores**. Llegan como «Borrador», apagadas: revíselas con **Editar** y pulse **Activar** cuando estén bien.
+
+**Editar, apagar o eliminar:** en cada pregunta, **Editar** abre el mismo formulario con sus datos. **Apagar** la saca de las evaluaciones nuevas sin borrarla, y **Activar** la devuelve. La papelera pide confirmación. Si la pregunta ya se usó en una evaluación, una sala o la Arena, se archiva: sale del banco, pero las evaluaciones anteriores y sus notas se conservan. Si ya hay respuestas guardadas, se puede corregir el texto pero no quitar las opciones que alguien eligió. Modifica una pregunta quien la creó, el docente que dicta esa materia o administración; las demás se ven en modo lectura.
 
 **Armar una evaluación:**
 
-1. Marque las preguntas en la lista.
-2. En **Armar evaluación** elija el **Curso**, escriba el **Título** y el **Tipo**: **Práctica**, **Examen** o **En vivo**.
-3. Pulse **Publicar evaluación**. Aparece de inmediato en el curso. Cada pregunta vale 10 puntos.
+1. Marque las preguntas activas (los borradores no se pueden marcar). Abajo aparece la barra con el número de preguntas marcadas.
+2. Pulse **Armar evaluación**, elija el **Curso**, escriba el **Título** y elija el **Tipo**: **Práctica** (se repite), **Examen** (un intento, con tiempo y modo examen) o **En vivo** (se proyecta desde la Sala en vivo).
+3. Elija el **Tiempo límite** (de 5 a 90 minutos), revise la lista (puede quitar preguntas) y pulse **Publicar en el curso**. Aparece de inmediato en el curso. Cada pregunta vale 10 puntos.
 
-Los exámenes duran 10 minutos, se presentan una vez y en pantalla completa con control de integridad. Las prácticas se pueden repetir.
+Los exámenes se presentan una vez y en pantalla completa con control de integridad. Las prácticas se pueden repetir.
 
 ### Tareas y evaluaciones del curso (calificar)
 
@@ -488,7 +504,7 @@ Hay dos pestañas: **Familias** (acudientes de sus estudiantes) y **Colegas**. P
 
 ### Cartelera
 
-En **Publicar novedad** escriba el **Título**, el **Mensaje** y la **Categoría**, elija los **Destinatarios** (sus grupos y cursos) y pulse **Publicar**. Puede programar la fecha, fijarla arriba y pedir confirmación de lectura. En sus publicaciones, **Ver acuses** muestra quién la leyó y quién la confirmó. En los foros de sus cursos puede fijar, cerrar o borrar temas, marcar respuestas y pedir a Luka un resumen del hilo.
+En **Publicar novedad** escriba el **Título**, el **Mensaje** y la **Categoría**, elija a quién va dirigida y pulse **Publicar**. En **Destinatarios** puede elegir **Todos mis grupos** o los grados que usted dicta; al tocar un grado se ven sus grupos y puede quitar los que no quiera. Si dicta en varios grupos o grados, aparecen todos. **Solo algunos grupos** muestra la lista completa de sus grupos. Para programar la publicación o la fecha en que deja de mostrarse, toque la fecha y elíjala en el calendario y la hora en el desplegable (cada 30 minutos); el calendario no deja elegir días pasados. También puede fijarla arriba y pedir confirmación de lectura. En sus publicaciones, **Ver acuses** muestra quién la leyó y quién la confirmó. En los foros de sus cursos puede fijar, cerrar o borrar temas, marcar respuestas y pedir a Luka un resumen del hilo.
 
 ![Cartelera del docente](img/docente/cartelera.png)
 
@@ -526,7 +542,7 @@ Aquí llegan las alertas académicas y de convivencia de todos los grupos. Filtr
 
 1. Pulse **Nueva citación** (o **Citar** en una alerta).
 2. Busque al estudiante. Solo se pueden citar estudiantes con acudientes vinculados.
-3. Elija **Fecha y hora** (al menos 30 minutos en el futuro), **Modalidad** (presencial o virtual), **Lugar o enlace** y **Motivo**.
+3. Elija **Fecha y hora** en el calendario y el desplegable de horas (al menos 30 minutos en el futuro), **Modalidad** (presencial o virtual), **Lugar o enlace** y **Motivo**.
 4. Pulse **Enviar citación**. Cada acudiente recibe un aviso en el campus y un correo para confirmar.
 
 ![Nueva citación](img/coordinacion/nueva-citacion.png)
@@ -549,7 +565,7 @@ Es la planilla de notas de cualquier curso en modo consulta: las notas, la asist
 
 ### Cartelera y foros
 
-Coordinación puede publicar para **Toda la comunidad**, por rol (estudiantes, acudientes, docentes…) o por grupo y curso, y puede emitir circulares urgentes con confirmación de lectura (los docentes no). En los foros de curso modera (fijar, cerrar, borrar) pero no publica.
+Coordinación puede publicar para **Toda la comunidad**, por **grado** (llega a estudiantes, acudientes y docentes de todos sus grupos), por rol (estudiantes, acudientes, docentes…) o, en **Solo algunos grupos**, por grupo. Puede emitir circulares urgentes con confirmación de lectura (los docentes no). En los foros de curso modera (fijar, cerrar, borrar) pero no publica.
 
 ![Publicar en la cartelera](img/coordinacion/cartelera-publicar.png)
 
@@ -630,7 +646,9 @@ Usted ve las **Novedades** dirigidas a acudientes o a los grupos de sus hijos. S
 
 ## 9. Administración
 
-Sus edificios: **Administración** (Usuarios, Institución), **Datos** (Observatorio) y **Comunicación** (Mensajes, Cartelera, Biblioteca).
+Sus edificios: **Administración** (Usuarios, Institución, Grupos y cursos), **Académico** (Banco de preguntas, Consolidado de notas, Archivo de reportes), **Seguimiento** (Alertas, Asistencia, Citaciones), **Datos** (Tablero, Observatorio) y **Comunicación** (Mensajes, Cartelera, Biblioteca).
+
+Administración entra a todos los módulos de gestión y los usa como se describe en las secciones de Docente (banco de preguntas), Coordinación (alertas, asistencia, citaciones y consolidado) y Rectoría (tablero y archivo de reportes). Firmar certificados y boletines y emitir comunicados oficiales siguen siendo de Rectoría.
 
 ![Inicio de administración](img/administracion/inicio.png)
 
@@ -648,10 +666,18 @@ El año lectivo y sus periodos no se crean desde la pantalla; los prepara el equ
 
 ![Usuarios](img/administracion/usuarios.png)
 
+Las cuentas se ven en pestañas, cada una con su propia tabla y su conteo: **Estudiantes**, **Docentes**, **Acudientes**, **Coordinación** y **Rectoría** (y **Administración** si hay otras cuentas de administración). Cada tabla muestra lo que importa para ese rol:
+
+- **Estudiantes:** grupo, acudientes y la marca «Menor».
+- **Docentes:** los cursos que tiene a cargo este año (por ejemplo «Matemáticas 6A»). Un docente puede tener varios.
+- **Acudientes:** los estudiantes a su cargo. Un acudiente puede tener varios.
+
+En Estudiantes, Docentes y Acudientes, el filtro **Grupo** muestra los estudiantes del grupo, los docentes que dictan en él o los acudientes de esos estudiantes. El buscador filtra por nombre o correo.
+
 **Crear una cuenta:**
 
-1. Pulse **Nueva cuenta**.
-2. Escriba el **Nombre completo**, el **Correo** y elija el **Rol**.
+1. Pulse **Nueva cuenta**. El rol viene elegido según la pestaña abierta.
+2. Escriba el **Nombre completo** y el **Correo**, y cambie el **Rol** si hace falta.
 3. Si es estudiante, elija el **Grupo**. Si es acudiente, escriba en **Acudiente de** los correos de sus estudiantes.
 4. Marque **Es menor de edad** si aplica (viene marcada para estudiantes).
 5. Pulse **Crear y enviar acceso**. La persona recibe por correo su clave temporal.
@@ -742,8 +768,8 @@ Si el problema sigue, escriba a secretaría indicando su correo, la hora y una c
 Estas son diferencias entre lo que podría esperarse y lo que el campus hace hoy. Están documentadas para evitar confusiones mientras se resuelven.
 
 - **Tareas:** las entregas son solo de texto, sin archivos adjuntos ni fecha límite visible. Los docentes todavía no pueden crear tareas, anuncios del curso ni eventos del calendario desde la pantalla.
-- **Contenido:** las unidades, lecciones, preguntas y evaluaciones no se pueden editar ni borrar desde la pantalla. Las lecciones solo se agregan a la unidad recién creada.
-- **Exámenes:** duran siempre 10 minutos y, al llegar a 00:00, el examen no se entrega solo; hay que pulsar **Entregar evaluación**.
+- **Contenido:** las unidades, lecciones y evaluaciones ya publicadas no se pueden editar ni borrar desde la pantalla (las preguntas del banco sí). Las lecciones solo se agregan a la unidad recién creada.
+- **Exámenes:** al llegar a 00:00 el examen no se entrega solo; hay que pulsar **Entregar evaluación**.
 - **Mapa del curso:** los candados de las lecciones son decorativos; todas las lecciones se pueden abrir.
 - **Buscador superior:** la caja «Buscar lecciones, tareas o evaluaciones» del computador todavía no busca.
 - **Año lectivo y periodos:** no hay pantalla para crearlos; los prepara el equipo técnico.

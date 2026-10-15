@@ -74,6 +74,7 @@ export class LearningService {
         'courses.description',
         'courses.published',
         'courses.is_demo as demo',
+        'courses.subject_id',
         'subjects.name as subject',
         'groups_class.name as group_name',
         'grades.level as grade_level',

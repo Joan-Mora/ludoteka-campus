@@ -28,6 +28,7 @@ import {
   Sparkles,
   Trash2,
   Unlock,
+  Users,
   X,
   Zap,
   type LucideIcon,
@@ -40,6 +41,7 @@ import { RichText } from '@/shared/rich-text';
 import { MicButton, SpeakButton } from '@/shared/voice-ui';
 import { joinDictation } from '@/shared/voice';
 import { Avatar, Bar, Empty, PageHeader, Reveal, Stat, Tile, type Tone } from '@/ui';
+import { DateTimeField } from '@/ui/date-time';
 import { DigestControl, FamilyDetail, useFamily, type FamilyChild } from './governance';
 
 const when = (value: string | null | undefined) =>
@@ -282,9 +284,80 @@ const roleLabel: Record<string, string> = ROLE_LABELS;
 const toGrade = (percent: number) => Math.round((1 + (4 * percent) / 100) * 10) / 10;
 const roleAudience: Record<string, string> = { student: 'Estudiantes', guardian: 'Acudientes', teacher: 'Docentes', coordinator: 'Coordinación', rector: 'Rectoría' };
 
-interface Targets { allowAll: boolean; canOfficial?: boolean; roles: string[]; groups: { id: string; label: string }[]; courses: { id: string; title: string }[] }
-type Target = { kind: 'all' } | { kind: 'role' | 'group' | 'course'; value: string };
-const targetKey = (t: Target) => `${t.kind}:${'value' in t ? t.value : ''}`;
+interface GradeTarget { id: string; label: string; groups: { id: string; label: string }[] }
+interface Targets { allowAll: boolean; canOfficial?: boolean; roles: string[]; grades: GradeTarget[] }
+type Target = { kind: 'all' } | { kind: 'role' | 'grade' | 'group'; value: string };
+
+/**
+ * Who gets the notice, by grade. Board roles pick the whole community, whole grades or a role; a teacher picks
+ * «todos mis grupos» or a grade, which means the groups they teach in it, so a student with several of their
+ * courses gets the notice once.
+ */
+function AudiencePicker({ targets, value, onChange }: { targets: Targets; value: Target[]; onChange: (value: Target[]) => void }) {
+  const [fine, setFine] = useState(false);
+  const board = targets.allowAll;
+  const has = (t: Target) => value.some((v) => v.kind === t.kind && ('value' in v ? v.value : '') === ('value' in t ? t.value : ''));
+  const toggle = (t: Target) => onChange(has(t) ? value.filter((v) => !(v.kind === t.kind && ('value' in v ? v.value : '') === ('value' in t ? t.value : ''))) : [...value.filter((v) => v.kind !== 'all'), t]);
+  const groupsOf = (grade: GradeTarget) => grade.groups.map((g) => ({ kind: 'group' as const, value: g.id }));
+  const allMine = targets.grades.flatMap(groupsOf);
+  const gradeOn = (grade: GradeTarget) => (board ? has({ kind: 'grade', value: grade.id }) : grade.groups.every((g) => has({ kind: 'group', value: g.id })));
+  const everyone = board ? has({ kind: 'all' }) : allMine.length > 0 && allMine.every(has);
+
+  function toggleGrade(grade: GradeTarget) {
+    if (board) {
+      const t: Target = { kind: 'grade', value: grade.id };
+      const ids = new Set(grade.groups.map((g) => g.id));
+      return onChange(has(t) ? value.filter((v) => !(v.kind === 'grade' && v.value === grade.id)) : [...value.filter((v) => v.kind !== 'all' && !(v.kind === 'group' && ids.has(v.value))), t]);
+    }
+    const ids = new Set(grade.groups.map((g) => g.id));
+    const rest = value.filter((v) => !(v.kind === 'group' && ids.has(v.value)));
+    onChange(gradeOn(grade) ? rest : [...rest, ...groupsOf(grade)]);
+  }
+
+  return (
+    <div className="field audience">
+      ¿A quién va dirigida?
+      <div className="row g-8 wrap">
+        <button type="button" className={`chip ${everyone ? 'violet' : ''}`} aria-pressed={everyone} onClick={() => onChange(everyone ? [] : board ? [{ kind: 'all' }] : allMine)}>
+          <Users size={13} /> {board ? 'Toda la comunidad' : 'Todos mis grupos'}
+        </button>
+      </div>
+      {targets.grades.length > 0 && (
+        <>
+          <span className="audience-sub">Por grado</span>
+          <div className="row g-8 wrap">
+            {targets.grades.map((grade) => (
+              <button type="button" key={grade.id} className={`chip ${gradeOn(grade) ? 'sky' : ''}`} aria-pressed={gradeOn(grade)} disabled={board && everyone} onClick={() => toggleGrade(grade)} title={grade.groups.map((g) => g.label).join(', ')}>
+                {grade.label}{!board && grade.groups.length > 1 ? ` (${grade.groups.length} grupos)` : ''}
+              </button>
+            ))}
+          </div>
+          <button type="button" className="linkish" style={{ width: 'fit-content' }} onClick={() => setFine(!fine)} aria-expanded={fine}>{fine ? 'Ocultar grupos' : 'Solo algunos grupos'}</button>
+          {fine && (
+            <div className="row g-6 wrap">
+              {targets.grades.flatMap((grade) => grade.groups.map((g) => {
+                const t: Target = { kind: 'group', value: g.id };
+                const covered = board && (everyone || has({ kind: 'grade', value: grade.id }));
+                return <button type="button" key={g.id} className={`chip ${has(t) || covered ? 'mint' : ''}`} aria-pressed={has(t)} disabled={covered} onClick={() => toggle(t)}>{g.label}</button>;
+              }))}
+            </div>
+          )}
+        </>
+      )}
+      {board && (
+        <>
+          <span className="audience-sub">Por rol</span>
+          <div className="row g-8 wrap">
+            {targets.roles.map((r) => {
+              const t: Target = { kind: 'role', value: r };
+              return <button type="button" key={r} className={`chip ${has(t) ? 'gold' : ''}`} aria-pressed={has(t)} disabled={everyone} onClick={() => toggle(t)}>{roleAudience[r] ?? r}</button>;
+            })}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
 
 function Composer({ onDone }: { onDone: () => void }) {
   const targets = useQuery({ queryKey: ['news-targets'], queryFn: () => api<Targets>('/api/news/targets') });
@@ -292,14 +365,10 @@ function Composer({ onDone }: { onDone: () => void }) {
   const officialPreset = params.get('oficial') === '1';
   const [body, setBody] = useState('');
   const [audience, setAudience] = useState<Target[]>([]);
+  const [publishAt, setPublishAt] = useState<Date | null>(null);
+  const [expiresAt, setExpiresAt] = useState<Date | null>(null);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const selected = useMemo(() => new Set(audience.map(targetKey)), [audience]);
-
-  function toggle(target: Target) {
-    const key = targetKey(target);
-    setAudience((current) => (current.some((t) => targetKey(t) === key) ? current.filter((t) => targetKey(t) !== key) : [...current, target]));
-  }
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -307,8 +376,7 @@ function Composer({ onDone }: { onDone: () => void }) {
     const d = new FormData(form);
     setError('');
     if (!audience.length) return setError('Elige a quién va dirigida.');
-    const publishAt = String(d.get('publishAt') || '');
-    const expiresAt = String(d.get('expiresAt') || '');
+    if (expiresAt && expiresAt <= (publishAt ?? new Date())) return setError('El vencimiento debe ser después de la publicación.');
     setBusy(true);
     try {
       await api('/api/news', {
@@ -320,14 +388,16 @@ function Composer({ onDone }: { onDone: () => void }) {
           pinned: d.get('pinned') === 'on',
           requiresAck: d.get('requiresAck') === 'on',
           official: d.get('official') === 'on',
-          publishAt: publishAt ? new Date(publishAt).toISOString() : undefined,
-          expiresAt: expiresAt ? new Date(expiresAt).toISOString() : undefined,
+          publishAt: publishAt && publishAt > new Date() ? publishAt.toISOString() : undefined,
+          expiresAt: expiresAt?.toISOString(),
           audience,
         }),
       });
       form.reset();
       setBody('');
       setAudience([]);
+      setPublishAt(null);
+      setExpiresAt(null);
       onDone();
     } catch (err) {
       setError((err as Error).message);
@@ -348,18 +418,10 @@ function Composer({ onDone }: { onDone: () => void }) {
         <label className="field">Categoría
           <select name="category" defaultValue="general">{CATEGORIES.map((c) => <option key={c.key} value={c.key}>{c.label}</option>)}</select>
         </label>
-        <div className="field">
-          Destinatarios
-          <div className="row g-8 wrap">
-            {t?.allowAll && <button type="button" className={`chip ${selected.has('all:') ? 'violet' : ''}`} onClick={() => toggle({ kind: 'all' })}>Toda la comunidad</button>}
-            {t?.roles.map((r) => <button type="button" key={r} className={`chip ${selected.has(`role:${r}`) ? 'violet' : ''}`} onClick={() => toggle({ kind: 'role', value: r })}>{roleAudience[r] ?? r}</button>)}
-            {t?.groups.map((g) => <button type="button" key={g.id} className={`chip ${selected.has(`group:${g.id}`) ? 'sky' : ''}`} onClick={() => toggle({ kind: 'group', value: g.id })}>{g.label}</button>)}
-            {t?.courses.map((c) => <button type="button" key={c.id} className={`chip ${selected.has(`course:${c.id}`) ? 'mint' : ''}`} onClick={() => toggle({ kind: 'course', value: c.id })}>{c.title}</button>)}
-          </div>
-        </div>
+        {t && <AudiencePicker targets={t} value={audience} onChange={setAudience} />}
         <div className="grid cols-2" style={{ gap: 10 }}>
-          <label className="field">Publicar el<input name="publishAt" type="datetime-local" /></label>
-          <label className="field">Vence el<input name="expiresAt" type="datetime-local" /></label>
+          <DateTimeField label="Publicar el" placeholder="Ahora mismo" value={publishAt} onChange={setPublishAt} min={new Date()} />
+          <DateTimeField label="Vence el" placeholder="No vence" value={expiresAt} onChange={setExpiresAt} min={publishAt ?? new Date()} defaultTime="18:00" />
         </div>
         <label className="check"><input name="pinned" type="checkbox" /> Fijar arriba</label>
         <label className="check"><input name="requiresAck" type="checkbox" /> Pedir confirmación de lectura</label>

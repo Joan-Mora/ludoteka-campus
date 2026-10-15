@@ -37,6 +37,7 @@ import { ROLE_LABELS } from '@eduquest/contracts';
 import { api, download } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
 import { Avatar, Bar, Empty, PageHeader, Reveal, Sheet, Stat, Tile, type Tone } from '@/ui';
+import { DateTimeField } from '@/ui/date-time';
 import { CourseLinks, InstitutionReports, ReportHistory } from './staff';
 
 const when = (value: string | null | undefined) =>
@@ -343,13 +344,13 @@ function MeetingForm({ preset, onDone }: { preset: { studentId: string; studentN
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(0);
+  const [when, setWhen] = useState<Date | null>(null);
 
   async function submit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!student) return setError('Elige el estudiante.');
     const d = new FormData(e.currentTarget);
-    const local = String(d.get('when') || '');
-    if (!local) return setError('Elige la fecha y la hora.');
+    if (!when) return setError('Elige la fecha y la hora.');
     setBusy(true);
     setError('');
     try {
@@ -357,7 +358,7 @@ function MeetingForm({ preset, onDone }: { preset: { studentId: string; studentN
         method: 'POST',
         body: JSON.stringify({
           studentId: student.id,
-          scheduledAt: new Date(local).toISOString(),
+          scheduledAt: when.toISOString(),
           mode: d.get('mode'),
           place: d.get('place'),
           reason: d.get('reason'),
@@ -396,7 +397,8 @@ function MeetingForm({ preset, onDone }: { preset: { studentId: string; studentN
       ) : (
         <StudentPicker onPick={setStudent} />
       )}
-      <label className="field">Fecha y hora<input name="when" type="datetime-local" required /></label>
+      <DateTimeField label="Fecha y hora" placeholder="Elige el día" value={when} onChange={setWhen} min={new Date()} />
+
       <div className="grid cols-2" style={{ gap: 10 }}>
         <label className="field">Modalidad<select name="mode" defaultValue="presencial"><option value="presencial">Presencial</option><option value="virtual">Virtual</option></select></label>
         <label className="field">Lugar o enlace<input name="place" maxLength={200} placeholder="Sala de coordinación" /></label>
@@ -577,7 +579,7 @@ export function RectoriaPage() {
   const setTab = (next: keyof typeof RECTOR_TABS) => navigate(RECTOR_TABS[next]);
   const [period, setPeriod] = useState<string>('');
   const dash = useQuery({ queryKey: ['rectoria', period], queryFn: () => api<Dashboard>(`/api/rectoria/dashboard${period ? `?period=${period}` : ''}`) });
-  const sigs = useQuery({ queryKey: ['rectoria-signatures'], queryFn: () => api<Signatures>('/api/rectoria/signatures') });
+  const sigs = useQuery({ queryKey: ['rectoria-signatures'], queryFn: () => api<Signatures>('/api/rectoria/signatures'), enabled: user?.role === 'rector' });
   const pending = (sigs.data?.certificates.length ?? 0) + (sigs.data?.bulletins.length ?? 0);
   const d = dash.data;
   return (
@@ -602,12 +604,17 @@ export function RectoriaPage() {
       <Tabs
         value={tab}
         onChange={setTab}
-        items={[
-          ['board', 'Indicadores', BarChart3],
-          ['sign', 'Por firmar', FileSignature, pending],
-          ['news', 'Comunicados', Megaphone],
-          ['reports', 'Reportes', FileText],
-        ]}
+        items={user?.role === 'rector'
+          ? [
+              ['board', 'Indicadores', BarChart3],
+              ['sign', 'Por firmar', FileSignature, pending],
+              ['news', 'Comunicados', Megaphone],
+              ['reports', 'Reportes', FileText],
+            ]
+          : [
+              ['board', 'Indicadores', BarChart3],
+              ['reports', 'Reportes', FileText],
+            ]}
       />
       {tab === 'board' && d && <RectorBoard d={d} />}
       {tab === 'board' && dash.isLoading && <p className="muted">Calculando indicadores…</p>}

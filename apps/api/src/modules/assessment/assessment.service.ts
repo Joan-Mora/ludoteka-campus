@@ -45,21 +45,126 @@ export class AssessmentService implements OnApplicationBootstrap, OnModuleDestro
     if (closed) this.logger.log(`${closed} sala(s) en vivo abandonadas cerradas`);
   }
 
-  async listQuestions(subjectId?: string) {
-    let query = this.database.db.selectFrom('questions').selectAll().orderBy('created_at', 'desc');
-    if (subjectId) query = query.where('subject_id', '=', subjectId);
-    const questions = await query.limit(200).execute();
+  /** Admin manages the whole bank; a teacher, what they wrote and the questions of the subjects they teach. */
+  private manages(user: AuthUser) {
+    if (user.role === 'admin') return sql<boolean>`true`;
+    return sql<boolean>`(questions.created_by = ${user.id} OR EXISTS (SELECT 1 FROM courses c WHERE c.teacher_id = ${user.id} AND c.subject_id = questions.subject_id))`;
+  }
+
+  async listQuestions(user: AuthUser, subjectId?: string) {
+    let query = this.database.db
+      .selectFrom('questions')
+      .innerJoin('subjects', 'subjects.id', 'questions.subject_id')
+      .leftJoin('grades', 'grades.id', 'questions.grade_id')
+      .leftJoin('users', 'users.id', 'questions.created_by')
+      .select([
+        'questions.id', 'questions.code', 'questions.subject_id', 'questions.grade_id', 'questions.prompt', 'questions.difficulty',
+        'questions.explanation', 'questions.active', 'questions.created_at', 'subjects.name as subject', 'grades.name as grade', 'users.full_name as author',
+      ])
+      .select(this.manages(user).as('can_edit'))
+      .select(sql<number>`(SELECT count(*)::INT FROM assessment_questions aq WHERE aq.question_id = questions.id)`.as('uses'))
+      .where('questions.archived_at', 'is', null)
+      .orderBy('questions.created_at', 'desc');
+    if (subjectId) query = query.where('questions.subject_id', '=', subjectId);
+    const questions = await query.limit(500).execute();
     if (!questions.length) return [];
     const options = await this.database.db
       .selectFrom('question_options')
-      .selectAll()
+      .select(['id', 'question_id', 'label', 'text', 'is_correct', 'position'])
       .where('question_id', 'in', questions.map((q) => q.id))
       .orderBy('position')
       .execute();
     return questions.map((question) => ({
       ...question,
+      uses: Number(question.uses),
+      can_edit: Boolean(question.can_edit),
       options: options.filter((option) => option.question_id === question.id),
     }));
+  }
+
+  private async manageable(user: AuthUser, id: string) {
+    const question = await this.database.db
+      .selectFrom('questions')
+      .select(['questions.id', 'questions.subject_id'])
+      .select(this.manages(user).as('can_edit'))
+      .where('questions.id', '=', id)
+      .where('questions.archived_at', 'is', null)
+      .executeTakeFirst();
+    if (!question) throw new ApiError(404, 'NOT_FOUND', 'La pregunta no existe');
+    if (!question.can_edit) throw new ApiError(403, 'FORBIDDEN', 'Solo quien la creó, el docente de la materia o un administrador la modifica');
+    return question;
+  }
+
+  /** Whether any evaluation, attempt or Arena room points at the question (or at some of its options). */
+  private async inUse(questionId: string, optionIds?: string[]) {
+    if (optionIds) {
+      if (!optionIds.length) return false;
+      const row = await sql<{ used: boolean }>`
+        SELECT EXISTS (SELECT 1 FROM attempt_answers WHERE option_id IN (${sql.join(optionIds)}))
+          OR EXISTS (SELECT 1 FROM arena_answers WHERE option_id IN (${sql.join(optionIds)})) AS used`.execute(this.database.db);
+      return Boolean(row.rows[0]?.used);
+    }
+    const row = await sql<{ used: boolean }>`
+      SELECT EXISTS (SELECT 1 FROM assessment_questions WHERE question_id = ${questionId})
+        OR EXISTS (SELECT 1 FROM attempt_answers WHERE question_id = ${questionId})
+        OR EXISTS (SELECT 1 FROM arena_answers WHERE question_id = ${questionId})
+        OR EXISTS (SELECT 1 FROM arena_rooms WHERE ${questionId}::UUID = ANY (question_ids)) AS used`.execute(this.database.db);
+    return Boolean(row.rows[0]?.used);
+  }
+
+  async updateQuestion(user: AuthUser, id: string, input: {
+    subjectId: string;
+    gradeId?: string;
+    prompt: string;
+    difficulty?: string;
+    explanation?: string;
+    options: { label: string; text: string; correct: boolean }[];
+  }) {
+    if (input.options.filter((option) => option.correct).length !== 1) throw new ApiError(400, 'NO_ANSWER', 'Marca una sola opción correcta');
+    await this.manageable(user, id);
+    const existing = await this.database.db.selectFrom('question_options').select(['id', 'label']).where('question_id', '=', id).orderBy('position').execute();
+    const removed = existing.slice(input.options.length).map((option) => option.id);
+    if (await this.inUse(id, removed)) throw new ApiError(409, 'OPTION_IN_USE', 'Hay estudiantes que ya eligieron las opciones que quitaste; deja el mismo número de opciones');
+    return this.database.withTx(async (trx) => {
+      const question = await trx
+        .updateTable('questions')
+        .set({
+          subject_id: input.subjectId,
+          grade_id: input.gradeId ?? null,
+          prompt: input.prompt,
+          difficulty: input.difficulty ?? 'media',
+          explanation: input.explanation ?? '',
+        })
+        .where('id', '=', id)
+        .returningAll()
+        .executeTakeFirstOrThrow();
+      if (removed.length) await trx.deleteFrom('question_options').where('id', 'in', removed).execute();
+      // Labels move to a temporary value first so A↔B swaps never hit the (question_id, label) unique key.
+      for (const [index, option] of existing.slice(0, input.options.length).entries()) {
+        await trx.updateTable('question_options').set({ label: `~${index}` }).where('id', '=', option.id).execute();
+      }
+      for (const [index, option] of input.options.entries()) {
+        const label = String.fromCharCode(65 + index);
+        const current = existing[index];
+        if (current) {
+          await trx.updateTable('question_options').set({ label, text: option.text, is_correct: option.correct, position: index + 1 }).where('id', '=', current.id).execute();
+        } else {
+          await trx.insertInto('question_options').values({ question_id: id, label, text: option.text, is_correct: option.correct, position: index + 1 }).execute();
+        }
+      }
+      return question;
+    });
+  }
+
+  /** Unused questions disappear; used ones are archived so past evaluations and Arena rooms keep opening. */
+  async deleteQuestion(user: AuthUser, id: string) {
+    await this.manageable(user, id);
+    if (await this.inUse(id)) {
+      await this.database.db.updateTable('questions').set({ archived_at: new Date(), active: false }).where('id', '=', id).execute();
+      return { deleted: true, archived: true };
+    }
+    await this.database.db.deleteFrom('questions').where('id', '=', id).execute();
+    return { deleted: true, archived: false };
   }
 
   async createQuestion(user: AuthUser, input: {
@@ -70,8 +175,8 @@ export class AssessmentService implements OnApplicationBootstrap, OnModuleDestro
     explanation?: string;
     options: { label: string; text: string; correct: boolean }[];
   }) {
-    if (!input.options.some((option) => option.correct)) {
-      throw new ApiError(400, 'NO_ANSWER', 'Marca una opción correcta');
+    if (input.options.filter((option) => option.correct).length !== 1) {
+      throw new ApiError(400, 'NO_ANSWER', 'Marca una sola opción correcta');
     }
     const code = `Q-${shortCode(8)}`;
     return this.database.withTx(async (trx) => {
@@ -105,20 +210,31 @@ export class AssessmentService implements OnApplicationBootstrap, OnModuleDestro
     });
   }
 
-  async setActive(id: string, active: boolean) {
-    const row = await this.database.db
-      .updateTable('questions')
-      .set({ active })
-      .where('id', '=', id)
-      .returningAll()
-      .executeTakeFirst();
-    if (!row) throw new ApiError(404, 'NOT_FOUND', 'La pregunta no existe');
-    return row;
+  async setActive(user: AuthUser, id: string, active: boolean) {
+    await this.manageable(user, id);
+    if (active) {
+      const correct = await this.database.db
+        .selectFrom('question_options')
+        .select(sql<number>`count(*)::INT`.as('n'))
+        .where('question_id', '=', id)
+        .where('is_correct', '=', true)
+        .executeTakeFirstOrThrow();
+      if (Number(correct.n) !== 1) throw new ApiError(400, 'NO_ANSWER', 'Edita la pregunta y marca una sola opción correcta antes de activarla');
+    }
+    return this.database.db.updateTable('questions').set({ active }).where('id', '=', id).returningAll().executeTakeFirstOrThrow();
   }
 
   async createAssessment(user: AuthUser, input: { courseId: string; title: string; kind: string; timeLimitSec?: number; questionIds: string[] }) {
     const course = await this.learning.assertAccess(user, input.courseId, 'write');
     if (course.teacher_id !== user.id && user.role !== 'admin') throw new ApiError(403, 'FORBIDDEN', 'Solo el docente arma la evaluación');
+    const usable = await this.database.db
+      .selectFrom('questions')
+      .select('id')
+      .where('id', 'in', input.questionIds)
+      .where('active', '=', true)
+      .where('archived_at', 'is', null)
+      .execute();
+    if (usable.length !== new Set(input.questionIds).size) throw new ApiError(400, 'INACTIVE_QUESTIONS', 'Solo las preguntas activas entran en una evaluación; activa los borradores primero');
     return this.database.withTx(async (trx) => {
       const assessment = await trx
         .insertInto('assessments')

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { draftSchema, tutorChatSchema, type LearningMethod } from '@eduquest/contracts';
 import { CurrentUser, Roles, type AuthUser } from '../../core/auth/auth.decorators';
 import { ZodPipe } from '../../core/common/zod.pipe';
@@ -18,9 +18,27 @@ export class TutorController {
     return this.tutor.chat(user, body);
   }
 
+  @Roles('student', 'teacher')
+  @Get('tutor/conversations')
+  conversations(@CurrentUser() user: AuthUser) {
+    return this.tutor.conversations(user);
+  }
+
+  @Roles('student', 'teacher')
+  @Get('tutor/conversations/:id')
+  conversation(@CurrentUser() user: AuthUser, @Param('id', new ParseUUIDPipe()) id: string) {
+    return this.tutor.conversation(user, id);
+  }
+
+  @Roles('student', 'teacher')
+  @Delete('tutor/conversations/:id')
+  deleteConversation(@CurrentUser() user: AuthUser, @Param('id', new ParseUUIDPipe()) id: string) {
+    return this.tutor.deleteConversation(user, id);
+  }
+
   @Roles('teacher', 'admin')
   @Post('tutor/drafts')
-  drafts(@CurrentUser() user: AuthUser, @Body(new ZodPipe(draftSchema)) body: { courseId: string; topic: string; count?: number }) {
+  drafts(@CurrentUser() user: AuthUser, @Body(new ZodPipe(draftSchema)) body: { subjectId?: string; courseId?: string; topic: string; count?: number }) {
     return this.tutor.drafts(user, body);
   }
 

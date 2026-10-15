@@ -370,7 +370,7 @@ export class RouteService implements OnApplicationBootstrap {
     const mastery = await this.database.withTx(async (trx) => {
       const updated = await trx
         .updateTable('route_items')
-        .set({ status: correct ? 'correct' : 'wrong', given: given.slice(0, 60), answered_at: new Date() })
+        .set({ status: correct ? 'correct' : 'wrong', given: given.slice(0, 500), answered_at: new Date() })
         .where('id', '=', id)
         .where('status', '=', 'pending')
         .executeTakeFirst();

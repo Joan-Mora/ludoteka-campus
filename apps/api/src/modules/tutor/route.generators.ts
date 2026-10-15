@@ -343,10 +343,23 @@ function parseCandidates(raw: string): number[] {
   return [...out].filter(Number.isFinite);
 }
 
+const NUMBER = /-?\d+(?:[.,]\d+)*(?:\s*\/\s*-?\d+(?:[.,]\d+)*)?/g;
+const CUE = /(?:=|\b(?:respuesta|resultado|total|da|dan|es|son|queda|quedan)\b)\s*:?\s*$/i;
+
+/** Students may explain their reasoning: the answer is the number after the last cue ("= 12", "la respuesta es 3/4") or, failing that, the last number written. */
+export function finalAnswer(raw: string) {
+  const text = raw.replace(/[−–]/g, '-').trim();
+  if (!/[a-záéíóúñ=]/i.test(text)) return text;
+  const tokens = [...text.matchAll(NUMBER)];
+  if (!tokens.length) return text;
+  const cued = tokens.filter((t) => CUE.test(text.slice(Math.max(0, (t.index ?? 0) - 20), t.index)));
+  return (cued.at(-1) ?? tokens.at(-1))![0];
+}
+
 export function checkAnswer(kind: AnswerKind, expected: string, given: string) {
   const target = parseCandidates(expected)[0];
   if (target === undefined) return false;
-  const value = given.trim();
+  const value = finalAnswer(given);
   if (!value) return false;
   if (kind === 'irreducible') {
     const match = /^\s*(-?\d+)\s*\/\s*(\d+)\s*$/.exec(value);

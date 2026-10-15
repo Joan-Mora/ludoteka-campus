@@ -108,6 +108,9 @@ El rol abre la puerta; la relación decide qué datos se ven. Ejemplos:
 | Portal de familia | Solo hijos con `guardian_links` activo; los mensajes exigen además que el docente le dicte al estudiante | `governance/family.service.ts` |
 | Integridad | El docente ve solo sus cursos; el estudiante solo reporta eventos de su propio intento | `integrity/integrity.service.ts` |
 | Observatorio | Docente limitado a sus grupos; sin grupos, `403 NO_GROUPS` | `analytics/observatory.service.ts` |
+| Conversación del tutor | Solo su dueño la lista, la abre, la continúa o la borra; otro usuario recibe `404` | `tutor/tutor.service.ts` (`ownConversation`) |
+| Pregunta del banco | La modifica quien la creó, el docente de un curso de esa materia o el administrador; las usadas se archivan, no se borran | `assessment/assessment.service.ts` (`manageable`) |
+| Destinatarios de la cartelera | El docente solo publica para sus grupos; grados, roles y toda la comunidad son de los directivos | `learning/news.service.ts` (`assertAudience`) |
 
 ### En la web
 
@@ -169,7 +172,8 @@ El rol abre la puerta; la relación decide qué datos se ven. Ejemplos:
 
 | Función | Qué se envía | Protección |
 |---|---|---|
-| Tutor | Texto de la lección, extractos de la biblioteca y los últimos 12 mensajes | El estudiante menor necesita la autorización `ai_tutor` del acudiente; se bloquea durante un examen activo |
+| Tutor | Texto de la lección, extractos de la biblioteca y los últimos 12 mensajes | A los mensajes del estudiante se les quitan correos, URLs y números de 7 o más dígitos. El estudiante menor necesita la autorización `ai_tutor` del acudiente; se bloquea durante un examen activo |
+| Título de la conversación | Los primeros 6 mensajes, recortados a 400 caracteres | Se quitan correos, URLs y números de 7 o más dígitos (`core/common/redact.ts`); se pide no incluir nombres en el título |
 | Recomendaciones al docente | Promedio y nombre del curso | El estudiante va como «el estudiante» |
 | Resumen de foro | Hilo completo | Seudónimos («Estudiante N»), nombres del curso reemplazados, correos y teléfonos quitados; los nombres se restauran en la respuesta |
 | Resumen del Cuaderno | Notas del estudiante | Se quitan correos, URLs y números de 7 o más dígitos |
@@ -225,7 +229,7 @@ Hallazgos de la revisión del código que siguen abiertos, ordenados por priorid
 | 5 | `live:join` une cualquier socket a una sala en vivo sin verificar que el usuario esté inscrito | Un tercero con el código ve las preguntas en tiempo real | Exigir token y participación antes de unir |
 | 6 | Los códigos de reporte son secuenciales y la verificación pública no tiene límite de intentos | Se puede enumerar el archivo de reportes (solo metadatos) | Agregar `AuthThrottleGuard` y un sufijo aleatorio al código |
 | 7 | La autorización `data_processing` se registra pero no se consulta en ninguna parte | El consentimiento no tiene efecto | Definir qué tratamiento depende de ella y exigirla |
-| 8 | El tutor envía al proveedor el texto del estudiante sin redactar | Datos que el estudiante escriba llegan a Gemini | Aplicar la misma redacción del Cuaderno antes de enviar |
+| 8 | El tutor quita correos, enlaces y números largos del texto del estudiante (`redact`), pero no detecta nombres ni direcciones escritos en prosa | Un nombre o una dirección que el estudiante escriba llegan a Gemini | Seudonimizar con los nombres del grupo, como el resumen de foro |
 | 9 | El acceso facial no respeta el bloqueo por contraseña (`locked_until`) | Una cuenta bloqueada puede entrar con rostro | Revisar `locked_until` en `BiometricsService.login` |
 | 10 | El Observatorio devuelve el texto del error de la base al cliente | Filtra detalles del esquema a quien ya puede consultarlo | Mensaje genérico y detalle solo en el registro |
 | 11 | `FACIAL_ENC_KEY` no está en `render.yaml`; producción deriva la llave de `JWT_SECRET` | Rotar `JWT_SECRET` destruye las plantillas | Definir `FACIAL_ENC_KEY` explícita en todos los entornos |

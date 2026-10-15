@@ -129,7 +129,25 @@ export class AccountsService {
       .limit(2000);
     if (filters.role) query = query.where('user_roles.role', '=', filters.role);
     if (filters.status) query = query.where('users.status', '=', filters.status);
-    if (filters.groupId) query = query.where('groups_class.id', '=', filters.groupId);
+    if (filters.groupId) {
+      const groupId = filters.groupId;
+      query = query.where((eb) =>
+        eb.or([
+          eb('groups_class.id', '=', groupId),
+          eb.exists(eb.selectFrom('courses').select('courses.id').whereRef('courses.teacher_id', '=', 'users.id').where('courses.group_id', '=', groupId)),
+          eb.exists(eb.selectFrom('teaching_assignments').select('teaching_assignments.id').whereRef('teaching_assignments.teacher_id', '=', 'users.id').where('teaching_assignments.group_id', '=', groupId)),
+          eb.exists(
+            eb.selectFrom('guardian_links')
+              .innerJoin('enrollments as kid', 'kid.user_id', 'guardian_links.student_id')
+              .select('guardian_links.id')
+              .whereRef('guardian_links.guardian_id', '=', 'users.id')
+              .where('guardian_links.status', '=', 'active')
+              .where('kid.status', '=', 'active')
+              .where('kid.group_id', '=', groupId),
+          ),
+        ]),
+      );
+    }
     if (filters.q?.trim()) {
       const q = `%${filters.q.trim().toLowerCase()}%`;
       query = query.where((eb) => eb.or([eb(eb.fn('lower', ['users.full_name']), 'like', q), eb('users.email', 'like', q)]));
@@ -149,6 +167,28 @@ export class AccountsService {
       linked.set(link.guardian_id, [...(linked.get(link.guardian_id) ?? []), link.student_name]);
       linked.set(link.student_id, [...(linked.get(link.student_id) ?? []), link.guardian_name]);
     }
+    const teacherIds = rows.filter((row) => row.role === 'teacher').map((row) => row.id);
+    const courses = teacherIds.length
+      ? await this.database.db
+          .selectFrom('courses')
+          .innerJoin('subjects', 'subjects.id', 'courses.subject_id')
+          .innerJoin('groups_class', 'groups_class.id', 'courses.group_id')
+          .innerJoin('grades', 'grades.id', 'groups_class.grade_id')
+          .select(['courses.teacher_id', 'subjects.name as subject', 'groups_class.name as group_name', 'grades.level'])
+          .where('courses.teacher_id', 'in', teacherIds)
+          .where('courses.is_demo', '=', false)
+          .$if(Boolean(year), (q) => q.where('courses.academic_year_id', '=', year!.id))
+          .orderBy('grades.level')
+          .orderBy('groups_class.name')
+          .execute()
+      : [];
+    const teaching = new Map<string, string[]>();
+    for (const c of courses) {
+      if (!c.teacher_id) continue;
+      const label = `${c.subject} ${groupLabel(c.level, c.group_name)}`;
+      const list = teaching.get(c.teacher_id) ?? [];
+      if (!list.includes(label)) teaching.set(c.teacher_id, [...list, label]);
+    }
     return rows.map((row) => ({
       id: row.id,
       email: row.email,
@@ -163,6 +203,7 @@ export class AccountsService {
       groupId: row.group_id,
       group: row.group_name && row.grade_level != null ? groupLabel(row.grade_level, row.group_name) : null,
       linked: linked.get(row.id) ?? [],
+      teaching: teaching.get(row.id) ?? [],
     }));
   }
 

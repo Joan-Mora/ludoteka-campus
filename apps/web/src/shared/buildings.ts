@@ -158,8 +158,10 @@ const MAPS: Record<Role, [district: string, keys: BuildingKey[], names?: Partial
     ['Colegio', ['cartelera', 'biblioteca']],
   ],
   admin: [
-    ['Administración', ['usuarios', 'institucion']],
-    ['Datos', ['observatorio']],
+    ['Administración', ['usuarios', 'institucion', 'grupos']],
+    ['Académico', ['banco', 'planilla', 'reportes'], { planilla: 'Consolidado de notas' }],
+    ['Seguimiento', ['alertas', 'asistencia', 'citaciones']],
+    ['Datos', ['tablero', 'observatorio']],
     ['Comunicación', ['mensajes', 'cartelera', 'biblioteca']],
   ],
 };

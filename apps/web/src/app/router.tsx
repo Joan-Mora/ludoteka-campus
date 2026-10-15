@@ -36,7 +36,7 @@ const FacialLoginPage = page(facial, 'FacialLoginPage');
 const AdminPage = page(staff, 'AdminPage');
 const UsuariosPage = page(() => import('@/features/accounts'), 'UsuariosPage');
 const SettingsPage = page(() => import('@/features/settings'), 'SettingsPage');
-const BankPage = page(staff, 'BankPage');
+const BankPage = page(() => import('@/features/bank'), 'BankPage');
 const IntegrityPage = page(staff, 'IntegrityPage');
 const ReportsPage = page(staff, 'ReportsPage');
 const CoordinationPage = page(governance, 'CoordinationPage');

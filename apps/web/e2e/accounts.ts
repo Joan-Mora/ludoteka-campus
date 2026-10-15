@@ -28,7 +28,7 @@ export const routesByRole: Record<E2ERole, string[]> = {
   coordinator: ['/app', '/app/coordinacion', '/app/coordinacion/asistencia', '/app/coordinacion/citaciones', '/app/cursos', '/app/calificaciones', '/app/consultas', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
   rector: ['/app', '/app/rectoria', '/app/rectoria/firmas', '/app/rectoria/reportes', '/app/consultas', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
   guardian: ['/app', '/app/acudiente', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
-  admin: ['/app', '/app/admin/usuarios', '/app/admin', '/app/consultas', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
+  admin: ['/app', '/app/admin/usuarios', '/app/admin', '/app/cursos', '/app/banco', '/app/calificaciones', '/app/coordinacion', '/app/coordinacion/asistencia', '/app/coordinacion/citaciones', '/app/rectoria', '/app/rectoria/reportes', '/app/consultas', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
 };
 
 /** Routes each role must not open: the router shows «Esta sección no es para tu rol». */
@@ -38,7 +38,7 @@ export const forbiddenByRole: Record<E2ERole, string[]> = {
   coordinator: ['/app/rectoria', '/app/banco', '/app/admin', '/app/en-vivo', '/app/arena', '/app/tutor', '/app/acudiente', '/app/logros'],
   rector: ['/app/coordinacion', '/app/cursos', '/app/calificaciones', '/app/banco', '/app/admin', '/app/en-vivo', '/app/tutor', '/app/acudiente'],
   guardian: ['/app/cursos', '/app/calificaciones', '/app/coordinacion', '/app/rectoria', '/app/admin', '/app/arena', '/app/jugar', '/app/aprender', '/app/tutor', '/app/en-vivo', '/app/consultas'],
-  admin: ['/app/cursos', '/app/coordinacion', '/app/rectoria', '/app/acudiente', '/app/ruta', '/app/tutor', '/app/en-vivo', '/app/arena', '/app/logros'],
+  admin: ['/app/acudiente', '/app/ruta', '/app/tutor', '/app/en-vivo', '/app/arena', '/app/logros', '/app/rectoria/firmas'],
 };
 
 export function storageFor(role: E2ERole) {

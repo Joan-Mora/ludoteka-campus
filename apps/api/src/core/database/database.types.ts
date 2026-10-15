@@ -199,6 +199,7 @@ export interface Database {
     explanation: Generated<string>;
     created_by: NullableString;
     active: Generated<boolean>;
+    archived_at: NullableDate;
     created_at: Ts;
   };
   question_options: {
@@ -394,7 +395,9 @@ export interface Database {
     user_id: string;
     course_id: NullableString;
     lesson_id: NullableString;
+    title: NullableString;
     created_at: Ts;
+    updated_at: Ts;
   };
   tutor_messages: {
     id: Generated<string>;

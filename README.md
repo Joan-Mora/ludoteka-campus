@@ -36,14 +36,15 @@ Ludoteka Campus reúne todo eso en una sola aplicación web para seis roles (adm
 
 ## Funcionalidades
 
-- **Aula:** cursos, unidades, lecciones, tareas, cartelera con confirmación de lectura y foros con reacciones, menciones, adjuntos de la biblioteca, XP por la mejor respuesta y resumen del hilo por Luka (con seudónimos).
-- **Evaluación:** banco de preguntas, prácticas, exámenes en kiosco con control de integridad y quiz en vivo.
+- **Aula:** cursos, unidades, lecciones, tareas, cartelera por grado, grupo o rol (con fecha programada y confirmación de lectura) y foros con reacciones, menciones, adjuntos de la biblioteca, XP por la mejor respuesta y resumen del hilo por Luka (con seudónimos).
+- **Evaluación:** banco de preguntas (crear, editar, apagar, archivar y borradores de IA), prácticas, exámenes en kiosco con tiempo configurable y control de integridad, y quiz en vivo.
 - **Libro de calificaciones:** ponderación por categorías (escala 1.0 a 5.0), asistencia, rúbricas y alertas de riesgo al docente y al acudiente.
 - **Juego:** campus isométrico con los pendientes de cada edificio, XP, rachas, misiones, sala de trofeos (41 insignias con niveles, ocultas y de temporada), Arcade de 10 juegos calificados en el servidor con reto del día, y **Arena** por equipos con QR.
 - **Luka o Luna, el compañero:** vive en la esquina de cada pantalla, sigue el puntero con la mirada y saluda cuando hay pendientes nuevos. Al tocarlo habla y ofrece ayuda: qué tengo pendiente por edificio, cómo funciona la pantalla actual, recorrido del campus, preguntas al tutor, órdenes por voz y lectura de la página.
 - **Avisos y voz:** notificaciones que llevan al lugar exacto, página `/app/notificaciones` con filtros y comandos de voz con panel «Qué puedo decir» («qué tengo pendiente», «léeme la lección», «busca en la biblioteca…»).
 - **Estudio:**
-  - Mi ruta adaptativa por maestría de temas;
+  - Laboratorio IA con historial de conversaciones, cada una con un título que pone la IA;
+  - Mi ruta adaptativa por maestría de temas, con respuestas de hasta 500 caracteres;
   - Cuaderno con resumen IA y tarjetas SM-2;
   - metas y sesiones de enfoque.
 - **Biblioteca:** archivos en Cloudinary, etiquetas, marcadores, glosario y tutor IA con citas a las guías. Trae 60 guías propias por grado y materia alineadas con los DBA, los DBA oficiales del MEN y libros abiertos de OpenStax, cada uno con su fuente y licencia (`npm run library:seed -w @eduquest/api`). Todo recurso muestra portada: la primera página del PDF, aunque esté alojado en otro sitio, o la imagen de vista previa de la página enlazada.
@@ -77,7 +78,7 @@ Ludoteka Campus reúne todo eso en una sola aplicación web para seis roles (adm
 | Coordinación | Atiende las alertas de riesgo de todos los grupos con una bitácora, consolida la asistencia con umbrales, cita a los acudientes (aviso y correo) y modera los foros |
 | Rectoría | Tablero estratégico por periodo con comparación, firma de certificados y boletines, y comunicados oficiales en la cartelera |
 | Acudiente | Sigue a cada hijo (lo que viene, notas, asistencia y alertas), confirma citaciones, escribe a los docentes, recibe un resumen semanal por correo, acepta los documentos legales por el menor y autoriza o revoca su acceso facial |
-| Administrador | Gestiona años, grupos, materias, matrículas y cuentas (alta individual o importación por Excel) |
+| Administrador | Gestiona años, grupos, materias, matrículas y cuentas por rol (alta individual o importación por Excel), y entra a los módulos de gestión: banco de preguntas, consolidado de notas, seguimiento, tablero y reportes |
 
 Solo el docente y la administración escriben contenido académico. Cada ruta de la web declara sus roles en `apps/web/src/app/nav.ts` y la API los exige con `@Roles`; la matriz completa está en [`docs/roles-y-permisos.md`](docs/roles-y-permisos.md).
 
@@ -145,7 +146,7 @@ Decisiones técnicas principales (detalle y motivos en [`docs/manuales/Architect
 
 - **Monolito modular con fronteras exigidas:** cada módulo expone su fachada en `public-api.ts` y `dependency-cruiser` impide importar archivos internos de otro módulo (`npm run deps:check`).
 - **Eventos para lo transversal:** gamificación y notificaciones escuchan eventos; la escritura de cada tabla la hace solo su módulo dueño y los tableros leen en solo lectura.
-- **CockroachDB con Kysely y SQL versionado:** claves `UUID`, `withTx()` reintenta ante el SQLSTATE `40001` y las migraciones (`db/migrations`, 0000 a 0032) se aplican al arrancar la API (o a mano con `npm run migrate`).
+- **CockroachDB con Kysely y SQL versionado:** claves `UUID`, `withTx()` reintenta ante el SQLSTATE `40001` y las migraciones (`db/migrations`, 0000 a 0034) se aplican al arrancar la API (o a mano con `npm run migrate`).
 - **Observatorio NL→SQL acotado:** la IA genera SQL que corre en una transacción `READ ONLY`, con `statement_timeout` y rol restringido, solo sobre vistas `v_*`.
 - **Biometría en el navegador:** face-api calcula el descriptor de 128 dimensiones en el cliente; la API promedia de 3 a 10 muestras, las cifra con AES-256-GCM y compara por distancia euclidiana, con el marco de la Ley 1581.
 - **IA con camino alterno:** `AiService` usa modelos de respaldo si el principal falla, cada función quita los datos personales que no necesita antes de enviar texto y cada una tiene una versión sin IA (el tutor responde con la lección, el Cuaderno usa un resumen local, Mi ruta usa plantillas).
@@ -258,7 +259,7 @@ El sistema de archivos de Render es efímero, así que los PDF y Excel se genera
 apps/api            NestJS 11 + Kysely sobre CockroachDB (core/ y modules/ con public-api.ts)
 apps/web            React 19 + Vite + TanStack Query (app/, features/, shared/, e2e/)
 packages/contracts  Esquemas zod compartidos
-db/migrations       SQL del esquema (0000 a 0032)
+db/migrations       SQL del esquema (0000 a 0034)
 db/seeds            Contenido demo de Matemáticas de sexto y manifiesto de la biblioteca
 docs/               Manuales (usuario, técnico, instalación, arquitectura, seguridad) en Markdown y PDF, y referencia: roles, datos, API, frontend, operación y desarrollorender.yaml         Blueprint del Web Service en Render
 Dockerfile          Imagen de producción (API + web en un contenedor); docker-compose*.yml para levantarla

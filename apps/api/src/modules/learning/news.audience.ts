@@ -43,6 +43,7 @@ export function visibleNews(viewer: Viewer, includeScheduled = false): RawBuilde
         SELECT 1 FROM news_audience a WHERE a.news_id = n.id AND (
           a.kind = 'all'
           OR (a.kind = 'role' AND a.value = ${viewer.role})
+          OR (a.kind = 'grade' AND a.value IN (SELECT gc.grade_id::STRING FROM groups_class gc WHERE gc.id IN (SELECT group_id FROM (${viewerGroups(viewer)}) AS vgg)))
           OR (a.kind = 'group' AND a.value IN (SELECT group_id::STRING FROM (${viewerGroups(viewer)}) AS vg))
           OR (a.kind = 'course' AND a.value IN (SELECT id::STRING FROM (${viewerCourses(viewer)}) AS vc))
         )

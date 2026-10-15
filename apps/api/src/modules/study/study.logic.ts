@@ -13,13 +13,7 @@ export function sm2(card: { ease: number; intervalDays: number; repetitions: num
   return { ease: Math.round(ease * 100) / 100, intervalDays: Math.min(3650, intervalDays), repetitions };
 }
 
-/** Quita correos, teléfonos y enlaces antes de enviar apuntes a la IA. */
-export function redact(text: string) {
-  return text
-    .replace(/[\w.+-]+@[\w-]+\.[\w.-]+/g, '[correo]')
-    .replace(/https?:\/\/\S+/g, '[enlace]')
-    .replace(/(?:\+?\d[\s-]?){7,}/g, '[número]');
-}
+export { redact } from '../../core/common/redact';
 
 export interface StudySummary {
   summary: string;

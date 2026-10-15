@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Post, Put, Query } from '@nestjs/common';
 import { answerSchema, assessmentSchema, liveCreateSchema, liveJoinSchema, questionSchema } from '@eduquest/contracts';
 import { CurrentUser, Roles, type AuthUser } from '../../core/auth/auth.decorators';
 import { ZodPipe } from '../../core/common/zod.pipe';
@@ -10,8 +10,8 @@ export class AssessmentController {
 
   @Roles('teacher', 'admin')
   @Get('questions')
-  questions(@Query('subjectId') subjectId?: string) {
-    return this.assessment.listQuestions(subjectId);
+  questions(@CurrentUser() user: AuthUser, @Query('subjectId') subjectId?: string) {
+    return this.assessment.listQuestions(user, subjectId);
   }
 
   @Roles('teacher', 'admin')
@@ -25,9 +25,26 @@ export class AssessmentController {
   }
 
   @Roles('teacher', 'admin')
+  @Put('questions/:id')
+  updateQuestion(
+    @CurrentUser() user: AuthUser,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body(new ZodPipe(questionSchema))
+    body: { subjectId: string; gradeId?: string; prompt: string; difficulty?: 'baja' | 'media' | 'alta'; explanation?: string; options: { label: string; text: string; correct: boolean }[] },
+  ) {
+    return this.assessment.updateQuestion(user, id, body);
+  }
+
+  @Roles('teacher', 'admin')
+  @Delete('questions/:id')
+  deleteQuestion(@CurrentUser() user: AuthUser, @Param('id', new ParseUUIDPipe()) id: string) {
+    return this.assessment.deleteQuestion(user, id);
+  }
+
+  @Roles('teacher', 'admin')
   @Post('questions/:id/active')
-  active(@Param('id') id: string, @Body() body: { active?: boolean }) {
-    return this.assessment.setActive(id, Boolean(body.active));
+  active(@CurrentUser() user: AuthUser, @Param('id', new ParseUUIDPipe()) id: string, @Body() body: { active?: boolean }) {
+    return this.assessment.setActive(user, id, Boolean(body.active));
   }
 
   @Roles('teacher', 'admin')

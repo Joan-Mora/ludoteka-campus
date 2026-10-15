@@ -21,7 +21,9 @@ La única base es **CockroachDB Cloud** (dialecto PostgreSQL). La API accede con
 - Archivos SQL en `db/migrations`, aplicados en orden alfabético al arrancar la API o con `npm run migrate`.
 - Cada archivo corre en su propia transacción junto con su registro en `schema_migrations (id, applied_at)`; si falla, se deshace y la API no arranca.
 - **No hay checksum:** editar un archivo ya aplicado no tiene efecto. Todo cambio va en un archivo nuevo con el siguiente número.
-- Hoy van de `0000_drop_legacy` a `0032_library_covers_b` (38 archivos; `0011`, `0020`, `0028` y `0032` tienen variantes con sufijo).
+- Hoy van de `0000_drop_legacy` a `0034_news_grade_b` (43 archivos; `0011`, `0020`, `0028`, `0032`, `0033` y `0034` tienen variantes con sufijo).
+- `0033_bank_tutor_history_a/b/c` agrega `questions.archived_at` y `tutor_conversations.title` / `updated_at` con su índice, y luego ordena las conversaciones existentes por su último mensaje.
+- `0034_news_grade_a/b` cambia el CHECK de `news_audience.kind` para aceptar `grade`. Se quita en un archivo y se crea con nombre (`news_audience_kind`) en el siguiente.
 
 **Particularidades de CockroachDB al escribir migraciones:**
 
@@ -72,7 +74,7 @@ El dueño es el módulo que escribe la tabla. Se listan las restricciones que ca
 | `lesson_resources`, `lesson_progress` | Recursos (link/note/video) y avance (started/completed) |
 | `assignments`, `submissions` | Tareas y entregas (una por estudiante y tarea) |
 | `announcements`, `calendar_events` | Anuncios y calendario por curso |
-| `news`, `news_audience`, `news_reads` | Cartelera: audiencia por todos/rol/grupo/curso, lectura y confirmación |
+| `news`, `news_audience`, `news_reads` | Cartelera: audiencia por todos/rol/grado/grupo/curso, lectura y confirmación |
 | `forum_threads`, `forum_posts` | Foros por curso; resumen IA guardado en el hilo |
 | `forum_reactions`, `forum_mentions`, `forum_attachments` | Reacciones (útil/idea/gracias/duda), menciones y adjuntos de la biblioteca |
 
@@ -80,7 +82,7 @@ El dueño es el módulo que escribe la tabla. Se listan las restricciones que ca
 
 | Tabla | Propósito y restricciones clave |
 |---|---|
-| `competencies`, `questions`, `question_options` | Banco de preguntas por materia, grado y competencia |
+| `competencies`, `questions`, `question_options` | Banco de preguntas por materia, grado y competencia. Una pregunta ya usada no se borra: `archived_at` la saca del banco y conserva los intentos |
 | `assessments`, `assessment_questions` | Evaluaciones `practice`, `exam` o `live` |
 | `attempts`, `attempt_answers` | Intentos; índice único parcial: un intento activo por usuario y evaluación |
 | `live_sessions`, `live_participants` | Sala en vivo con código único |
@@ -119,7 +121,7 @@ El dueño es el módulo que escribe la tabla. Se listan las restricciones que ca
 | `library_items` | Archivo: tipo, visibilidad (pública/institución/curso), estado, fuente y licencia; `cloudinary_public_id` único; `cover_url` con la portada (`NULL` = por generar, vacío = sin portada) |
 | `library_tags`, `bookmarks`, `library_views`, `library_visits`, `glossary_terms` | Etiquetas, marcadores, vistas, última visita y glosario |
 | `library_chunks` | Fragmentos de texto con `tsv` (búsqueda en español) y `embedding VECTOR(768)` |
-| `tutor_conversations`, `tutor_messages` | Conversaciones del tutor con citas en JSONB |
+| `tutor_conversations`, `tutor_messages` | Conversaciones del tutor con citas en JSONB. `title` (hasta 80 caracteres) lo pone la IA y `updated_at` ordena el historial; borrar la conversación borra sus mensajes |
 | `recommendations` | Recomendaciones del docente a un estudiante |
 | `topics`, `question_topics`, `topic_mastery`, `route_items` | Temas, maestría por estudiante y ejercicios de Mi ruta (respuesta calculada en el servidor) |
 | `learning_profiles`, `learning_activity` | Perfil de método de aprendizaje y actividad por método |

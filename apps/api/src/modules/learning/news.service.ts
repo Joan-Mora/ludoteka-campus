@@ -97,6 +97,11 @@ export class NewsService {
     for (const [role, label] of Object.entries(AUDIENCE_LABELS)) labels.set(`role:${role}`, label);
     const groupIds = [...new Set(rows.filter((r) => r.kind === 'group').map((r) => r.value))];
     const courseIds = [...new Set(rows.filter((r) => r.kind === 'course').map((r) => r.value))];
+    const gradeIds = [...new Set(rows.filter((r) => r.kind === 'grade').map((r) => r.value))];
+    if (gradeIds.length) {
+      const grades = await this.database.db.selectFrom('grades').select(['id', 'name']).where('id', 'in', gradeIds).execute();
+      for (const g of grades) labels.set(`grade:${g.id}`, `Grado ${g.name}`);
+    }
     if (groupIds.length) {
       const groups = await this.database.db
         .selectFrom('groups_class')
@@ -113,13 +118,16 @@ export class NewsService {
     return labels;
   }
 
-  /** Targets the author may publish to: everything for board roles, own groups and courses for teachers. */
+  /**
+   * Targets the author may publish to, by grade. Board roles reach everyone, whole grades and roles;
+   * a teacher reaches the groups they teach (however many courses they have in each), grouped by grade.
+   */
   async targets(viewer: AuthUser) {
     const board = isBoard(viewer);
     const groups = await this.database.db
       .selectFrom('groups_class')
       .innerJoin('grades', 'grades.id', 'groups_class.grade_id')
-      .select(['groups_class.id', 'groups_class.name', 'grades.name as grade', 'grades.level'])
+      .select(['groups_class.id', 'groups_class.name', 'groups_class.grade_id', 'grades.name as grade', 'grades.level'])
       .$if(!board, (q) =>
         q.where((eb) =>
           eb.or([
@@ -131,29 +139,26 @@ export class NewsService {
       .orderBy('grades.level')
       .orderBy('groups_class.name')
       .execute();
-    const courses = await this.database.db
-      .selectFrom('courses')
-      .select(['id', 'title'])
-      .$if(!board, (q) => q.where('teacher_id', '=', viewer.id))
-      .orderBy('title')
-      .execute();
+    const grades = new Map<string, { id: string; label: string; groups: { id: string; label: string }[] }>();
+    for (const g of groups) {
+      const grade = grades.get(g.grade_id) ?? { id: g.grade_id, label: g.grade, groups: [] };
+      grade.groups.push({ id: g.id, label: `${g.grade} ${g.name}` });
+      grades.set(g.grade_id, grade);
+    }
     return {
       allowAll: board,
       roles: board ? ['student', 'guardian', 'teacher', 'coordinator', 'rector'] : [],
       canOfficial: viewer.role === 'rector',
-      groups: groups.map((g) => ({ id: g.id, label: `${g.grade} · ${g.name}` })),
-      courses,
+      grades: [...grades.values()],
     };
   }
 
   private async assertAudience(viewer: AuthUser, audience: NewsAudience[]) {
     if (isBoard(viewer)) return;
     const allowed = await this.targets(viewer);
-    const groups = new Set(allowed.groups.map((g) => g.id));
-    const courses = new Set(allowed.courses.map((c) => c.id));
+    const groups = new Set(allowed.grades.flatMap((g) => g.groups.map((group) => group.id)));
     for (const target of audience) {
-      const ok = (target.kind === 'group' && groups.has(target.value)) || (target.kind === 'course' && courses.has(target.value));
-      if (!ok) throw new ApiError(403, 'AUDIENCE_FORBIDDEN', 'Como docente solo puedes publicar a tus grupos y cursos');
+      if (target.kind !== 'group' || !groups.has(target.value)) throw new ApiError(403, 'AUDIENCE_FORBIDDEN', 'Como docente publicas a los grupos que tienes a cargo');
     }
   }
 
@@ -256,9 +261,17 @@ export class NewsService {
         SELECT 1 FROM news_audience a WHERE a.news_id = ${newsId} AND (
           a.kind = 'all'
           OR (a.kind = 'role' AND a.value = ur.role)
+          OR (a.kind = 'grade' AND (
+            EXISTS (SELECT 1 FROM enrollments e JOIN groups_class gc ON gc.id = e.group_id WHERE e.user_id = u.id AND e.status = 'active' AND gc.grade_id::STRING = a.value)
+            OR EXISTS (SELECT 1 FROM teaching_assignments t JOIN groups_class gc ON gc.id = t.group_id WHERE t.teacher_id = u.id AND gc.grade_id::STRING = a.value)
+            OR EXISTS (SELECT 1 FROM courses c JOIN groups_class gc ON gc.id = c.group_id WHERE c.teacher_id = u.id AND gc.grade_id::STRING = a.value)
+            OR EXISTS (SELECT 1 FROM guardian_links g JOIN enrollments e ON e.user_id = g.student_id JOIN groups_class gc ON gc.id = e.group_id
+                       WHERE g.guardian_id = u.id AND g.status = 'active' AND e.status = 'active' AND gc.grade_id::STRING = a.value)
+          ))
           OR (a.kind = 'group' AND (
             EXISTS (SELECT 1 FROM enrollments e WHERE e.user_id = u.id AND e.status = 'active' AND e.group_id::STRING = a.value)
             OR EXISTS (SELECT 1 FROM teaching_assignments t WHERE t.teacher_id = u.id AND t.group_id::STRING = a.value)
+            OR EXISTS (SELECT 1 FROM courses c WHERE c.teacher_id = u.id AND c.group_id::STRING = a.value)
             OR EXISTS (SELECT 1 FROM guardian_links g JOIN enrollments e ON e.user_id = g.student_id
                        WHERE g.guardian_id = u.id AND g.status = 'active' AND e.status = 'active' AND e.group_id::STRING = a.value)
           ))

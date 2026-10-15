@@ -49,7 +49,7 @@ Ludoteka Campus es el campus virtual gamificado del Colegio Francisco Arango. Re
 - **Evaluación:** banco de preguntas, prácticas, exámenes en modo kiosco con control de integridad y sala en vivo.
 - **Calificaciones:** planilla ponderada (escala 1.0 a 5.0), asistencia, rúbricas y alertas de riesgo.
 - **Juego:** campus isométrico, XP, rachas, insignias, Arcade de 10 juegos y Arena por equipos.
-- **Estudio:** Mi ruta adaptativa, Cuaderno con tarjetas de repaso, metas y sesiones de enfoque.
+- **Estudio:** Laboratorio IA con historial y títulos automáticos, Mi ruta adaptativa, Cuaderno con tarjetas de repaso, metas y sesiones de enfoque.
 - **Biblioteca:** archivos con búsqueda híbrida y tutor de IA que cita sus fuentes.
 - **Gobierno escolar:** coordinación, rectoría, portal de familia, mensajes y Observatorio (preguntas en español convertidas a SQL de solo lectura).
 - **Cuentas y acceso:** contraseña con código por correo, dispositivos de confianza, passkeys y acceso facial.
@@ -157,7 +157,7 @@ apps/web              Aplicación React
   src/ui/             Componentes base y dibujo isométrico
   e2e/                Pruebas Playwright
 packages/contracts    Roles y esquemas zod
-db/migrations         Esquema SQL (0000 a 0032)
+db/migrations         Esquema SQL (0000 a 0034)
 db/seeds              Contenido demo y manifiesto de la biblioteca
 docs/manuales         Manuales en Markdown, capturas (img/) y PDF (pdf/)
 render.yaml           Definición del servicio en Render

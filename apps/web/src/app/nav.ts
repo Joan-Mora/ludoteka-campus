@@ -11,13 +11,13 @@ const ALL: readonly Role[] = ROLES;
 
 /** Pages reached from inside a building (a course, a lesson, a room…); the building doors come from each role's campus. */
 const INNER: Record<string, readonly Role[]> = {
-  'cursos/:id': ['student', 'teacher', 'coordinator', 'rector'],
-  'cursos/:id/aula': ['teacher', 'coordinator', 'rector'],
-  'lecciones/:id': ['student', 'teacher', 'coordinator'],
+  'cursos/:id': ['student', 'teacher', 'coordinator', 'rector', 'admin'],
+  'cursos/:id/aula': ['teacher', 'coordinator', 'rector', 'admin'],
+  'lecciones/:id': ['student', 'teacher', 'coordinator', 'admin'],
   'arena/:id': ['student', 'teacher'],
   'biblioteca/:id': ALL,
-  'integridad/:id': ['teacher', 'coordinator'],
-  'reportes/:id': ['teacher', 'coordinator', 'rector'],
+  'integridad/:id': ['teacher', 'coordinator', 'admin'],
+  'reportes/:id': ['teacher', 'coordinator', 'rector', 'admin'],
   'rectoria/comunicados': ['rector'],
   rostro: ALL,
   ajustes: ALL,

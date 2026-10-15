@@ -4,6 +4,34 @@ Todos los cambios relevantes de Ludoteka Campus, del más reciente al más antig
 
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Las secciones usan: **Añadido** (funciones nuevas), **Cambiado** (comportamiento distinto), **Corregido** (errores) y **Documentación**.
 
+## [1.1.0] — 2026-10-15
+
+Ajustes de uso pedidos tras la primera entrega: banco de preguntas, cartelera, usuarios, Laboratorio IA y Mi ruta.
+
+### Añadido
+- [`6bb947b`] **Historial en el Laboratorio IA** (migración `0033`). Cada conversación es independiente y la IA le pone un título corto después de la primera respuesta (y lo ajusta en la tercera pregunta). La pestaña **Historial** reabre cualquier conversación; **Nueva conversación** y el botón **+** empiezan una en blanco, y la papelera borra una. La conversación abierta queda en la dirección (`?c=`), así que recargar no la pierde.
+- [`6bb947b`] **Editar y eliminar preguntas del banco.** Una pregunta que ya se usó en evaluaciones, salas o la Arena se archiva en lugar de borrarse, para no romper intentos ni notas.
+- [`6bb947b`] **Cartelera por grado** (migración `0034`). Un aviso puede ir a un grado completo: llega a estudiantes, acudientes y docentes de todos sus grupos.
+- [`6bb947b`] Selector de fecha con calendario y desplegable de hora cada 30 minutos (`DateTimeField`) en la cartelera y las citaciones.
+- [`6bb947b`] Cuadro de respuesta que crece hacia abajo (`AutoTextarea`): Enter envía, Shift+Enter baja de línea.
+
+### Cambiado
+- [`6bb947b`] **Banco de preguntas más claro.** Muestra un camino en tres pasos con conteos, pestañas Todas / Activas / Borradores, filtro por materia y buscador. Tiene un formulario de pregunta con 2 a 6 opciones y la correcta marcada con un círculo, y una barra fija para armar la evaluación. Al armarla se elige el tipo explicado (Práctica, Examen o En vivo) y el tiempo límite (5 a 90 minutos). Los borradores de IA se piden por materia y en cantidad de 1 a 5.
+- [`6bb947b`] **Administración entra a los módulos de gestión:** banco de preguntas, consolidado de notas, archivo de reportes, alertas, asistencia, citaciones, tablero y grupos y cursos. Firmar y emitir comunicados oficiales siguen siendo de Rectoría.
+- [`6bb947b`] **Destinatarios de la cartelera:** ya no aparecen materias ni cursos. Los directivos eligen toda la comunidad, grados o roles. El docente elige «Todos mis grupos» o sus grados (con todos los grupos que dicta, aunque sean varios) y puede afinar por grupo.
+- [`6bb947b`] **Usuarios en pestañas** con su propia tabla: Estudiantes (grupo, acudientes, menor), Docentes (cursos a cargo), Acudientes (estudiantes a cargo), Coordinación y Rectoría. El filtro por grupo también encuentra a los docentes que dictan en él y a los acudientes de sus estudiantes.
+- [`6bb947b`] **Mi ruta:** la respuesta admite 500 caracteres (antes 60) y trae botones para `/ , . −`. Si el estudiante explica su razonamiento, se califica el número que va después de «=» o «la respuesta es», o el último que escriba.
+- [`6bb947b`] El tutor quita correos, enlaces y números largos de los mensajes del estudiante antes de enviarlos a la IA (`core/common/redact.ts`, compartido con el Cuaderno).
+
+### Corregido
+- [`6bb947b`] Una conversación del tutor solo la puede continuar, abrir o borrar su dueño. Antes, quien conociera el identificador podía escribir en ella.
+- [`6bb947b`] El tutor enviaba a la IA los 12 primeros mensajes de la conversación en lugar de los 12 últimos.
+- [`6bb947b`] En la biblioteca, la portada ya no se sale de su recuadro ni tapa el texto de la tarjeta.
+- [`6bb947b`] La cartelera y las citaciones ya no aceptan fechas inexistentes.
+
+### Documentación
+- Manual de usuario (banco, cartelera, usuarios, Laboratorio IA, Mi ruta y edificios de administración), API, datos, frontend, roles y permisos, seguridad, manual técnico, README y PDF regenerados.
+
 ## [1.0.0] — 2026-10-13
 
 Primera versión entregable: campus por rol, manuales completos en Markdown y PDF, e imagen Docker.

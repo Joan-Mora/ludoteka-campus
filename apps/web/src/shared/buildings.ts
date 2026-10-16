@@ -15,6 +15,7 @@ import {
   Mail,
   Megaphone,
   NotebookPen,
+  QrCode,
   Radio,
   School,
   ShieldAlert,
@@ -37,7 +38,7 @@ export type BuildingKey =
   | 'alertas' | 'asistencia' | 'citaciones' | 'grupos'
   | 'tablero' | 'firmas' | 'reportes'
   | 'familia'
-  | 'usuarios' | 'institucion';
+  | 'usuarios' | 'institucion' | 'invitados';
 
 export type Shape =
   | 'school' | 'library' | 'lab' | 'stadium' | 'hall' | 'board' | 'house' | 'tower'
@@ -126,6 +127,7 @@ function catalog(companion: string): Record<BuildingKey, Spec> {
     familia: { name: 'Mis hijos', caption: 'por atender', idle: 'todo al día', about: 'Notas, asistencia, alertas y citaciones de cada hijo.', to: '/app/acudiente', icon: HeartHandshake, color: '#ff8a5c', shape: 'house', material: 'rayado', voice: ['familia', 'mis hijos', 'seguimiento', 'acudiente'] },
     usuarios: { name: 'Usuarios', caption: 'solicitudes', idle: 'cuentas y roles', about: 'Cuentas, roles, importación masiva y solicitudes de datos.', to: '/app/admin/usuarios', icon: Users, color: '#3ab8ff', shape: 'tower', material: 'cuadricula', voice: ['usuarios', 'cuentas', 'roles'] },
     institucion: { name: 'Institución', caption: 'pendientes', idle: 'grados, grupos y asignaturas', about: 'Estructura del colegio: grados, grupos, asignaturas y carga docente.', to: '/app/admin', icon: Building2, color: '#7c5cff', shape: 'capitol', material: 'laton', voice: ['institucion', 'colegio', 'grados', 'asignaturas'] },
+    invitados: { name: 'Sesiones de invitados', caption: 'en clase', idle: 'abre una sesión con QR', about: 'Un código QR para que el grupo entre sin cuenta, juegue y deje el registro de la sesión.', to: '/app/clase', icon: QrCode, color: '#19c39c', shape: 'studio', material: 'neon', voice: ['invitados', 'sesion', 'codigo qr', 'clase'] },
   };
 }
 
@@ -139,7 +141,7 @@ const MAPS: Record<Role, [district: string, keys: BuildingKey[], names?: Partial
   ],
   teacher: [
     ['Enseñar', ['aula', 'planilla', 'banco']],
-    ['En clase', ['envivo', 'arena']],
+    ['En clase', ['invitados', 'envivo', 'arena']],
     ['Comunicación', ['mensajes', 'cartelera']],
     ['Recursos', ['biblioteca', 'observatorio']],
   ],
@@ -158,7 +160,7 @@ const MAPS: Record<Role, [district: string, keys: BuildingKey[], names?: Partial
     ['Colegio', ['cartelera', 'biblioteca']],
   ],
   admin: [
-    ['Administración', ['usuarios', 'institucion', 'grupos']],
+    ['Administración', ['usuarios', 'institucion', 'grupos', 'invitados']],
     ['Académico', ['banco', 'planilla', 'reportes'], { planilla: 'Consolidado de notas' }],
     ['Seguimiento', ['alertas', 'asistencia', 'citaciones']],
     ['Datos', ['tablero', 'observatorio']],

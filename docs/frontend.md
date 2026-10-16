@@ -81,6 +81,12 @@ El inicio es un campus isométrico y cada sección es un edificio. Cada rol tien
 - **Destinatarios de la cartelera:** `AudiencePicker` (`src/features/community.tsx`) ofrece «Toda la comunidad», grados y roles a los directivos. Al docente le ofrece «Todos mis grupos» y sus grados, que se expanden a sus grupos. No ofrece materias ni cursos.
 - **Pestañas:** `.seg-tabs` con `.seg-count` para el conteo. Usuarios tiene una tabla por rol, el banco filtra por estado y el Laboratorio IA alterna entre Historial y Consejos.
 
+## Clase de invitados
+
+- `/invitado/:código` es pública: el estudiante elige su nombre y entra sin correo.
+- `/app/clase` es el tablero del docente (QR, actividad abierta, mejor de la sesión, Excel) y, para el invitado, el diagnóstico y los juegos de su grado.
+- Dos elementos escucha el socket `clase` y también consulta el estado cada 2 segundos.
+
 ## Laboratorio IA
 
 - `src/features/tutor.tsx` guarda la conversación abierta en `?c=<id>`, así que recargar la página la reabre.

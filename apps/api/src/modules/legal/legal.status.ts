@@ -46,6 +46,8 @@ export async function pendingWards(database: DatabaseService, guardianId: string
 
 /** Whether the user must go through the acceptance screen before using the campus. */
 export async function legalPending(database: DatabaseService, userId: string, role: string) {
+  const guest = await database.db.selectFrom('users').select('is_guest').where('id', '=', userId).executeTakeFirst();
+  if (guest?.is_guest) return false;
   const docs = await currentDocuments(database);
   const ids = docs.map((d) => d.id);
   if ((await acceptedCount(database, userId, ids)) < ids.length) return true;

@@ -34,6 +34,9 @@ interface UserRow {
   email: string;
   full_name: string;
   is_minor: boolean;
+  is_guest?: boolean;
+  guest_grade?: number | null;
+  guest_group?: string | null;
   guardian_consent_at: Date | null;
   status: string;
   must_change_password: boolean;
@@ -72,7 +75,9 @@ export class IdentityService {
     return row?.companion === 'luna' ? 'luna' : 'luka';
   }
 
-  toPublic(row: Pick<UserRow, 'id' | 'email' | 'full_name' | 'is_minor' | 'guardian_consent_at'> & Partial<Pick<UserRow, 'status' | 'must_change_password'>>, role: Role, companion: 'luka' | 'luna' = 'luka', pendingLegal = false) {
+  toPublic(row: Pick<UserRow, 'id' | 'email' | 'full_name' | 'is_minor' | 'guardian_consent_at'> & Partial<Pick<UserRow, 'status' | 'must_change_password' | 'is_guest' | 'guest_grade' | 'guest_group'>>, role: Role, companion: 'luka' | 'luna' = 'luka', pendingLegal = false) {
+    const gradeNames: Record<number, string> = { 6: 'Sexto', 7: 'Séptimo', 8: 'Octavo', 9: 'Noveno', 10: 'Décimo', 11: 'Undécimo' };
+    const guest = Boolean(row.is_guest);
     return {
       id: row.id,
       email: row.email,
@@ -80,9 +85,13 @@ export class IdentityService {
       role,
       isMinor: row.is_minor,
       guardianConsent: Boolean(row.guardian_consent_at),
-      mustChangePassword: Boolean(row.must_change_password),
+      mustChangePassword: guest ? false : Boolean(row.must_change_password),
       companion,
-      legalPending: pendingLegal,
+      legalPending: guest ? false : pendingLegal,
+      isGuest: guest,
+      guestGrade: guest ? Number(row.guest_grade ?? 0) : null,
+      guestGroup: guest ? row.guest_group ?? null : null,
+      guestLabel: guest ? `Estudiante (Invitado · ${gradeNames[Number(row.guest_grade)] ?? 'grado'})` : null,
     };
   }
 

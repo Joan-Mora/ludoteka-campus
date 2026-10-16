@@ -19,6 +19,7 @@ const INNER: Record<string, readonly Role[]> = {
   'integridad/:id': ['teacher', 'coordinator', 'admin'],
   'reportes/:id': ['teacher', 'coordinator', 'rector', 'admin'],
   'rectoria/comunicados': ['rector'],
+  clase: ['student', 'teacher', 'admin'],
   rostro: ALL,
   ajustes: ALL,
   notificaciones: ALL,

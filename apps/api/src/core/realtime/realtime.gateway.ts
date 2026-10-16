@@ -31,6 +31,9 @@ export class RealtimeGateway implements OnGatewayInit {
       socket.on('live:join', (body: { code?: string }) => {
         if (body?.code) socket.join(`live:${body.code.toUpperCase()}`);
       });
+      socket.on('clase:join', (body: { sessionId?: string }) => {
+        if (body?.sessionId && /^[0-9a-f-]{36}$/i.test(body.sessionId)) socket.join(`clase:${body.sessionId}`);
+      });
     });
   }
 }

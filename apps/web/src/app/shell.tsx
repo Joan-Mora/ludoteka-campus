@@ -1,7 +1,7 @@
 import { Suspense, useEffect, useMemo, useRef, useState, type CSSProperties, type MouseEvent, type RefObject } from 'react';
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { ArrowLeft, Bell, CheckCheck, LogOut, Menu, Search, Zap } from 'lucide-react';
+import { ArrowLeft, Bell, CheckCheck, Gamepad2, LogOut, Menu, Search, Zap } from 'lucide-react';
 import { api } from '@/shared/api';
 import { NoteRow, useNoteActions, useNotifications, type NoteFeed } from '@/shared/notifications';
 import { useAuth } from '@/shared/auth';
@@ -197,13 +197,13 @@ function DesktopShell({ sections }: { sections: NavSection[] }) {
             <Avatar name={user?.fullName} />
             <div style={{ minWidth: 0, flex: 1 }}>
               <div className="side-name">{user?.fullName}</div>
-              <div className="side-role">{user ? roleLabel[user.role] : ''}</div>
+              <div className="side-role">{user?.guestLabel || (user ? roleLabel[user.role] : '')}</div>
             </div>
             <button className="icon-btn" onClick={async () => { await logout(); navigate('/'); }} title="Salir">
               <LogOut size={17} />
             </button>
           </div>
-          {isStudent && game.data && (
+          {isStudent && !user?.isGuest && game.data && (
             <div style={{ marginTop: 14 }}>
               <div className="row between side-level">
                 <span>Nivel {game.data.level.level} · {game.data.level.title}</span>
@@ -295,7 +295,10 @@ function MobileShell({ sections }: { sections: NavSection[] }) {
   const content = useRef<HTMLElement>(null);
   useTableCards(content);
 
-  const tabs = useMemo(() => (user ? mobileTabs(user.role, companion.name) : []), [user, companion.name]);
+  const tabs = useMemo(() => {
+    if (user?.isGuest) return [{ to: '/app/clase', label: 'Clase', icon: Gamepad2, end: true }];
+    return user ? mobileTabs(user.role, companion.name) : [];
+  }, [user, companion.name]);
   const all = useMemo(() => sections.flatMap((s) => s.items), [sections]);
   const current = useMemo(() => {
     const path = location.pathname;
@@ -357,8 +360,8 @@ function MobileShell({ sections }: { sections: NavSection[] }) {
           <Avatar name={user?.fullName} large />
           <div style={{ minWidth: 0, flex: 1 }}>
             <b className="ellipsis">{user?.fullName}</b>
-            <div className="muted" style={{ fontSize: 13 }}>{user ? roleLabel[user.role] : ''} · {user?.email}</div>
-            {isStudent && game.data && (
+            <div className="muted" style={{ fontSize: 13 }}>{user?.guestLabel || (user ? roleLabel[user.role] : '')}{user?.isGuest ? '' : ` · ${user?.email ?? ''}`}</div>
+            {isStudent && !user?.isGuest && game.data && (
               <div style={{ marginTop: 8 }}>
                 <div className="row between muted" style={{ fontSize: 12, fontWeight: 700, marginBottom: 4 }}>
                   <span>Nivel {game.data.level.level} · {game.data.level.title}</span><span>{pct}%</span>
@@ -399,7 +402,11 @@ export function Shell() {
   const { user } = useAuth();
   const companion = useCompanion();
   const layout = useLayout();
-  const sections = useMemo(() => (user ? navSections(user.role, companion.name) : []), [user, companion.name]);
+  const sections = useMemo(() => {
+    if (!user) return [];
+    if (user.isGuest) return [{ label: 'Hoy', items: [{ to: '/app/clase', label: 'La clase', icon: Gamepad2, end: true }] }];
+    return navSections(user.role, companion.name);
+  }, [user, companion.name]);
   useEffect(() => configureSpeech(companion.female ? 'female' : 'male'), [companion.female]);
   useScrollQuiet();
   const preferences = useQuery({ queryKey: ['preferences'], queryFn: () => api<{ theme: ThemeChoice }>('/api/me/preferences'), staleTime: Infinity, enabled: Boolean(user) });

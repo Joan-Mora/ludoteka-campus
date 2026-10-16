@@ -13,6 +13,9 @@ export interface Database {
     password_hash: string;
     full_name: string;
     is_minor: Generated<boolean>;
+    is_guest: Generated<boolean>;
+    guest_grade: NullableInt;
+    guest_group: NullableString;
     guardian_consent_at: NullableDate;
     status: Generated<string>;
     must_change_password: Generated<boolean>;
@@ -1029,5 +1032,47 @@ export interface Database {
     resolved_by: NullableString;
     resolved_at: NullableDate;
     created_at: Ts;
+  };
+  guest_sessions: {
+    id: Generated<string>;
+    code: string;
+    title: string;
+    grade: number;
+    group_code: string;
+    activity: Generated<string>;
+    status: Generated<string>;
+    opened_by: string;
+    opened_at: Ts;
+    closed_at: NullableDate;
+  };
+  guest_joins: {
+    session_id: string;
+    user_id: string;
+    joined_at: Ts;
+  };
+  guest_runs: {
+    id: Generated<string>;
+    session_id: string;
+    user_id: string;
+    game: string;
+    state: JsonValue;
+    score: Generated<number>;
+    correct: Generated<number>;
+    total: Generated<number>;
+    started_at: Ts;
+    finished_at: NullableDate;
+  };
+  guest_pairs: {
+    id: Generated<string>;
+    session_id: string;
+    user_a: string;
+    user_b: NullableString;
+    gate: Generated<number>;
+    total: Generated<number>;
+    state: JsonValue;
+    score_a: Generated<number>;
+    score_b: Generated<number>;
+    finished_at: NullableDate;
+    updated_at: Ts;
   };
 }

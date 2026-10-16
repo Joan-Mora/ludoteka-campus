@@ -13,6 +13,10 @@ export interface SessionUser {
   mustChangePassword?: boolean;
   /** Current terms or data policy not accepted yet (by the user, or by a guardian for their wards). */
   legalPending?: boolean;
+  isGuest?: boolean;
+  guestGrade?: number | null;
+  guestGroup?: string | null;
+  guestLabel?: string | null;
 }
 
 export interface OtpChallenge {

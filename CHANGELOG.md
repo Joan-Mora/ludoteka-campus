@@ -4,6 +4,18 @@ Todos los cambios relevantes de Ludoteka Campus, del más reciente al más antig
 
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Las secciones usan: **Añadido** (funciones nuevas), **Cambiado** (comportamiento distinto), **Corregido** (errores) y **Documentación**.
 
+## [1.2.0] — 2026-10-16
+
+Clase de octavo con ingreso por QR, diagnóstico y tres juegos de factorización y fracciones algebraicas.
+
+### Añadido
+- Sesiones de invitados: el docente o administración abre un grupo (81, 82 u 83), proyecta un QR y el estudiante entra con su nombre, sin cuenta. La etiqueta es «Estudiante (Invitado · Octavo)». La sesión queda guardada al cerrarla.
+- Diagnóstico de octavo (un intento) y tres juegos: La fábrica, Dos elementos (parejas, en vivo por socket) y ¿Qué caso es?.
+- Tablero del docente con el mejor de la sesión y exportación a Excel de una sesión, varias o un rango de fechas.
+
+### Cambiado
+- El arcade anterior, el banco de preguntas y la biblioteca publicados se despublican (migración `0035`). Entran dos guías de octavo con enlace a los DBA del MEN y a OpenStax Intermediate Algebra. Los archivos de Cloudinary no se borran.
+
 ## [1.1.0] — 2026-10-15
 
 Ajustes de uso pedidos tras la primera entrega: banco de preguntas, cartelera, usuarios, Laboratorio IA y Mi ruta.

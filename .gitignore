@@ -14,6 +14,7 @@ packages/*/dist/
 apps/web/public/models/
 .local/
 /scripts/
+Colegio Francisco Arango.pdf
 apps/web/e2e/.auth/
 apps/web/e2e/.results/
 apps/web/e2e/.report/

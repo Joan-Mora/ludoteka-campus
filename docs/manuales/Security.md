@@ -111,6 +111,7 @@ El rol abre la puerta; la relación decide qué datos se ven. Ejemplos:
 | Conversación del tutor | Solo su dueño la lista, la abre, la continúa o la borra; otro usuario recibe `404` | `tutor/tutor.service.ts` (`ownConversation`) |
 | Pregunta del banco | La modifica quien la creó, el docente de un curso de esa materia o el administrador; las usadas se archivan, no se borran | `assessment/assessment.service.ts` (`manageable`) |
 | Destinatarios de la cartelera | El docente solo publica para sus grupos; grados, roles y toda la comunidad son de los directivos | `learning/news.service.ts` (`assertAudience`) |
+| Invitado de clase | Entra solo con el código de una sesión abierta y un nombre de su grupo. No tiene contraseña usable. No se guardan teléfono ni acudiente | `guest/guest.service.ts` |
 
 ### En la web
 

@@ -375,7 +375,15 @@ En **Novedades** están las circulares del colegio y los avisos de sus cursos. S
 
 ## 5. Docente
 
-Sus edificios: **Enseñar** (Mis cursos, Planilla de notas, Banco de preguntas), **En clase** (Sala en vivo, Arena), **Comunicación** (Mensajes, Cartelera) y **Recursos** (Biblioteca, Observatorio).
+Sus edificios: **Enseñar** (Mis cursos, Planilla de notas, Banco de preguntas), **En clase** (Sesiones de invitados, Sala en vivo, Arena), **Comunicación** (Mensajes, Cartelera) y **Recursos** (Biblioteca, Observatorio).
+
+### Sesión de invitados (octavo)
+
+En **Sesiones de invitados** elija el grupo (81, 82 u 83) y pulse **Abrir sesión**. Proyecte el QR. Cada estudiante elige su nombre o lo escribe y entra como **Estudiante (Invitado · Octavo)**, sin correo ni contraseña.
+
+Arriba de la lista cambie la actividad para que todo el grupo vaya junto: **Diagnóstico** (un intento, 20 minutos), **La fábrica**, **Dos elementos** (en parejas) o **¿Qué caso es?** (90 segundos). El tablero se actualiza solo y marca al mejor de la sesión. **Cerrar sesión** no borra a nadie.
+
+En **Sesiones guardadas** marque una o varias, o elija un rango de fechas, y pulse **Exportar informe**.
 
 ![Inicio del docente](img/docente/inicio.png)
 

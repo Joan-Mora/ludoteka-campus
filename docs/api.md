@@ -455,6 +455,29 @@ La respuesta de un reto (`answer`) admite hasta 500 caracteres. Si trae texto o 
 | `GET` | `/api/public/reports/:code` | Pública |
 | `GET` | `/api/reports/log` | Docente, Admin, Coord., Rect. |
 
+### Clase de invitados
+
+El estudiante no crea cuenta: escanea un QR, elige su nombre (o lo escribe) y entra como `student` con `isGuest`. La etiqueta es «Estudiante (Invitado · grado)». La sesión no se borra al cerrarla.
+
+| Método | Ruta | Acceso |
+|---|---|---|
+| `POST` | `/api/clase/sesiones` | Docente, Admin |
+| `GET` | `/api/clase/sesiones` | Docente, Admin |
+| `GET` | `/api/clase/sesiones/:id/tablero` | Docente, Admin |
+| `PATCH` | `/api/clase/sesiones/:id` | Docente, Admin. Cambia la actividad abierta |
+| `POST` | `/api/clase/sesiones/:id/cerrar` | Docente, Admin |
+| `GET` | `/api/clase/informe.xlsx` | Docente, Admin. `ids`, `from` y `to` |
+| `GET` | `/api/invitado/:code` | Público |
+| `POST` | `/api/invitado/:code/entrar` | Público |
+| `GET` | `/api/clase/mia` | Estudiante invitado |
+| `POST` | `/api/clase/diagnostico` | Estudiante invitado |
+| `POST` | `/api/clase/fabrica` | Estudiante invitado |
+| `POST` | `/api/clase/casos` | Estudiante invitado |
+| `GET` / `POST` | `/api/clase/pareja` | Estudiante invitado |
+| `POST` | `/api/clase/pareja/respuesta` | Estudiante invitado |
+
+Hoy el grado es octavo (grupos 81, 82 y 83) y las actividades son diagnóstico, La fábrica, Dos elementos y ¿Qué caso es?. Las respuestas se califican en el servidor. El tablero marca al mejor de la sesión.
+
 ### Salud
 
 | Método | Ruta | Acceso |

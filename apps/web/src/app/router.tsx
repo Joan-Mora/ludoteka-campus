@@ -22,6 +22,8 @@ const play = () => import('@/features/play');
 const facial = () => import('@/features/facial');
 
 const HomePage = page(classroom, 'HomePage');
+const ClassPage = page(() => import('@/features/clase'), 'ClassPage');
+const GuestJoinPage = page(() => import('@/features/guest-join'), 'GuestJoinPage');
 const CoursesPage = page(classroom, 'CoursesPage');
 const CoursePage = page(classroom, 'CoursePage');
 const CourseDesk = page(classroom, 'CourseDesk');
@@ -74,8 +76,8 @@ function Gate({ children }: { children: ReactNode }) {
   const { user, ready } = useAuth();
   if (!ready) return <Splash />;
   if (!user) return <Navigate to="/ingresar" replace />;
-  if (user.mustChangePassword) return <Navigate to="/cambiar-clave" replace />;
-  if (user.legalPending) return <Navigate to="/aceptar" replace />;
+  if (!user.isGuest && user.mustChangePassword) return <Navigate to="/cambiar-clave" replace />;
+  if (!user.isGuest && user.legalPending) return <Navigate to="/aceptar" replace />;
   return children;
 }
 
@@ -100,6 +102,12 @@ export function NotForRole() {
       <Link className="btn" to="/app">Volver al inicio</Link>
     </div>
   );
+}
+
+function Home() {
+  const { user } = useAuth();
+  if (user?.isGuest) return <Navigate to="/app/clase" replace />;
+  return <HomePage />;
 }
 
 function RoleRoute({ path, children }: { path: string; children: ReactNode }) {
@@ -145,6 +153,7 @@ const app: [string, ComponentType][] = [
   ['cuaderno', StudyPage],
   ['calificaciones', GradebookPage],
   ['ajustes', SettingsPage],
+  ['clase', ClassPage],
 ];
 
 export function AppRouter() {
@@ -161,10 +170,11 @@ export function AppRouter() {
         <Route path="/legal/:kind" element={<LegalPage />} />
         <Route path="/verificar/:code" element={<VerifyPage />} />
         <Route path="/verificar-reporte/:code" element={<VerifyReportPage />} />
+        <Route path="/invitado/:code" element={<GuestJoinPage />} />
         <Route path="/examen/:id" element={<Gate><ExamPage /></Gate>} />
         <Route path="/arena/:id/proyector" element={<Gate><ArenaProjectorPage /></Gate>} />
         <Route path="/app" element={<Gate><Shell /></Gate>}>
-          <Route index element={<HomePage />} />
+          <Route index element={<Home />} />
           {app.map(([path, Page]) => (
             <Route key={path} path={path} element={<RoleRoute path={path}><Page /></RoleRoute>} />
           ))}

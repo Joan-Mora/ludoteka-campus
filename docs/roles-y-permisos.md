@@ -29,7 +29,7 @@ Cada rol tiene su propio mapa: solo sus edificios, agrupados en distritos. El me
 | Rol | Distritos y edificios (ruta) |
 |---|---|
 | Estudiante | **Mi día:** Mis cursos `/app/cursos`, Mi ruta `/app/ruta`, Cuaderno `/app/cuaderno` · **A mi manera:** Mi espacio `/app/aprender`, Laboratorio IA `/app/tutor` · **Jugar:** Sala en vivo `/app/en-vivo`, Arena `/app/arena`, Arcade `/app/jugar`, Sala de trofeos `/app/logros` · **Colegio:** Biblioteca `/app/biblioteca`, Cartelera `/app/novedades` |
-| Docente | **Enseñar:** Mis cursos, Planilla de notas `/app/calificaciones`, Banco de preguntas `/app/banco` · **En clase:** Sala en vivo, Arena · **Comunicación:** Mensajes `/app/mensajes`, Cartelera · **Recursos:** Biblioteca, Observatorio `/app/consultas` |
+| Docente | **Enseñar:** Mis cursos, Planilla de notas `/app/calificaciones`, Banco de preguntas `/app/banco` · **En clase:** Sesiones de invitados `/app/clase`, Sala en vivo, Arena · **Comunicación:** Mensajes `/app/mensajes`, Cartelera · **Recursos:** Biblioteca, Observatorio `/app/consultas` |
 | Coordinación | **Seguimiento:** Alertas `/app/coordinacion`, Asistencia `/app/coordinacion/asistencia`, Citaciones `/app/coordinacion/citaciones` · **Académico:** Grupos y cursos `/app/cursos`, Consolidado de notas `/app/calificaciones`, Observatorio · **Comunicación:** Mensajes, Cartelera, Biblioteca |
 | Rectoría | **Dirección:** Tablero `/app/rectoria`, Sala de firmas `/app/rectoria/firmas`, Archivo de reportes `/app/rectoria/reportes` · **Datos:** Observatorio · **Comunicación:** Mensajes, Cartelera, Biblioteca |
 | Acudiente | **Familia:** Mis hijos `/app/acudiente`, Mensajes · **Colegio:** Cartelera, Biblioteca |

@@ -24,11 +24,11 @@ export const publicRoutes = ['/', '/ingresar', '/recuperar', '/legal/terminos', 
 
 export const routesByRole: Record<E2ERole, string[]> = {
   student: ['/app', '/app/cursos', '/app/ruta', '/app/cuaderno', '/app/aprender', '/app/tutor', '/app/en-vivo', '/app/arena', '/app/jugar', '/app/logros', '/app/biblioteca', '/app/novedades', '/app/ajustes'],
-  teacher: ['/app', '/app/cursos', '/app/calificaciones', '/app/banco', '/app/en-vivo', '/app/arena', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/consultas', '/app/ajustes'],
+  teacher: ['/app', '/app/cursos', '/app/calificaciones', '/app/banco', '/app/clase', '/app/en-vivo', '/app/arena', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/consultas', '/app/ajustes'],
   coordinator: ['/app', '/app/coordinacion', '/app/coordinacion/asistencia', '/app/coordinacion/citaciones', '/app/cursos', '/app/calificaciones', '/app/consultas', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
   rector: ['/app', '/app/rectoria', '/app/rectoria/firmas', '/app/rectoria/reportes', '/app/consultas', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
   guardian: ['/app', '/app/acudiente', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
-  admin: ['/app', '/app/admin/usuarios', '/app/admin', '/app/cursos', '/app/banco', '/app/calificaciones', '/app/coordinacion', '/app/coordinacion/asistencia', '/app/coordinacion/citaciones', '/app/rectoria', '/app/rectoria/reportes', '/app/consultas', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
+  admin: ['/app', '/app/admin/usuarios', '/app/admin', '/app/clase', '/app/cursos', '/app/banco', '/app/calificaciones', '/app/coordinacion', '/app/coordinacion/asistencia', '/app/coordinacion/citaciones', '/app/rectoria', '/app/rectoria/reportes', '/app/consultas', '/app/mensajes', '/app/novedades', '/app/biblioteca', '/app/ajustes'],
 };
 
 /** Routes each role must not open: the router shows «Esta sección no es para tu rol». */

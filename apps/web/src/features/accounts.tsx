@@ -225,7 +225,7 @@ export function UsuariosPage() {
                 <tr>
                   <th>Persona</th>
                   {role === 'student' && <><th className="num">Grupo</th><th>Acudientes</th></>}
-                  {role === 'teacher' && <th>Cursos a cargo</th>}
+                  {role === 'teacher' && <th>Grupos a cargo</th>}
                   {role === 'guardian' && <th>Estudiantes a cargo</th>}
                   <th className="num">Estado</th><th className="num">Último ingreso</th><th className="act" />
                 </tr>

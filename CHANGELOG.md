@@ -16,6 +16,9 @@ Clase de octavo con ingreso por QR, diagnóstico y tres juegos de factorización
 ### Cambiado
 - El arcade anterior, el banco de preguntas y la biblioteca publicados se despublican (migración `0035`). Entran dos guías de octavo con enlace a los DBA del MEN y a OpenStax Intermediate Algebra. Los archivos de Cloudinary no se borran.
 
+### Corregido
+- Institución: asignar un docente a un grupo o a todo un grado ya no responde error interno si esa carga ya existía. La lista muestra la asignación y permite quitarla. La matrícula y el curso usan el año del grupo.
+
 ## [1.1.0] — 2026-10-15
 
 Ajustes de uso pedidos tras la primera entrega: banco de preguntas, cartelera, usuarios, Laboratorio IA y Mi ruta.

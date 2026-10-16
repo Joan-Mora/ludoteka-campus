@@ -665,7 +665,7 @@ Administración entra a todos los módulos de gestión y los usa como se describ
 1. **Institución › Estructura:** crear grados, grupos y materias (con la plantilla o la estructura base).
 2. **Usuarios:** crear o importar las cuentas de docentes, estudiantes (con su grupo) y acudientes.
 3. **Institución › Acudientes:** revisar o crear los vínculos entre acudientes y estudiantes.
-4. **Institución › Estructura › Asignación docente:** asignar cada docente a su materia y grupo.
+4. **Institución › Estructura › Asignación docente:** asignar cada docente a una materia en un grupo, o a todos los grupos de un grado. La lista de abajo confirma la carga; **Quitar** la retira.
 5. **Institución › Cursos:** abrir los cursos.
 
 El año lectivo y sus periodos no se crean desde la pantalla; los prepara el equipo técnico (ver el [Manual de instalación](manual-de-instalacion.md)).
@@ -724,7 +724,7 @@ Si desmarca el envío de correos, el campus le deja descargar las claves tempora
 **Estructura:**
 
 - **Plantilla de estructura:** **Descargar plantilla** (hojas «Grupos» y «Materias»), **Subir plantilla llena** o **Usar estructura base** (grados 6.° a 11.° con grupos A y B y 10 materias). Revise la vista previa y pulse **Crear lo que falta**; lo que ya existe se conserva.
-- Formularios individuales: **Grupos**, **Materias**, **Asignación docente** y **Matrícula**. Estos formularios se limpian al guardar pero no muestran mensaje de confirmación; verifique el resultado en las listas.
+- Formularios individuales: **Grupos**, **Materias**, **Asignación docente** y **Matrícula**. Al guardar aparece la confirmación o el motivo si no se pudo. La asignación docente lista la carga actual.
 
 **Acudientes:** la tabla de vínculos muestra cada acudiente con su estudiante, parentesco y estado. Use **Nuevo vínculo** (acudiente, estudiante, parentesco) › **Vincular**, o **Revocar** para quitarlo.
 
@@ -782,7 +782,7 @@ Estas son diferencias entre lo que podría esperarse y lo que el campus hace hoy
 - **Buscador superior:** la caja «Buscar lecciones, tareas o evaluaciones» del computador todavía no busca.
 - **Año lectivo y periodos:** no hay pantalla para crearlos; los prepara el equipo técnico.
 - **Coordinación y acudientes:** coordinación no tiene pantalla para vincular acudientes; lo hace administración en **Institución › Acudientes**.
-- **Formularios de Institución:** los de grupos, materias, asignación docente, matrícula y cursos no muestran mensajes de éxito ni de error.
+- **Formularios de Institución:** grupos, materias, asignación docente, matrícula y cursos muestran si se guardó o por qué no.
 - **Resumen semanal:** el correo dice que se apaga desde Ajustes, pero la casilla está en **Mis hijos**.
 - **Restablecer contraseña:** la pantalla pide la contraseña una sola vez, sin confirmación.
 - **Aviso de cookies:** indica que la sesión dura 7 días; en realidad dura hasta 14 días si no se cierra.

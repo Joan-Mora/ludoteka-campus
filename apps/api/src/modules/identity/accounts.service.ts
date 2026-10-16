@@ -182,8 +182,19 @@ export class AccountsService {
           .orderBy('groups_class.name')
           .execute()
       : [];
+    const assigned = teacherIds.length
+      ? await this.database.db
+          .selectFrom('teaching_assignments')
+          .innerJoin('subjects', 'subjects.id', 'teaching_assignments.subject_id')
+          .innerJoin('groups_class', 'groups_class.id', 'teaching_assignments.group_id')
+          .innerJoin('grades', 'grades.id', 'groups_class.grade_id')
+          .select(['teaching_assignments.teacher_id', 'subjects.name as subject', 'groups_class.name as group_name', 'grades.level'])
+          .where('teaching_assignments.teacher_id', 'in', teacherIds)
+          .$if(Boolean(year), (q) => q.where('teaching_assignments.academic_year_id', '=', year!.id))
+          .execute()
+      : [];
     const teaching = new Map<string, string[]>();
-    for (const c of courses) {
+    for (const c of [...courses, ...assigned]) {
       if (!c.teacher_id) continue;
       const label = `${c.subject} ${groupLabel(c.level, c.group_name)}`;
       const list = teaching.get(c.teacher_id) ?? [];

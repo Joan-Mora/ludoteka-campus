@@ -290,23 +290,48 @@ export function CourseLinks() {
   );
 }
 
+type YearRow = { id: string; name: string; is_current: boolean };
+type GradeRow = { id: string; name: string; level: number };
+type GroupRow = { id: string; name: string; grade_id: string; grade_name: string; grade_level: number; academic_year_id: string; year_name: string };
+type Person = { id: string; fullName: string; email: string; role: string };
+
+const schoolStudents = (people: Person[]) => people.filter((u) => u.role === 'student' && !u.email.endsWith('@invitados.ludoteka.local'));
+const groupOption = (g: GroupRow) => `${g.name.toUpperCase().startsWith(String(g.grade_level)) ? g.name : `${g.grade_name} ${g.name}`} · ${g.year_name}`;
+
+function Note({ kind, text }: { kind: 'ok' | 'err'; text: string }) {
+  if (!text) return null;
+  return <p className={kind === 'ok' ? 'ok-text' : 'form-error'}>{text}</p>;
+}
+
 export function AdminPage() {
   const client = useQueryClient();
-  const years = useQuery({ queryKey: ['years'], queryFn: () => api<{ id: string; name: string }[]>('/api/institution/years') });
-  const grades = useQuery({ queryKey: ['grades'], queryFn: () => api<{ id: string; name: string; level: number }[]>('/api/institution/grades') });
-  const groups = useQuery({ queryKey: ['groups'], queryFn: () => api<{ id: string; name: string; grade_name: string }[]>('/api/institution/groups') });
+  const years = useQuery({ queryKey: ['years'], queryFn: () => api<YearRow[]>('/api/institution/years') });
+  const grades = useQuery({ queryKey: ['grades'], queryFn: () => api<GradeRow[]>('/api/institution/grades') });
+  const groups = useQuery({ queryKey: ['groups'], queryFn: () => api<GroupRow[]>('/api/institution/groups') });
   const subjects = useQuery({ queryKey: ['subjects'], queryFn: () => api<{ id: string; name: string; code: string }[]>('/api/institution/subjects') });
-  const users = useQuery({ queryKey: ['users'], queryFn: () => api<{ id: string; fullName: string; email: string; role: string }[]>('/api/admin/users') });
+  const users = useQuery({ queryKey: ['users'], queryFn: () => api<Person[]>('/api/admin/users') });
   const [tab, setTab] = useState<'guardians' | 'structure' | 'courses'>('structure');
+  const [note, setNote] = useState<{ key: string; kind: 'ok' | 'err'; text: string } | null>(null);
+  const [busy, setBusy] = useState('');
 
-  async function send(path: string, body: unknown, form?: HTMLFormElement) {
-    await api(path, { method: 'POST', body: JSON.stringify(body) });
-    form?.reset();
-    client.invalidateQueries();
+  async function send(key: string, path: string, body: unknown, form: HTMLFormElement | undefined, ok: string) {
+    setBusy(key);
+    setNote(null);
+    try {
+      await api(path, { method: 'POST', body: JSON.stringify(body) });
+      form?.reset();
+      setNote({ key, kind: 'ok', text: ok });
+      client.invalidateQueries();
+    } catch (err) {
+      setNote({ key, kind: 'err', text: err instanceof Error ? err.message : 'No se pudo guardar' });
+    } finally {
+      setBusy('');
+    }
   }
 
-  const yearSelect = <label className="field">Año<select name="yearId">{(years.data ?? []).map((y) => <option key={y.id} value={y.id}>{y.name}</option>)}</select></label>;
-  const groupSelect = <label className="field">Grupo<select name="groupId">{(groups.data ?? []).map((g) => <option key={g.id} value={g.id}>{g.grade_name} {g.name}</option>)}</select></label>;
+  const flash = (key: string) => (note?.key === key ? <Note kind={note.kind} text={note.text} /> : null);
+  const teachers = (users.data ?? []).filter((u) => u.role === 'teacher');
+  const students = schoolStudents(users.data ?? []);
 
   return (
     <div>
@@ -317,7 +342,7 @@ export function AdminPage() {
         actions={<Link className="btn ghost" to="/app/admin/usuarios"><Users size={16} /> Gestionar usuarios</Link>}
       />
       <div className="grid cols-4" style={{ marginBottom: 18 }}>
-        <Stat icon={Users} tone="violet" value={users.data?.length ?? 0} label="Cuentas" />
+        <Stat icon={Users} tone="violet" value={(users.data ?? []).filter((u) => !u.email.endsWith('@invitados.ludoteka.local')).length} label="Cuentas" />
         <Stat icon={Layers} tone="sky" value={groups.data?.length ?? 0} label="Grupos" />
         <Stat icon={Library} tone="gold" value={subjects.data?.length ?? 0} label="Materias" />
         <Stat icon={GraduationCap} tone="mint" value={grades.data?.length ?? 0} label="Grados" />
@@ -338,50 +363,147 @@ export function AdminPage() {
         <div className="grid cols-3" style={{ alignItems: 'start' }}>
           <Panel icon={Layers} tone="sky" title="Grupos">
             <div className="row g-8 wrap" style={{ marginBottom: 16 }}>
-              {(groups.data ?? []).map((g) => <span key={g.id} className="chip sky">{g.grade_name} {g.name}</span>)}
+              {(groups.data ?? []).map((g) => <span key={g.id} className="chip sky">{groupOption(g)}</span>)}
             </div>
-            <form onSubmit={(e) => { e.preventDefault(); const f = e.currentTarget; const d = new FormData(f); send('/api/institution/groups', { name: d.get('name'), gradeId: d.get('gradeId'), academicYearId: d.get('yearId') }, f); }}>
-              <label className="field">Nombre<input name="name" required /></label>
-              <label className="field">Grado<select name="gradeId">{(grades.data ?? []).map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}</select></label>
-              {yearSelect}
-              <button className="btn" type="submit" style={{ width: '100%' }}>Crear grupo</button>
+            <form onSubmit={(e) => { e.preventDefault(); const f = e.currentTarget; const d = new FormData(f); send('group', '/api/institution/groups', { name: d.get('name'), gradeId: d.get('gradeId'), academicYearId: d.get('yearId') }, f, 'Grupo creado.'); }}>
+              <label className="field">Nombre<input name="name" required placeholder="81" /></label>
+              <label className="field">Grado<select name="gradeId" required>{(grades.data ?? []).map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}</select></label>
+              <label className="field">Año<select name="yearId" required>{(years.data ?? []).map((y) => <option key={y.id} value={y.id}>{y.name}{y.is_current ? ' · actual' : ''}</option>)}</select></label>
+              {flash('group')}
+              <button className="btn" type="submit" style={{ width: '100%' }} disabled={busy === 'group'}>Crear grupo</button>
             </form>
           </Panel>
           <Panel icon={Library} tone="gold" title="Materias">
             <div className="row g-8 wrap" style={{ marginBottom: 16 }}>
               {(subjects.data ?? []).map((s) => <span key={s.id} className="chip gold">{s.code} · {s.name}</span>)}
             </div>
-            <form onSubmit={(e) => { e.preventDefault(); const f = e.currentTarget; const d = new FormData(f); send('/api/institution/subjects', { code: d.get('code'), name: d.get('name'), area: d.get('area') }, f); }}>
+            <form onSubmit={(e) => { e.preventDefault(); const f = e.currentTarget; const d = new FormData(f); send('subject', '/api/institution/subjects', { code: d.get('code'), name: d.get('name'), area: d.get('area') }, f, 'Materia creada.'); }}>
               <label className="field">Código<input name="code" required /></label>
               <label className="field">Nombre<input name="name" required /></label>
               <label className="field">Área<input name="area" required /></label>
-              <button className="btn" type="submit" style={{ width: '100%' }}>Crear materia</button>
+              {flash('subject')}
+              <button className="btn" type="submit" style={{ width: '100%' }} disabled={busy === 'subject'}>Crear materia</button>
             </form>
           </Panel>
-          <Panel icon={Users} tone="violet" title="Asignación docente">
-            <form onSubmit={(e) => { e.preventDefault(); const f = e.currentTarget; const d = new FormData(f); send('/api/institution/teaching', { teacherId: d.get('teacherId'), subjectId: d.get('subjectId'), groupId: d.get('groupId'), academicYearId: d.get('yearId') }, f); }}>
-              <label className="field">Docente<select name="teacherId">{(users.data ?? []).filter((u) => u.role === 'teacher').map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}</select></label>
-              <label className="field">Materia<select name="subjectId">{(subjects.data ?? []).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
-              {groupSelect}
-              {yearSelect}
-              <button className="btn" type="submit" style={{ width: '100%' }}>Asignar</button>
-            </form>
-          </Panel>
-          <Panel icon={GraduationCap} tone="mint" title="Matrícula" subtitle="Las cuentas nuevas se matriculan desde Usuarios">
-            <form onSubmit={(e) => { e.preventDefault(); const f = e.currentTarget; const d = new FormData(f); send('/api/institution/enrollments', { userId: d.get('userId'), groupId: d.get('groupId'), academicYearId: d.get('yearId') }, f); }}>
-              <label className="field">Estudiante<select name="userId">{(users.data ?? []).filter((u) => u.role === 'student').map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}</select></label>
-              {groupSelect}
-              {yearSelect}
-              <button className="btn" type="submit" style={{ width: '100%' }}>Matricular</button>
+          <Panel icon={GraduationCap} tone="mint" title="Matrícula" subtitle="El año es el del grupo. Si ya tenía otro grupo este año, se cambia.">
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const f = e.currentTarget;
+              const d = new FormData(f);
+              const group = (groups.data ?? []).find((g) => g.id === d.get('groupId'));
+              if (!group) return;
+              send('enroll', '/api/institution/enrollments', { userId: d.get('userId'), groupId: group.id, academicYearId: group.academic_year_id }, f, 'Matrícula guardada.');
+            }}>
+              <label className="field">Estudiante<select name="userId" required>{students.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}</select></label>
+              <label className="field">Grupo<select name="groupId" required>{(groups.data ?? []).map((g) => <option key={g.id} value={g.id}>{groupOption(g)}</option>)}</select></label>
+              {!students.length && <p className="muted" style={{ fontSize: 13 }}>No hay estudiantes del colegio. Los invitados de la clase no se matriculan aquí.</p>}
+              {flash('enroll')}
+              <button className="btn" type="submit" style={{ width: '100%' }} disabled={busy === 'enroll' || !students.length}>Matricular</button>
             </form>
           </Panel>
         </div>
       )}
+      {tab === 'structure' && <TeachingAssign teachers={teachers} subjects={subjects.data ?? []} groups={groups.data ?? []} grades={grades.data ?? []} years={years.data ?? []} />}
 
       {tab === 'guardians' && <GuardianLinks users={users.data ?? []} />}
 
-      {tab === 'courses' && <TeacherBuilder />}
+      {tab === 'courses' && <TeacherBuilder teachers={teachers} groups={groups.data ?? []} />}
     </div>
+  );
+}
+
+interface TeachRow { id: string; teacher_name: string; subject_name: string; group_name: string; grade_name: string; grade_level: number; year_name: string }
+
+function TeachingAssign({ teachers, subjects, groups, grades, years }: { teachers: Person[]; subjects: { id: string; name: string }[]; groups: GroupRow[]; grades: GradeRow[]; years: YearRow[] }) {
+  const client = useQueryClient();
+  const rows = useQuery({ queryKey: ['teaching'], queryFn: () => api<TeachRow[]>('/api/institution/teaching') });
+  const [scope, setScope] = useState<'group' | 'grade'>('grade');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+  const [ok, setOk] = useState('');
+  const currentYear = years.find((y) => y.is_current)?.id ?? years[0]?.id ?? '';
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    setBusy(true);
+    setError('');
+    setOk('');
+    try {
+      const result = await api<{ created: number; already: number }>('/api/institution/teaching', {
+        method: 'POST',
+        body: JSON.stringify({
+          teacherId: data.get('teacherId'),
+          subjectId: data.get('subjectId'),
+          ...(scope === 'group'
+            ? { groupId: data.get('groupId') }
+            : { gradeId: data.get('gradeId'), academicYearId: data.get('yearId') }),
+        }),
+      });
+      if (result.created && result.already) setOk(`Listo: ${result.created} grupos nuevos. ${result.already} ya los tenía.`);
+      else if (result.created > 1) setOk(`Asignados ${result.created} grupos.`);
+      else if (result.created === 1) setOk('Asignación guardada.');
+      else setOk('Ese docente ya tenía esa asignación.');
+      client.invalidateQueries({ queryKey: ['teaching'] });
+      client.invalidateQueries({ queryKey: ['admin-users'] });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudo asignar');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function remove(id: string) {
+    if (!window.confirm('¿Quitar esta asignación?')) return;
+    setError('');
+    setOk('');
+    try {
+      await api(`/api/institution/teaching/${id}`, { method: 'DELETE' });
+      setOk('Asignación quitada.');
+      client.invalidateQueries({ queryKey: ['teaching'] });
+      client.invalidateQueries({ queryKey: ['admin-users'] });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'No se pudo quitar');
+    }
+  }
+
+  return (
+    <Panel icon={Users} tone="violet" title="Asignación docente" subtitle="Un grupo o todo un grado. El año queda el del grupo, y aquí se ve quién ya lo tiene.">
+      {!teachers.length && <p className="muted" style={{ fontSize: 13 }}>Primero crea un docente en Usuarios.</p>}
+      <div className="grid cols-2" style={{ alignItems: 'start' }}>
+        <form onSubmit={submit}>
+          <div className="row g-8" style={{ marginBottom: 12 }}>
+            <button type="button" className={`btn sm ${scope === 'grade' ? '' : 'ghost'}`} onClick={() => setScope('grade')}>Todo el grado</button>
+            <button type="button" className={`btn sm ${scope === 'group' ? '' : 'ghost'}`} onClick={() => setScope('group')}>Un grupo</button>
+          </div>
+          <label className="field">Docente<select name="teacherId" required disabled={!teachers.length}>{teachers.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}</select></label>
+          <label className="field">Materia<select name="subjectId" required>{subjects.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
+          {scope === 'grade' ? (
+            <>
+              <label className="field">Grado<select name="gradeId" required>{grades.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}</select></label>
+              <label className="field">Año<select name="yearId" required defaultValue={currentYear} key={currentYear}>{years.map((y) => <option key={y.id} value={y.id}>{y.name}{y.is_current ? ' · actual' : ''}</option>)}</select></label>
+            </>
+          ) : (
+            <label className="field">Grupo<select name="groupId" required>{groups.map((g) => <option key={g.id} value={g.id}>{groupOption(g)}</option>)}</select></label>
+          )}
+          {ok && <Note kind="ok" text={ok} />}
+          {error && <Note kind="err" text={error} />}
+          <button className="btn" type="submit" style={{ width: '100%' }} disabled={busy || !teachers.length}>{busy ? 'Guardando…' : 'Asignar'}</button>
+        </form>
+        <div>
+          {(rows.data ?? []).map((row) => (
+            <div key={row.id} className="row between g-8" style={{ padding: '8px 0', borderBottom: '1px solid var(--line, rgba(0,0,0,.08))' }}>
+              <div style={{ minWidth: 0 }}>
+                <b className="ellipsis">{row.teacher_name}</b>
+                <div className="muted ellipsis" style={{ fontSize: 13 }}>{row.subject_name} · {row.grade_name} {row.group_name} · {row.year_name}</div>
+              </div>
+              <button type="button" className="btn sm ghost" onClick={() => remove(row.id)}>Quitar</button>
+            </div>
+          ))}
+          {rows.data && !rows.data.length && <p className="muted" style={{ margin: 0 }}>Todavía no hay docentes asignados.</p>}
+        </div>
+      </div>
+    </Panel>
   );
 }
 
@@ -499,7 +621,7 @@ function GuardianLinks({ users }: { users: { id: string; fullName: string; email
       <Panel icon={UserPlus} tone="violet" title="Nuevo vínculo">
         <form onSubmit={create}>
           <label className="field">Acudiente<select name="guardian" required>{users.filter((u) => u.role === 'guardian').map((u) => <option key={u.id} value={u.email}>{u.fullName}</option>)}</select></label>
-          <label className="field">Estudiante<select name="student" required>{users.filter((u) => u.role === 'student').map((u) => <option key={u.id} value={u.email}>{u.fullName}</option>)}</select></label>
+          <label className="field">Estudiante<select name="student" required>{schoolStudents(users).map((u) => <option key={u.id} value={u.email}>{u.fullName}</option>)}</select></label>
           <label className="field">Parentesco
             <select name="relationship">
               {['madre', 'padre', 'tutor', 'abuelo', 'otro'].map((r) => <option key={r} value={r}>{r[0]!.toUpperCase() + r.slice(1)}</option>)}
@@ -513,12 +635,13 @@ function GuardianLinks({ users }: { users: { id: string; fullName: string; email
   );
 }
 
-function TeacherBuilder() {
+function TeacherBuilder({ teachers, groups }: { teachers: Person[]; groups: GroupRow[] }) {
   const courses = useQuery({ queryKey: ['courses'], queryFn: () => api<{ id: string; title: string }[]>('/api/courses') });
   const subjects = useQuery({ queryKey: ['subjects'], queryFn: () => api<{ id: string; name: string }[]>('/api/institution/subjects') });
-  const groups = useQuery({ queryKey: ['groups'], queryFn: () => api<{ id: string; name: string; academic_year_id?: string }[]>('/api/institution/groups') });
-  const years = useQuery({ queryKey: ['years'], queryFn: () => api<{ id: string; name: string }[]>('/api/institution/years') });
   const client = useQueryClient();
+  const [error, setError] = useState('');
+  const [ok, setOk] = useState('');
+  const [busy, setBusy] = useState(false);
   return (
     <div className="grid cols-3" style={{ alignItems: 'start' }}>
       <Panel icon={BookOpen} tone="violet" title="Cursos abiertos" className="span-2">
@@ -532,21 +655,35 @@ function TeacherBuilder() {
         </div>
         {!courses.data?.length && <Empty icon={BookOpen} title="Aún no hay cursos" />}
       </Panel>
-      <Panel icon={Plus} tone="mint" title="Nuevo curso">
+      <Panel icon={Plus} tone="mint" title="Nuevo curso" subtitle="El docente tiene que tener esa materia en el grupo.">
         <form onSubmit={async (e) => {
           e.preventDefault();
           const f = e.currentTarget;
           const d = new FormData(f);
-          await api('/api/courses', { method: 'POST', body: JSON.stringify({ title: d.get('title'), description: d.get('description'), subjectId: d.get('subjectId'), groupId: d.get('groupId'), academicYearId: d.get('yearId') }) });
-          f.reset();
-          client.invalidateQueries({ queryKey: ['courses'] });
+          const group = groups.find((g) => g.id === d.get('groupId'));
+          if (!group) return;
+          setBusy(true);
+          setError('');
+          setOk('');
+          try {
+            await api('/api/courses', { method: 'POST', body: JSON.stringify({ title: d.get('title'), description: d.get('description'), subjectId: d.get('subjectId'), groupId: group.id, academicYearId: group.academic_year_id, teacherId: d.get('teacherId') }) });
+            f.reset();
+            setOk('Curso abierto.');
+            client.invalidateQueries({ queryKey: ['courses'] });
+          } catch (err) {
+            setError(err instanceof Error ? err.message : 'No se pudo abrir el curso');
+          } finally {
+            setBusy(false);
+          }
         }}>
           <label className="field">Título<input name="title" required /></label>
           <label className="field">Descripción<input name="description" /></label>
-          <label className="field">Materia<select name="subjectId">{(subjects.data ?? []).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
-          <label className="field">Grupo<select name="groupId">{(groups.data ?? []).map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}</select></label>
-          <label className="field">Año<select name="yearId">{(years.data ?? []).map((y) => <option key={y.id} value={y.id}>{y.name}</option>)}</select></label>
-          <button className="btn" type="submit" style={{ width: '100%' }}>Abrir curso</button>
+          <label className="field">Docente<select name="teacherId" required>{teachers.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}</select></label>
+          <label className="field">Materia<select name="subjectId" required>{(subjects.data ?? []).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></label>
+          <label className="field">Grupo<select name="groupId" required>{groups.map((g) => <option key={g.id} value={g.id}>{groupOption(g)}</option>)}</select></label>
+          {ok && <Note kind="ok" text={ok} />}
+          {error && <Note kind="err" text={error} />}
+          <button className="btn" type="submit" style={{ width: '100%' }} disabled={busy || !teachers.length}>{busy ? 'Abriendo…' : 'Abrir curso'}</button>
         </form>
       </Panel>
     </div>

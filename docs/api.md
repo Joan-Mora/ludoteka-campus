@@ -149,7 +149,8 @@ Generado a partir de los decoradores de los controladores (`@Get`, `@Post`, `@Ro
 | `GET` | `/api/institution/enrollments` | Admin, Coord., Rect., Docente |
 | `POST` | `/api/institution/enrollments` | Admin |
 | `GET` | `/api/institution/teaching` | Admin, Coord., Rect., Docente |
-| `POST` | `/api/institution/teaching` | Admin |
+| `POST` | `/api/institution/teaching` | Admin. Un grupo (`groupId`) o todo un grado (`gradeId` y año). Si ya existía, responde cuántos quedaron y cuántos ya estaban. |
+| `DELETE` | `/api/institution/teaching/:id` | Admin |
 | `GET` | `/api/institution/overview` | Admin, Coord., Rect. |
 
 ### Cursos y lecciones

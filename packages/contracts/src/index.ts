@@ -147,17 +147,21 @@ export const enrollmentSchema = z.object({
   academicYearId: z.string().uuid(),
 });
 
-export const teachingSchema = z.object({
-  teacherId: z.string().uuid(),
-  subjectId: z.string().uuid(),
-  groupId: z.string().uuid(),
-  academicYearId: z.string().uuid(),
-});
+export const teachingSchema = z
+  .object({
+    teacherId: z.string().uuid(),
+    subjectId: z.string().uuid(),
+    groupId: z.string().uuid().optional(),
+    gradeId: z.string().uuid().optional(),
+    academicYearId: z.string().uuid().optional(),
+  })
+  .refine((value) => Boolean(value.groupId || value.gradeId), { message: 'Elige un grupo o un grado' });
 
 export const courseSchema = z.object({
   subjectId: z.string().uuid(),
   groupId: z.string().uuid(),
   academicYearId: z.string().uuid(),
+  teacherId: z.string().uuid().optional(),
   title: z.string().min(3),
   description: z.string().optional(),
 });

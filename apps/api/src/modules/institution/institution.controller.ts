@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import {
   enrollmentSchema,
   gradeSchema,
@@ -85,9 +85,15 @@ export class InstitutionController {
   @Post('teaching')
   createTeaching(
     @Body(new ZodPipe(teachingSchema))
-    body: { teacherId: string; subjectId: string; groupId: string; academicYearId: string },
+    body: { teacherId: string; subjectId: string; groupId?: string; gradeId?: string; academicYearId?: string },
   ) {
     return this.institution.createTeaching(body);
+  }
+
+  @Roles('admin')
+  @Delete('teaching/:id')
+  removeTeaching(@Param('id') id: string) {
+    return this.institution.removeTeaching(id);
   }
 
   @Roles('admin', 'coordinator', 'rector')

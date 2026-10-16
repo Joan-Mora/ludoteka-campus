@@ -3,6 +3,11 @@ import { sql } from 'kysely';
 import { DatabaseService } from '../../core/database/database.service';
 import { ApiError } from '../../core/errors/api-error';
 
+function isDuplicate(error: unknown) {
+  const row = error as { code?: string; cause?: { code?: string } };
+  return row?.code === '23505' || row?.cause?.code === '23505';
+}
+
 @Injectable()
 export class InstitutionService {
   constructor(private readonly database: DatabaseService) {}
@@ -54,24 +59,34 @@ export class InstitutionService {
       .execute();
   }
 
-  createGroup(input: { gradeId: string; academicYearId: string; name: string }) {
-    return this.database.db
-      .insertInto('groups_class')
-      .values({ grade_id: input.gradeId, academic_year_id: input.academicYearId, name: input.name })
-      .returningAll()
-      .executeTakeFirstOrThrow();
+  async createGroup(input: { gradeId: string; academicYearId: string; name: string }) {
+    try {
+      return await this.database.db
+        .insertInto('groups_class')
+        .values({ grade_id: input.gradeId, academic_year_id: input.academicYearId, name: input.name.trim() })
+        .returningAll()
+        .executeTakeFirstOrThrow();
+    } catch (error) {
+      if (isDuplicate(error)) throw new ApiError(409, 'ALREADY', 'Ese grupo ya existe en ese grado y año');
+      throw error;
+    }
   }
 
   listSubjects() {
     return this.database.db.selectFrom('subjects').selectAll().orderBy('name').execute();
   }
 
-  createSubject(input: { code: string; name: string; area: string }) {
-    return this.database.db
-      .insertInto('subjects')
-      .values({ ...input, code: input.code.toUpperCase() })
-      .returningAll()
-      .executeTakeFirstOrThrow();
+  async createSubject(input: { code: string; name: string; area: string }) {
+    try {
+      return await this.database.db
+        .insertInto('subjects')
+        .values({ ...input, code: input.code.toUpperCase() })
+        .returningAll()
+        .executeTakeFirstOrThrow();
+    } catch (error) {
+      if (isDuplicate(error)) throw new ApiError(409, 'ALREADY', 'Ya existe una materia con ese código');
+      throw error;
+    }
   }
 
   async listEnrollments(viewer: { id: string; role: string }, groupId?: string) {
@@ -110,15 +125,38 @@ export class InstitutionService {
       .selectAll()
       .where('id', '=', input.groupId)
       .executeTakeFirst();
-    if (!group || group.academic_year_id !== input.academicYearId) {
-      throw new ApiError(400, 'GROUP_YEAR', 'El grupo no pertenece a ese año lectivo');
+    if (!group) throw new ApiError(400, 'GROUP', 'Ese grupo no existe');
+    const student = await this.database.db
+      .selectFrom('users')
+      .innerJoin('user_roles', 'user_roles.user_id', 'users.id')
+      .select(['users.is_guest', 'user_roles.role'])
+      .where('users.id', '=', input.userId)
+      .where('user_roles.role', '=', 'student')
+      .executeTakeFirst();
+    if (!student || student.is_guest) {
+      throw new ApiError(400, 'NOT_STUDENT', 'Elige un estudiante del colegio. Los invitados de clase no se matriculan aquí.');
+    }
+    const existing = await this.database.db
+      .selectFrom('enrollments')
+      .select(['id', 'group_id'])
+      .where('user_id', '=', input.userId)
+      .where('academic_year_id', '=', group.academic_year_id)
+      .executeTakeFirst();
+    if (existing?.group_id === group.id) throw new ApiError(409, 'ALREADY', 'Ese estudiante ya está en ese grupo');
+    if (existing) {
+      return this.database.db
+        .updateTable('enrollments')
+        .set({ group_id: group.id, status: 'active' })
+        .where('id', '=', existing.id)
+        .returningAll()
+        .executeTakeFirstOrThrow();
     }
     return this.database.db
       .insertInto('enrollments')
       .values({
         user_id: input.userId,
-        group_id: input.groupId,
-        academic_year_id: input.academicYearId,
+        group_id: group.id,
+        academic_year_id: group.academic_year_id,
       })
       .returningAll()
       .executeTakeFirstOrThrow();
@@ -130,6 +168,8 @@ export class InstitutionService {
       .innerJoin('users', 'users.id', 'teaching_assignments.teacher_id')
       .innerJoin('subjects', 'subjects.id', 'teaching_assignments.subject_id')
       .innerJoin('groups_class', 'groups_class.id', 'teaching_assignments.group_id')
+      .innerJoin('grades', 'grades.id', 'groups_class.grade_id')
+      .innerJoin('academic_years', 'academic_years.id', 'teaching_assignments.academic_year_id')
       .select([
         'teaching_assignments.id',
         'teaching_assignments.teacher_id',
@@ -139,21 +179,98 @@ export class InstitutionService {
         'users.full_name as teacher_name',
         'subjects.name as subject_name',
         'groups_class.name as group_name',
+        'grades.level as grade_level',
+        'grades.name as grade_name',
+        'academic_years.name as year_name',
       ])
+      .orderBy('grades.level')
+      .orderBy('groups_class.name')
+      .orderBy('users.full_name')
       .execute();
   }
 
-  createTeaching(input: { teacherId: string; subjectId: string; groupId: string; academicYearId: string }) {
-    return this.database.db
-      .insertInto('teaching_assignments')
-      .values({
-        teacher_id: input.teacherId,
-        subject_id: input.subjectId,
-        group_id: input.groupId,
-        academic_year_id: input.academicYearId,
-      })
-      .returningAll()
-      .executeTakeFirstOrThrow();
+  async createTeaching(input: { teacherId: string; subjectId: string; groupId?: string; gradeId?: string; academicYearId?: string }) {
+    const teacher = await this.database.db
+      .selectFrom('user_roles')
+      .select('user_id')
+      .where('user_id', '=', input.teacherId)
+      .where('role', '=', 'teacher')
+      .executeTakeFirst();
+    if (!teacher) throw new ApiError(400, 'NOT_TEACHER', 'Elige una cuenta con rol docente');
+    const subject = await this.database.db.selectFrom('subjects').select('id').where('id', '=', input.subjectId).executeTakeFirst();
+    if (!subject) throw new ApiError(400, 'SUBJECT', 'Esa materia no existe');
+
+    let targets: { id: string; academic_year_id: string }[] = [];
+    if (input.groupId) {
+      const group = await this.database.db
+        .selectFrom('groups_class')
+        .select(['id', 'academic_year_id'])
+        .where('id', '=', input.groupId)
+        .executeTakeFirst();
+      if (!group) throw new ApiError(400, 'GROUP', 'Ese grupo no existe');
+      targets = [group];
+    } else if (input.gradeId) {
+      const yearId = await this.resolveYear(input.academicYearId);
+      targets = await this.database.db
+        .selectFrom('groups_class')
+        .select(['id', 'academic_year_id'])
+        .where('grade_id', '=', input.gradeId)
+        .where('academic_year_id', '=', yearId)
+        .execute();
+      if (!targets.length) throw new ApiError(400, 'NO_GROUPS', 'Ese grado no tiene grupos en el año elegido');
+    }
+
+    let created = 0;
+    let already = 0;
+    for (const group of targets) {
+      const existing = await this.database.db
+        .selectFrom('teaching_assignments')
+        .select('id')
+        .where('teacher_id', '=', input.teacherId)
+        .where('subject_id', '=', input.subjectId)
+        .where('group_id', '=', group.id)
+        .where('academic_year_id', '=', group.academic_year_id)
+        .executeTakeFirst();
+      if (existing) {
+        already += 1;
+        continue;
+      }
+      try {
+        await this.database.db
+          .insertInto('teaching_assignments')
+          .values({
+            teacher_id: input.teacherId,
+            subject_id: input.subjectId,
+            group_id: group.id,
+            academic_year_id: group.academic_year_id,
+          })
+          .execute();
+        created += 1;
+      } catch (error) {
+        if (!isDuplicate(error)) throw error;
+        already += 1;
+      }
+    }
+    return { created, already };
+  }
+
+  async removeTeaching(id: string) {
+    const row = await this.database.db.deleteFrom('teaching_assignments').where('id', '=', id).returning('id').executeTakeFirst();
+    if (!row) throw new ApiError(404, 'NOT_FOUND', 'Esa asignación ya no existe');
+    return { ok: true };
+  }
+
+  private async resolveYear(preferred?: string) {
+    if (preferred) {
+      const year = await this.database.db.selectFrom('academic_years').select('id').where('id', '=', preferred).executeTakeFirst();
+      if (!year) throw new ApiError(400, 'YEAR', 'Ese año lectivo no existe');
+      return year.id;
+    }
+    const current = await this.database.db.selectFrom('academic_years').select('id').where('is_current', '=', true).executeTakeFirst();
+    if (current) return current.id;
+    const latest = await this.database.db.selectFrom('academic_years').select('id').orderBy('starts_on', 'desc').executeTakeFirst();
+    if (!latest) throw new ApiError(400, 'NO_YEAR', 'Crea primero un año lectivo');
+    return latest.id;
   }
 
   async overview() {

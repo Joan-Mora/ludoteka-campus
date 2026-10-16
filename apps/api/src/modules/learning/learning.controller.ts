@@ -34,7 +34,7 @@ export class LearningController {
 
   @Roles('teacher', 'admin')
   @Post('courses')
-  create(@CurrentUser() user: AuthUser, @Body(new ZodPipe(courseSchema)) body: { subjectId: string; groupId: string; academicYearId: string; title: string; description?: string }) {
+  create(@CurrentUser() user: AuthUser, @Body(new ZodPipe(courseSchema)) body: { subjectId: string; groupId: string; academicYearId: string; teacherId?: string; title: string; description?: string }) {
     return this.learning.createCourse(user, body);
   }
 

@@ -191,32 +191,55 @@ export class LearningService {
     };
   }
 
-  async createCourse(user: AuthUser, input: { subjectId: string; groupId: string; academicYearId: string; title: string; description?: string }) {
+  async createCourse(user: AuthUser, input: { subjectId: string; groupId: string; academicYearId: string; teacherId?: string; title: string; description?: string }) {
+    const group = await this.database.db
+      .selectFrom('groups_class')
+      .select(['id', 'academic_year_id'])
+      .where('id', '=', input.groupId)
+      .executeTakeFirst();
+    if (!group) throw new ApiError(400, 'GROUP', 'Ese grupo no existe');
+    let teacherId = user.id;
+    if (user.role === 'admin') {
+      teacherId = input.teacherId ?? '';
+      if (!teacherId) throw new ApiError(400, 'TEACHER', 'Elige el docente a cargo del curso');
+      const role = await this.database.db
+        .selectFrom('user_roles')
+        .select('user_id')
+        .where('user_id', '=', teacherId)
+        .where('role', '=', 'teacher')
+        .executeTakeFirst();
+      if (!role) throw new ApiError(400, 'NOT_TEACHER', 'El curso queda a cargo de un docente');
+    }
     const assignment = await this.database.db
       .selectFrom('teaching_assignments')
       .select('id')
-      .where('teacher_id', '=', user.role === 'admin' ? user.id : user.id)
+      .where('teacher_id', '=', teacherId)
       .where('subject_id', '=', input.subjectId)
-      .where('group_id', '=', input.groupId)
-      .where('academic_year_id', '=', input.academicYearId)
+      .where('group_id', '=', group.id)
+      .where('academic_year_id', '=', group.academic_year_id)
       .executeTakeFirst();
-    if (user.role !== 'admin' && !assignment) {
-      throw new ApiError(403, 'NOT_ASSIGNED', 'No tienes asignación para esa materia y grupo');
+    if (!assignment) {
+      throw new ApiError(user.role === 'admin' ? 400 : 403, 'NOT_ASSIGNED', 'Ese docente no tiene esa materia en ese grupo. Asígnasela en Institución.');
     }
-    const teacherId = user.role === 'teacher' ? user.id : user.id;
-    return this.database.db
-      .insertInto('courses')
-      .values({
-        subject_id: input.subjectId,
-        group_id: input.groupId,
-        academic_year_id: input.academicYearId,
-        teacher_id: teacherId,
-        title: input.title,
-        description: input.description ?? '',
-        published: true,
-      })
-      .returningAll()
-      .executeTakeFirstOrThrow();
+    try {
+      return await this.database.db
+        .insertInto('courses')
+        .values({
+          subject_id: input.subjectId,
+          group_id: group.id,
+          academic_year_id: group.academic_year_id,
+          teacher_id: teacherId,
+          title: input.title,
+          description: input.description ?? '',
+          published: true,
+        })
+        .returningAll()
+        .executeTakeFirstOrThrow();
+    } catch (error) {
+      const code = (error as { code?: string }).code;
+      if (code === '23505') throw new ApiError(409, 'ALREADY', 'Ya hay un curso de esa materia en ese grupo');
+      throw error;
+    }
   }
 
   async addUnit(user: AuthUser, courseId: string, input: { title: string; summary?: string }) {

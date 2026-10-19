@@ -16,11 +16,17 @@ import { LearningProfileService } from '../profile/public-api';
 import type { LearningMethod } from '@eduquest/contracts';
 import { AiService } from '../../core/ai/ai.service';
 
-const SYSTEM = `Eres el tutor de matemáticas de sexto del Colegio Francisco Arango, dentro de Ludoteka Campus.
+const SYSTEM = `Eres el tutor de matemáticas del Colegio Francisco Arango, dentro de Ludoteka Campus.
 Ayudas a practicar. Das pistas, preguntas y un siguiente paso. No entregas la respuesta final ni resuelves el ejercicio completo.
 Si te piden la respuesta directa, devuelve una pista más pequeña.
-No hables de temas ajenos al curso. Responde en español, breve, con calma.
-No uses LaTeX ni signos $: escribe las operaciones con ×, ÷ y /.`;
+Responde en español, breve, con calma.
+No uses LaTeX ni signos $: escribe las operaciones con ×, ÷ y /.
+Temas de la clase, y solo estos:
+Sexto: ecuaciones lineales, operaciones con fracciones, regla de tres, estadística.
+Séptimo: áreas, ecuaciones lineales, proporcionalidad, polinomios.
+Octavo: casos de factorización y fracciones algebraicas.
+Noveno: sistemas 2×2 y 3×3 por sustitución, reducción, igualación, método gráfico y Gauss-Jordan.
+Si la persona está en un grado, quédate en los temas de ese grado. Las fuentes para ampliar son los Derechos Básicos de Aprendizaje del Ministerio de Educación y los libros abiertos de OpenStax (Preálgebra, Álgebra elemental, Álgebra intermedia, Estadística introductoria y College Algebra, sección 7.6). No inventes otras fuentes.`;
 
 @Injectable()
 export class TutorService {
@@ -39,7 +45,8 @@ export class TutorService {
     if (await this.integrity.hasBlockingAttempt(user.id)) {
       throw new ApiError(403, 'KIOSK_ACTIVE', 'El tutor se apaga durante un examen. Termina la evaluación y vuelve a practicar.');
     }
-    if (user.role === 'student' && !(await this.guardians.isAuthorized(user.id, 'ai_tutor'))) {
+    const guest = await this.database.db.selectFrom('users').select(['is_guest', 'guest_grade']).where('id', '=', user.id).executeTakeFirst();
+    if (user.role === 'student' && !guest?.is_guest && !(await this.guardians.isAuthorized(user.id, 'ai_tutor'))) {
       throw new ApiError(403, 'GUARDIAN_REQUIRED', 'Tu acudiente debe autorizar el tutor con IA desde su panel antes de que puedas usarlo.');
     }
     let conversationId = input.conversationId;
@@ -71,7 +78,10 @@ export class TutorService {
         .limit(12)
         .execute()
     ).reverse();
-    const context = lesson ? `Lección «${lesson.title}»:\n${lesson.body_md.slice(0, 2500)}` : 'Práctica general de matemáticas de sexto.';
+    const gradeNote = guest?.is_guest && guest.guest_grade
+      ? `Grado ${guest.guest_grade}. Quédate solo en los temas de ese grado.`
+      : 'Si no conoces el grado, pregunta cuál es y no salgas de la lista de temas.';
+    const context = lesson ? `Lección «${lesson.title}»:\n${lesson.body_md.slice(0, 2500)}` : gradeNote;
     const citations = await this.library.search(user, input.message, { limit: 3 }).catch(() => []);
     const sources = citations.length
       ? `Fragmentos de la biblioteca del colegio. Si los usas, cítalos con [n]:\n${citations.map((c) => `[${c.n}] «${c.title}»${c.page ? `, pág. ${c.page}` : ''}: ${c.excerpt}`).join('\n')}`

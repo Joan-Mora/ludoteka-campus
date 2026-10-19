@@ -6,8 +6,9 @@ import { CheckCircle2, Crown, Flame, Loader2, QrCode, Timer, Users } from 'lucid
 import { api, ApiException, download, getToken } from '@/shared/api';
 import { useAuth } from '@/shared/auth';
 import { PageHeader } from '@/ui';
+import { CoopBoard, PlayBoard } from './clase-plays';
 
-type Activity = 'diagnostico' | 'fabrica' | 'elementos' | 'casos';
+type Activity = string;
 
 interface SessionRow {
   id: string;
@@ -16,21 +17,16 @@ interface SessionRow {
   gradeName: string;
   groupCode: string;
   activity: Activity;
+  activities?: ActivityInfo[];
   status: 'open' | 'closed';
   openedAt: string;
   joined: number;
 }
 
 interface Option { id: string; text: string }
-interface Item { id: string; topic: string; prompt: string; options: Option[] }
+interface Item { id: string; topic: string; prompt: string; options: Option[]; input?: boolean }
 interface Scene { id: string; text: string; prompt?: string; options?: Option[]; end?: boolean }
-
-const ACTIVITIES: { id: Activity; label: string; hint: string }[] = [
-  { id: 'diagnostico', label: 'Diagnóstico', hint: '12 preguntas, 20 minutos, un intento' },
-  { id: 'fabrica', label: 'La fábrica', hint: 'Historia: cada decisión abre o traba una compuerta' },
-  { id: 'elementos', label: 'Dos elementos', hint: 'En parejas: las dos cerraduras deben abrir juntas' },
-  { id: 'casos', label: '¿Qué caso es?', hint: 'Reconocer el caso, 90 segundos' },
-];
+interface ActivityInfo { id: Activity; label: string; hint: string }
 
 export function ClassPage() {
   const { user } = useAuth();
@@ -42,7 +38,7 @@ export function ClassPage() {
 function Desk() {
   const client = useQueryClient();
   const sessions = useQuery({ queryKey: ['guest-sessions'], queryFn: () => api<SessionRow[]>('/api/clase/sesiones') });
-  const [group, setGroup] = useState('81');
+  const [grade, setGrade] = useState(8);
   const [openId, setOpenId] = useState<string | null>(null);
   const [picked, setPicked] = useState<string[]>([]);
   const [from, setFrom] = useState('');
@@ -55,7 +51,7 @@ function Desk() {
     setBusy(true);
     setError('');
     try {
-      const row = await api<SessionRow>('/api/clase/sesiones', { method: 'POST', body: JSON.stringify({ groupCode: group }) });
+      const row = await api<SessionRow>('/api/clase/sesiones', { method: 'POST', body: JSON.stringify({ grade }) });
       setOpenId(row.id);
       void client.invalidateQueries({ queryKey: ['guest-sessions'] });
     } catch (err) {
@@ -74,11 +70,14 @@ function Desk() {
 
   return (
     <div className="stack" style={{ gap: 18 }}>
-      <PageHeader eyebrow="Clase de hoy" title="Sesiones de invitados" subtitle="El grupo escanea el QR, escribe o elige su nombre y entra como Estudiante (Invitado · Octavo). La sesión queda guardada." />
+      <PageHeader eyebrow="Clase de hoy" title="Sesiones de invitados" subtitle="El grupo escanea el QR, escribe su nombre y entra como Estudiante (Invitado · grado). La sesión no se borra." />
+      <div className="card">
+        <p><b>Para 50 estudiantes durante las dos horas</b> el plan gratuito de Render se duerme y se queda corto de memoria. Antes de la clase hay que pasar el servicio a un plan que no se apague (Starter o superior) y abrir la página unos minutos antes para que no arranque en frío.</p>
+      </div>
       <div className="card">
         <div className="row g-8 wrap">
-          <label className="field" style={{ margin: 0 }}>Grupo de octavo
-            <select value={group} onChange={(e) => setGroup(e.target.value)}>{['81', '82', '83'].map((g) => <option key={g}>{g}</option>)}</select>
+          <label className="field" style={{ margin: 0 }}>Grado
+            <select value={grade} onChange={(e) => setGrade(Number(e.target.value))}>{[6, 7, 8, 9].map((g) => <option key={g} value={g}>{['', '', '', '', '', '', 'Sexto', 'Séptimo', 'Octavo', 'Noveno'][g]}</option>)}</select>
           </label>
           <button className="btn" disabled={busy} onClick={create}>{busy ? <Loader2 size={16} className="spin" /> : <QrCode size={16} />} Abrir sesión</button>
         </div>
@@ -136,7 +135,7 @@ function Live({ session, onActivity, onClose }: { session: SessionRow; onActivit
       </div>
       {session.status === 'open' && <Qr link={link} code={session.code} />}
       <div className="seg-tabs" style={{ marginTop: 14 }}>
-        {ACTIVITIES.map((item) => (
+        {(session.activities ?? []).map((item) => (
           <button key={item.id} className={session.activity === item.id ? 'on' : ''} disabled={session.status !== 'open'} onClick={() => onActivity(item.id)} title={item.hint}>{item.label}</button>
         ))}
       </div>
@@ -194,18 +193,23 @@ function Play() {
   if (mine.isLoading) return <p className="muted row g-6"><Loader2 className="spin" size={16} /> Entrando a la clase…</p>;
   if (mine.isError) return <p className="form-error">{mine.error instanceof ApiException ? mine.error.message : 'No hay clase'}</p>;
   const data = mine.data!;
-  const label = ACTIVITIES.find((a) => a.id === data.activity);
+  const label = (data.session.activities ?? []).find((a) => a.id === data.activity);
   return (
     <div className="stack" style={{ gap: 16 }}>
       <PageHeader eyebrow={`${data.session.gradeName} · grupo ${data.session.groupCode}`} title={label?.label ?? 'La clase'} subtitle={data.session.status === 'closed' ? 'Esta sesión ya cerró. Tus resultados quedan guardados.' : label?.hint} />
-      {data.session.status === 'open' && data.activity === 'diagnostico' && <Diagnostic play={data.play} done={data.runs.diagnostico} />}
-      {data.session.status === 'open' && data.activity === 'fabrica' && <Factory play={data.play} />}
+      {data.session.status === 'open' && (data.activity === 'diagnostico' || data.activity === 'final') && <Diagnostic play={data.play} done={data.runs[data.activity]} path={data.activity === 'final' ? '/api/clase/final' : '/api/clase/diagnostico'} />}
+      {data.session.status === 'open' && data.play && 'kind' in (data.play as object) && data.activity !== 'elementos' && (
+        <PlayBoard play={data.play as Record<string, unknown>} onMove={async (move) => {
+          const result = await api<{ message: string }>('/api/clase/jugar', { method: 'POST', body: JSON.stringify(move) });
+          void client.invalidateQueries({ queryKey: ['guest-mine'] });
+          return result.message;
+        }} />
+      )}
       {data.session.status === 'open' && data.activity === 'elementos' && <Elements sessionId={data.session.id} />}
-      {data.session.status === 'open' && data.activity === 'casos' && <Cases play={data.play} />}
       <div className="card">
         <h2 style={{ fontSize: 18 }}>Tu resultado</h2>
         <div className="row g-8 wrap" style={{ marginTop: 10 }}>
-          {ACTIVITIES.map((item) => {
+          {(data.session.activities ?? []).map((item) => {
             const run = data.runs[item.id];
             return <span key={item.id} className="chip">{item.label}: {run?.done ? run.score : 'en curso o pendiente'}</span>;
           })}
@@ -223,7 +227,7 @@ interface Mine {
   play: { items?: Item[]; picks?: Record<string, string>; done?: boolean; startedAt?: string | null; seconds?: number; scene?: Scene; score?: number } | null;
 }
 
-function Diagnostic({ play, done }: { play: Mine['play']; done?: Run }) {
+function Diagnostic({ play, done, path }: { play: Mine['play']; done?: Run; path: string }) {
   const client = useQueryClient();
   const [picks, setPicks] = useState<Record<string, string>>(play?.picks ?? {});
   const [review, setReview] = useState<{ prompt: string; ok: boolean; explain: string }[] | null>(null);
@@ -240,7 +244,7 @@ function Diagnostic({ play, done }: { play: Mine['play']; done?: Run }) {
   async function send(save: boolean) {
     setError('');
     try {
-      const result = await api<{ review?: { prompt: string; ok: boolean; explain: string }[] }>('/api/clase/diagnostico', { method: 'POST', body: JSON.stringify({ picks, save }) });
+      const result = await api<{ review?: { prompt: string; ok: boolean; explain: string }[] }>(path, { method: 'POST', body: JSON.stringify({ picks, save: path.endsWith('diagnostico') && save }) });
       if (!save) setReview(result.review ?? []);
       void client.invalidateQueries({ queryKey: ['guest-mine'] });
     } catch (err) {
@@ -254,13 +258,15 @@ function Diagnostic({ play, done }: { play: Mine['play']; done?: Run }) {
       {(play?.items ?? []).map((item, index) => (
         <fieldset key={item.id} className="stack g-8">
           <legend><b>{index + 1}. {item.prompt}</b></legend>
-          {item.options.map((option) => (
-            <label key={option.id} className="row g-8"><input type="radio" name={item.id} checked={picks[item.id] === option.id} onChange={() => { const next = { ...picks, [item.id]: option.id }; setPicks(next); void api('/api/clase/diagnostico', { method: 'POST', body: JSON.stringify({ picks: next, save: true }) }); }} /> {option.text}</label>
+          {item.input || !item.options.length ? (
+            <input value={picks[item.id] ?? ''} onChange={(e) => setPicks({ ...picks, [item.id]: e.target.value })} placeholder="Tu respuesta" />
+          ) : item.options.map((option) => (
+            <label key={option.id} className="row g-8"><input type="radio" name={item.id} checked={picks[item.id] === option.id} onChange={() => { const next = { ...picks, [item.id]: option.id }; setPicks(next); if (path.endsWith('diagnostico')) void api(path, { method: 'POST', body: JSON.stringify({ picks: next, save: true }) }); }} /> {option.text}</label>
           ))}
         </fieldset>
       ))}
       {error && <p className="form-error">{error}</p>}
-      <button className="btn" type="submit">Entregar diagnóstico</button>
+      <button className="btn" type="submit">Entregar</button>
     </form>
   );
 }
@@ -359,6 +365,13 @@ function Elements({ sessionId }: { sessionId: string }) {
       </div>
     );
   }
+  if ('equation' in mine) {
+    return <CoopBoard play={mine as { equation?: string; turn?: string; yours?: boolean; role?: string; round?: number; rounds?: number; waiting?: boolean; log?: string[] }} onMove={async (move) => {
+      const result = await api<{ message?: string }>('/api/clase/jugar', { method: 'POST', body: JSON.stringify(move) });
+      void client.invalidateQueries({ queryKey: ['guest-pair', sessionId] });
+      return result.message ?? '';
+    }} />;
+  }
   return (
     <div className="card stack" style={{ gap: 12 }}>
       <p className="row g-8">{mine.side === 'fire' ? <Flame size={16} /> : <span />} Eres el camino {mine.side === 'fire' ? 'de fuego (factorizar)' : 'de agua (fracciones)'} · puerta {mine.gate} de {mine.total}</p>
@@ -379,7 +392,7 @@ function Elements({ sessionId }: { sessionId: string }) {
 }
 
 interface PairResponse {
-  pair: { side: 'fire' | 'water'; waiting: boolean; gate: number; total: number; done: boolean; score: number; partnerSolved: boolean; you: { prompt: string; solved: boolean; options: Option[] } | null } | null;
+  pair: { side: 'fire' | 'water'; waiting: boolean; gate?: number; total?: number; done: boolean; score: number; partnerSolved?: boolean; equation?: string; turn?: string; yours?: boolean; role?: string; round?: number; rounds?: number; log?: string[]; you: { prompt: string; solved: boolean; options: Option[] } | null } | null;
   waiting: { id: string; name: string }[];
 }
 

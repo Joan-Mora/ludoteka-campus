@@ -91,7 +91,7 @@ export class IdentityService {
       isGuest: guest,
       guestGrade: guest ? Number(row.guest_grade ?? 0) : null,
       guestGroup: guest ? row.guest_group ?? null : null,
-      guestLabel: guest ? `Estudiante (Invitado · ${gradeNames[Number(row.guest_grade)] ?? 'grado'})` : null,
+      guestLabel: guest ? `Estudiante (Invitado - ${gradeNames[Number(row.guest_grade)] ?? 'grado'})` : null,
     };
   }
 

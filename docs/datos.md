@@ -21,8 +21,9 @@ La única base es **CockroachDB Cloud** (dialecto PostgreSQL). La API accede con
 - Archivos SQL en `db/migrations`, aplicados en orden alfabético al arrancar la API o con `npm run migrate`.
 - Cada archivo corre en su propia transacción junto con su registro en `schema_migrations (id, applied_at)`; si falla, se deshace y la API no arranca.
 - **No hay checksum:** editar un archivo ya aplicado no tiene efecto. Todo cambio va en un archivo nuevo con el siguiente número.
-- Hoy van de `0000_drop_legacy` a `0035_guest_class_b` (45 archivos; `0011`, `0020`, `0028`, `0032`, `0033`, `0034` y `0035` tienen variantes con sufijo).
+- Hoy van de `0000_drop_legacy` a `0036_class_games_b` (47 archivos; `0011`, `0020`, `0028`, `0032`, `0033`, `0034`, `0035` y `0036` tienen variantes con sufijo).
 - `0035_guest_class_a` crea las sesiones de invitados (`guest_sessions`, `guest_joins`, `guest_runs`, `guest_pairs`) y marca `users.is_guest`. `0035_guest_class_b` apaga el arcade anterior, archiva el banco y la biblioteca que no son de la clase, y publica dos guías de octavo.
+- `0036_class_games_a` quita los CHECK de actividad y de juego para poder agregar juegos sin otra migración de esquema. `0036_class_games_b` publica enlaces reales de OpenStax y de los DBA del Ministerio para los temas de sexto a noveno.
 - `0033_bank_tutor_history_a/b/c` agrega `questions.archived_at` y `tutor_conversations.title` / `updated_at` con su índice, y luego ordena las conversaciones existentes por su último mensaje.
 - `0034_news_grade_a/b` cambia el CHECK de `news_audience.kind` para aceptar `grade`. Se quita en un archivo y se crea con nombre (`news_audience_kind`) en el siguiente.
 

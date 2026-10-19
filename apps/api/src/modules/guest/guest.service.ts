@@ -9,11 +9,12 @@ import { ApiError } from '../../core/errors/api-error';
 import { IdentityService } from '../identity/public-api';
 import { RealtimeService } from '../../core/realtime/realtime.service';
 import {
-  ACTIVITIES, CASES, CASE_SECONDS, CLASS_GRADE, CLASS_GROUPS, DIAGNOSTIC, FACTORY, FACTORY_GATES, GATES, GRADE_NAME,
-  publicItem, publicLock, sceneView, type Activity, type Item,
+  CASES, CASE_SECONDS, CLASS_GRADE, CLASS_GRADES, CLASS_GROUPS, FACTORY, FACTORY_GATES, GATES, GRADE_ACTIVITIES, GRADE_NAME, PLAY_GAMES,
+  examItems, normAnswer, publicItem, publicLock, sceneView, type Activity, type Item,
 } from './guest.content';
+import { applyCoop, applySolo, explainGauss, parseMatrix, startCoop, startSolo, viewCoop, viewSolo, type Coop, type Move, type Solo } from './play.engine';
 
-const GAMES = ['diagnostico', 'fabrica', 'elementos', 'casos'] as const;
+const GAMES = ['diagnostico', 'final', 'fabrica', 'elementos', 'casos', ...PLAY_GAMES] as const;
 type Game = (typeof GAMES)[number];
 
 function asState<T>(value: unknown): T {
@@ -52,9 +53,11 @@ export class GuestService {
     return GRADE_NAME[grade] ?? `Grado ${grade}`;
   }
 
-  async open(user: AuthUser, groupCode: string) {
-    if (!CLASS_GROUPS.includes(groupCode as (typeof CLASS_GROUPS)[number])) {
-      throw new ApiError(400, 'BAD_GROUP', 'Hoy la sesión es para un grupo de octavo: 81, 82 o 83');
+  async open(user: AuthUser, input: { grade?: number; groupCode?: string }) {
+    const legacy = CLASS_GROUPS.includes((input.groupCode ?? '') as (typeof CLASS_GROUPS)[number]);
+    const grade = legacy ? CLASS_GRADE : Number(input.grade);
+    if (!CLASS_GRADES.includes(grade as (typeof CLASS_GRADES)[number])) {
+      throw new ApiError(400, 'BAD_GRADE', 'La sesión es para sexto, séptimo, octavo o noveno');
     }
     const previous = await this.database.db.selectFrom('guest_sessions').select(sql<number>`count(*)::int`.as('n')).executeTakeFirst();
     const n = num(previous?.n) + 1;
@@ -63,9 +66,9 @@ export class GuestService {
       .insertInto('guest_sessions')
       .values({
         code: shortCode(6),
-        title: `Sesión ${n} (Invitados) · ${when}`,
-        grade: CLASS_GRADE,
-        group_code: groupCode,
+        title: `Sesión ${n} (Invitados) - ${when}`,
+        grade,
+        group_code: legacy ? input.groupCode! : `g${grade}`,
         opened_by: user.id,
       })
       .returningAll()
@@ -82,11 +85,11 @@ export class GuestService {
     return this.present(await this.sessionById(id));
   }
 
-  async setActivity(id: string, activity: Activity) {
-    if (!ACTIVITIES.includes(activity)) throw new ApiError(400, 'BAD_ACTIVITY', 'Esa actividad no existe');
+  async setActivity(id: string, activity: string) {
     const row = await this.sessionById(id);
+    const allowed = (GRADE_ACTIVITIES[num(row.grade)] ?? []).map((item) => item.id);
+    if (!allowed.includes(activity)) throw new ApiError(400, 'BAD_ACTIVITY', 'Esa actividad no es de este grado');
     if (row.status !== 'open') throw new ApiError(409, 'CLOSED', 'Esa sesión ya está cerrada');
-    if (row.grade !== CLASS_GRADE && activity !== 'diagnostico') throw new ApiError(400, 'NO_GAMES', 'Los juegos de hoy son de octavo');
     await this.database.db.updateTable('guest_sessions').set({ activity }).where('id', '=', id).execute();
     this.ping(id);
     return this.one(id);
@@ -158,7 +161,47 @@ export class GuestService {
     if (run.finished_at) throw new ApiError(409, 'DONE', 'Ya presentaste el diagnóstico de esta sesión');
     const elapsed = Date.now() - new Date(run.started_at).getTime();
     if (elapsed > 22 * 60_000) throw new ApiError(409, 'TIME', 'Se acabó el tiempo del diagnóstico');
-    return this.finishItems(run.id, DIAGNOSTIC, picks, 20 * 60);
+    return this.finishItems(run.id, examItems(num(session.grade), 'diagnostico'), picks, 20 * 60);
+  }
+
+  async answerFinal(user: AuthUser, picks: Record<string, string>) {
+    const { session } = await this.openRun(user, 'final');
+    const run = await this.runOf(session.id, user.id, 'final');
+    if (run.finished_at) throw new ApiError(409, 'DONE', 'Ya presentaste el examen final de esta sesión');
+    return this.finishItems(run.id, examItems(num(session.grade), 'final'), picks, 30 * 60);
+  }
+
+  async play(user: AuthUser, move: Move) {
+    const session = await this.openSession(user);
+    const game = session.activity as Game;
+    if (game === 'elementos') return this.coopMove(user, move);
+    if (game === 'gauss' && move.action === 'libre') return this.freeGauss(move);
+    if (!PLAY_GAMES.includes(game as (typeof PLAY_GAMES)[number])) throw new ApiError(409, 'OTHER', 'Tu docente todavía no abre un juego');
+    const { session: open } = await this.openRun(user, game);
+    const run = await this.runOf(open.id, user.id, game);
+    if (run.finished_at) return { done: true, message: 'Esta partida ya quedó guardada', play: viewSolo(asState<Solo>(run.state)) };
+    const seed = `${open.id}:${user.id}:${game}`;
+    const current = asState<Solo>(run.state);
+    const state = current.kind ? current : startSolo(game, seed)!;
+    const result = applySolo(state, move, seed);
+    const rounds = 'rounds' in result.state ? result.state.rounds : num(run.total) || 1;
+    const round = 'round' in result.state ? result.state.round : 0;
+    await this.database.db.updateTable('guest_runs').set({
+      state: JSON.stringify(result.state),
+      score: 'score' in result.state ? num(result.state.score) : 0,
+      correct: result.done ? rounds : Math.max(0, round - 1),
+      total: rounds,
+      finished_at: result.done ? new Date() : null,
+    }).where('id', '=', run.id).execute();
+    this.ping(open.id);
+    return { message: result.message, done: result.done, play: viewSolo(result.state) };
+  }
+
+  async freeGauss(move: Move) {
+    const cells = parseMatrix((move as { matrix?: unknown }).matrix);
+    if (!cells) throw new ApiError(400, 'BAD_MATRIX', 'La matriz debe tener de 1 a 6 filas y de 2 a 8 columnas, con números o fracciones');
+    const steps = explainGauss(cells);
+    return { steps, reduced: steps.at(-1) };
   }
 
   async saveDiagnostic(user: AuthUser, picks: Record<string, string>) {
@@ -238,7 +281,7 @@ export class GuestService {
       const created = await this.database.db.insertInto('guest_pairs').values({
         session_id: session.id,
         user_a: user.id,
-        state: JSON.stringify(this.gateState(0)),
+        state: JSON.stringify(startCoop(`${session.id}:${user.id}`)),
       }).returningAll().executeTakeFirstOrThrow();
       this.ping(session.id);
       return this.pairView(created, user.id);
@@ -326,25 +369,29 @@ export class GuestService {
     const book = new ExcelJS.Workbook();
     book.creator = 'Ludoteka Campus';
     const sheet = book.addWorksheet('Sesiones');
-    sheet.addRow(['Sesión', 'Fecha', 'Grado', 'Grupo', 'Estudiante', 'Diagnóstico', 'La fábrica', 'Dos elementos', '¿Qué caso es?', 'Total', 'Minutos']);
+    sheet.addRow(['Sesión', 'Fecha', 'Grado', 'Estudiante', 'Actividad', 'Puntaje', 'Aciertos', 'Total', 'Minutos', 'Dificultades']);
     sheet.getRow(1).font = { bold: true };
     for (const session of sessions) {
       const view = await this.board(session.id);
       for (const student of view.students) {
-        const g = student.games;
-        sheet.addRow([
-          session.title,
-          new Date(session.opened_at).toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
-          this.gradeName(num(session.grade)),
-          session.group_code,
-          student.name,
-          g.diagnostico?.score ?? '',
-          g.fabrica?.score ?? '',
-          g.elementos?.score ?? '',
-          g.casos?.score ?? '',
-          student.score,
-          Math.round(student.seconds / 60),
-        ]);
+        const games = Object.entries(student.games);
+        if (!games.length) {
+          sheet.addRow([session.title, new Date(session.opened_at).toLocaleString('es-CO', { timeZone: 'America/Bogota' }), this.gradeName(num(session.grade)), student.name, '', student.score, '', '', Math.round(student.seconds / 60), student.wrongs.join(', ')]);
+        }
+        for (const [game, result] of games) {
+          sheet.addRow([
+            session.title,
+            new Date(session.opened_at).toLocaleString('es-CO', { timeZone: 'America/Bogota' }),
+            this.gradeName(num(session.grade)),
+            student.name,
+            game,
+            result?.score ?? '',
+            result?.correct ?? '',
+            result?.total ?? '',
+            Math.round(student.seconds / 60),
+            student.wrongs.join(', '),
+          ]);
+        }
       }
       if (!view.students.length) {
         sheet.addRow([session.title, new Date(session.opened_at).toLocaleString('es-CO', { timeZone: 'America/Bogota' }), this.gradeName(num(session.grade)), session.group_code, 'Nadie entró']);
@@ -384,7 +431,50 @@ export class GuestService {
     return created.id;
   }
 
-  private async openRun(user: AuthUser, game: Game) {
+  private async openSession(user: AuthUser) {
+    const guest = await this.database.db.selectFrom('users').select('is_guest').where('id', '=', user.id).executeTakeFirst();
+    if (!guest?.is_guest) throw new ApiError(403, 'NOT_GUEST', 'Esta actividad es de la clase de invitados');
+    const session = await this.database.db
+      .selectFrom('guest_joins')
+      .innerJoin('guest_sessions', 'guest_sessions.id', 'guest_joins.session_id')
+      .selectAll('guest_sessions')
+      .where('guest_joins.user_id', '=', user.id)
+      .where('guest_sessions.status', '=', 'open')
+      .orderBy('guest_sessions.opened_at', 'desc')
+      .executeTakeFirst();
+    if (!session) throw new ApiError(409, 'CLOSED', 'No hay una clase abierta para ti');
+    return session;
+  }
+
+  private async coopMove(user: AuthUser, move: Move) {
+    const { session } = await this.openRun(user, 'elementos');
+    for (let attempt = 0; attempt < 3; attempt++) {
+      const pair = await this.pairOf(session.id, user.id);
+      if (!pair) throw new ApiError(404, 'NO_PAIR', 'Primero abre una mesa o siéntate con alguien');
+      if (!pair.user_b) throw new ApiError(409, 'WAIT', 'Falta que alguien se siente contigo');
+      if (pair.finished_at) return { ...this.pairView(pair, user.id), done: true };
+      const side = pair.user_a === user.id ? 'fire' : 'water';
+      const state = asState<Coop>(pair.state);
+      const result = applyCoop(state.a ? state : startCoop(pair.id), side, move, pair.id);
+      const scoreA = num(pair.score_a) + (side === 'fire' ? result.points : 0);
+      const scoreB = num(pair.score_b) + (side === 'water' ? result.points : 0);
+      const saved = await this.database.db.updateTable('guest_pairs').set({
+        state: JSON.stringify(result.state),
+        score_a: scoreA,
+        score_b: scoreB,
+        gate: result.state.round,
+        finished_at: result.done ? new Date() : null,
+        updated_at: new Date(),
+      }).where('id', '=', pair.id).where('updated_at', '=', pair.updated_at).returningAll().executeTakeFirst();
+      if (!saved) continue;
+      await this.syncPairRuns(session.id, saved);
+      this.ping(session.id);
+      return { ...this.pairView(saved, user.id), message: result.message, done: result.done };
+    }
+    throw new ApiError(409, 'RETRY', 'Tu pareja movió al mismo tiempo. Intenta de nuevo.');
+  }
+
+  private async openRun(user: AuthUser, game: string) {
     const guest = await this.database.db.selectFrom('users').select('is_guest').where('id', '=', user.id).executeTakeFirst();
     if (!guest?.is_guest) throw new ApiError(403, 'NOT_GUEST', 'Esta actividad es de la clase de invitados');
     const session = await this.database.db
@@ -397,19 +487,22 @@ export class GuestService {
       .executeTakeFirst();
     if (!session) throw new ApiError(409, 'CLOSED', 'No hay una clase abierta para ti');
     if (session.activity !== game) throw new ApiError(409, 'OTHER', 'Tu docente todavía no abre esta actividad');
-    await this.ensureRun(session.id, user.id, game);
+    await this.ensureRun(session.id, user.id, game as Game);
     return { session };
   }
 
   private async ensureRun(sessionId: string, userId: string, game: Game) {
     const existing = await this.database.db.selectFrom('guest_runs').select('id').where('session_id', '=', sessionId).where('user_id', '=', userId).where('game', '=', game).executeTakeFirst();
     if (existing) return;
-    const state = game === 'fabrica' ? { scene: 'porton', mistakes: [], first: [] } : game === 'diagnostico' ? { picks: {} } : {};
+    const grade = num((await this.sessionById(sessionId)).grade);
+    const solo = PLAY_GAMES.includes(game as (typeof PLAY_GAMES)[number]) && game !== 'elementos' ? startSolo(game, `${sessionId}:${userId}:${game}`) : null;
+    const exam = game === 'diagnostico' || game === 'final' ? examItems(grade, game) : null;
+    const state = solo ?? (game === 'fabrica' ? { scene: 'porton', mistakes: [], first: [] } : { picks: {} });
     await this.database.db.insertInto('guest_runs').values({
       session_id: sessionId,
       user_id: userId,
       game,
-      total: game === 'diagnostico' ? DIAGNOSTIC.length : game === 'fabrica' ? FACTORY_GATES.length : game === 'casos' ? CASES.length : GATES.length,
+      total: solo && 'rounds' in solo ? solo.rounds : exam ? exam.length : game === 'fabrica' ? FACTORY_GATES.length : game === 'casos' ? CASES.length : GATES.length,
       state: JSON.stringify(state),
     }).onConflict((oc) => oc.columns(['session_id', 'user_id', 'game']).doNothing()).execute();
   }
@@ -419,7 +512,11 @@ export class GuestService {
   }
 
   private grade(items: Item[], picks: Record<string, string>) {
-    const review = items.map((item) => ({ id: item.id, topic: item.topic, prompt: item.prompt, yours: picks[item.id] ?? '', answer: item.answer, explain: item.explain, ok: picks[item.id] === item.answer }));
+    const review = items.map((item) => {
+      const yours = picks[item.id] ?? '';
+      const ok = item.options.length ? yours === item.answer : normAnswer(yours) === normAnswer(item.answer);
+      return { id: item.id, topic: item.topic, prompt: item.prompt, yours, answer: item.answer, explain: item.explain, ok };
+    });
     return { correct: review.filter((r) => r.ok).length, wrongs: review.filter((r) => !r.ok).map((r) => r.topic), review };
   }
 
@@ -451,8 +548,19 @@ export class GuestService {
   }
 
   private pairView(pair: { id: string; user_a: string; user_b: string | null; gate: number; total: number; state: unknown; score_a: number; score_b: number; finished_at: Date | null }, userId: string) {
-    const state = asState<PairState>(pair.state);
     const side = pair.user_a === userId ? 'fire' : 'water';
+    const coop = asState<Coop>(pair.state);
+    if (typeof coop.a === 'number') {
+      return {
+        id: pair.id,
+        waiting: !pair.user_b,
+        score: num(side === 'fire' ? pair.score_a : pair.score_b),
+        ...viewCoop(coop, side),
+        side,
+        done: Boolean(pair.finished_at),
+      };
+    }
+    const state = asState<PairState>(pair.state);
     const mine = state[side];
     const other = state[side === 'fire' ? 'water' : 'fire'];
     return {
@@ -482,11 +590,17 @@ export class GuestService {
     }
   }
 
-  private async playState(sessionId: string, userId: string, activity: Activity) {
-    if (activity === 'diagnostico') {
-      const run = await this.database.db.selectFrom('guest_runs').selectAll().where('session_id', '=', sessionId).where('user_id', '=', userId).where('game', '=', 'diagnostico').executeTakeFirst();
+  private async playState(sessionId: string, userId: string, activity: string) {
+    if (activity === 'diagnostico' || activity === 'final') {
+      const grade = num((await this.sessionById(sessionId)).grade);
+      const run = await this.database.db.selectFrom('guest_runs').selectAll().where('session_id', '=', sessionId).where('user_id', '=', userId).where('game', '=', activity).executeTakeFirst();
       const picks = asState<{ picks?: Record<string, string> }>(run?.state).picks ?? {};
-      return { seconds: 20 * 60, startedAt: run?.started_at ?? null, done: Boolean(run?.finished_at), picks, items: DIAGNOSTIC.map(publicItem) };
+      return { seconds: activity === 'final' ? 30 * 60 : 20 * 60, startedAt: run?.started_at ?? null, done: Boolean(run?.finished_at), picks, items: examItems(grade, activity).map(publicItem) };
+    }
+    if (PLAY_GAMES.includes(activity as (typeof PLAY_GAMES)[number]) && activity !== 'elementos') {
+      const run = await this.database.db.selectFrom('guest_runs').selectAll().where('session_id', '=', sessionId).where('user_id', '=', userId).where('game', '=', activity).executeTakeFirst();
+      const state = asState<Solo>(run?.state);
+      return state.kind ? viewSolo(state) : null;
     }
     if (activity === 'fabrica') {
       const run = await this.database.db.selectFrom('guest_runs').selectAll().where('session_id', '=', sessionId).where('user_id', '=', userId).where('game', '=', 'fabrica').executeTakeFirst();
@@ -515,6 +629,7 @@ export class GuestService {
       gradeName: this.gradeName(num(row.grade)),
       groupCode: row.group_code,
       activity: row.activity,
+      activities: GRADE_ACTIVITIES[num(row.grade)] ?? GRADE_ACTIVITIES[8],
       status: row.status,
       openedAt: row.opened_at,
       closedAt: row.closed_at,

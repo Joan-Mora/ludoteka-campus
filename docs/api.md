@@ -472,12 +472,13 @@ El estudiante no crea cuenta: escanea un QR, elige su nombre (o lo escribe) y en
 | `POST` | `/api/invitado/:code/entrar` | Público |
 | `GET` | `/api/clase/mia` | Estudiante invitado |
 | `POST` | `/api/clase/diagnostico` | Estudiante invitado |
-| `POST` | `/api/clase/fabrica` | Estudiante invitado |
-| `POST` | `/api/clase/casos` | Estudiante invitado |
+| `POST` | `/api/clase/final` | Estudiante invitado |
+| `POST` | `/api/clase/jugar` | Estudiante invitado. Jugada del juego abierto |
+| `POST` | `/api/clase/matriz` | Estudiante, docente, admin. Explica una matriz sin puntaje |
 | `GET` / `POST` | `/api/clase/pareja` | Estudiante invitado |
 | `POST` | `/api/clase/pareja/respuesta` | Estudiante invitado |
 
-Hoy el grado es octavo (grupos 81, 82 y 83) y las actividades son diagnóstico, La fábrica, Dos elementos y ¿Qué caso es?. Las respuestas se califican en el servidor. El tablero marca al mejor de la sesión.
+El docente abre la sesión eligiendo el grado (6 a 9). Cada grado ve solo sus juegos. El diagnóstico y el examen final se califican en el servidor. Los juegos (balanza, barras, áreas, proporción, fichas, relato, dos elementos, cruce, Gauss) también: el navegador manda la jugada y el servidor guarda el puntaje. El tablero marca al mejor de la sesión.
 
 ### Salud
 

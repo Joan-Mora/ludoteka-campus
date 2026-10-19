@@ -377,13 +377,22 @@ En **Novedades** están las circulares del colegio y los avisos de sus cursos. S
 
 Sus edificios: **Enseñar** (Mis cursos, Planilla de notas, Banco de preguntas), **En clase** (Sesiones de invitados, Sala en vivo, Arena), **Comunicación** (Mensajes, Cartelera) y **Recursos** (Biblioteca, Observatorio).
 
-### Sesión de invitados (octavo)
+### Sesión de invitados (sexto a noveno)
 
-En **Sesiones de invitados** elija el grupo (81, 82 u 83) y pulse **Abrir sesión**. Proyecte el QR. Cada estudiante elige su nombre o lo escribe y entra como **Estudiante (Invitado · Octavo)**, sin correo ni contraseña.
+En **Sesiones de invitados** elija el grado y pulse **Abrir sesión**. Proyecte el QR. Cada estudiante elige su nombre o lo escribe y entra como **Estudiante (Invitado - Sexto)** (o el grado de la sesión), sin correo ni contraseña. Si el nombre no estaba, se crea su perfil de preinscripción y la próxima vez aparece en la lista.
 
-Arriba de la lista cambie la actividad para que todo el grupo vaya junto: **Diagnóstico** (un intento, 20 minutos), **La fábrica**, **Dos elementos** (en parejas) o **¿Qué caso es?** (90 segundos). El tablero se actualiza solo y marca al mejor de la sesión. **Cerrar sesión** no borra a nadie.
+Arriba de la lista cambie la actividad para que todo el grupo vaya junto. Cada grado ve las suyas:
+
+- **Sexto:** diagnóstico, balanza de ecuaciones, barras de fracciones, regla de tres, encuesta (gráfica de barras) y examen final.
+- **Séptimo:** diagnóstico, áreas, balanza, proporción, fichas de polinomios y examen final.
+- **Octavo:** diagnóstico, fichas de factorización, relato de decisiones, juego en parejas y examen final.
+- **Noveno:** diagnóstico, cruce de rectas, Gauss-Jordan (también puede pegar su propia matriz para ver los pasos) y examen final.
+
+El tablero se actualiza solo, muestra cómo va cada estudiante y marca al mejor de la sesión. **Cerrar sesión** no borra a nadie.
 
 En **Sesiones guardadas** marque una o varias, o elija un rango de fechas, y pulse **Exportar informe**.
+
+Para una clase de unas 50 personas durante dos horas, el plan gratuito del servidor se queda corto: se apaga por inactividad y tiene poca memoria. Antes de esa clase hay que dejar el servicio en un plan que no se apague y abrir la página unos minutos antes.
 
 ![Inicio del docente](img/docente/inicio.png)
 

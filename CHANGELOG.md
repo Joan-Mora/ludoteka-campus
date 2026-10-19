@@ -4,6 +4,20 @@ Todos los cambios relevantes de Ludoteka Campus, del más reciente al más antig
 
 El formato sigue [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/). Las secciones usan: **Añadido** (funciones nuevas), **Cambiado** (comportamiento distinto), **Corregido** (errores) y **Documentación**.
 
+## [1.3.0] — 2026-10-19
+
+La clase de invitados cubre sexto a noveno con juegos de manipulación, diagnóstico, examen final y fuentes reales.
+
+### Añadido
+- El docente abre la sesión por grado (6 a 9). El estudiante entra con nombre y queda como «Estudiante (Invitado - grado)». Si escribe un nombre nuevo, se crea su perfil de preinscripción.
+- Juegos en el servidor, uno por tema: balanza, barras de fracciones, áreas, proporción, fichas, relato de decisiones (octavo), juego en parejas y cruce de rectas. Gauss-Jordan acepta cualquier matriz de hasta 6×8 y explica cada paso.
+- Diagnóstico y examen final por grado. El tablero sigue marcando al mejor y el Excel exporta cada actividad.
+
+### Cambiado
+- El tutor se queda en los temas de sexto a noveno. Un invitado puede usarlo sin autorización de acudiente, porque todavía no hay datos de acudiente; el mensaje se redacta igual.
+- El Arcade vacío explica que la práctica pasó a la clase. La migración `0036` publica los enlaces de OpenStax y de los DBA.
+- El pool de Postgres sube de 10 a 20 conexiones. Cincuenta estudiantes por dos horas siguen necesitando un plan de Render que no se apague.
+
 ## [1.2.0] — 2026-10-16
 
 Clase de octavo con ingreso por QR, diagnóstico y tres juegos de factorización y fracciones algebraicas.

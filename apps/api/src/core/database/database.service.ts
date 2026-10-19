@@ -15,7 +15,7 @@ export class DatabaseService implements OnModuleDestroy {
   private readonly pool: Pool;
 
   constructor(env: Env) {
-    this.pool = new Pool({ connectionString: env.values.DATABASE_URL, max: 10 });
+    this.pool = new Pool({ connectionString: env.values.DATABASE_URL, max: 20 });
     this.db = new Kysely<Database>({ dialect: new PostgresDialect({ pool: this.pool }) });
   }
 

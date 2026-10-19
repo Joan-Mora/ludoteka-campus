@@ -44,8 +44,8 @@ export function GuestJoinPage() {
         {door.isError && <p className="form-error">{door.error instanceof ApiException ? door.error.message : 'Ese código no abre una clase'}</p>}
         {door.data && (
           <>
-            <h1 style={{ fontSize: 28, margin: '8px 0' }}>{door.data.gradeName} · grupo {door.data.groupCode}</h1>
-            <p className="muted">{door.data.title}. Elige tu nombre. Si no estás en la lista, escríbelo abajo.</p>
+            <h1 style={{ fontSize: 28, margin: '8px 0' }}>{door.data.gradeName}</h1>
+            <p className="muted">{door.data.title}. Entras como Estudiante (Invitado - {door.data.gradeName}). Si ya estás en la lista, tócala. Si no, escribe tu nombre: queda tu perfil de esta clase.</p>
             <div className="stack g-8" style={{ marginTop: 16 }}>
               {door.data.people.map((person) => (
                 <button key={person.id} className="btn ghost" style={{ justifyContent: 'flex-start' }} disabled={Boolean(busy)} onClick={() => join({ userId: person.id }, person.id)}>

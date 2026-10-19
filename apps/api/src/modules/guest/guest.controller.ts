@@ -5,7 +5,6 @@ import { clientInfo, setRefreshCookie } from '../../core/auth/session-cookies';
 import { Env } from '../../core/config/config.module';
 import { XLSX_TYPE } from '../../core/reports/documents';
 import { GuestService } from './guest.service';
-import type { Activity } from './guest.content';
 
 @Controller()
 export class GuestController {
@@ -22,8 +21,8 @@ export class GuestController {
 
   @Roles('teacher', 'admin')
   @Post('clase/sesiones')
-  open(@CurrentUser() user: AuthUser, @Body() body: { groupCode?: string }) {
-    return this.guest.open(user, String(body.groupCode ?? ''));
+  open(@CurrentUser() user: AuthUser, @Body() body: { grade?: number; groupCode?: string }) {
+    return this.guest.open(user, body);
   }
 
   @Roles('teacher', 'admin')
@@ -40,7 +39,7 @@ export class GuestController {
 
   @Roles('teacher', 'admin')
   @Patch('clase/sesiones/:id')
-  activity(@Param('id', new ParseUUIDPipe()) id: string, @Body() body: { activity?: Activity }) {
+  activity(@Param('id', new ParseUUIDPipe()) id: string, @Body() body: { activity?: string }) {
     return this.guest.setActivity(id, body.activity ?? 'diagnostico');
   }
 
@@ -79,6 +78,24 @@ export class GuestController {
   @Get('clase/mia')
   mine(@CurrentUser() user: AuthUser) {
     return this.guest.mine(user);
+  }
+
+  @Roles('student', 'teacher', 'admin')
+  @Post('clase/matriz')
+  matrix(@Body() body: { matrix?: unknown }) {
+    return this.guest.freeGauss({ action: 'libre', matrix: body.matrix });
+  }
+
+  @Roles('student')
+  @Post('clase/jugar')
+  play(@CurrentUser() user: AuthUser, @Body() body: { action?: string; n?: number; index?: number; tile?: string; b1?: number; m2?: number; b2?: number; from?: number; matrix?: unknown }) {
+    return this.guest.play(user, body);
+  }
+
+  @Roles('student')
+  @Post('clase/final')
+  final(@CurrentUser() user: AuthUser, @Body() body: { picks?: Record<string, string> }) {
+    return this.guest.answerFinal(user, body.picks ?? {});
   }
 
   @Roles('student')

@@ -164,6 +164,12 @@ export function GamesPage() {
       )}
 
       {overview.isLoading && <p className="muted"><Loader2 size={14} className="spin" /> Cargando juegos…</p>}
+      {!overview.isLoading && !ordered.length && (
+        <div className="card">
+          <h2 style={{ fontSize: 20 }}>Los juegos de práctica están en la clase</h2>
+          <p className="muted">Los juegos cortos de opción múltiple salieron del Arcade. Ahora cada grado juega con fichas, balanzas, barras, rectas o matrices, y el docente los abre desde Sesiones de invitados.</p>
+        </div>
+      )}
       <div className="arcade-grid">
         {ordered.map((game, i) => {
           const info = gameInfo(game.code);
